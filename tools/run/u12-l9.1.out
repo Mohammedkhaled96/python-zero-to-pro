@@ -1,0 +1,13 @@
+{"name": "\u0633\u0627\u0631\u0629", "age": 21, "skills": ["Python", "SQL"], "graduated": false, "gpa": null}
+<class 'str'>
+{
+  "name": "سارة",
+  "age": 21,
+  "skills": [
+    "Python",
+    "SQL"
+  ],
+  "graduated": false,
+  "gpa": null
+}
+True <class 'dict'>

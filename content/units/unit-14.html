@@ -1,0 +1,1093 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة الرابعة عشرة · العالم الخارجي</div>
+    <h2>المكتبات الخارجية والـ APIs: وصّل برنامجك بالعالم</h2>
+    <p>
+      المكتبة القياسية قوية، لكن القوة الحقيقية لبايثون في الـ <strong>500 ألف مكتبة</strong>
+      اللي كتبها المجتمع. الوحدة دي بتوريك إزاي تنزّلهم وتستخدمهم، وإزاي تجيب بيانات
+      حيّة من الإنترنت. دي نقطة انطلاقك لأي تراك.
+    </p>
+  </div>
+
+  <!-- 14.1 -->
+  <article class="lesson" id="u14-l1">
+    <h3>pip: تثبيت المكتبات الخارجية <span class="tag">درس 72</span></h3>
+    <p class="goal">الهدف: تعرف تنزّل أي مكتبة وتستخدمها.</p>
+
+    <h4>1. الفرق بين المكتبة القياسية والخارجية</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th></th><th>قياسية (Standard)</th><th>خارجية (Third-party)</th></tr>
+        <tr><td>مثال</td><td><code class="inl">random</code>, <code class="inl">os</code>, <code class="inl">json</code></td><td><code class="inl">requests</code>, <code class="inl">pandas</code>, <code class="inl">numpy</code></td></tr>
+        <tr><td>التثبيت</td><td>جاية مع بايثون</td><td>لازم تنزّلها بـ <code class="inl">pip</code></td></tr>
+        <tr><td>مين كتبها</td><td>فريق بايثون</td><td>المجتمع والشركات</td></tr>
+      </table>
+    </div>
+
+    <h4>2. أوامر pip الأساسية</h4>
+    <div class="code" data-file="terminal"><pre>
+pip install requests            # تثبيت
+pip install requests==2.31.0    # إصدار محدّد
+pip install --upgrade requests  # تحديث
+pip uninstall requests          # إزالة
+pip list                        # عرض المثبّت
+pip freeze &gt; requirements.txt   # حفظ قائمة المكتبات
+pip install -r requirements.txt # تثبيت من القائمة
+</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 في Google Colab وJupyter</div>
+      <p>
+        بتحط علامة تعجّب <code class="inl">!</code> قبل الأمر عشان تشغّله كأمر نظام:
+        <code class="inl">!pip install requests</code>. علامة التعجّب دي
+        <strong>مش جزء من بايثون</strong> — دي ميزة في Notebook بس. في ملف
+        <code class="inl">.py</code> عادي، شغّل الأمر في الـ Terminal من غيرها.
+      </p>
+    </div>
+
+    <h4>3. مكتبات المحاضرة الأخيرة</h4>
+    <div class="code" data-file="terminal"><pre>
+pip install requests
+pip install deep-translator
+pip install -U openai-whisper
+pip install gtts
+pip install pandas openpyxl
+pip install pytesseract pdf2image
+pip install translate==3.6.1
+# على لينكس/Colab كمان:
+apt-get install tesseract-ocr tesseract-ocr-ara
+</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ البيئات الافتراضية (Virtual Environments)</div>
+      <p>
+        لو ثبّت كل حاجة على النظام، مشاريعك هتتصادم (مشروع عايز إصدار قديم والتاني جديد).
+        الحل الاحترافي: بيئة معزولة لكل مشروع.
+      </p>
+      <div class="code" data-file="terminal"><pre>
+python -m venv venv                # إنشاء البيئة
+venv\Scripts\activate              # تفعيلها (ويندوز)
+source venv/bin/activate           # تفعيلها (ماك/لينكس)
+pip install requests               # هتتثبّت جوّه البيئة بس
+deactivate                         # الخروج منها
+</pre></div>
+      <p>اعمل ده من أول مشروع حقيقي ليك — هيوفّر عليك صداع كتير.</p>
+    </div>
+    <!-- APPEND:u14-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>بيئة مشروع نضيفة</div>
+      <p>اكتب في الطرفية خطوات: بيئة افتراضية، تفعيلها، تسطيب مكتبة، حفظ المتطلّبات. وبعدين افحص من بايثون هل مكتبة موجودة من غير ما تستوردها.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code" data-file="terminal" data-norun><pre>
+python -m venv .venv
+.venv\Scripts\activate
+python -m pip install requests
+python -m pip list
+python -m pip freeze &gt; requirements.txt
+python -m pip install -r requirements.txt
+</pre></div>
+      <div class="code"><pre>
+import importlib.util
+for name in ["json", "not_a_real_package_xyz"]:
+    found = importlib.util.find_spec(name) is not None
+    print(name, "موجودة" if found else "مش متسطّبة")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>json موجودة
+not_a_real_package_xyz مش متسطّبة</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">ModuleNotFoundError: No module named 'requests'</code> — الحل؟</p>
+        <label><input type="radio"> تعيد تسطيب بايثون</label>
+        <label><input type="radio"> تغيّر اسم الملف</label>
+        <label><input type="radio"> pip install requests (في نفس البيئة)</label>
+        <label><input type="radio"> import requests مرّتين</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. فايدة البيئة الافتراضية؟</p>
+        <label><input type="radio"> بتسرّع بايثون</label>
+        <label><input type="radio"> كل مشروع بمكتباته وإصداراته من غير تعارض</label>
+        <label><input type="radio"> بتحمي من الفيروسات</label>
+        <label><input type="radio"> إجبارية للتشغيل</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">pip freeze > requirements.txt</code> بتعمل…</p>
+        <label><input type="radio"> بتسطّب المكتبات</label>
+        <label><input type="radio"> بتمسح المكتبات</label>
+        <label><input type="radio"> بتحدّث pip</label>
+        <label><input type="radio"> بتحفظ أسماء وإصدارات المكتبات المتسطّبة في ملف</label>
+      </div>
+    </div>
+    <!-- /APPEND:u14-l1 -->
+                <!-- SUM:u14-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">pip install</code> بيسطّب مكتبات من PyPI.</li><li>المكتبة القياسية جاهزة، والخارجية محتاجة تسطيب.</li><li><code class="inl">pip freeze &gt; requirements.txt</code> بيسجّل مكتبات المشروع.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 14.2 -->
+  <article class="lesson" id="u14-l2">
+    <h3>مكتبة requests والـ APIs <span class="tag">درس 73</span></h3>
+    <p class="goal">الهدف: تجيب بيانات حيّة من الإنترنت — أكتر حاجة هتبهرك في بايثون.</p>
+
+    <h4>1. إيه هو الـ API؟</h4>
+    <p>
+      الـ <strong>API</strong> (Application Programming Interface) هو «شبّاك خدمة» على
+      الإنترنت. إنت بتبعت طلب على رابط معيّن، والخادم بيرجّع لك بيانات منظّمة
+      (غالبًا بصيغة <strong>JSON</strong>) بدل صفحة ويب.
+    </p>
+    <div class="diagram">
+<pre>  برنامجك ──── GET request ───►  خادم الـ API
+                                      │
+  برنامجك ◄─── JSON response ─────────┘
+
+  {"rates": {"EGP": 48.5, "EUR": 0.92}}</pre>
+      <div class="cap">دورة طلب API</div>
+    </div>
+    <p>
+      و<strong>JSON</strong> شكله زي القاموس في بايثون بالظبط:
+      <code class="inl">{"key": "value"}</code>. عشان كده بايثون بتحوّله لقاموس بسطر واحد.
+    </p>
+
+    <h4>2. أول طلب</h4>
+    <div class="code" data-file="exchange_rate.py"><pre>
+import requests
+url = "https://api.exchangerate-api.com/v4/latest/USD"
+try:
+    response = requests.get(url, timeout=10)
+    response.raise_for_status()      # بترمي خطأ لو الرد فيه مشكلة
+    data = response.json()           # بتحوّل JSON لقاموس بايثون
+    egp_rate = data["rates"]["EGP"]
+    print("1 USD = {} EGP".format(egp_rate))
+except requests.RequestException as e:
+    print("Error fetching exchange rate:", e)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1 USD = 48.25 EGP</pre></div>
+
+    <h4>3. تفكيك الكود</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>السطر</th><th>الشرح</th></tr>
+        <tr><td><code class="inl">requests.get(url)</code></td><td>بيبعت طلب GET ويستنى الرد</td></tr>
+        <tr><td><code class="inl">response.raise_for_status()</code></td><td>لو الرد 404 أو 500 بترمي استثناء بدل ما تكمّل ببيانات فاضية</td></tr>
+        <tr><td><code class="inl">response.json()</code></td><td>بتحوّل نص الـ JSON لقاموس بايثون</td></tr>
+        <tr><td><code class="inl">data["rates"]["EGP"]</code></td><td>وصول متداخل للقاموس — من الوحدة 10</td></tr>
+        <tr><td><code class="inl">try/except</code></td><td>ضروري! النت ممكن يفصل، والخادم ممكن يقع</td></tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ أي كود بيتعامل مع الشبكة لازم يكون محميّ</div>
+      <p>
+        مليون سبب ممكن يفشل الطلب: النت مفصول، الخادم واقع، الرابط اتغيّر، مهلة انتهت.
+        <strong>ما تكتبش <code class="inl">requests.get()</code> من غير
+        <code class="inl">try/except</code> أبدًا.</strong>
+        وضيف <code class="inl">timeout=10</code> عشان البرنامج ما يعلّقش للأبد.
+      </p>
+    </div>
+
+    <h4>4. تطبيق كامل: تطبيق الطقس</h4>
+    <div class="code" data-file="weather_app.py"><pre>
+import requests
+def fetch_weather_data():
+    api_url = "https://api.open-meteo.com/v1/forecast"
+    params = {
+        "latitude": 30.0444,
+        "longitude": 31.2357,
+        "current_weather": "true"
+    }
+    try:
+        response = requests.get(api_url, params=params, timeout=10)
+        response.raise_for_status()
+        return response.json()
+    except requests.RequestException as e:
+        raise Exception("Error fetching weather data: {}".format(e))
+def map_weather_code_to_status(code):
+    weather_status_map = {
+        0: "Clear sky", 1: "Mainly clear", 2: "Partly cloudy", 3: "Overcast",
+        45: "Fog", 48: "Depositing rime fog",
+        51: "Light drizzle", 53: "Moderate drizzle", 55: "Dense drizzle",
+        61: "Slight rain", 63: "Moderate rain", 65: "Heavy rain",
+        71: "Slight snowfall", 73: "Moderate snowfall", 75: "Heavy snowfall",
+        80: "Slight rain showers", 81: "Moderate rain showers", 82: "Violent rain showers",
+        95: "Thunderstorm", 96: "Thunderstorm with slight hail", 99: "Thunderstorm with heavy hail"
+    }
+    return weather_status_map.get(code, "Unknown weather condition")
+def parse_weather_data(data):
+    if "current_weather" not in data:
+        raise Exception("Missing 'current_weather' in API response.")
+    weather = data["current_weather"]
+    temperature = weather.get("temperature")
+    weather_code = weather.get("weathercode")
+    if temperature is None or weather_code is None:
+        raise Exception("Incomplete weather data in the API response.")
+    return temperature, map_weather_code_to_status(weather_code)
+def main():
+    try:
+        data = fetch_weather_data()
+        temperature, status = parse_weather_data(data)
+        print("Current temperature in Cairo, Egypt: {}°C".format(temperature))
+        print("Weather status: {}".format(status))
+    except Exception as e:
+        print("An error occurred:", e)
+if __name__ == "__main__":
+    main()
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Current temperature in Cairo, Egypt: 28.4°C
+Weather status: Partly cloudy</pre></div>
+
+    <h4>5. ليه الكود ده مكتوب كويس؟</h4>
+    <ul>
+      <li>
+        <strong>كل دالة ليها مهمّة واحدة:</strong> واحدة بتجيب، واحدة بتترجم الكود،
+        واحدة بتحلّل، وواحدة بتنسّق. لو الـ API اتغيّر، هتعدّل في دالة واحدة بس.
+      </li>
+      <li>
+        <strong><code class="inl">params</code> كقاموس:</strong> مكتبة requests بتبني الرابط
+        بنفسها. أنضف وأأمن من دمج النصوص يدويًا.
+      </li>
+      <li>
+        <strong><code class="inl">.get()</code> بدل <code class="inl">[]</code>:</strong>
+        من الوحدة 10 — بتحمي من <code class="inl">KeyError</code> لو الـ API رجّع بيانات ناقصة.
+      </li>
+      <li>
+        <strong><code class="inl">raise</code> برسالة واضحة:</strong> بدل ما نكمّل ببيانات
+        فاسدة، بنوقف ونقول المشكلة إيه.
+      </li>
+      <li>
+        <strong><code class="inl">weather_status_map.get(code, "Unknown")</code>:</strong>
+        قيمة افتراضية لو الكود مش في الجدول.
+      </li>
+    </ul>
+    <div class="box tip">
+      <div class="bt">💡 APIs مجانية للتجربة</div>
+      <ul>
+        <li><strong>الطقس:</strong> open-meteo.com — من غير مفتاح</li>
+        <li><strong>العملات:</strong> exchangerate-api.com</li>
+        <li><strong>بيانات وهمية:</strong> jsonplaceholder.typicode.com</li>
+        <li><strong>نكت وحقائق:</strong> official-joke-api، numbersapi.com</li>
+      </ul>
+    </div>
+    <div class="box err">
+      <div class="bt">💥 مفاتيح الـ API — تحذير أمني مهم</div>
+      <div class="code"><pre>
+API_KEY = "sk-abc123..."       # ❌ ما تكتبش المفتاح في الكود!
+</pre></div>
+      <p>
+        لو رفعت الكود على GitHub، المفتاح بقى متاح للعالم. حد ممكن يستخدمه ويصرّف فلوسك.
+        الحل: خزّنه في <strong>متغيّر بيئة</strong> أو ملف <code class="inl">.env</code>
+        مش مرفوع على Git:
+      </p>
+      <div class="code"><pre>
+import os
+API_KEY = os.environ.get("MY_API_KEY")
+</pre></div>
+    </div>
+    <!-- APPEND:u14-l2 -->
+    <h4>6. أكواد الحالة (Status Codes)</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الكود</th><th>المعنى</th><th>تعمل إيه؟</th></tr>
+        <tr><td><strong>200</strong> OK</td><td>تمام</td><td>اقرا البيانات</td></tr>
+        <tr><td><strong>201</strong> Created</td><td>اتعمل عنصر جديد (بعد POST)</td><td>اقرا العنصر الجديد</td></tr>
+        <tr><td><strong>400</strong> Bad Request</td><td>الطلب نفسه غلط</td><td>راجع المعاملات والبيانات اللي بعتّها</td></tr>
+        <tr><td><strong>401</strong> / <strong>403</strong></td><td>مش مسجّل / مش مسموح لك</td><td>راجع مفتاح الـ API أو الصلاحيات</td></tr>
+        <tr><td><strong>404</strong> Not Found</td><td>الرابط أو العنصر مش موجود</td><td>راجع الرابط</td></tr>
+        <tr><td><strong>429</strong> Too Many Requests</td><td>بعتّ طلبات كتير في وقت قصير</td><td>استنّى وجرّب تاني (فقرة 10)</td></tr>
+        <tr><td><strong>500</strong> / <strong>503</strong></td><td>مشكلة عند الخادم</td><td>جرّب تاني بعدين — مش ذنبك</td></tr>
+      </table>
+    </div>
+    <p>القاعدة: <strong>2xx نجاح، 4xx غلطتك، 5xx غلطة الخادم</strong>. و <code class="inl">response.ok</code> بتكون True لأي كود أقل من 400.</p>
+
+    <h4>7. طلب GET بمعاملات وفحص الرد</h4>
+    <div class="code" data-file="params_demo.py"><pre>
+import requests
+response = requests.get(
+    "https://httpbin.org/get",
+    params={"q": "بايثون", "page": 2},
+    timeout=10,
+)
+print(response.status_code, response.ok)
+print(response.url)
+print(response.headers["Content-Type"])
+print(response.json()["args"])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>200 True
+https://httpbin.org/get?q=%D8%A8%D8%A7%D9%8A%D8%AB%D9%88%D9%86&amp;page=2
+application/json
+{'page': '2', 'q': 'بايثون'}</pre></div>
+
+    <h4>8. POST: إرسال بيانات ومفتاح الـ API</h4>
+    <div class="code" data-file="post_demo.py"><pre>
+import os
+import requests
+token = os.environ.get("API_TOKEN", "demo-token")
+response = requests.post(
+    "https://httpbin.org/post",
+    json={"name": "sara", "score": 91},
+    headers={"Authorization": f"Bearer {token}"},
+    timeout=10,
+)
+response.raise_for_status()
+echo = response.json()
+print(echo["json"])
+print(echo["headers"]["Authorization"])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>{'name': 'sara', 'score': 91}
+Bearer demo-token</pre></div>
+
+    <h4>9. التعامل مع كل نوع خطأ لوحده</h4>
+    <div class="code" data-file="fetch_safe.py"><pre>
+import requests
+def fetch(url):
+    try:
+        response = requests.get(url, timeout=3)
+        response.raise_for_status()
+        return response.json()
+    except requests.Timeout:
+        print("⏱ الخادم اتأخّر — جرّب تاني بعدين")
+    except requests.ConnectionError:
+        print("🌐 مفيش اتصال بالخادم")
+    except requests.HTTPError as e:
+        print(f"❌ الخادم رد بخطأ {e.response.status_code}")
+    except ValueError:
+        print("📄 الرد مش JSON")
+    return None
+fetch("https://httpbin.org/status/404")
+fetch("https://httpbin.org/delay/5")
+fetch("https://no-such-host.invalid")
+fetch("https://httpbin.org/html")
+print(fetch("https://httpbin.org/json")["slideshow"]["title"])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>❌ الخادم رد بخطأ 404
+⏱ الخادم اتأخّر — جرّب تاني بعدين
+🌐 مفيش اتصال بالخادم
+📄 الرد مش JSON
+Sample Slide Show</pre></div>
+
+    <h4>10. إعادة المحاولة واحترام حدود الخدمة</h4>
+    <div class="code" data-file="retry_demo.py"><pre>
+import time
+import requests
+def get_with_retry(url, attempts=3, wait=1):
+    for attempt in range(1, attempts + 1):
+        try:
+            response = requests.get(url, timeout=5)
+            response.raise_for_status()
+            return response
+        except (requests.Timeout, requests.ConnectionError, requests.HTTPError) as e:
+            print(f"محاولة {attempt} فشلت: {type(e).__name__}")
+            if attempt == attempts:
+                raise
+            time.sleep(wait * attempt)
+try:
+    get_with_retry("https://httpbin.org/status/503", attempts=2, wait=0.5)
+except requests.HTTPError:
+    print("استسلمنا بعد كل المحاولات")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>محاولة 1 فشلت: HTTPError
+محاولة 2 فشلت: HTTPError
+استسلمنا بعد كل المحاولات</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 قبل ما تستخدم أي API</div>
+      <ul>
+        <li><strong>اقرا التوثيق بتاعه</strong>: الروابط، المعاملات، شكل الرد، وحدود الطلبات (rate limit).</li>
+        <li><strong>التقسيم لصفحات (pagination)</strong>: النتايج الكتير بتيجي على دفعات بمعامل زي <code class="inl">page</code> — لفّ لحد ما الرد يرجع فاضي.</li>
+        <li><strong>المفاتيح في متغيّرات البيئة</strong> أو <code class="inl">.env</code> — عمرها ما تترفع على GitHub.</li>
+        <li><strong>كل الأمثلة هنا متشغّلة على httpbin.org</strong> — خدمة مجانية للتجربة بترجّع اللي بتبعته.</li>
+      </ul>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>عالج رد API من غير نت</div>
+      <p>عندك نص JSON راجع من API طقس (زي <code class="inl">response.text</code>) وكود حالة. ابني رابط الطلب، واقرا الرد بأمان.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import json
+from urllib.parse import urlencode
+params = {"city": "القاهرة", "units": "metric"}
+print("https://api.example.com/weather?" + urlencode(params))
+status = 200
+body = '{"city": "Cairo", "temp": 31.5, "tags": ["sunny", "dry"]}'
+if status == 200:
+    data = json.loads(body)
+    print(data["city"], data["temp"])
+    print(data.get("humidity", "غير متاحة"))
+    print(", ".join(data["tags"]))
+else:
+    print("فشل الطلب:", status)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>https://api.example.com/weather?city=%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9&amp;units=metric
+Cairo 31.5
+غير متاحة
+sunny, dry</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. كود الحالة 404 معناه…</p>
+        <label><input type="radio"> نجاح</label>
+        <label><input type="radio"> خطأ في الخادم</label>
+        <label><input type="radio"> المورد مش موجود</label>
+        <label><input type="radio"> محتاج تسجيل دخول</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">response.raise_for_status()</code> بتعمل…</p>
+        <label><input type="radio"> بترمي HTTPError لو الكود 4xx أو 5xx</label>
+        <label><input type="radio"> بتطبع الكود</label>
+        <label><input type="radio"> بتعيد الطلب</label>
+        <label><input type="radio"> بترجّع True أو False</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. المكان الصح لمفتاح API…</p>
+        <label><input type="radio"> مكتوب في الكود</label>
+        <label><input type="radio"> متغيّر بيئة أو ملف .env مش مرفوع على GitHub</label>
+        <label><input type="radio"> في اسم الملف</label>
+        <label><input type="radio"> في تعليق</label>
+      </div>
+    </div>
+    <!-- /APPEND:u14-l2 -->
+                <!-- SUM:u14-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الـ API واجهة بتكلّم برنامج تاني عن طريق طلبات HTTP.</li><li><code class="inl">requests.get(url, params=…, timeout=…)</code> و <code class="inl">response.json()</code>.</li><li>افحص <code class="inl">status_code</code> واتعامل مع أخطاء الشبكة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 14.3 -->
+  <article class="lesson" id="u14-l3">
+    <h3>جولة في المكتبات الشهيرة <span class="tag">درس 74 · استعراض</span></h3>
+    <p class="goal">الهدف: تعرف إيه المتاح عشان تعرف تدوّر على إيه لما تحتاج.</p>
+    <div class="box info">
+      <div class="bt">ℹ️ الدرس ده استعراض مش شرح متعمّق</div>
+      <p>
+        كل مكتبة هنا تستاهل كورس لوحدها. الهدف إنك تعرف إن الحاجات دي <strong>موجودة</strong>
+        وإزاي شكل استخدامها، عشان لما تحتاج واحدة تعرف تدوّر عليها.
+      </p>
+    </div>
+
+    <h4>1. pandas — التعامل مع الجداول و Excel</h4>
+    <div class="code" data-file="excel_append.py"><pre>
+import pandas as pd
+import os
+def append_to_excel(name, phone, file_path='output.xlsx'):
+    new_data = pd.DataFrame({'name': [name], 'phone': [phone]})
+    if os.path.exists(file_path):
+        existing_data = pd.read_excel(file_path)
+        updated_data = pd.concat([existing_data, new_data], ignore_index=True)
+    else:
+        updated_data = new_data
+    updated_data.to_excel(file_path, index=False, engine='openpyxl')
+    print("Data is saved successfully.")
+    print(pd.read_excel(file_path))
+input_name = input("Enter name: ")
+input_phone = input("Enter phone: ")
+append_to_excel(input_name, input_phone)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Data is saved successfully.
+    name        phone
+0  Alice   0123456789
+1    Bob   0987654321</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ تصحيح مهم</div>
+      <p>
+        الكود الأصلي كان بيستخدم <code class="inl">existing_data.append(new_data)</code>.
+        الدالة دي <strong>اتشالت من pandas 2.0</strong> وبترمي
+        <code class="inl">AttributeError</code> دلوقتي. البديل الصحيح هو
+        <code class="inl">pd.concat([existing_data, new_data], ignore_index=True)</code>
+        زي ما في الكود فوق.
+      </p>
+      <p>
+        <strong>درس عام:</strong> المكتبات بتتغيّر مع الوقت. لما كود قديم ما يشتغلش،
+        دوّر على توثيق الإصدار الحالي — الغالب إن الدالة اتغيّرت مش إنك غلطان.
+      </p>
+    </div>
+
+    <h4>2. البحث في Excel</h4>
+    <div class="code" data-file="excel_search.py"><pre>
+import pandas as pd
+def search_excel(search_value, file_path="output.xlsx"):
+    df = pd.read_excel(file_path)
+    result = df[df.apply(
+        lambda row: row.astype(str).str.contains(search_value, na=False, case=False).any(),
+        axis=1
+    )]
+    return result
+search_value = input("Enter the search term: ")
+try:
+    results = search_excel(search_value)
+    if not results.empty:
+        print("Search Results:")
+        print(results)
+    else:
+        print("No results found.")
+except Exception as e:
+    print(f"An error occurred: {e}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Search Results:
+  name        phone
+1  Bob   0987654321</pre></div>
+    <p>
+      السطر ده مكثّف: بيمرّ على كل صف، يحوّل كل خلاياه لنصوص، ويفحص لو أي خلية فيها
+      كلمة البحث. <code class="inl">axis=1</code> معناها «امشِ على الصفوف مش الأعمدة».
+      <code class="inl">lambda</code> اللي شفناها في الوحدة 10.
+    </p>
+
+    <h4>3. re — البحث بالأنماط (Regular Expressions)</h4>
+    <div class="box info">
+      <div class="bt">ℹ️ تذكير سريع</div>
+      <p>دي مراجعة سريعة — الشرح الكامل (الدوال، فئات الحروف، المجموعات، الاستبدال، العربي، والفخاخ) في درس <a href="#u12-l8">التعبيرات النمطية</a> في الوحدة 12.</p>
+    </div>
+    <div class="code" data-file="regex_demo.py"><pre>
+import re
+text = "There are 123 apples and 456 oranges."
+numbers = re.findall(r"\d+", text)
+print("Numbers found:", numbers)
+match = re.search(r"apples", text, re.IGNORECASE)
+if match:
+    print("Match found:", match.group())
+else:
+    print("No match found.")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Numbers found: ['123', '456']
+Match found: apples</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>النمط</th><th>معناه</th><th>مثال</th></tr>
+        <tr><td><code class="inl">\d</code></td><td>أي رقم</td><td><code class="inl">\d+</code> = رقم أو أكتر</td></tr>
+        <tr><td><code class="inl">\w</code></td><td>حرف أو رقم أو _</td><td></td></tr>
+        <tr><td><code class="inl">\s</code></td><td>مسافة</td><td></td></tr>
+        <tr><td><code class="inl">.</code></td><td>أي حرف</td><td></td></tr>
+        <tr><td><code class="inl">+</code></td><td>مرّة أو أكتر</td><td></td></tr>
+        <tr><td><code class="inl">*</code></td><td>صفر مرّة أو أكتر</td><td></td></tr>
+        <tr><td><code class="inl">^</code> / <code class="inl">$</code></td><td>بداية / نهاية النص</td><td></td></tr>
+      </table>
+    </div>
+    <div class="code"><pre>
+import re
+# تحقّق حقيقي من الإيميل — أدق بكتير من فحص "@" اللي عملناه
+pattern = r"^[\w.+-]+@[\w-]+(\.[\w-]+)+$"
+print(bool(re.match(pattern, "farid@gmail.com")))     # True
+print(bool(re.match(pattern, "a@b..com")))            # False
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+False</pre></div>
+    <p>
+      لاحظ <code class="inl">r"..."</code> قبل النمط — دي الـ <strong>raw string</strong> من
+      الوحدة 1! ضرورية هنا عشان <code class="inl">\d</code> ما تتفسّرش كحرف هروب.
+    </p>
+
+    <h4>4. gTTS — تحويل النص لصوت</h4>
+    <div class="code" data-file="tts.py"><pre>
+from gtts import gTTS
+import webbrowser
+def text_to_speech(text, lang='en'):
+    tts = gTTS(text=text, lang=lang)
+    tts.save("output.mp3")
+    print("File saved successfully as 'output.mp3'.")
+    webbrowser.open("output.mp3")       # بيشغّله بالبرنامج الافتراضي
+sample_text = "مرحبا بالجميع، هذه تجربة لتحويل النص إلى صوت."
+text_to_speech(sample_text, lang='ar')
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>File saved successfully as 'output.mp3'.</pre></div>
+
+    <h4>5. الترجمة</h4>
+    <div class="code" data-file="translate.py"><pre>
+from translate import Translator
+def translate_text():
+    text_to_translate = input("Enter the text to translate: ")
+    target_language = input("Enter the target language (default is English): ").lower() or 'en'
+    translator = Translator(to_lang=target_language)
+    translation = translator.translate(text_to_translate)
+    print(f'Original text: {text_to_translate}')
+    print(f'Translated text: {translation}')
+translate_text()
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Enter the text to translate: مرحبا
+Enter the target language (default is English): en
+Original text: مرحبا
+Translated text: Hello</pre></div>
+    <p>
+      لاحظ الحيلة <code class="inl">.lower() or 'en'</code>: لو المستخدم ما كتبش حاجة،
+      النص الفاضي قيمته <strong>Falsy</strong> (الوحدة 4!) فـ <code class="inl">or</code>
+      بترجّع <code class="inl">'en'</code>. طريقة أنيقة للقيم الافتراضية.
+    </p>
+    <div class="box warn">
+      <div class="bt">⚠️ خدمات الترجمة المجانية</div>
+      <p>
+        مكتبة <code class="inl">translate</code> بتكلّم خدمة مجانية عليها حدّ يومي للطلبات، والمكتبات دي بتتغيّر كتير لأنها بتعتمد على خدمات خارجية.
+        للمشاريع الجدّية استخدم <code class="inl">deep-translator</code> (بتدعم أكتر من خدمة) أو API رسمي بمفتاح (درس الأمان في الوحدة 18).
+      </p>
+    </div>
+
+    <h4>6. OCR — استخراج النص من الصور والـ PDF</h4>
+    <div class="code" data-file="ocr.py"><pre>
+import pytesseract
+from pdf2image import convert_from_path
+import numpy as np
+def pdf_to_text_tesseract(pdf_path="file.pdf", output_txt_path="output.txt"):
+    try:
+        images = convert_from_path(pdf_path)
+        print(f"Total pages to process: {len(images)}")
+        with open(output_txt_path, 'w', encoding='utf-8') as file:
+            for image in images:
+                np_image = np.array(image)
+                text = pytesseract.image_to_string(np_image, lang='ara')
+                file.write(text + "\n\n--- Page Break ---\n\n")
+        print(f"OCR complete. Output saved to {output_txt_path}")
+    except Exception as e:
+        print(f"An error occurred: {e}")
+pdf_to_text_tesseract()
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Total pages to process: 5
+OCR complete. Output saved to output.txt</pre></div>
+    <p>
+      لاحظ إن الملف بيتفتح بـ <code class="inl">encoding='utf-8'</code> — ضروري جدًا
+      للنص العربي زي ما اتعلّمنا في الوحدة 12.
+    </p>
+
+    <div class="box info">
+      <div class="bt">ℹ️ OCR محتاج برامج على الجهاز نفسه</div>
+      <p>
+        <code class="inl">pytesseract</code> مجرّد واجهة لبرنامج <strong>Tesseract</strong>، و <code class="inl">pdf2image</code> محتاجة <strong>Poppler</strong>.
+        لازم تسطّبهم على نظام التشغيل (مش بـ pip): على ويندوز من صفحات التحميل الرسمية وتضيفهم للـ PATH، وعلى لينكس بـ <code class="inl">apt-get</code> زي ما في درس pip، وعلى Colab جاهزين بأمر واحد.
+        ولو الصور واضحة والخط منتظم النتيجة ممتازة، لكن الخط اليدوي والصور المهزوزة بتقلّل الدقّة كتير.
+      </p>
+    </div>
+
+    <h4>7. Whisper — تحويل الصوت لنص</h4>
+    <div class="code" data-file="whisper_demo.py"><pre>
+import whisper
+model = whisper.load_model("base")
+result = model.transcribe("audio.wav")
+print(result["text"])
+</pre></div>
+    <p>
+      3 سطور بتعمل حاجة كانت مستحيلة من كام سنة. دي قوة المكتبات:
+      <strong>إنت بتقف على أكتاف آلاف المبرمجين.</strong>
+    </p>
+
+    <h4>8. Google Colab — عمليات الملفات</h4>
+    <div class="code" data-file="colab_files.py"><pre>
+from google.colab import files
+import os
+# رفع ملف
+uploaded = files.upload()
+for filename, filedata in uploaded.items():
+    print(f'Uploaded file: {filename} ({len(filedata)} bytes)')
+# تنزيل ملف
+files.download('your_file.txt')
+# معرفة المسار الكامل
+print(os.path.abspath('your_file.txt'))
+# حذف ملف
+os.remove('your_file.txt')
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Uploaded file: example.txt (1234 bytes)
+/content/example.txt</pre></div>
+
+    <h4>9. عرض HTML في Notebook</h4>
+    <div class="code" data-file="display_html.py"><pre>
+from IPython.display import HTML, display
+html_content = """
+&lt;h1&gt;welcome in my page&lt;/h1&gt;
+&lt;h2&gt;farid mohammed&lt;/h2&gt;
+&lt;p&gt;my name is farid, i graduated from al alsun.&lt;/p&gt;
+&lt;a href="https://google.com"&gt;google&lt;/a&gt;
+"""
+display(HTML(html_content))
+</pre></div>
+    <p>مفيدة جدًا لعرض نتائج منسّقة في Colab بدل الطباعة العادية.</p>
+    <!-- APPEND:u14-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>اختار المكتبة المناسبة</div>
+      <p>اعمل قاموس «مهمة ← مكتبة» من الجولة، واطبع اقتراح لكل مهمة — ولو المهمة مش معروفة اطبع نصيحة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+tools = {
+    "نص لصوت": "gTTS",
+    "ترجمة": "deep-translator",
+    "نص من صورة": "pytesseract",
+    "صوت لنص": "openai-whisper",
+    "طلبات ويب": "requests",
+}
+for task in ["ترجمة", "صوت لنص", "تعديل فيديو"]:
+    lib = tools.get(task)
+    if lib:
+        print(f"{task}: pip install {lib}")
+    else:
+        print(f"{task}: دوّر على pypi.org واقرا التوثيق")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>ترجمة: pip install deep-translator
+صوت لنص: pip install openai-whisper
+تعديل فيديو: دوّر على pypi.org واقرا التوثيق</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="0">
+        <p class="qt">1. pytesseract محتاجة إيه غير pip؟</p>
+        <label><input type="radio"> برنامج Tesseract متسطّب على النظام</label>
+        <label><input type="radio"> مفتاح API</label>
+        <label><input type="radio"> مفيش</label>
+        <label><input type="radio"> كارت شاشة</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. أصغر نموذج Whisper من دول…</p>
+        <label><input type="radio"> large</label>
+        <label><input type="radio"> medium</label>
+        <label><input type="radio"> base</label>
+        <label><input type="radio"> tiny</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. قبل ما تستخدم مكتبة خارجية جديدة، أهم خطوة…</p>
+        <label><input type="radio"> تنسخ أي كود من النت</label>
+        <label><input type="radio"> تقرا التوثيق وتتأكّد إنها متحدّثة ومشهورة</label>
+        <label><input type="radio"> تسطّب أقدم إصدار</label>
+        <label><input type="radio"> تسطّبها بـ sudo</label>
+      </div>
+    </div>
+    <!-- /APPEND:u14-l3 -->
+                <!-- SUM:u14-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>pandas للجداول وExcel، و re للبحث بالأنماط.</li><li>مكتبات متخصّصة لكل حاجة: صوت، ترجمة، OCR.</li><li>Google Colab بيشغّل بايثون في المتصفّح من غير تسطيب.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- ADD:u14-l4 -->
+  <!-- 14.4 -->
+  <article class="lesson" id="u14-l4">
+    <h3>التزامن: async و await وasyncio <span class="tag">درس 75 · مهارة احترافية</span></h3>
+    <p class="goal">الهدف: تخلّي برنامجك يستنى 10 طلبات في نفس وقت الطلب الواحد، وتعرف إمتى asyncio وإمتى الخيوط وإمتى العمليات.</p>
+
+    <h4>1. المشكلة: البرنامج بيقعد يستنى</h4>
+    <p>
+      في الدرس اللي فات كل <code class="inl">requests.get</code> كانت بتوقف البرنامج لحد ما الرد يوصل.
+      لو عندك 3 طلبات كل واحد بياخد ثانية، البرنامج بياخد 3 ثواني — <strong>وهو قاعد مستني، مش بيحسب حاجة</strong>.
+    </p>
+    <div class="code"><pre>
+import time
+def fetch(name, seconds):
+    time.sleep(seconds)
+    return f"{name} جاهز"
+start = time.perf_counter()
+results = [fetch("طلب 1", 0.3), fetch("طلب 2", 0.3), fetch("طلب 3", 0.3)]
+print(results)
+print("الوقت:", round(time.perf_counter() - start, 1), "ثانية")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>['طلب 1 جاهز', 'طلب 2 جاهز', 'طلب 3 جاهز']
+الوقت: 0.9 ثانية</pre></div>
+
+    <h4>2. نوعين من الشغل — والحل مختلف</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>نوع الشغل</th><th>مثال</th><th>الحل الصح</th><th>ليه</th></tr>
+        <tr><td><strong>مرتبط بالإدخال/الإخراج</strong> (I/O-bound)</td><td>طلبات شبكة، قراءة ملفات، قواعد بيانات</td><td><code class="inl">asyncio</code> (أو خيوط)</td><td>البرنامج بيستنى، فنسيبه يبدأ الباقي وهو مستني</td></tr>
+        <tr><td><strong>مرتبط بالمعالج</strong> (CPU-bound)</td><td>حسابات تقيلة، معالجة صور، تشفير</td><td><code class="inl">multiprocessing</code></td><td>محتاج أنوية فعلية — الخيوط مش بتفيد بسبب الـ GIL</td></tr>
+      </table>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 الـ GIL في سطرين</div>
+      <p>
+        بايثون (CPython) بتسمح لخيط واحد بس ينفّذ bytecode في اللحظة (Global Interpreter Lock).
+        يعني الخيوط <strong>مش</strong> بتسرّع الحسابات، لكنها بتفيد في الانتظار (لأن الخيط بيسيب القفل وهو مستني).
+        وde نفس سبب وجود <code class="inl">asyncio</code>: تزامن بخيط واحد بدل تعقيد الخيوط.
+      </p>
+    </div>
+
+    <h4>3. أول كوروتين: <code>async def</code> و <code>await</code></h4>
+    <div class="code"><pre>
+import asyncio
+async def fetch(name, seconds):
+    await asyncio.sleep(seconds)
+    return f"{name} جاهز"
+async def main():
+    result = await fetch("طلب 1", 0.1)
+    print(result)
+    coro = fetch("طلب 2", 0.1)
+    print(type(coro).__name__)
+    print(await coro)
+asyncio.run(main())
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>طلب 1 جاهز
+coroutine
+طلب 2 جاهز</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ أشهر 3 غلطات</div>
+      <ul>
+        <li>نسيان <code class="inl">await</code> ← الكود مش بيتنفّذ وبيجيلك تحذير <code class="inl">coroutine was never awaited</code>.</li>
+        <li><code class="inl">time.sleep</code> جوّه <code class="inl">async def</code> ← بتوقّف <strong>كل</strong> المهام (استخدم <code class="inl">asyncio.sleep</code>).</li>
+        <li>استخدام <code class="inl">requests</code> جوّه async ← مكتبة متزامنة بتقفل الحلقة (استخدم <code class="inl">httpx</code> أو <code class="inl">aiohttp</code>).</li>
+      </ul>
+    </div>
+
+    <h4>4. التشغيل مع بعض: <code>gather</code></h4>
+    <p>هنا بتحصل الفايدة: التلات طلبات بيبدأوا في نفس اللحظة، والوقت الكلي = <strong>أطول</strong> طلب مش مجموعهم.</p>
+    <div class="code"><pre>
+import asyncio
+import time
+async def fetch(name, seconds):
+    await asyncio.sleep(seconds)
+    return f"{name} ({seconds}s)"
+async def main():
+    start = time.perf_counter()
+    results = await asyncio.gather(
+        fetch("طلب 1", 0.3),
+        fetch("طلب 2", 0.2),
+        fetch("طلب 3", 0.1),
+    )
+    print(results)
+    print("الوقت:", round(time.perf_counter() - start, 1), "ثانية")
+asyncio.run(main())
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>['طلب 1 (0.3s)', 'طلب 2 (0.2s)', 'طلب 3 (0.1s)']
+الوقت: 0.3 ثانية</pre></div>
+
+    <h4>5. مهام، ومهلة، وأول نتيجة تخلص</h4>
+    <div class="code"><pre>
+import asyncio
+async def work(name, seconds):
+    await asyncio.sleep(seconds)
+    print("خلص:", name)
+    return name
+async def main():
+    task = asyncio.create_task(work("خلفية", 0.1))
+    print("المهمة اتجدولت وإحنا لسه شغالين")
+    await task
+    try:
+        await asyncio.wait_for(work("بطيء", 1.0), timeout=0.2)
+    except asyncio.TimeoutError:
+        print("اتأخّر فألغيناه")
+    done, pending = await asyncio.wait(
+        [asyncio.create_task(work("سريع", 0.1)), asyncio.create_task(work("متأخّر", 0.5))],
+        return_when=asyncio.FIRST_COMPLETED,
+    )
+    print("خلصت:", len(done), "· فاضل:", len(pending))
+    for t in pending:
+        t.cancel()
+asyncio.run(main())
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>المهمة اتجدولت وإحنا لسه شغالين
+خلص: خلفية
+اتأخّر فألغيناه
+خلص: سريع
+خلصت: 1 · فاضل: 1</pre></div>
+
+    <h4>6. الشكل الحقيقي مع طلبات ويب</h4>
+    <p>في مشروع حقيقي بتستخدم مكتبة غير متزامنة زي <code class="inl">httpx</code> (تسطيبها: <code class="inl">pip install httpx</code>).</p>
+    <div class="code" data-file="fetch_all.py"><pre>
+import asyncio
+import httpx
+URLS = [
+    "https://httpbin.org/delay/1",
+    "https://httpbin.org/delay/1",
+    "https://httpbin.org/delay/1",
+]
+async def get(client, url):
+    response = await client.get(url, timeout=10)
+    return response.status_code
+async def main():
+    async with httpx.AsyncClient() as client:
+        codes = await asyncio.gather(*(get(client, u) for u in URLS))
+    print(codes)
+asyncio.run(main())
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[200, 200, 200]</pre></div>
+
+    <h4>7. الحسابات التقيلة: العمليات مش الخيوط</h4>
+    <div class="code" data-file="cpu_work.py"><pre>
+from concurrent.futures import ProcessPoolExecutor
+import time
+def heavy(n):
+    return sum(i * i for i in range(n))
+if __name__ == "__main__":
+    numbers = [2_000_000] * 4
+    start = time.perf_counter()
+    serial = [heavy(n) for n in numbers]
+    print("بالتوالي:", round(time.perf_counter() - start, 2), "ثانية")
+    start = time.perf_counter()
+    with ProcessPoolExecutor() as pool:
+        parallel = list(pool.map(heavy, numbers))
+    print("بالتوازي:", round(time.perf_counter() - start, 2), "ثانية")
+    print(serial == parallel)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>بالتوالي: 0.84 ثانية
+بالتوازي: 0.31 ثانية
+True</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ القاعدة العملية</div>
+      <ul>
+        <li>بتستنى شبكة أو ملفات؟ <strong><code class="inl">asyncio</code></strong> (أو <code class="inl">ThreadPoolExecutor</code> لو المكتبة متزامنة ومش بتدعم async).</li>
+        <li>بتحسب؟ <strong><code class="inl">ProcessPoolExecutor</code></strong>.</li>
+        <li>مش متأكّد إن فيه مشكلة سرعة؟ <strong>قيس الأول</strong> — التزامن بيزوّد تعقيد، فما تضيفوش من غير سبب.</li>
+      </ul>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>من بالتوالي لبالتوازي</div>
+      <p>حوّل الكود ده لغير متزامن، وخلّي التلات مهام تشتغل مع بعض، واطبع الوقت (المتوقّع: 0.4 بدل 0.9).</p>
+      <div class="code" data-file="before.py" data-norun><pre>
+import time
+def download(name, seconds):
+    time.sleep(seconds)
+    return name
+start = time.perf_counter()
+files = [download("a", 0.4), download("b", 0.3), download("c", 0.2)]
+print(files, round(time.perf_counter() - start, 1))
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import asyncio
+import time
+async def download(name, seconds):
+    await asyncio.sleep(seconds)
+    return name
+async def main():
+    start = time.perf_counter()
+    files = await asyncio.gather(download("a", 0.4), download("b", 0.3), download("c", 0.2))
+    print(files, round(time.perf_counter() - start, 1))
+asyncio.run(main())
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>['a', 'b', 'c'] 0.4</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">asyncio</code> بتفيد أكتر في…</p>
+        <label><input type="radio"> الحسابات التقيلة على المعالج</label>
+        <label><input type="radio"> الانتظار (شبكة، ملفات، قواعد بيانات)</label>
+        <label><input type="radio"> تصغير حجم الكود</label>
+        <label><input type="radio"> الرسومات</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. ناديت كوروتين من غير <code class="inl">await</code>؟</p>
+        <label><input type="radio"> بيتنفّذ عادي</label>
+        <label><input type="radio"> بيرمي SyntaxError</label>
+        <label><input type="radio"> بيتنفّذ بعد شوية لوحده</label>
+        <label><input type="radio"> بترجع كائن كوروتين ومفيش حاجة اتنفّذت (مع تحذير)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">time.sleep(1)</code> جوّه <code class="inl">async def</code>…</p>
+        <label><input type="radio"> بتوقّف كل المهام — الصح <code class="inl">await asyncio.sleep(1)</code></label>
+        <label><input type="radio"> نفس <code class="inl">asyncio.sleep</code></label>
+        <label><input type="radio"> بترمي خطأ</label>
+        <label><input type="radio"> بتلغي المهمة</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. 4 مهام حساب تقيلة على 4 أنوية — الأنسب…</p>
+        <label><input type="radio"> asyncio.gather</label>
+        <label><input type="radio"> ThreadPoolExecutor</label>
+        <label><input type="radio"> ProcessPoolExecutor</label>
+        <label><input type="radio"> حلقة for عادية</label>
+      </div>
+    </div>
+  <!-- SUM:u14-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الانتظار (شبكة/ملفات) بيتحل بـ <code class="inl">asyncio</code>: <code class="inl">async def</code> و <code class="inl">await</code> وحلقة أحداث واحدة بخيط واحد.</li><li><code class="inl">asyncio.gather</code> بتشغّل المهام مع بعض فالوقت = أطول مهمة، و <code class="inl">create_task</code> للخلفية، و <code class="inl">wait_for</code> للمهلة.</li><li>الحسابات التقيلة محتاجة <code class="inl">ProcessPoolExecutor</code> (بسبب الـ GIL)، و <code class="inl">time.sleep</code> جوّه async غلط — استخدم <code class="inl">asyncio.sleep</code>.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u14-l4 -->
+
+  <!-- ADD:u14-ch -->
+  <!-- 14.CH -->
+  <article class="lesson" id="u14-ch">
+    <h3>تحدّيات بتصحيح آلي: بيانات الـ APIs <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">الـ API بيرجّع JSON — ومش دايمًا كامل. اكتب كود بيتعامل مع الرد الحقيقي والرد الناقص.</p>
+
+    <div class="challenge" data-ch="u14-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — ملخّص الطقس <span class="lvl">⭐⭐</span></div>
+      <p>
+        <code class="inl">summarize(json_text)</code> بتاخد نص JSON شكله <code class="inl">{"name": "Cairo", "main": {"temp": 31.4}, "weather": [{"description": "clear sky"}]}</code>
+        وترجّع <code class="inl">"Cairo: 31°C — clear sky"</code> (الحرارة مقرّبة). لو فيه مفتاح ناقص ترجّع <code class="inl">"بيانات ناقصة"</code>، ولو النص مش JSON أصلًا ترجّع <code class="inl">"رد غير صالح"</code>.
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+import json
+
+def summarize(json_text):
+    data = json.loads(json_text)
+    return f"{data['name']}: {data['main']['temp']}°C — {data['weather'][0]['description']}"
+</textarea>
+      <script type="text/plain" class="ch-tests">
+import json
+
+GOOD = json.dumps({"name": "Cairo", "main": {"temp": 31.4}, "weather": [{"description": "clear sky"}]})
+
+def test_good():
+    "رد كامل ← Cairo: 31°C — clear sky"
+    assert summarize(GOOD) == "Cairo: 31°C — clear sky", summarize(GOOD)
+
+def test_missing_key():
+    "مفتاح main ناقص ← بيانات ناقصة"
+    assert summarize(json.dumps({"name": "Giza", "weather": [{"description": "rain"}]})) == "بيانات ناقصة"
+
+def test_empty_weather():
+    "قائمة weather فاضية ← بيانات ناقصة"
+    assert summarize(json.dumps({"name": "X", "main": {"temp": 20}, "weather": []})) == "بيانات ناقصة"
+
+def test_not_json():
+    "نص مش JSON ← رد غير صالح"
+    assert summarize("<html>Error 500</html>") == "رد غير صالح"
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+import json
+def summarize(json_text):
+    try:
+        data = json.loads(json_text)
+    except json.JSONDecodeError:
+        return "رد غير صالح"
+    try:
+        city = data["name"]
+        temp = round(data["main"]["temp"])
+        description = data["weather"][0]["description"]
+    except (KeyError, IndexError, TypeError):
+        return "بيانات ناقصة"
+    return f"{city}: {temp}°C — {description}"
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u14-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — صيّاد الإيميلات <span class="lvl">⭐⭐</span></div>
+      <p><code class="inl">extract_emails(text)</code> بـ <code class="inl">re</code>: ترجّع كل الإيميلات في النص — بحروف صغيرة، من غير تكرار، ومرتّبة أبجديًا.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+import re
+
+def extract_emails(text):
+    pass
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_basic():
+    "إيميلين في نص عادي"
+    text = "كلّم sara@mail.com أو ahmed.ali@company.co.uk بكرة"
+    assert extract_emails(text) == ["ahmed.ali@company.co.uk", "sara@mail.com"], extract_emails(text)
+
+def test_dupes_and_case():
+    "تكرار بحروف مختلفة ← مرّة واحدة بحروف صغيرة"
+    assert extract_emails("Sara@Mail.com, sara@mail.com") == ["sara@mail.com"]
+
+def test_none():
+    "مفيش إيميلات ← قائمة فاضية"
+    assert extract_emails("مفيش حاجة هنا @ ولا هنا") == []
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+import re
+EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+")
+def extract_emails(text):
+    found = {match.lower() for match in EMAIL.findall(text)}
+    return sorted(found)
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u14-ch -->
+
+  <!-- CP:14 -->
+  <div class="checkpoint" data-unit="14">
+    <h4>✅ نقطة تفتيش: الوحدة الرابعة عشرة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أسطّب مكتبات بـ pip وأسجّلها في requirements.txt.</li><li>أكلّم API بـ requests وأقرا JSON.</li><li>أتعامل مع ردود ناقصة أو غلط من غير ما البرنامج يقع.</li><li>أعرف أدوّر على مكتبة مناسبة لمشكلتي.</li><li>أفرّق بين الشغل اللي بيستنى (asyncio) والشغل اللي بيحسب (عمليات)، وأشغّل طلبات مع بعض بـ gather.</li></ul>
+  </div>
+  <!-- /CP -->

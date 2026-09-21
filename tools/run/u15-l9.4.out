@@ -1,0 +1,7 @@
+True
+[Version(major=3, minor=9, patch=0), Version(major=3, minor=12, patch=0), Version(major=3, minor=12, patch=1)]
+{'major': 3, 'minor': 12, 'patch': 1}
+(3, 12, 1)
+Version(major=3, minor=12, patch=2)
+FrozenInstanceError
+current

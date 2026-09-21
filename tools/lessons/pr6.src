@@ -1,0 +1,332 @@
+@@append u0-l4
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>اعمل «ترجمة» بإيدك</div>
+      <p>استخدم <code class="inl">compile</code> عشان تحوّل نص كود لكائن كود (نفس اللي بايثون بتعمله مع ملفك)، وبعدين شغّله، وجرّب كود فيه خطأ تركيب.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+source = "x = 2 + 3\nprint(x * 10)" ¦¦ كود كنص — زي محتوى ملف .py.
+code = compile(source, "demo.py", "exec") ¦¦ مرحلة الترجمة: نص ← bytecode (من غير تشغيل).
+print(type(code).__name__, code.co_filename) ¦¦ كائن من نوع code، وفاكر اسم الملف (بيظهر في رسايل الخطأ).
+print(5 in code.co_consts) ¦¦ المترجم حسب `2 + 3` مسبقًا (constant folding) — الـ 5 محفوظة جاهزة.
+exec(code) ¦¦ مرحلة التنفيذ: الآلة الافتراضية بتشغّل الـ bytecode.
+try: ¦¦ كود ناقص.
+    compile("x = ", "bad.py", "exec") ¦¦ الخطأ بيظهر في الترجمة — قبل تنفيذ أي سطر.
+except SyntaxError as e: ¦¦ نمسكه.
+    print(type(e).__name__, "في", e.filename) ¦¦ عشان كده خطأ التركيب بيمنع الملف كله من الشغل.
+      @end
+      @out
+code demo.py
+True
+50
+SyntaxError في bad.py
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. ملفات <code class="inl">.pyc</code> في <code class="inl">__pycache__</code> فيها…</p>
+        <label><input type="radio"> كود الآلة للمعالج</label>
+        <label><input type="radio"> bytecode محفوظ عشان التشغيل الجاي يبقى أسرع</label>
+        <label><input type="radio"> نسخة احتياطية من الكود</label>
+        <label><input type="radio"> رسايل الأخطاء</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. الـ bytecode بيشغّله…</p>
+        <label><input type="radio"> المعالج مباشرةً</label>
+        <label><input type="radio"> نظام التشغيل</label>
+        <label><input type="radio"> المتصفح</label>
+        <label><input type="radio"> الآلة الافتراضية لبايثون (PVM)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ليه خطأ التركيب في آخر سطر بيمنع أول سطر من التنفيذ؟</p>
+        <label><input type="radio"> لأن الملف كله بيتترجم الأول قبل ما أي سطر يشتغل</label>
+        <label><input type="radio"> لأن بايثون بتقرا من تحت لفوق</label>
+        <label><input type="radio"> مش صحيح — أول سطر بيشتغل</label>
+        <label><input type="radio"> بسبب ملفات pyc</label>
+      </div>
+    </div>
+
+@@append u10-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>أكتر كلمات تكرارًا</div>
+      <p>اعدّ الكلمات في جملة بقاموس، واطبع أكتر كلمتين تكرارًا، وبعدين اطبع كل الكلمات اللي ظهرت مرّة واحدة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+text = "بايثون سهلة و بايثون قوية و بايثون ممتعة" ¦¦ جملة.
+counts = {} ¦¦ قاموس العدّ.
+for word in text.split(): ¦¦ كلمة كلمة.
+    counts[word] = counts.get(word, 0) + 1 ¦¦ `get` بقيمة افتراضية 0 — من غير if.
+top = sorted(counts.items(), key=lambda pair: pair[1], reverse=True) ¦¦ ترتيب الأزواج بالقيمة تنازليًا.
+for word, n in top[:2]: ¦¦ أول اتنين.
+    print(word, n) ¦¦ الكلمة وعددها.
+once = [w for w, n in counts.items() if n == 1] ¦¦ فلترة بالقيمة.
+print(once) ¦¦ بترتيب أول ظهور (القاموس بيحافظ على الترتيب).
+      @end
+      @out
+بايثون 3
+و 2
+['سهلة', 'قوية', 'ممتعة']
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">for k in d:</code> بتلف على…</p>
+        <label><input type="radio"> القيم</label>
+        <label><input type="radio"> الأزواج</label>
+        <label><input type="radio"> المفاتيح</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">d.get("x", 0)</code> والمفتاح مش موجود…</p>
+        <label><input type="radio"> 0 — والقاموس ما بيتغيّرش</label>
+        <label><input type="radio"> KeyError</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> بيضيف x بقيمة 0</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">{"a": 1, "b": 2}.pop("a")</code> بترجّع…</p>
+        <label><input type="radio"> "a"</label>
+        <label><input type="radio"> ("a", 1)</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> 1</label>
+      </div>
+    </div>
+
+@@append u10-l4
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>أصحاب مشتركين</div>
+      <p>بمجموعات: لاقي الأصحاب المشتركين، اللي عند علي بس، وكل الأصحاب. وبعدين استخدم tuple كمفتاح قاموس لإحداثيات.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+ali = {"منى", "سارة", "كريم", "يوسف"} ¦¦ أصحاب علي.
+mona = {"سارة", "يوسف", "هند"} ¦¦ أصحاب منى.
+print(sorted(ali & mona)) ¦¦ التقاطع: المشتركين (`sorted` لأن ترتيب المجموعة مش ثابت).
+print(sorted(ali - mona)) ¦¦ الفرق: عند علي بس.
+print(len(ali | mona)) ¦¦ الاتحاد من غير تكرار.
+cities = {(30.04, 31.24): "القاهرة", (31.20, 29.92): "الإسكندرية"} ¦¦ tuple ينفع مفتاح لأنه ثابت (قائمة ما تنفعش).
+lat, lon = 30.04, 31.24 ¦¦ إحداثيات.
+print(cities[(lat, lon)]) ¦¦ البحث بالـ tuple.
+      @end
+      @out
+['سارة', 'يوسف']
+['كريم', 'منى']
+5
+القاهرة
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">{}</code> لوحدها بتعمل…</p>
+        <label><input type="radio"> مجموعة فاضية</label>
+        <label><input type="radio"> قاموس فاضي — المجموعة الفاضية <code class="inl">set()</code></label>
+        <label><input type="radio"> tuple فاضي</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">(5)</code> نوعها…</p>
+        <label><input type="radio"> tuple</label>
+        <label><input type="radio"> list</label>
+        <label><input type="radio"> set</label>
+        <label><input type="radio"> int — الـ tuple محتاج فاصلة: <code class="inl">(5,)</code></label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">{[1, 2]: "x"}</code>؟</p>
+        <label><input type="radio"> TypeError: unhashable type: 'list'</label>
+        <label><input type="radio"> قاموس سليم</label>
+        <label><input type="radio"> مجموعة</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+    </div>
+
+@@append u14-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>عالج رد API من غير نت</div>
+      <p>عندك نص JSON راجع من API طقس (زي <code class="inl">response.text</code>) وكود حالة. ابني رابط الطلب، واقرا الرد بأمان.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import json ¦¦ لتحويل النص لقاموس (زي `response.json()`).
+from urllib.parse import urlencode ¦¦ بتبني الـ query string زي `params=` في requests.
+ ¦¦
+params = {"city": "القاهرة", "units": "metric"} ¦¦ معاملات الطلب.
+print("https://api.example.com/weather?" + urlencode(params)) ¦¦ العربي بيتحوّل لترميز آمن للروابط.
+status = 200 ¦¦ في الحقيقة: `response.status_code`.
+body = '{"city": "Cairo", "temp": 31.5, "tags": ["sunny", "dry"]}' ¦¦ في الحقيقة: `response.text`.
+if status == 200: ¦¦ نجاح؟
+    data = json.loads(body) ¦¦ نص ← قاموس.
+    print(data["city"], data["temp"]) ¦¦ مفاتيح أكيدة.
+    print(data.get("humidity", "غير متاحة")) ¦¦ مفتاح ممكن يغيب — `get` بدل KeyError.
+    print(", ".join(data["tags"])) ¦¦ قائمة جوّه الرد.
+else: ¦¦ أي كود تاني.
+    print("فشل الطلب:", status) ¦¦ رسالة.
+      @end
+      @out
+https://api.example.com/weather?city=%D8%A7%D9%84%D9%82%D8%A7%D9%87%D8%B1%D8%A9&units=metric
+Cairo 31.5
+غير متاحة
+sunny, dry
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. كود الحالة 404 معناه…</p>
+        <label><input type="radio"> نجاح</label>
+        <label><input type="radio"> خطأ في الخادم</label>
+        <label><input type="radio"> المورد مش موجود</label>
+        <label><input type="radio"> محتاج تسجيل دخول</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">response.raise_for_status()</code> بتعمل…</p>
+        <label><input type="radio"> بترمي HTTPError لو الكود 4xx أو 5xx</label>
+        <label><input type="radio"> بتطبع الكود</label>
+        <label><input type="radio"> بتعيد الطلب</label>
+        <label><input type="radio"> بترجّع True أو False</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. المكان الصح لمفتاح API…</p>
+        <label><input type="radio"> مكتوب في الكود</label>
+        <label><input type="radio"> متغيّر بيئة أو ملف .env مش مرفوع على GitHub</label>
+        <label><input type="radio"> في اسم الملف</label>
+        <label><input type="radio"> في تعليق</label>
+      </div>
+    </div>
+
+@@append u16-l5
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>TestCase كامل</div>
+      <p>اكتب كلاس اختبار لكلاس <code class="inl">Wallet</code> فيه <code class="inl">setUp</code> وتلات اختبارات، وشغّله برمجيًا واطبع ملخّص النتيجة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import io ¦¦ عشان نوجّه تقرير unittest لمكان مؤقّت.
+import unittest ¦¦ المكتبة المدمجة.
+ ¦¦
+class Wallet: ¦¦ الكود المختبَر.
+    def __init__(self): ¦¦ الإنشاء.
+        self.balance = 0 ¦¦ رصيد.
+    def deposit(self, amount): ¦¦ إيداع.
+        if amount <= 0: ¦¦ تحقّق.
+            raise ValueError("المبلغ لازم يكون موجب") ¦¦ خطأ.
+        self.balance += amount ¦¦ إضافة.
+ ¦¦
+class TestWallet(unittest.TestCase): ¦¦ كلاس الاختبارات.
+    def setUp(self): ¦¦ بيتنادى قبل **كل** اختبار ← محفظة جديدة.
+        self.w = Wallet() ¦¦ التجهيز.
+    def test_starts_empty(self): ¦¦ اختبار 1.
+        self.assertEqual(self.w.balance, 0) ¦¦ مساواة.
+    def test_deposit(self): ¦¦ اختبار 2.
+        self.w.deposit(50) ¦¦ فعل.
+        self.assertEqual(self.w.balance, 50) ¦¦ تأكيد.
+    def test_negative(self): ¦¦ اختبار 3.
+        with self.assertRaises(ValueError): ¦¦ لازم يرمي الخطأ.
+            self.w.deposit(-5) ¦¦ مبلغ غلط.
+ ¦¦
+suite = unittest.TestLoader().loadTestsFromTestCase(TestWallet) ¦¦ تجميع الاختبارات.
+result = unittest.TextTestRunner(stream=io.StringIO()).run(suite) ¦¦ تشغيل (التقرير النصّي في StringIO عشان فيه وقت بيتغيّر).
+print(result.testsRun, len(result.failures), len(result.errors)) ¦¦ عدد اللي اشتغل، والفاشل، والأخطاء.
+print(result.wasSuccessful()) ¦¦ الكل نجح؟
+      @end
+      @out
+3 0 0
+True
+      @end
+      <p>في مشروع حقيقي بتحط الكلاس في <code class="inl">test_wallet.py</code> وتشغّل <code class="inl">python -m unittest -v</code>.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">setUp</code> بتتنادى…</p>
+        <label><input type="radio"> مرّة واحدة للكلاس</label>
+        <label><input type="radio"> بعد كل اختبار</label>
+        <label><input type="radio"> يدويًا</label>
+        <label><input type="radio"> قبل كل اختبار</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. المكافئ لـ <code class="inl">assert x in items</code>…</p>
+        <label><input type="radio"> assertEqual</label>
+        <label><input type="radio"> assertIn</label>
+        <label><input type="radio"> assertTrue(items)</label>
+        <label><input type="radio"> assertIs</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. pytest تقدر تشغّل اختبارات unittest؟</p>
+        <label><input type="radio"> أيوه، من غير أي تعديل</label>
+        <label><input type="radio"> لأ</label>
+        <label><input type="radio"> بعد تحويلها يدويًا</label>
+        <label><input type="radio"> بس على لينكس</label>
+      </div>
+    </div>
+
+@@append u16-l6
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>توثيق بيختبر نفسه</div>
+      <p>اكتب دالة <code class="inl">initials</code> بأمثلة doctest (منها حالة حدّية)، وشغّل الأمثلة برمجيًا واطبع النتيجة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import doctest ¦¦ المكتبة.
+ ¦¦
+def initials(name): ¦¦ الدالة.
+    """ترجّع الحروف الأولى بحروف كبيرة. ¦¦ التوثيق.
+ ¦¦
+    >>> initials("ada lovelace") ¦¦ مثال: السطر بعد `>>>` بيتنفّذ…
+    'AL' ¦¦ …والسطر اللي بعده هو الناتج المتوقّع بالظبط (بصيغة repr).
+    >>> initials("  guido   van rossum ") ¦¦ مسافات زيادة.
+    'GVR' ¦¦ المتوقّع.
+    >>> initials("") ¦¦ حالة حدّية: نص فاضي.
+    '' ¦¦ المتوقّع.
+    """ ¦¦ نهاية التوثيق.
+    return "".join(part[0].upper() for part in name.split()) ¦¦ `split()` من غير وسيط بتتجاهل المسافات الزيادة.
+ ¦¦
+runner = doctest.DocTestRunner() ¦¦ المشغّل (بيطبع الفاشل بس).
+for test in doctest.DocTestFinder().find(initials, "initials", module=False, globs={"initials": initials}): ¦¦ استخراج الأمثلة من التوثيق.
+    runner.run(test) ¦¦ تشغيلها.
+print(runner.summarize(verbose=False)) ¦¦ (عدد الفاشل، عدد الأمثلة).
+      @end
+      @out
+TestResults(failed=0, attempted=3)
+      @end
+      <p>في ملف حقيقي أسهل: <code class="inl">python -m doctest my_module.py -v</code>.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. الدالة رجّعت <code class="inl">"AL"</code> والمتوقّع مكتوب <code class="inl">AL</code> من غير علامات تنصيص…</p>
+        <label><input type="radio"> ينجح</label>
+        <label><input type="radio"> يتخطّى</label>
+        <label><input type="radio"> يفشل — doctest بيقارن النص حرفيًا بصيغة repr</label>
+        <label><input type="radio"> خطأ تركيب</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. doctest أنسب لـ…</p>
+        <label><input type="radio"> أمثلة صغيرة بتوثّق الاستخدام وبتتأكّد إنها لسه صح</label>
+        <label><input type="radio"> اختبارات قاعدة بيانات معقّدة</label>
+        <label><input type="radio"> اختبار السرعة</label>
+        <label><input type="radio"> بديل كامل لـ pytest</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. ناتج فيه قاموس أو مجموعة في doctest…</p>
+        <label><input type="radio"> دايمًا آمن</label>
+        <label><input type="radio"> ممكن ترتيبه يفرق — الأفضل تقارنه بـ <code class="inl">== {...}</code> وتتوقّع True</label>
+        <label><input type="radio"> ممنوع</label>
+        <label><input type="radio"> بيتحوّل لقائمة</label>
+      </div>
+    </div>

@@ -1,0 +1,1481 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة السابعة عشرة · أسس علوم الحاسب</div>
+    <h2>من «كورس بايثون» إلى «كورس برمجة»: الاسترجاع والخوارزميات</h2>
+    <p>
+      لحد دلوقتي بتعرف تكتب كود <strong>شغّال</strong>. الوحدة دي بتعلّمك تكتب كود
+      <strong>كفء</strong>، وتفهم ليه حل بياخد ثانية وحل تاني بياخد ساعة لنفس المشكلة.
+      المفاهيم هنا مش خاصة ببايثون — هتنفعك في أي لغة وأي إنترفيو.
+    </p>
+  </div>
+
+  <!-- 17.1 -->
+  <article class="lesson" id="u17-l1">
+    <h3>الاسترجاع (Recursion): دالة بتنادي نفسها <span class="tag">درس 94 · جوهري</span></h3>
+    <p class="goal">الهدف: تفهم الاسترجاع وتربطه بالـ Call Stack اللي شرحناه في الوحدة صفر.</p>
+
+    <h4>1. الفكرة</h4>
+    <p>
+      الاسترجاع = حلّ مشكلة عن طريق حلّ <strong>نسخة أصغر من نفس المشكلة</strong>.
+      ولكل دالة استرجاعية جزئين إلزاميين:
+    </p>
+    <div class="diagram">
+<pre>  def countdown(n):
+      if n == 0:              ← [1] الحالة الأساسية (Base Case): إمتى نوقف
+          print("انطلق!")
+          return
+      print(n)
+      countdown(n - 1)        ← [2] الخطوة الاسترجاعية: نسخة أصغر من المشكلة</pre>
+      <div class="cap">الجزئين اللي من غيرهم الاسترجاع ينهار</div>
+    </div>
+    <div class="code"><pre>
+def countdown(n):
+    if n == 0:
+        print("انطلق!")
+        return
+    print(n)
+    countdown(n - 1)
+countdown(3)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>3
+2
+1
+انطلق!</pre></div>
+
+    <h4>2. المضروب: المثال الكلاسيكي</h4>
+    <div class="code"><pre>
+def factorial(n):
+    if n &lt;= 1:
+        return 1
+    return n * factorial(n - 1)
+print(factorial(5))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>120</pre></div>
+    <p>بيحصل إيه على الـ Call Stack؟</p>
+    <div class="diagram">
+<pre>  النزول (كل استدعاء بيحط إطار جديد):
+
+  factorial(5)  →  5 * factorial(4)            ┌────────────────┐
+                        4 * factorial(3)       │ factorial(1)=1 │ ← الحالة الأساسية
+                             3 * factorial(2)  ├────────────────┤
+                                  2 * factorial(1)  │ factorial(2)   │
+                                                    ├────────────────┤
+  الصعود (كل إطار بيرجّع ويتشال):                  │ factorial(3)   │
+                                                    ├────────────────┤
+  factorial(1) = 1                                  │ factorial(4)   │
+  factorial(2) = 2 * 1  = 2                         ├────────────────┤
+  factorial(3) = 3 * 2  = 6                         │ factorial(5)   │
+  factorial(4) = 4 * 6  = 24                        └────────────────┘
+  factorial(5) = 5 * 24 = 120                          الـ Call Stack</pre>
+      <div class="cap">الاسترجاع = تكويم إطارات ثم تفكيكها</div>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 دلوقتي الوحدة صفر اكتملت</div>
+      <p>
+        في درس Stack و Heap قلنا إن الدالة اللي بتنادي نفسها للأبد بترمي
+        <code class="inl">RecursionError</code>. <strong>ده بالظبط اللي بيحصل لو نسيت الحالة
+        الأساسية:</strong> الإطارات بتتكوّم لحد ما مساحة الـ Stack تخلص.
+      </p>
+    </div>
+    <div class="code"><pre>
+def broken(n):
+    return n * broken(n - 1)       # ❌ مفيش حالة أساسية
+import sys
+print(sys.getrecursionlimit())     # 1000 — الحد الافتراضي
+broken(5)                          # RecursionError: maximum recursion depth exceeded
+</pre></div>
+
+    <h4>3. الاسترجاع مقابل الحلقة</h4>
+    <div class="code"><pre>
+def sum_recursive(numbers):
+    if not numbers:
+        return 0
+    return numbers[0] + sum_recursive(numbers[1:])
+def sum_loop(numbers):
+    total = 0
+    for n in numbers:
+        total += n
+    return total
+print(sum_recursive([1, 2, 3, 4]))
+print(sum_loop([1, 2, 3, 4]))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>10
+10</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th></th><th>الحلقة</th><th>الاسترجاع</th></tr>
+        <tr><td>الذاكرة</td><td>ثابتة</td><td>إطار لكل استدعاء — ممكن يخلّص الـ Stack</td></tr>
+        <tr><td>السرعة في بايثون</td><td>أسرع</td><td>أبطأ (تكلفة الاستدعاء)</td></tr>
+        <tr><td>مناسب لـ</td><td>قوائم وعدّ خطّي</td><td><strong>البيانات المتداخلة</strong>: شجر، فولدرات، JSON، تقسيم المشكلة</td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 القاعدة العملية</div>
+      <p>
+        لو المشكلة <strong>خطّية</strong> (قائمة، عدّاد) استخدم حلقة. لو المشكلة
+        <strong>متداخلة</strong> (حاجة جوّاها حاجات من نفس نوعها) الاسترجاع بيبقى أوضح بكتير.
+      </p>
+    </div>
+
+    <h4>4. المكان اللي الاسترجاع بيلمع فيه: البيانات المتداخلة</h4>
+    <div class="code"><pre>
+def flatten(items):
+    result = []
+    for item in items:
+        if isinstance(item, list):
+            result.extend(flatten(item))
+        else:
+            result.append(item)
+    return result
+nested = [1, [2, 3], [4, [5, [6, 7]]], 8]
+print(flatten(nested))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 3, 4, 5, 6, 7, 8]</pre></div>
+    <p>
+      جرّب تحلّها بحلقات عادية — هتحتاج تعرف عمق التداخل مسبقًا. الاسترجاع بيتعامل مع
+      <strong>أي عمق</strong> لأن كل قائمة داخلية بتتعامل كأنها المشكلة الأصلية.
+    </p>
+    <div class="code"><pre>
+def count_keys(data):
+    """بتعدّ كل المفاتيح في JSON متداخل بأي عمق"""
+    if isinstance(data, dict):
+        return len(data) + sum(count_keys(v) for v in data.values())
+    if isinstance(data, list):
+        return sum(count_keys(v) for v in data)
+    return 0
+config = {
+    "app": {"name": "x", "version": 1},
+    "users": [{"id": 1, "roles": {"admin": True}}, {"id": 2}],
+}
+print(count_keys(config))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>8</pre></div>
+
+    <h4>5. فخّ الأداء: فيبوناتشي والتخزين المؤقّت</h4>
+    <div class="code"><pre>
+import time
+def fib(n):
+    if n &lt; 2:
+        return n
+    return fib(n - 1) + fib(n - 2)
+start = time.perf_counter()
+print(fib(32))
+print(f"الوقت: {time.perf_counter() - start:.2f} ثانية")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>2178309
+الوقت: 0.71 ثانية</pre></div>
+    <div class="diagram">
+<pre>                      fib(5)
+                  /           \
+             fib(4)           fib(3)        ← fib(3) اتحسبت هنا
+            /     \           /    \
+        fib(3)   fib(2)   fib(2)  fib(1)    ← واتحسبت تاني هنا!
+        /   \
+    fib(2) fib(1)   ...
+
+  نفس القيم بتتحسب مرّات ومرّات → الوقت بيتضاعف مع كل n</pre>
+      <div class="cap">شجرة الاستدعاءات فيها تكرار ضخم</div>
+    </div>
+    <div class="code"><pre>
+from functools import lru_cache
+import time
+@lru_cache(maxsize=None)
+def fib(n):
+    if n &lt; 2:
+        return n
+    return fib(n - 1) + fib(n - 2)
+start = time.perf_counter()
+print(fib(32))
+print(fib(300))
+print(f"الوقت: {time.perf_counter() - start:.5f} ثانية")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>2178309
+222232244629420445529739893461909967206666939096499764990979600
+الوقت: 0.00012 ثانية</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 من 0.71 ثانية لـ 0.0001 — بسطر واحد</div>
+      <p>
+        <code class="inl">@lru_cache</code> بيحفظ ناتج كل استدعاء، فلو نفس الوسيط اتطلب تاني
+        بيرجّع الناتج المحفوظ من غير حساب. التقنية دي اسمها <strong>Memoization</strong>،
+        وهي أساس مجال كامل اسمه <em>Dynamic Programming</em>.
+      </p>
+      <p>
+        ولاحظ <code class="inl">fib(300)</code> — رقم من 63 خانة. بايثون بتتعامل مع الأعداد
+        الصحيحة <strong>بدقّة لا نهائية</strong>، بعكس أغلب اللغات اللي بتقف عند 19 خانة.
+      </p>
+    </div>
+    <!-- APPEND:u17-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تلات دوال استرجاعية</div>
+      <p>مجموع أرقام عدد، عكس نص، وأس — كل واحدة بحالة أساس وخطوة بتصغّر المشكلة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def digit_sum(n):
+    if n &lt; 10:
+        return n
+    return n % 10 + digit_sum(n // 10)
+def reverse(s):
+    if len(s) &lt;= 1:
+        return s
+    return reverse(s[1:]) + s[0]
+def power(base, exp):
+    if exp == 0:
+        return 1
+    return base * power(base, exp - 1)
+print(digit_sum(2026))
+print(reverse("بايثون"))
+print(power(2, 10))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>10
+نوثياب
+1024</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. دالة استرجاعية من غير حالة أساس…</p>
+        <label><input type="radio"> بترجّع None</label>
+        <label><input type="radio"> بتشتغل مرّة</label>
+        <label><input type="radio"> RecursionError</label>
+        <label><input type="radio"> حلقة لا نهائية من غير خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">def f(n): return 0 if n == 0 else n + f(n - 1)</code> — <code class="inl">f(4)</code>؟</p>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 24</label>
+        <label><input type="radio"> 0</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. الحدّ الافتراضي لعمق الاسترجاع في بايثون تقريبًا…</p>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> مفيش حدّ</label>
+        <label><input type="radio"> مليون</label>
+        <label><input type="radio"> 1000</label>
+      </div>
+    </div>
+    <!-- /APPEND:u17-l1 -->
+              <!-- SUM:u17-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>دالة استرجاعية = حالة أساسية + نداء على مشكلة أصغر.</li><li>من غير حالة أساسية ← <code class="inl">RecursionError</code>.</li><li>بتلمع مع البيانات المتداخلة، و <code class="inl">lru_cache</code> بيحلّ التكرار.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 17.2 -->
+  <article class="lesson" id="u17-l2">
+    <h3>تعقيد الخوارزميات: Big-O <span class="tag">درس 95</span></h3>
+    <p class="goal">الهدف: تقدر تقول «الحل ده هيتحمّل مليون عنصر ولا لأ» قبل ما تشغّله.</p>
+
+    <h4>1. السؤال الحقيقي</h4>
+    <p>
+      مش «الكود بياخد كام ثانية؟» — ده بيتغيّر حسب الجهاز. السؤال هو:
+      <strong>«لو البيانات اتضاعفت، الوقت هيعمل إيه؟»</strong>
+    </p>
+    <div class="code"><pre>
+import time
+def measure(func, data):
+    start = time.perf_counter()
+    func(data)
+    return time.perf_counter() - start
+def find_in_list(data):
+    return (len(data) - 1) in data         # بيدوّر عنصر عنصر
+for size in [10_000, 100_000, 1_000_000]:
+    data = list(range(size))
+    t_list = measure(find_in_list, data)
+    print(f"{size:&gt;9,} عنصر → قائمة: {t_list*1000:7.3f} ms")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>   10,000 عنصر → قائمة:   0.071 ms
+  100,000 عنصر → قائمة:   0.720 ms
+1,000,000 عنصر → قائمة:   7.390 ms</pre></div>
+    <p>البيانات اتضربت في 10 → الوقت اتضرب في 10 تقريبًا. ده اسمه <strong>O(n)</strong>.</p>
+
+    <h4>2. الفئات الأساسية</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الرمز</th><th>الاسم</th><th>لو البيانات ×10</th><th>مثال في بايثون</th></tr>
+        <tr><td><code class="inl">O(1)</code></td><td>ثابت</td><td>الوقت ما بيتغيّرش</td><td><code class="inl">d[key]</code>، <code class="inl">x in set</code>، <code class="inl">lst[i]</code>، <code class="inl">append</code></td></tr>
+        <tr><td><code class="inl">O(log n)</code></td><td>لوغاريتمي</td><td>+ خطوة واحدة تقريبًا</td><td>البحث الثنائي</td></tr>
+        <tr><td><code class="inl">O(n)</code></td><td>خطّي</td><td>×10</td><td><code class="inl">x in list</code>، <code class="inl">sum()</code>، حلقة واحدة</td></tr>
+        <tr><td><code class="inl">O(n log n)</code></td><td>—</td><td>×13 تقريبًا</td><td><code class="inl">sorted()</code>، <code class="inl">.sort()</code></td></tr>
+        <tr><td><code class="inl">O(n²)</code></td><td>تربيعي</td><td>×100</td><td>حلقة جوّه حلقة على نفس البيانات</td></tr>
+        <tr><td><code class="inl">O(2ⁿ)</code></td><td>أُسّي</td><td>كارثة</td><td>فيبوناتشي من غير cache</td></tr>
+      </table>
+    </div>
+    <div class="diagram">
+<pre>  الوقت
+    │                                              O(2ⁿ)  O(n²)
+    │                                             ╱       ╱
+    │                                           ╱       ╱
+    │                                         ╱      ╱
+    │                                       ╱     ╱
+    │                                    ╱    ╱           O(n log n)
+    │                                 ╱   ╱       ___---‾‾‾
+    │                             ╱  ╱ ___---‾‾‾‾              O(n)
+    │                        ╱ ╱---‾‾‾         ______-----‾‾‾‾‾
+    │                  ___---‾‾   ______----‾‾‾‾
+    │          ___---‾‾‾ ___---‾‾‾                      O(log n)
+    │   ___--‾‾____---‾‾‾ ______________________________________
+    │‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾‾  O(1)
+    └────────────────────────────────────────────────────────── حجم البيانات</pre>
+      <div class="cap">الفرق بيبان مع البيانات الكبيرة</div>
+    </div>
+
+    <h4>3. قراءة التعقيد من الكود</h4>
+    <div class="code"><pre>
+def get_first(items):               # O(1) — عملية واحدة مهما كان الحجم
+    return items[0]
+def total(items):                   # O(n) — حلقة واحدة
+    s = 0
+    for x in items:
+        s += x
+    return s
+def has_duplicate_slow(items):      # O(n²) — حلقة جوّه حلقة
+    for i in range(len(items)):
+        for j in range(i + 1, len(items)):
+            if items[i] == items[j]:
+                return True
+    return False
+def has_duplicate_fast(items):      # O(n) — حلقة واحدة + set
+    seen = set()
+    for x in items:
+        if x in seen:               # O(1) في الـ set
+            return True
+        seen.add(x)
+    return False
+</pre></div>
+
+    <h4>4. الفرق الحقيقي بالأرقام</h4>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">has_duplicate_slow</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+import time
+import random
+data = random.sample(range(10_000_000), 5_000)      # 5 آلاف رقم مختلف
+start = time.perf_counter()
+has_duplicate_slow(data)
+slow = time.perf_counter() - start
+start = time.perf_counter()
+has_duplicate_fast(data)
+fast = time.perf_counter() - start
+print(f"البطيء O(n²): {slow:.2f} ثانية")
+print(f"السريع O(n) : {fast:.4f} ثانية")
+print(f"أسرع بـ {slow / fast:,.0f} مرّة")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>البطيء O(n²): 0.52 ثانية
+السريع O(n) : 0.0008 ثانية
+أسرع بـ 687 مرّة</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 ده اللي كان ورا جملة «القاموس أسرع» في الوحدة 10</div>
+      <p>
+        قلنا هناك إن <code class="inl">x in dict</code> و<code class="inl">x in set</code>
+        سرعتهم <code class="inl">O(1)</code> و<code class="inl">x in list</code> سرعتها
+        <code class="inl">O(n)</code>. <strong>الفرق ده حوّل برنامج بياخد نص ثانية لبرنامج
+        بياخد أقل من مللي ثانية (ومع 20 ألف رقم: 12 ثانية مقابل 2 مللي)</strong> — من غير أي تغيير في المنطق، مجرد اختيار هيكل بيانات صح.
+      </p>
+    </div>
+
+    <h4>5. جدول تعقيد العمليات الشائعة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>العملية</th><th>list</th><th>dict / set</th></tr>
+        <tr><td>الوصول بفهرس / مفتاح</td><td><code class="inl">O(1)</code></td><td><code class="inl">O(1)</code></td></tr>
+        <tr><td><code class="inl">x in ...</code></td><td><code class="inl">O(n)</code> ⚠️</td><td><code class="inl">O(1)</code> ✅</td></tr>
+        <tr><td>إضافة في الآخر</td><td><code class="inl">O(1)</code></td><td><code class="inl">O(1)</code></td></tr>
+        <tr><td>إضافة/حذف في الأول</td><td><code class="inl">O(n)</code> ⚠️</td><td>—</td></tr>
+        <tr><td><code class="inl">pop()</code> من الآخر</td><td><code class="inl">O(1)</code></td><td>—</td></tr>
+        <tr><td><code class="inl">pop(0)</code> من الأول</td><td><code class="inl">O(n)</code> ⚠️</td><td>—</td></tr>
+        <tr><td>حذف بمفتاح</td><td><code class="inl">O(n)</code></td><td><code class="inl">O(1)</code></td></tr>
+        <tr><td>الترتيب</td><td><code class="inl">O(n log n)</code></td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ ما تحسّنش قبل ما تقيس</div>
+      <p>
+        مع 100 عنصر، <code class="inl">O(n²)</code> و<code class="inl">O(n)</code> الفرق بينهم
+        مش محسوس. <strong>اكتب الكود الواضح الأول</strong>، وفكّر في التعقيد لما البيانات
+        تكبر أو لما تلاحظ بطء فعلي. «التحسين المبكّر أصل كل الشرور» — دونالد كنوث.
+      </p>
+    </div>
+    <!-- APPEND:u17-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>عدّ الخطوات</div>
+      <p>اعدّ عدد عمليات المقارنة في حلقة واحدة وحلقتين متداخلتين لما n تتضاعف — وشوف O(n) و O(n²) بعينك.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def linear_ops(n):
+    ops = 0
+    for i in range(n):
+        ops += 1
+    return ops
+def pairs_ops(n):
+    ops = 0
+    for i in range(n):
+        for j in range(n):
+            ops += 1
+    return ops
+for n in [10, 20, 40]:
+    print(n, linear_ops(n), pairs_ops(n))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>10 10 100
+20 20 400
+40 40 1600</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">x in my_set</code> تعقيدها…</p>
+        <label><input type="radio"> O(n)</label>
+        <label><input type="radio"> O(1) في المتوسّط</label>
+        <label><input type="radio"> O(n²)</label>
+        <label><input type="radio"> O(log n)</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">x in my_list</code> تعقيدها…</p>
+        <label><input type="radio"> O(1)</label>
+        <label><input type="radio"> O(log n)</label>
+        <label><input type="radio"> O(n²)</label>
+        <label><input type="radio"> O(n)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. خوارزمية بتقسم المشكلة نصّين كل خطوة…</p>
+        <label><input type="radio"> O(log n)</label>
+        <label><input type="radio"> O(n)</label>
+        <label><input type="radio"> O(2ⁿ)</label>
+        <label><input type="radio"> O(1)</label>
+      </div>
+    </div>
+    <!-- /APPEND:u17-l2 -->
+              <!-- SUM:u17-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>Big-O بيقيس النمو مع حجم البيانات.</li><li>O(1) &lt; O(log n) &lt; O(n) &lt; O(n log n) &lt; O(n²).</li><li><code class="inl">in</code> على set O(1) وعلى list O(n).</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 17.3 -->
+  <article class="lesson" id="u17-l3">
+    <h3>البحث: الخطّي والثنائي <span class="tag">درس 96</span></h3>
+    <p class="goal">الهدف: تفهم ليه لعبة تخمين الرقم بتخلص في 7 محاولات — وتطبّقها على البيانات.</p>
+
+    <h4>1. البحث الخطّي — O(n)</h4>
+    <div class="code"><pre>
+def linear_search(items, target):
+    for i, item in enumerate(items):
+        if item == target:
+            return i
+    return -1
+names = ["سارة", "أحمد", "منى", "علي", "خالد"]
+print(linear_search(names, "علي"))
+print(linear_search(names, "رنا"))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>3
+-1</pre></div>
+    <p>بيشتغل على <strong>أي</strong> قائمة، مرتّبة أو لأ. بس في أسوأ حالة بيفحص كل العناصر.</p>
+
+    <h4>2. البحث الثنائي — O(log n)</h4>
+    <p>
+      افتكر لعبة التخمين في الوحدة 8: «خمّن من 1 لـ 100» والنصيحة كانت
+      «ابدأ بـ 50، ولو قال أعلى جرّب 75…». ده هو البحث الثنائي.
+      <strong>شرطه الوحيد: القائمة لازم تكون مرتّبة.</strong>
+    </p>
+    <div class="code"><pre>
+def binary_search(items, target):
+    low = 0
+    high = len(items) - 1
+    steps = 0
+    while low &lt;= high:
+        steps += 1
+        mid = (low + high) // 2
+        if items[mid] == target:
+            return mid, steps
+        elif items[mid] &lt; target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1, steps
+numbers = list(range(0, 1_000_000, 2))      # 500 ألف رقم زوجي مرتّب
+print(binary_search(numbers, 777_776))
+print(binary_search(numbers, 777_777))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>(388888, 18)
+(-1, 19)</pre></div>
+    <div class="diagram">
+<pre>  البحث عن 23 في [2, 5, 8, 12, 16, 23, 38, 56, 72, 91]
+
+  خطوة 1:  [2  5  8  12  16  23  38  56  72  91]
+                          ▲ mid=16 &lt; 23  → روح لليمين
+  خطوة 2:                    [23  38  56  72  91]
+                                   ▲ mid=56 &gt; 23  → روح للشمال
+  خطوة 3:                    [23  38]
+                               ▲ mid=23 = 23  → لقيناه ✅
+
+  كل خطوة بتشيل نص البيانات</pre>
+      <div class="cap">3 خطوات بدل 6</div>
+    </div>
+
+    <h4>3. ليه الفرق ضخم لهذه الدرجة؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>عدد العناصر</th><th>البحث الخطّي (أسوأ حالة)</th><th>البحث الثنائي (أسوأ حالة)</th></tr>
+        <tr><td>100</td><td>100 خطوة</td><td>7 خطوات</td></tr>
+        <tr><td>1,000</td><td>1,000</td><td>10</td></tr>
+        <tr><td>1,000,000</td><td>1,000,000</td><td>20</td></tr>
+        <tr><td>1,000,000,000</td><td>مليار</td><td><strong>30</strong></td></tr>
+      </table>
+    </div>
+    <p>
+      <strong>مليار عنصر في 30 خطوة.</strong> لأن كل خطوة بتقسم على 2، وعدد مرّات قسمة
+      المليار على 2 لحد ما يوصل لـ 1 هو 30 — ده معنى <code class="inl">log₂ n</code>.
+    </p>
+
+    <h4>4. في الشغل الحقيقي: مكتبة <code>bisect</code></h4>
+    <div class="code"><pre>
+import bisect
+scores = [45, 60, 72, 85, 93]
+pos = bisect.bisect_left(scores, 85)
+print(pos)                                  # 3 — مكانه في القائمة
+bisect.insort(scores, 78)                   # إضافة مع الحفاظ على الترتيب
+print(scores)
+def grade(score):
+    limits = [60, 70, 80, 90]
+    letters = ["F", "D", "C", "B", "A"]
+    return letters[bisect.bisect_right(limits, score)]
+print([grade(s) for s in [55, 60, 75, 89, 95]])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>3
+[45, 60, 72, 78, 85, 93]
+['F', 'D', 'C', 'B', 'A']</pre></div>
+    <p>
+      دالة <code class="inl">grade</code> دي بديل أنيق جدًا لسلسلة <code class="inl">if/elif</code>
+      بتاعة التقديرات في الوحدة 4 — وبتشتغل بـ <code class="inl">O(log n)</code>.
+    </p>
+    <!-- APPEND:u17-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>أول ظهور</div>
+      <p>عدّل البحث الثنائي بحيث يرجّع مكان <strong>أول</strong> ظهور لرقم متكرّر، وقارن بـ <code class="inl">bisect</code> المدمجة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import bisect
+def first_index(items, target):
+    low, high = 0, len(items) - 1
+    answer = -1
+    while low &lt;= high:
+        mid = (low + high) // 2
+        if items[mid] == target:
+            answer = mid
+            high = mid - 1
+        elif items[mid] &lt; target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return answer
+data = [1, 3, 3, 3, 5, 8, 8, 9]
+print(first_index(data, 3), first_index(data, 8), first_index(data, 4))
+print(bisect.bisect_left(data, 3), bisect.bisect_left(data, 8))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>1 5 -1
+1 5</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. شرط البحث الثنائي…</p>
+        <label><input type="radio"> القائمة فيها أرقام بس</label>
+        <label><input type="radio"> القائمة صغيرة</label>
+        <label><input type="radio"> القائمة مرتّبة</label>
+        <label><input type="radio"> مفيش تكرار</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. قائمة مليون عنصر — البحث الثنائي محتاج تقريبًا كام مقارنة؟</p>
+        <label><input type="radio"> 20</label>
+        <label><input type="radio"> 1000</label>
+        <label><input type="radio"> 500000</label>
+        <label><input type="radio"> مليون</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. قائمة 10 عناصر غير مرتّبة وهتبحث مرّة واحدة — الأنسب؟</p>
+        <label><input type="radio"> ترتّب وبعدين ثنائي</label>
+        <label><input type="radio"> مستحيل</label>
+        <label><input type="radio"> ثنائي على طول</label>
+        <label><input type="radio"> البحث الخطّي (أو in)</label>
+      </div>
+    </div>
+    <!-- /APPEND:u17-l3 -->
+              <!-- SUM:u17-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>البحث الخطّي O(n) على أي قائمة.</li><li>البحث الثنائي O(log n) — بس للقوائم المرتّبة.</li><li><code class="inl">bisect</code> جاهزة للبحث والإدراج في قائمة مرتّبة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 17.4 -->
+  <article class="lesson" id="u17-l4">
+    <h3>الترتيب: إزاي sort بتشتغل من جوّه <span class="tag">درس 97</span></h3>
+    <p class="goal">الهدف: تكتب خوارزميات ترتيب بإيدك — مش عشان تستخدمها، عشان تفهم إن <code>sort()</code> مش سحر.</p>
+
+    <h4>1. ترتيب الفقاعة (Bubble Sort) — O(n²)</h4>
+    <div class="code"><pre>
+def bubble_sort(items):
+    items = items.copy()
+    n = len(items)
+    for i in range(n):
+        swapped = False
+        for j in range(n - 1 - i):
+            if items[j] &gt; items[j + 1]:
+                items[j], items[j + 1] = items[j + 1], items[j]
+                swapped = True
+        if not swapped:
+            break
+    return items
+print(bubble_sort([5, 2, 9, 1, 7]))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 5, 7, 9]</pre></div>
+    <div class="diagram">
+<pre>  الدورة 1:  [5 2 9 1 7] → [2 5 9 1 7] → [2 5 9 1 7] → [2 5 1 9 7] → [2 5 1 7 9]
+                                                                           ▲ الأكبر "طفا" للآخر
+  الدورة 2:  [2 5 1 7 9] → [2 1 5 7 9]
+                                    ▲ تاني أكبر في مكانه
+  الدورة 3:  [1 2 5 7 9]  — مفيش تبديل → وقفنا بدري</pre>
+      <div class="cap">كل دورة بتطفّي أكبر عنصر لآخر القائمة</div>
+    </div>
+
+    <h4>2. ترتيب الاختيار (Selection Sort) — O(n²)</h4>
+    <div class="code"><pre>
+def selection_sort(items):
+    items = items.copy()
+    n = len(items)
+    for i in range(n):
+        smallest = i
+        for j in range(i + 1, n):
+            if items[j] &lt; items[smallest]:
+                smallest = j
+        items[i], items[smallest] = items[smallest], items[i]
+    return items
+print(selection_sort([64, 25, 12, 22, 11]))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[11, 12, 22, 25, 64]</pre></div>
+    <p>الفكرة: دوّر على الأصغر وحطّه في الأول، وبعدين دوّر على الأصغر في الباقي، وهكذا.</p>
+
+    <h4>3. ترتيب الدمج (Merge Sort) — O(n log n)</h4>
+    <div class="code"><pre>
+def merge_sort(items):
+    if len(items) &lt;= 1:
+        return items
+    mid = len(items) // 2
+    left = merge_sort(items[:mid])
+    right = merge_sort(items[mid:])
+    merged = []
+    i = j = 0
+    while i &lt; len(left) and j &lt; len(right):
+        if left[i] &lt;= right[j]:
+            merged.append(left[i])
+            i += 1
+        else:
+            merged.append(right[j])
+            j += 1
+    merged.extend(left[i:])
+    merged.extend(right[j:])
+    return merged
+print(merge_sort([38, 27, 43, 3, 9, 82, 10]))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[3, 9, 10, 27, 38, 43, 82]</pre></div>
+    <div class="diagram">
+<pre>                 [38 27 43 3 9 82 10]
+                  /                 \
+          [38 27 43]            [3 9 82 10]         ← قسّم (استرجاع)
+           /     \               /       \
+        [38]   [27 43]       [3 9]     [82 10]
+                /   \         / \       /   \
+              [27] [43]     [3] [9]  [82]  [10]     ← الحالة الأساسية
+                \   /         \ /       \   /
+               [27 43]       [3 9]     [10 82]      ← ادمج
+           \     /               \       /
+         [27 38 43]            [3 9 10 82]
+                  \                 /
+                 [3 9 10 27 38 43 82]</pre>
+      <div class="cap">«فرّق تسد» — تطبيق مباشر للاسترجاع من الدرس 94</div>
+    </div>
+
+    <h4>4. المقارنة بالأرقام</h4>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">bubble_sort</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+import random
+import time
+data = [random.randint(0, 100_000) for _ in range(5_000)]
+for name, func in [("Bubble", bubble_sort), ("Selection", selection_sort),
+                   ("Merge", merge_sort), ("sorted()", sorted)]:
+    start = time.perf_counter()
+    result = func(data)
+    elapsed = time.perf_counter() - start
+    assert result == sorted(data)
+    print(f"{name:10} {elapsed:8.4f} ثانية")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Bubble       2.1843 ثانية
+Selection    0.9712 ثانية
+Merge        0.0141 ثانية
+sorted()     0.0004 ثانية</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 ليه <code>sorted()</code> أسرع من Merge Sort بتاعتنا بـ 35 مرّة؟</div>
+      <ul>
+        <li>مكتوبة بلغة <strong>C</strong> مش بايثون (فاكر الوحدة صفر؟ اللغات منخفضة المستوى أسرع).</li>
+        <li>بتستخدم خوارزمية اسمها <strong>Timsort</strong> — مزيج ذكي بين Merge و Insertion بيستغل الأجزاء المرتّبة أصلًا في البيانات الحقيقية.</li>
+      </ul>
+      <p>
+        <strong>الدرس:</strong> في الشغل الحقيقي استخدم <code class="inl">sorted()</code> دايمًا.
+        كتابة خوارزمية بنفسك هدفها <em>الفهم</em> — وده اللي بيخلّيك تفهم ليه
+        <code class="inl">O(n²)</code> بياخد ثانيتين و<code class="inl">O(n log n)</code> بياخد جزء من الثانية.
+      </p>
+    </div>
+    <p>
+      ولاحظ <code class="inl">assert result == sorted(data)</code> جوّه الحلقة — <strong>اختبار
+      من الوحدة 16</strong> بيتأكّد إن كل خوارزمية طلّعت ناتج صحيح قبل ما نصدّق توقيتها.
+    </p>
+    <!-- APPEND:u17-l4 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>ترتيب بالإدراج</div>
+      <p>نفّذ Insertion Sort (زي ما بترتّب كروت في إيدك) وقارنه بـ <code class="inl">sorted</code>، وبعدين رتّب طلاب بمفتاحين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def insertion_sort(items):
+    items = items[:]
+    for i in range(1, len(items)):
+        current = items[i]
+        j = i - 1
+        while j &gt;= 0 and items[j] &gt; current:
+            items[j + 1] = items[j]
+            j -= 1
+        items[j + 1] = current
+    return items
+nums = [5, 2, 9, 1, 5]
+print(insertion_sort(nums), insertion_sort(nums) == sorted(nums))
+students = [("منى", 90), ("علي", 85), ("سارة", 90)]
+print(sorted(students, key=lambda s: (-s[1], s[0])))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 5, 5, 9] True
+[('سارة', 90), ('منى', 90), ('علي', 85)]</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. تعقيد <code class="inl">sorted</code> في بايثون (Timsort)…</p>
+        <label><input type="radio"> O(n²)</label>
+        <label><input type="radio"> O(n log n)</label>
+        <label><input type="radio"> O(n)</label>
+        <label><input type="radio"> O(1)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. الترتيب «المستقر» (stable) معناه…</p>
+        <label><input type="radio"> العناصر المتساوية بتفضل بترتيبها الأصلي</label>
+        <label><input type="radio"> مابيقعش</label>
+        <label><input type="radio"> بيرتّب الأرقام بس</label>
+        <label><input type="radio"> سرعته ثابتة</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. في الواقع العملي، ترتّب إزاي؟</p>
+        <label><input type="radio"> تكتب Bubble Sort</label>
+        <label><input type="radio"> تكتب Insertion Sort</label>
+        <label><input type="radio"> sorted أو list.sort مع key</label>
+        <label><input type="radio"> مكتبة خارجية دايمًا</label>
+      </div>
+    </div>
+    <!-- /APPEND:u17-l4 -->
+              <!-- SUM:u17-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>Bubble و Selection من O(n²) — للتعلّم.</li><li>Merge Sort من O(n log n) بمبدأ فرّق تسد.</li><li><code class="inl">sorted</code> الجاهزة (Timsort) أسرع من أي حاجة هتكتبها.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 17.5 -->
+  <article class="lesson" id="u17-l5">
+    <h3>المكدّس والطابور (Stack و Queue) <span class="tag">درس 98</span></h3>
+    <p class="goal">الهدف: هيكلين بيانات أساسيين موجودين في كل برنامج — من زرار «تراجع» لطابور الطباعة.</p>
+
+    <h4>1. المكدّس (Stack): آخر داخل أول خارج — LIFO</h4>
+    <div class="diagram">
+<pre>   push("أ")   push("ب")   push("ج")    pop() → "ج"   pop() → "ب"
+
+                            ┌─────┐
+                ┌─────┐     │  ج  │ ← top
+    ┌─────┐     │  ب  │     ├─────┤      ┌─────┐
+    │  أ  │     ├─────┤     │  ب  │      │  ب  │      ┌─────┐
+    └─────┘     │  أ  │     ├─────┤      ├─────┤      │  أ  │
+                └─────┘     │  أ  │      │  أ  │      └─────┘
+                            └─────┘      └─────┘</pre>
+      <div class="cap">زي كومة الأطباق: بتاخد من فوق دايمًا</div>
+    </div>
+    <div class="code"><pre>
+stack = []
+stack.append("أ")      # push — O(1)
+stack.append("ب")
+stack.append("ج")
+print(stack)
+print(stack.pop())     # pop — O(1)
+print(stack.pop())
+print(stack[-1])       # peek: شوف اللي فوق من غير ما تشيله
+print(len(stack))
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>['أ', 'ب', 'ج']
+ج
+ب
+أ
+1</pre></div>
+    <p>
+      القائمة العادية <strong>هي</strong> مكدّس ممتاز لأن <code class="inl">append</code> و
+      <code class="inl">pop()</code> الاتنين <code class="inl">O(1)</code>. وده اللي بيحصل
+      في الـ <strong>Call Stack</strong> بالظبط: آخر دالة اتنادت هي أول واحدة بتخلص.
+    </p>
+
+    <h4>2. تطبيق: زرار تراجع (Undo)</h4>
+    <div class="code" data-file="editor.py"><pre>
+class Editor:
+    def __init__(self):
+        self.text = ""
+        self._history = []
+    def write(self, words):
+        self._history.append(self.text)
+        self.text += words
+    def undo(self):
+        if not self._history:
+            print("مفيش حاجة تتراجع عنها")
+            return
+        self.text = self._history.pop()
+e = Editor()
+e.write("أهلًا ")
+e.write("بالعالم ")
+e.write("الجميل")
+print(e.text)
+e.undo()
+print(e.text)
+e.undo()
+print(e.text)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>أهلًا بالعالم الجميل
+أهلًا بالعالم
+أهلًا </pre></div>
+
+    <h4>3. الطابور (Queue): أول داخل أول خارج — FIFO</h4>
+    <div class="diagram">
+<pre>   الدخول ──►  [ د | ج | ب | أ ]  ──► الخروج
+                                ▲
+                          أول واحد وصل هو أول واحد يمشي
+
+   زي طابور البنك</pre>
+      <div class="cap">الطابور</div>
+    </div>
+    <div class="box err">
+      <div class="bt">💥 ما تستخدمش القائمة كطابور</div>
+      <div class="code"><pre>
+queue = ["أ", "ب", "ج"]
+queue.pop(0)                 # ❌ O(n) — كل العناصر بتتزحزح خطوة لقدّام
+</pre></div>
+      <p>مع مليون عنصر، كل <code class="inl">pop(0)</code> بتحرّك مليون عنصر في الذاكرة.</p>
+    </div>
+    <div class="code"><pre>
+from collections import deque
+queue = deque()
+queue.append("عميل 1")       # الدخول من الآخر — O(1)
+queue.append("عميل 2")
+queue.append("عميل 3")
+print(queue)
+print(queue.popleft())       # الخروج من الأول — O(1) ✅
+print(queue.popleft())
+print(queue)
+print(len(queue))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>deque(['عميل 1', 'عميل 2', 'عميل 3'])
+عميل 1
+عميل 2
+deque(['عميل 3'])
+1</pre></div>
+    <p>
+      <code class="inl">deque</code> (تنطق «ديك» واختصار double-ended queue) مصمّمة
+      للإضافة والحذف من الطرفين بـ <code class="inl">O(1)</code>.
+    </p>
+
+    <h4>4. ميزة إضافية: الطابور محدود الطول</h4>
+    <div class="code"><pre>
+from collections import deque
+recent = deque(maxlen=3)
+for page in ["الرئيسية", "المنتجات", "السلة", "الدفع", "التأكيد"]:
+    recent.append(page)
+    print(list(recent))
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>['الرئيسية']
+['الرئيسية', 'المنتجات']
+['الرئيسية', 'المنتجات', 'السلة']
+['المنتجات', 'السلة', 'الدفع']
+['السلة', 'الدفع', 'التأكيد']</pre></div>
+    <p>
+      لما يتملي، العنصر الأقدم بيتشال تلقائيًا. مثالي لـ «آخر 10 عمليات» أو
+      «آخر 100 سطر في السجل».
+    </p>
+
+    <h4>5. ملخّص</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th></th><th>المكدّس (Stack)</th><th>الطابور (Queue)</th></tr>
+        <tr><td>القاعدة</td><td>LIFO — آخر داخل أول خارج</td><td>FIFO — أول داخل أول خارج</td></tr>
+        <tr><td>في بايثون</td><td><code class="inl">list</code>: <code class="inl">append</code> / <code class="inl">pop()</code></td><td><code class="inl">deque</code>: <code class="inl">append</code> / <code class="inl">popleft()</code></td></tr>
+        <tr><td>أمثلة</td><td>تراجع، الـ Call Stack، زرار «رجوع» في المتصفّح، التحقّق من الأقواس</td><td>طابور طباعة، طلبات خادم، مهام بالترتيب</td></tr>
+      </table>
+    </div>
+    <!-- APPEND:u17-l5 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>الأقواس المتوازنة + طابور طباعة</div>
+      <p>استخدم مكدّس عشان تتأكّد إن الأقواس متوازنة، وطابور <code class="inl">deque</code> لمحاكاة طابور طباعة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+from collections import deque
+def balanced(text):
+    pairs = {")": "(", "]": "[", "}": "{"}
+    stack = []
+    for ch in text:
+        if ch in "([{":
+            stack.append(ch)
+        elif ch in pairs:
+            if not stack or stack.pop() != pairs[ch]:
+                return False
+    return not stack
+for t in ["(a[b]{c})", "(]", "((x)"]:
+    print(t, balanced(t))
+printer = deque(["تقرير", "فاتورة"])
+printer.append("صورة")
+while printer:
+    print("طباعة:", printer.popleft())
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>(a[b]{c}) True
+(] False
+((x) False
+طباعة: تقرير
+طباعة: فاتورة
+طباعة: صورة</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. زرار «تراجع» (Undo) في برنامج بيستخدم…</p>
+        <label><input type="radio"> طابور</label>
+        <label><input type="radio"> قاموس</label>
+        <label><input type="radio"> مجموعة</label>
+        <label><input type="radio"> مكدّس</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ليه <code class="inl">deque</code> بدل <code class="inl">list.pop(0)</code>؟</p>
+        <label><input type="radio"> pop(0) بتزحلق كل العناصر O(n)، و popleft هي O(1)</label>
+        <label><input type="radio"> list ما بتقبلش pop(0)</label>
+        <label><input type="radio"> deque أصغر دايمًا</label>
+        <label><input type="radio"> مفيش فرق</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. push 1 ثم 2 ثم 3 على مكدّس، ثم pop — الناتج؟</p>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> [1, 2]</label>
+      </div>
+    </div>
+    <!-- /APPEND:u17-l5 -->
+              <!-- SUM:u17-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>المكدّس LIFO: <code class="inl">append</code> و <code class="inl">pop</code> — للتراجع والأقواس.</li><li>الطابور FIFO: <code class="inl">deque</code> مع <code class="inl">popleft</code> — مش <code class="inl">pop(0)</code>.</li><li><code class="inl">deque(maxlen=n)</code> بتحتفظ بآخر n عناصر.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 17.P1 -->
+  <article class="lesson project" id="u17-p1">
+    <h3>مشروع 32: مدقّق الأقواس ومستكشف الفولدرات <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: مشكلتين كلاسيكيتين — واحدة حلّها المكدّس، والتانية حلّها الاسترجاع.</p>
+
+    <h4>الجزء 1: مدقّق الأقواس بالمكدّس</h4>
+    <p>كل محرّر كود في الدنيا بيعمل الفحص ده: هل الأقواس متوازنة؟</p>
+    <div class="code" data-file="brackets.py"><pre>
+PAIRS = {")": "(", "]": "[", "}": "{"}
+def check_brackets(text):
+    """بترجّع (True, None) لو متوازن، أو (False, مكان_الخطأ)"""
+    stack = []
+    for i, ch in enumerate(text):
+        if ch in "([{":
+            stack.append((ch, i))
+        elif ch in ")]}":
+            if not stack:
+                return False, i
+            opening, _ = stack.pop()
+            if opening != PAIRS[ch]:
+                return False, i
+    if stack:
+        return False, stack[-1][1]
+    return True, None
+tests = [
+    "print(len([1, 2, 3]))",
+    "d = {'a': [1, 2}",
+    "if (x &gt; 0:",
+    "f(a)) + g(b)",
+    "",
+]
+for t in tests:
+    ok, pos = check_brackets(t)
+    if ok:
+        print(f"✅ {t!r}")
+    else:
+        print(f"❌ {t!r}")
+        print("   " + " " * (pos + 1) + "^ هنا")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>✅ 'print(len([1, 2, 3]))'
+❌ "d = {'a': [1, 2}"
+                   ^ هنا
+❌ 'if (x > 0:'
+       ^ هنا
+❌ 'f(a)) + g(b)'
+        ^ هنا
+✅ ''</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 ليه المكدّس بالذات؟</div>
+      <p>
+        لأن آخر قوس اتفتح <strong>لازم</strong> يكون أول قوس يتقفل — وده تعريف LIFO
+        بالظبط. في <code class="inl">[ ( ] )</code> الـ <code class="inl">]</code> بتيجي
+        والقوس اللي فوق المكدّس <code class="inl">(</code> مش <code class="inl">[</code>،
+        فبنكتشف الغلط فورًا.
+      </p>
+    </div>
+
+    <h4>الجزء 2: مستكشف الفولدرات بالاسترجاع</h4>
+    <p>الفولدر جوّاه فولدرات، وكل واحد جوّاه فولدرات… <strong>بيانات متداخلة = استرجاع.</strong></p>
+    <div class="code" data-file="tree.py"><pre>
+from pathlib import Path
+def format_size(n):
+    for unit in ["B", "KB", "MB", "GB"]:
+        if n &lt; 1024:
+            return f"{n:.0f} {unit}"
+        n /= 1024
+    return f"{n:.1f} TB"
+def folder_size(path):
+    """الحجم الكلي لفولدر — استرجاع على الفولدرات الفرعية"""
+    total = 0
+    for item in path.iterdir():
+        if item.is_file():
+            total += item.stat().st_size
+        elif item.is_dir():
+            total += folder_size(item)
+    return total
+def print_tree(path, prefix="", max_depth=3, depth=0):
+    """رسم شجرة الفولدرات"""
+    if depth &gt; max_depth:
+        return
+    items = sorted(path.iterdir(), key=lambda p: (p.is_file(), p.name.lower()))
+    for i, item in enumerate(items):
+        last = i == len(items) - 1
+        branch = "└── " if last else "├── "
+        if item.is_dir():
+            print(f"{prefix}{branch}📁 {item.name}/  ({format_size(folder_size(item))})")
+            extension = "    " if last else "│   "
+            print_tree(item, prefix + extension, max_depth, depth + 1)
+        else:
+            print(f"{prefix}{branch}📄 {item.name}  ({format_size(item.stat().st_size)})")
+root = Path(".")
+print(f"📁 {root.resolve().name}/  ({format_size(folder_size(root))})")
+print_tree(root, max_depth=2)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>📁 my_project/  (48 KB)
+├── 📁 src/  (21 KB)
+│   ├── 📁 utils/  (6 KB)
+│   │   └── 📄 helpers.py  (6 KB)
+│   ├── 📄 main.py  (9 KB)
+│   └── 📄 models.py  (6 KB)
+├── 📁 tests/  (14 KB)
+│   └── 📄 test_main.py  (14 KB)
+├── 📄 README.md  (3 KB)
+└── 📄 requirements.txt  (41 B)</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المفهوم</th><th>فين في الكود</th></tr>
+        <tr><td>الاسترجاع</td><td><code class="inl">folder_size</code> و<code class="inl">print_tree</code> بينادوا نفسهم على كل فولدر فرعي</td></tr>
+        <tr><td>الحالة الأساسية</td><td>الملف (مش فولدر) + <code class="inl">depth &gt; max_depth</code></td></tr>
+        <tr><td>تمرير الحالة</td><td><code class="inl">prefix</code> و<code class="inl">depth</code> بيتغيّروا مع كل مستوى</td></tr>
+        <tr><td><code class="inl">pathlib</code></td><td><code class="inl">iterdir</code>، <code class="inl">is_file</code>، <code class="inl">stat</code> — التعامل الحديث مع المسارات</td></tr>
+        <tr><td>ترتيب بمفتاح مركّب</td><td><code class="inl">key=lambda p: (p.is_file(), ...)</code> — الفولدرات الأول لأن <code class="inl">False &lt; True</code></td></tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ ملاحظة أداء (تطبيق على درس Big-O)</div>
+      <p>
+        <code class="inl">print_tree</code> بتنادي <code class="inl">folder_size</code> لكل فولدر،
+        و<code class="inl">folder_size</code> نفسها بتلف على كل اللي تحته — فالفولدرات العميقة
+        بتتحسب <strong>أكتر من مرّة</strong>. لمشروع صغير مش مشكلة، لكن على قرص كامل هتبقى
+        بطيئة جدًا. الحل: <code class="inl">@lru_cache</code> على <code class="inl">folder_size</code>،
+        أو حساب الأحجام في مرور واحد وتخزينها في قاموس.
+      </p>
+    </div>
+  </article>
+
+  <!-- ADD:u17-ch -->
+  <!-- 17.CH -->
+  <article class="lesson" id="u17-ch">
+    <h3>تحدّيات بتصحيح آلي: الخوارزميات <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">مش بس «النتيجة صح» — الاختبارات هنا بتعدّ كمان إنت قريت كام عنصر، عشان تتأكّد إن الخوارزمية كفؤة فعلًا.</p>
+
+    <div class="challenge" data-ch="u17-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — بحث ثنائي حقيقي <span class="lvl">⭐⭐⭐</span></div>
+      <p>الكود اللي تحت <strong>صحيح لكنه بطيء</strong> (بحث خطّي). حوّله لبحث ثنائي يلاقي العنصر في مليون عنصر بـ 25 قراءة أو أقل. ارجع المكان أو <code class="inl">-1</code>.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+def binary_search(items, target):
+    """مكان target في القائمة المرتّبة items، أو -1"""
+    for i, value in enumerate(items):
+        if value == target:
+            return i
+    return -1
+</textarea>
+      <script type="text/plain" class="ch-tests">
+class Counting(list):
+    def __init__(self, data):
+        super().__init__(data)
+        self.reads = 0
+
+    def __getitem__(self, i):
+        self.reads += 1
+        return super().__getitem__(i)
+
+def test_found():
+    "بيلاقي 35 في [0, 5, 10, …]"
+    assert binary_search(list(range(0, 100, 5)), 35) == 7
+
+def test_missing():
+    "العناصر المش موجودة ← -1"
+    items = list(range(0, 100, 5))
+    for t in (36, -5, 1000):
+        assert binary_search(items, t) == -1, f"البحث عن {t}"
+
+def test_edges():
+    "أول عنصر وآخر عنصر وقائمة فاضية"
+    items = [2, 4, 6, 8]
+    assert binary_search(items, 2) == 0
+    assert binary_search(items, 8) == 3
+    assert binary_search([], 3) == -1
+
+def test_efficient():
+    "مليون عنصر ← 25 قراءة بحدّ أقصى"
+    items = Counting(range(1_000_000))
+    assert binary_search(items, 765_432) == 765_432
+    assert 0 < items.reads <= 25, f"قريت {items.reads} عنصر — اقرا بالفهرس items[mid] وقسّم النطاق نصّين كل مرّة"
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+def binary_search(items, target):
+    """مكان target في القائمة المرتّبة items، أو -1"""
+    low, high = 0, len(items) - 1
+    while low &lt;= high:
+        mid = (low + high) // 2
+        value = items[mid]
+        if value == target:
+            return mid
+        if value &lt; target:
+            low = mid + 1
+        else:
+            high = mid - 1
+    return -1
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u17-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — الأقواس المتوازنة <span class="lvl">⭐⭐</span></div>
+      <p><code class="inl">is_balanced(text)</code> بترجّع <code class="inl">True</code> لو كل الأقواس <code class="inl">() [] {}</code> متقفلة صح وبالترتيب (الحروف التانية بتتجاهل).</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+def is_balanced(text):
+    return text.count("(") == text.count(")")
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_good():
+    "(a[b]{c}) و '' ← True"
+    assert is_balanced("(a[b]{c})") is True
+    assert is_balanced("") is True
+
+def test_wrong_type():
+    "(] ← False"
+    assert is_balanced("(]") is False
+
+def test_order():
+    ")( ← False (العدد متساوي بس الترتيب غلط)"
+    assert is_balanced(")(") is False
+
+def test_unclosed():
+    "(( و [{ ← False"
+    assert is_balanced("((") is False
+    assert is_balanced("[{") is False
+
+def test_crossed():
+    "([)] ← False (متقاطعين)"
+    assert is_balanced("([)]") is False
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+PAIRS = {")": "(", "]": "[", "}": "{"}
+def is_balanced(text):
+    stack = []
+    for ch in text:
+        if ch in "([{":
+            stack.append(ch)
+        elif ch in PAIRS:
+            if not stack or stack.pop() != PAIRS[ch]:
+                return False
+    return not stack
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u17-ch3">
+      <div class="ch-head">🧪 التحدّي 3 — حجم الشجرة بالاسترجاع <span class="lvl">⭐⭐⭐</span></div>
+      <p>كل فولدر قاموس <code class="inl">{"name": …, "size": …, "children": [...]}</code>. اكتب <code class="inl">total_size(node)</code> بترجّع حجم الفولدر + كل اللي جوّاه بأي عمق.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+def total_size(node):
+    return node["size"] + sum(child["size"] for child in node["children"])
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def leaf(name, size):
+    return {"name": name, "size": size, "children": []}
+
+def test_leaf():
+    "فولدر من غير أبناء ← حجمه"
+    assert total_size(leaf("a", 7)) == 7
+
+def test_one_level():
+    "مستوى واحد"
+    root = {"name": "r", "size": 1, "children": [leaf("a", 2), leaf("b", 3)]}
+    assert total_size(root) == 6
+
+def test_nested():
+    "مستويات متداخلة"
+    root = {"name": "r", "size": 1, "children": [
+        {"name": "x", "size": 2, "children": [leaf("y", 3), {"name": "z", "size": 4, "children": [leaf("w", 5)]}]},
+        leaf("v", 6),
+    ]}
+    assert total_size(root) == 21, total_size(root)
+
+def test_deep():
+    "عمق 200 مستوى"
+    node = leaf("bottom", 1)
+    for i in range(200):
+        node = {"name": str(i), "size": 1, "children": [node]}
+    assert total_size(node) == 201
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+def total_size(node):
+    return node["size"] + sum(total_size(child) for child in node["children"])
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u17-ch -->
+
+  <!-- 17.EX -->
+  <article class="lesson" id="u17-ex">
+    <h3>تمارين الوحدة السابعة عشرة <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">التمارين دي من نوعية أسئلة الإنترفيوهات.</p>
+
+    <h4>المستوى الأول</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — مجموع الخانات</div>
+      <p>اكتب دالة استرجاعية بترجّع مجموع خانات رقم: <code class="inl">digit_sum(1234)</code> ← 10.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def digit_sum(n):
+    if n &lt; 10:
+        return n
+    return n % 10 + digit_sum(n // 10)
+print(digit_sum(1234))     # 10
+print(digit_sum(9))        # 9
+</pre></div>
+      <p><code class="inl">% 10</code> بتجيب آخر خانة، و<code class="inl">// 10</code> بتشيلها — نفس حيل الوحدة 2، بس بالاسترجاع.</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — حدّد التعقيد</div>
+      <p>حدّد Big-O لكل دالة:</p>
+      <div class="code"><pre>
+def a(lst):
+    return lst[len(lst) // 2]
+def b(lst):
+    return max(lst) - min(lst)
+def c(lst):
+    return [x for x in lst for y in lst if x == y]
+def d(lst):
+    return sorted(lst)[0]
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="tbl-wrap"><table>
+        <tr><th>الدالة</th><th>التعقيد</th><th>ليه</th></tr>
+        <tr><td><code class="inl">a</code></td><td><code class="inl">O(1)</code></td><td>وصول بفهرس</td></tr>
+        <tr><td><code class="inl">b</code></td><td><code class="inl">O(n)</code></td><td>مرورين كل واحد <code class="inl">O(n)</code>، و<code class="inl">2n</code> لسه <code class="inl">O(n)</code></td></tr>
+        <tr><td><code class="inl">c</code></td><td><code class="inl">O(n²)</code></td><td>حلقتين متداخلتين على نفس القائمة</td></tr>
+        <tr><td><code class="inl">d</code></td><td><code class="inl">O(n log n)</code></td><td>الترتيب — مع إن <code class="inl">min(lst)</code> كانت هتعمل نفس الشغل بـ <code class="inl">O(n)</code>!</td></tr>
+      </table></div>
+      </details>
+    </div>
+
+    <h4>المستوى الثاني</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 3 — عكس نص بالاسترجاع</div>
+      <p>اكتب <code class="inl">reverse(text)</code> من غير <code class="inl">[::-1]</code> ومن غير حلقات.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def reverse(text):
+    if len(text) &lt;= 1:
+        return text
+    return reverse(text[1:]) + text[0]
+print(reverse("بايثون"))
+print(reverse("python"))
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — أول عنصر مكرّر</div>
+      <p>اكتب دالة بترجّع أول عنصر بيتكرّر في قائمة، أو <code class="inl">None</code>. لازم تكون <code class="inl">O(n)</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def first_duplicate(items):
+    seen = set()
+    for x in items:
+        if x in seen:
+            return x
+        seen.add(x)
+    return None
+print(first_duplicate([3, 1, 4, 1, 5, 9, 3]))   # 1
+print(first_duplicate([1, 2, 3]))               # None
+</pre></div>
+      <p>السر في <code class="inl">set</code>: الفحص <code class="inl">O(1)</code>. لو استخدمت قائمة بدلها هتبقى <code class="inl">O(n²)</code>.</p>
+      </details>
+    </div>
+
+    <h4>المستوى الثالث</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 5 — كل تباديل نص</div>
+      <p>اكتب دالة استرجاعية بترجّع كل ترتيبات حروف كلمة: <code class="inl">"abc"</code> ← 6 ترتيبات.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def permutations(text):
+    if len(text) &lt;= 1:
+        return [text]
+    result = []
+    for i, ch in enumerate(text):
+        rest = text[:i] + text[i + 1:]
+        for p in permutations(rest):
+            result.append(ch + p)
+    return result
+print(permutations("abc"))
+print(len(permutations("abcd")))     # 24
+</pre></div>
+      <p>
+        الفكرة: لكل حرف، ثبّته في الأول واحسب تباديل الباقي. التعقيد <code class="inl">O(n!)</code> —
+        كلمة من 10 حروف فيها 3.6 مليون ترتيب! (الحل الجاهز: <code class="inl">itertools.permutations</code>.)
+      </p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 6 — اختبر خوارزمياتك</div>
+      <p>اكتب اختبارات pytest بتتأكّد إن <code class="inl">bubble_sort</code> و<code class="inl">merge_sort</code> بيطلّعوا نفس ناتج <code class="inl">sorted()</code> على حالات متنوّعة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code" data-file="test_sorting.py"><pre>
+import random
+import pytest
+from sorting import bubble_sort, selection_sort, merge_sort
+ALGORITHMS = [bubble_sort, selection_sort, merge_sort]
+CASES = [
+    [],
+    [1],
+    [2, 1],
+    [1, 2, 3, 4],
+    [4, 3, 2, 1],
+    [5, 5, 5],
+    [3, -1, 0, -7, 8],
+    [1.5, 0.2, 3.3],
+]
+@pytest.mark.parametrize("algorithm", ALGORITHMS)
+@pytest.mark.parametrize("data", CASES)
+def test_matches_sorted(algorithm, data):
+    assert algorithm(data) == sorted(data)
+@pytest.mark.parametrize("algorithm", ALGORITHMS)
+def test_random_large(algorithm):
+    data = [random.randint(-1000, 1000) for _ in range(300)]
+    assert algorithm(data) == sorted(data)
+@pytest.mark.parametrize("algorithm", ALGORITHMS)
+def test_does_not_modify_input(algorithm):
+    data = [3, 1, 2]
+    algorithm(data)
+    assert data == [3, 1, 2]
+</pre></div>
+      <p>
+        <b>parametrize مزدوجة</b> بتعمل كل التوافيق: 3 خوارزميات × 8 حالات = 24 اختبار من دالة واحدة.
+        والاختبار الأخير بيتأكّد إن الدوال ما بتعدّلش القائمة الأصلية — ودي خاصية سهل تكسرها لو نسيت <code class="inl">.copy()</code>.
+      </p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. الدالة الاسترجاعية من غير حالة أساسية بتسبّب…</p>
+        <label><input type="radio"> MemoryError</label>
+        <label><input type="radio"> RecursionError لأن الـ Call Stack بيتملي</label>
+        <label><input type="radio"> حلقة لانهائية بتشتغل للأبد</label>
+        <label><input type="radio"> ترجّع None</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">x in my_set</code> تعقيدها…</p>
+        <label><input type="radio"> O(n)</label>
+        <label><input type="radio"> O(n²)</label>
+        <label><input type="radio"> O(log n)</label>
+        <label><input type="radio"> O(1)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. شرط استخدام البحث الثنائي…</p>
+        <label><input type="radio"> البيانات تكون مرتّبة</label>
+        <label><input type="radio"> البيانات تكون أرقام بس</label>
+        <label><input type="radio"> البيانات أقل من 1000 عنصر</label>
+        <label><input type="radio"> مفيش شرط</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. حلقة جوّه حلقة على نفس القائمة غالبًا تعقيدها…</p>
+        <label><input type="radio"> O(n)</label>
+        <label><input type="radio"> O(2n)</label>
+        <label><input type="radio"> O(n²)</label>
+        <label><input type="radio"> O(log n)</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">5. الطابور (FIFO) في بايثون الأنسب له…</p>
+        <label><input type="radio"> list مع pop(0)</label>
+        <label><input type="radio"> collections.deque مع popleft()</label>
+        <label><input type="radio"> dict</label>
+        <label><input type="radio"> set</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">6. <code class="inl">@lru_cache</code> سرّعت فيبوناتشي لأنها…</p>
+        <label><input type="radio"> بتحوّل الكود لـ C</label>
+        <label><input type="radio"> بتشغّل على أكتر من معالج</label>
+        <label><input type="radio"> بتلغي الاسترجاع</label>
+        <label><input type="radio"> بتحفظ نواتج الاستدعاءات فما بتتحسبش تاني</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">7. ليه <code class="inl">sorted()</code> أسرع من Merge Sort اللي كتبناه؟</p>
+        <label><input type="radio"> مكتوبة بـ C وبتستخدم Timsort</label>
+        <label><input type="radio"> لأن تعقيدها O(1)</label>
+        <label><input type="radio"> لأنها ما بتقارنش العناصر</label>
+        <label><input type="radio"> مش أسرع فعلًا</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:17 -->
+  <div class="checkpoint" data-unit="17">
+    <h4>✅ نقطة تفتيش: الوحدة السابعة عشرة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أكتب دالة استرجاعية بحالة أساسية.</li><li>أقدّر تعقيد كود بسيط بـ Big-O.</li><li>أفرّق بين البحث الخطّي والثنائي.</li><li>أستخدم المكدّس والطابور في مكانهم.</li></ul>
+  </div>
+  <!-- /CP -->

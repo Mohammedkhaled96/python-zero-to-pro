@@ -1,0 +1,1327 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة الخامسة · القوائم</div>
+    <h2>القوائم (Lists): تخزين مجموعة قيم في متغيّر واحد</h2>
+    <p>
+      لحد دلوقتي كل متغيّر بيشيل قيمة واحدة. طيب لو عايز تخزّن 100 اسم؟ هتعمل 100 متغيّر؟
+      طبعًا لأ. <strong>القائمة</strong> هي الحل، وهي أهم نوع بيانات في بايثون بعد النصوص،
+      وأساس كل اللي جاي في الحلقات والملفات.
+    </p>
+  </div>
+
+  <!-- 5.1 -->
+  <article class="lesson" id="u5-l1">
+    <h3>إنشاء القوائم والوصول لعناصرها <span class="tag">درس 21</span></h3>
+    <p class="goal">الهدف: تعمل قائمة، وتوصل لأي عنصر فيها، وتفهم إنها مرنة جدًا.</p>
+
+    <h4>1. إنشاء قائمة</h4>
+    <div class="code"><pre>
+my_list = [1, 2, 3, 'Python', True]
+print(my_list)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 3, 'Python', True]</pre></div>
+    <p>الملاحظات على السطر ده:</p>
+    <ul>
+      <li>الأقواس المربّعة <code class="inl">[ ]</code> هي اللي بتعرّف القائمة.</li>
+      <li>العناصر مفصولة بفواصل.</li>
+      <li>
+        <strong>الأنواع ممكن تتخلط!</strong> في نفس القائمة عندنا <code class="inl">int</code>
+        و<code class="inl">str</code> و<code class="inl">bool</code>. لغات كتير ما بتسمحش بده،
+        بايثون بتسمح.
+      </li>
+    </ul>
+    <div class="box tip">
+      <div class="bt">💡 لكن هل نستغلّ الحرّية دي؟</div>
+      <p>
+        غالبًا <strong>لأ</strong>. القائمة عمليًا بتمثّل «مجموعة حاجات من نفس النوع»:
+        قائمة أسماء، قائمة أسعار، قائمة درجات. خلط الأنواع بيخلّي الكود صعب. الحرية موجودة
+        لكن استخدمها بحساب.
+      </p>
+    </div>
+
+    <h4>2. أشكال إنشاء القوائم</h4>
+    <div class="code"><pre>
+empty = []                        # قائمة فاضية
+numbers = [10, 20, 30, 40]
+names = ["ahmed", "sara", "ali"]
+from_string = list("python")      # ['p','y','t','h','o','n']
+repeated = [0] * 5                # [0, 0, 0, 0, 0]
+print(empty, numbers, from_string, repeated)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[] [10, 20, 30, 40] ['p', 'y', 't', 'h', 'o', 'n'] [0, 0, 0, 0, 0]</pre></div>
+
+    <h4>3. الوصول للعناصر — نفس قواعد النصوص</h4>
+    <div class="code"><pre>
+names = ["ahmed", "sara", "ali", "mona"]
+print(names[0])      # ahmed
+print(names[2])      # ali
+print(names[-1])     # mona   ← آخر عنصر
+print(names[1:3])    # ['sara', 'ali']   ← تقطيع
+print(names[::-1])   # ['mona', 'ali', 'sara', 'ahmed']
+print(len(names))    # 4
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>ahmed
+ali
+mona
+['sara', 'ali']
+['mona', 'ali', 'sara', 'ahmed']
+4</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ لاحظ فرق مهم</div>
+      <p>
+        <code class="inl">names[2]</code> بترجّع <strong>العنصر</strong> نفسه (نص).<br>
+        <code class="inl">names[1:3]</code> بترجّع <strong>قائمة جديدة</strong> فيها العناصر دي.<br>
+        فهرس واحد ← عنصر. تقطيع ← قائمة.
+      </p>
+    </div>
+
+    <h4>4. الفرق الجوهري عن النصوص: القوائم قابلة للتعديل</h4>
+    <div class="code"><pre>
+my_list = [1, 2, 3, 'Python']
+my_list[0] = 'مستبدل'
+print(my_list)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['مستبدل', 2, 3, 'Python']</pre></div>
+    <p>
+      جرّب تعمل ده مع نص وشوف: <code class="inl">"python"[0] = "P"</code> هترمي
+      <code class="inl">TypeError</code>. <strong>القائمة mutable، النص immutable</strong> —
+      الفرق ده من الوحدة صفر وهو أهم من إنه مجرد تفصيلة.
+    </p>
+
+    <h4>5. الفحص بـ in</h4>
+    <div class="code"><pre>
+names = ["ahmed", "sara", "ali"]
+print("sara" in names)        # True
+print("mona" in names)        # False
+print("mona" not in names)    # True
+print(names.index("ali"))     # 2   ← فهرس العنصر
+print(names.count("ahmed"))   # 1   ← عدد مرّات وجوده
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+False
+True
+2
+1</pre></div>
+    <!-- APPEND:u5-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>سلة الفاكهة</div>
+      <p>اعمل قائمة فاكهة، اطبع أولها وآخرها، غيّر عنصر، وافحص وجود عنصر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+fruits = ["تفاح", "موز", "عنب"]
+print(fruits[0], fruits[-1])
+fruits[1] = "مانجو"
+print(fruits)
+print("موز" in fruits, len(fruits))
+mixed = [1, "اتنين", 3.0, True]
+print(mixed[1:3])
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>تفاح عنب
+['تفاح', 'مانجو', 'عنب']
+False 3
+['اتنين', 3.0]</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">[10, 20, 30][-2]</code>؟</p>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> 30</label>
+        <label><input type="radio"> 20</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">lst = [1, 2]</code> ثم <code class="inl">lst[0] = 9</code>؟</p>
+        <label><input type="radio"> lst بقت [9, 2]</label>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> lst بقت [9, 1, 2]</label>
+        <label><input type="radio"> ما بيحصلش حاجة</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">len([[1, 2], [3]])</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 5</label>
+      </div>
+    </div>
+    <!-- /APPEND:u5-l1 -->
+                <!-- SUM:u5-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>القائمة بتخزّن عناصر مرتّبة بين <code class="inl">[ ]</code>، وبتقبل أنواع مختلفة.</li><li>الفهرسة والتقطيع زي النصوص بالظبط.</li><li>القوائم <strong>قابلة للتعديل</strong>: <code class="inl">lst[0] = x</code> شغّالة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 5.2 -->
+  <article class="lesson" id="u5-l2">
+    <h3>إضافة وحذف العناصر <span class="tag">درس 22</span></h3>
+    <p class="goal">الهدف: تتقن الست دوال اللي بتغيّر محتوى القائمة.</p>
+
+    <h4>1. append — إضافة عنصر واحد في الآخر</h4>
+    <div class="code"><pre>
+my_list = [1, 2, 3, 'Python', True]
+my_list.append("جديد")
+print(my_list)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 3, 'Python', True, 'جديد']</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ <code>append</code> بتعدّل القائمة الأصلية وبترجّع None</div>
+      <div class="code"><pre>
+my_list = [1, 2]
+result = my_list.append(3)
+print(my_list)     # [1, 2, 3]   ← الأصلية اتغيّرت
+print(result)      # None        ← الدالة ما رجّعتش قائمة!
+# ❌ الخطأ الشائع:
+my_list = my_list.append(4)      # دلوقتي my_list بقت None وضاعت القائمة!
+</pre></div>
+      <p>
+        <strong>القاعدة:</strong> دوال القوائم اللي بتعدّل (append, extend, insert, remove,
+        sort, reverse, clear) بتشتغل «على مكانها» وبترجّع <code class="inl">None</code>.
+        <strong>ما تسندهاش لمتغيّر أبدًا.</strong>
+      </p>
+    </div>
+
+    <h4>2. extend — إضافة عدة عناصر</h4>
+    <div class="code"><pre>
+my_list = [1, 2, 3, 'Python', True, 'جديد']
+my_list.extend([4, 5, "لغة بايثون"])
+print(my_list)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 3, 'Python', True, 'جديد', 4, 5, 'لغة بايثون']</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 append مقابل extend — الفرق حاسم</div>
+      <div class="code"><pre>
+a = [1, 2]
+a.append([3, 4])
+print(a)          # [1, 2, [3, 4]]   ← ضاف القائمة كعنصر واحد!
+b = [1, 2]
+b.extend([3, 4])
+print(b)          # [1, 2, 3, 4]     ← فكّها وضاف عناصرها
+</pre></div>
+      <p>
+        <code class="inl">append</code> بتضيف <strong>شيء واحد</strong> مهما كان.
+        <code class="inl">extend</code> بتفكّ اللي جوّه وتضيف عناصره واحد واحد.
+      </p>
+    </div>
+
+    <h4>3. insert — إضافة في موقع محدّد</h4>
+    <div class="code"><pre>
+my_list = [1, 2, 3, 'Python', True, 'جديد', 4, 5, 'لغة بايثون']
+my_list.insert(2, "مرحبا")
+print(my_list)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 'مرحبا', 3, 'Python', True, 'جديد', 4, 5, 'لغة بايثون']</pre></div>
+    <p>
+      <code class="inl">insert(i, x)</code> بتحط <code class="inl">x</code> في الفهرس
+      <code class="inl">i</code>، وكل اللي بعده بيزحزح خطوة لقدّام.
+    </p>
+
+    <h4>4. remove — حذف بالقيمة</h4>
+    <div class="code"><pre>
+my_list = [1, 2, 'مرحبا', 3, 'Python', True, 'جديد', 4, 5, 'لغة بايثون']
+my_list.remove("Python")
+print(my_list)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 'مرحبا', 3, True, 'جديد', 4, 5, 'لغة بايثون']</pre></div>
+    <div class="box err">
+      <div class="bt">💥 نقطتين مهمّتين في remove</div>
+      <ul>
+        <li>بتحذف <strong>أول ظهور بس</strong>. لو العنصر متكرّر، الباقي هيفضل.</li>
+        <li>لو العنصر مش موجود بترمي <code class="inl">ValueError</code>. اتأكد الأول:
+          <code class="inl">if x in my_list: my_list.remove(x)</code></li>
+      </ul>
+    </div>
+
+    <h4>5. pop — حذف بالفهرس مع إرجاع القيمة</h4>
+    <div class="code"><pre>
+my_list = [1, 2, 'مرحبا', 3, True, 'جديد', 4, 5, 'لغة بايثون']
+my_list.pop()
+print(my_list)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 'مرحبا', 3, True, 'جديد', 4, 5]</pre></div>
+    <div class="code"><pre>
+items = ["a", "b", "c", "d"]
+last = items.pop()      # من غير رقم → بيشيل الأخير
+print(last, items)      # d ['a', 'b', 'c']
+first = items.pop(0)    # بفهرس → بيشيل العنصر ده
+print(first, items)     # a ['b', 'c']
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>d ['a', 'b', 'c']
+a ['b', 'c']</pre></div>
+    <p>
+      <code class="inl">pop</code> هي الدالة الوحيدة في المجموعة دي اللي
+      <strong>بترجّع قيمة</strong> — العنصر المحذوف. مفيدة لما تحتاج تستخدمه بعد الحذف.
+    </p>
+
+    <h4>6. clear و del</h4>
+    <div class="code"><pre>
+my_list = [1, 2, 3]
+my_list.clear()
+print(my_list)          # []
+items = ["a", "b", "c", "d"]
+del items[1]            # حذف بالفهرس
+print(items)            # ['a', 'c', 'd']
+del items[0:2]          # حذف شريحة
+print(items)            # ['d']
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[]
+['a', 'c', 'd']
+['d']</pre></div>
+
+    <h4>7. ملخّص الحذف</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الطريقة</th><th>بتحذف بالـ</th><th>بترجّع؟</th><th>استخدمها لما</th></tr>
+        <tr><td><code class="inl">remove(x)</code></td><td>القيمة</td><td>لأ</td><td>تعرف القيمة مش المكان</td></tr>
+        <tr><td><code class="inl">pop(i)</code></td><td>الفهرس</td><td>أيوة، العنصر</td><td>محتاج العنصر بعد الحذف</td></tr>
+        <tr><td><code class="inl">del lst[i]</code></td><td>الفهرس أو شريحة</td><td>لأ</td><td>حذف مجموعة مرّة واحدة</td></tr>
+        <tr><td><code class="inl">clear()</code></td><td>الكل</td><td>لأ</td><td>تفضية القائمة</td></tr>
+      </table>
+    </div>
+    <!-- APPEND:u5-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>قائمة المشتريات</div>
+      <p>توقّع شكل القائمة بعد كل العمليات.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+cart = ["عيش", "لبن"]
+cart.append("جبنة")
+cart.insert(0, "بيض")
+cart.extend(["شاي", "سكر"])
+removed = cart.pop()
+cart.remove("لبن")
+print(cart)
+print("شلنا:", removed)
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>['بيض', 'عيش', 'جبنة', 'شاي']
+شلنا: سكر</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">a = [1]</code> ثم <code class="inl">a.append([2, 3])</code> — a؟</p>
+        <label><input type="radio"> [1, 2, 3]</label>
+        <label><input type="radio"> [1, 2]</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> [1, [2, 3]]</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">[1, 2].remove(5)</code>؟</p>
+        <label><input type="radio"> ما بيحصلش حاجة</label>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> IndexError</label>
+        <label><input type="radio"> بترجّع -1</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. الفرق بين <code class="inl">pop()</code> و <code class="inl">remove(x)</code>؟</p>
+        <label><input type="radio"> pop بالفهرس وبترجّع العنصر، remove بالقيمة</label>
+        <label><input type="radio"> مفيش فرق</label>
+        <label><input type="radio"> remove أسرع دايمًا</label>
+        <label><input type="radio"> pop بتمسح كل القائمة</label>
+      </div>
+    </div>
+    <!-- /APPEND:u5-l2 -->
+                <!-- SUM:u5-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">append</code> عنصر، <code class="inl">extend</code> مجموعة عناصر، <code class="inl">insert</code> في مكان محدّد.</li><li><code class="inl">remove</code> بالقيمة، و <code class="inl">pop</code> بالفهرس وبترجّع العنصر.</li><li><code class="inl">clear</code> بتفضّي، و <code class="inl">del</code> بتمسح بالفهرس أو الشريحة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 5.3 -->
+  <article class="lesson" id="u5-l3">
+    <h3>الترتيب والدوال العامة على القوائم <span class="tag">درس 23</span></h3>
+    <p class="goal">الهدف: ترتّب وتحسب إحصائيات على القوائم بسطر واحد.</p>
+
+    <h4>1. sort — الترتيب في المكان</h4>
+    <div class="code"><pre>
+names = ["khaled", "abdallah", "marwa", "tarek", "randa"]
+names.sort()
+print(names)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['abdallah', 'khaled', 'marwa', 'randa', 'tarek']</pre></div>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">names</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+names.sort(reverse=True)
+print(names)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['tarek', 'randa', 'marwa', 'khaled', 'abdallah']</pre></div>
+    <p>
+      <code class="inl">reverse=True</code> ده اسمه <strong>keyword argument</strong> —
+      وسيط بتسمّيه باسمه. هنشرحه بالتفصيل في وحدة الدوال.
+    </p>
+    <div class="box warn">
+      <div class="bt">⚠️ الترتيب بالحروف بيتبع Unicode مش الأبجدية</div>
+      <div class="code"><pre>
+words = ["banana", "Apple", "cherry"]
+words.sort()
+print(words)        # ['Apple', 'banana', 'cherry']  ← الكابيتال الأول!
+words.sort(key=str.lower)     # الحل: رتّب متجاهلًا الحالة
+print(words)        # ['Apple', 'banana', 'cherry']
+</pre></div>
+      <p>
+        السبب من درس <code class="inl">ord</code>: الحروف الكابيتال أرقامها (65-90) أقل من
+        الصغيرة (97-122)، فبتيجي الأول في الترتيب.
+      </p>
+    </div>
+
+    <h4>2. sorted — الترتيب مع الاحتفاظ بالأصل</h4>
+    <div class="code"><pre>
+numbers = [5, 2, 9, 1]
+new_list = sorted(numbers)
+print(numbers)      # [5, 2, 9, 1]   ← الأصلية زي ما هي
+print(new_list)     # [1, 2, 5, 9]   ← نسخة مرتّبة
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[5, 2, 9, 1]
+[1, 2, 5, 9]</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th></th><th><code class="inl">list.sort()</code></th><th><code class="inl">sorted(list)</code></th></tr>
+        <tr><td>بتعدّل الأصل؟</td><td>أيوة</td><td>لأ</td></tr>
+        <tr><td>بترجّع؟</td><td><code class="inl">None</code></td><td>قائمة جديدة</td></tr>
+        <tr><td>بتشتغل على؟</td><td>القوائم بس</td><td>أي شيء قابل للتكرار</td></tr>
+      </table>
+    </div>
+
+    <h4>3. reverse — عكس الترتيب</h4>
+    <div class="code"><pre>
+items = [1, 2, 3, 4]
+items.reverse()
+print(items)          # [4, 3, 2, 1]   ← بتعدّل الأصل
+items2 = [1, 2, 3, 4]
+print(items2[::-1])   # [4, 3, 2, 1]   ← نسخة معكوسة، الأصل سليم
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[4, 3, 2, 1]
+[4, 3, 2, 1]</pre></div>
+
+    <h4>4. الدوال الحسابية</h4>
+    <div class="code"><pre>
+num_list = [10, 20, 30, 40]
+total = sum(num_list)
+print(total)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>100</pre></div>
+    <div class="code"><pre>
+scores = [55, 92, 78, 41, 88]
+print(len(scores))          # 5     عدد العناصر
+print(sum(scores))          # 354   المجموع
+print(min(scores))          # 41    الأصغر
+print(max(scores))          # 92    الأكبر
+print(sum(scores) / len(scores))    # 70.8   المتوسط
+print(round(sum(scores) / len(scores), 1))   # 70.8
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>5
+354
+41
+92
+70.8
+70.8</pre></div>
+    <div class="box err">
+      <div class="bt">💥 <code>sum</code> بتشتغل على الأرقام بس</div>
+      <div class="code"><pre>
+mixed = [1, 2, "ثلاثة"]
+print(sum(mixed))     # ❌ TypeError: unsupported operand type(s)
+</pre></div>
+      <p>لو القائمة فيها نصوص أرقام (زي اللي جاية من ملف)، لازم تحوّلها الأول — وهنعمل ده في الوحدة 9.</p>
+    </div>
+
+    <h4>5. عرض القائمة كجملة</h4>
+    <div class="code"><pre>
+names = ["khaled", "abdallah", "marwa", "tarek", "randa"]
+print(f"your names are {', '.join(names)}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>your names are khaled, abdallah, marwa, tarek, randa</pre></div>
+    <p>
+      لاحظ إن <code class="inl">print(names)</code> كان هيطبع
+      <code class="inl">['khaled', 'abdallah', …]</code> بالأقواس وعلامات التنصيص — شكل
+      مناسب للمبرمج مش للمستخدم. <code class="inl">join</code> بتخلّيه شكل بشري.
+    </p>
+    <div class="box warn">
+      <div class="bt">⚠️ <code>join</code> بتشتغل على النصوص بس</div>
+      <div class="code"><pre>
+numbers = [1, 2, 3]
+print(", ".join(numbers))                    # ❌ TypeError
+print(", ".join(str(n) for n in numbers))    # ✅ 1, 2, 3
+</pre></div>
+    </div>
+    <!-- APPEND:u5-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>ترتيب الدرجات</div>
+      <p>رتّب من غير ما تغيّر الأصل، وبعدين رتّب الأصل تنازليًا، واحسب الإحصائيات، ورتّب أسماء من غير فرق بين الكبير والصغير.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+scores = [72, 95, 60, 88]
+print(sorted(scores))
+print(scores)
+scores.sort(reverse=True)
+print(scores)
+print(max(scores), min(scores), sum(scores) / len(scores))
+names = ["bob", "Ali", "alex"]
+print(sorted(names))
+print(sorted(names, key=str.lower))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>[60, 72, 88, 95]
+[72, 95, 60, 88]
+[95, 88, 72, 60]
+95 60 78.75
+['Ali', 'alex', 'bob']
+['alex', 'Ali', 'bob']</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">x = [3, 1].sort()</code> — x؟</p>
+        <label><input type="radio"> [1, 3]</label>
+        <label><input type="radio"> [3, 1]</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. عايز نسخة مرتّبة والأصل يفضل زي ما هو…</p>
+        <label><input type="radio"> sorted(lst)</label>
+        <label><input type="radio"> lst.sort()</label>
+        <label><input type="radio"> lst.reverse()</label>
+        <label><input type="radio"> lst[::-1]</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">sum([1, 2, 3]) / len([1, 2, 3])</code>؟</p>
+        <label><input type="radio"> 6</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 2.0</label>
+      </div>
+    </div>
+    <!-- /APPEND:u5-l3 -->
+                <!-- SUM:u5-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">sort()</code> بترتّب الأصل وترجّع None، و <code class="inl">sorted()</code> بترجّع نسخة.</li><li><code class="inl">reverse=True</code> للترتيب التنازلي.</li><li><code class="inl">sum</code> و <code class="inl">min</code> و <code class="inl">max</code> و <code class="inl">len</code> بتشتغل على أي قائمة أرقام.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 5.4 -->
+  <article class="lesson" id="u5-l4">
+    <h3>القوائم المتداخلة (Nested Lists) <span class="tag">درس 24</span></h3>
+    <p class="goal">الهدف: تعمل قائمة جوّه قائمة — الأساس اللي هتبني عليه الجداول والبيانات المركّبة.</p>
+
+    <h4>1. الفكرة</h4>
+    <div class="code"><pre>
+main_menu = [["banana", "orange", "apple"], ["potato", "tomato"], [1, 2, 3, 4, 5]]
+print(main_menu)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[['banana', 'orange', 'apple'], ['potato', 'tomato'], [1, 2, 3, 4, 5]]</pre></div>
+    <p>
+      القائمة دي فيها 3 عناصر بس — وكل عنصر منهم قائمة. بنستخدم ده لتنظيم البيانات في
+      مجموعات: قسم الفواكه، قسم الخضار، قسم الأرقام.
+    </p>
+    <div class="diagram">
+<pre>  main_menu
+    │
+    ├── [0] ─► ["banana", "orange", "apple"]
+    │            [0]       [1]       [2]
+    │
+    ├── [1] ─► ["potato", "tomato"]
+    │            [0]        [1]
+    │
+    └── [2] ─► [1, 2, 3, 4, 5]
+                [0][1][2][3][4]</pre>
+      <div class="cap">بنية القائمة المتداخلة</div>
+    </div>
+
+    <h4>2. الوصول بفهرس مزدوج</h4>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">main_menu</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+print(main_menu[0])        # ['banana', 'orange', 'apple']   ← القائمة الداخلية كلها
+print(main_menu[1][1])     # tomato   ← القائمة رقم 1، العنصر رقم 1
+print(main_menu[0][2])     # apple
+print(main_menu[2][-1])    # 5
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['banana', 'orange', 'apple']
+tomato
+apple
+5</pre></div>
+    <p>
+      اقراها من الشمال لليمين: <code class="inl">main_menu[1]</code> بترجّع
+      <code class="inl">["potato", "tomato"]</code>، وبعدين <code class="inl">[1]</code>
+      بتشتغل على النتيجة دي فبترجّع <code class="inl">"tomato"</code>.
+    </p>
+
+    <h4>3. التعديل على القوائم الداخلية</h4>
+    <div class="code"><pre>
+main_menu = [["banana", "orange", "apple"], ["potato", "tomato"], [1, 2, 3, 4, 5]]
+main_menu[1].append("rice")
+print(main_menu)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[['banana', 'orange', 'apple'], ['potato', 'tomato', 'rice'], [1, 2, 3, 4, 5]]</pre></div>
+    <p>ضفنا «rice» جوّه القائمة رقم 1 بس.</p>
+
+    <div class="code"><pre>
+main_menu = [["banana", "orange", "apple"], ["potato", "tomato"], [1, 2, 3, 4, 5]]
+main_menu.extend(["meat", "chicken"])
+print(main_menu)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[['banana', 'orange', 'apple'], ['potato', 'tomato'], [1, 2, 3, 4, 5], 'meat', 'chicken']</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ لاحظ الفرق</div>
+      <p>
+        هنا <code class="inl">extend</code> اتنادت على <strong>القائمة الرئيسية</strong>
+        (من غير فهرس)، فضافت «meat» و«chicken» كعناصر مستقلة على المستوى الخارجي —
+        مش جوّه أي قائمة داخلية. البنية بقت مختلطة: 3 قوائم + نصّين.
+        <strong>ده بيبان صح ونادرًا ما يكون مقصود</strong>، فخلي بالك على أي مستوى بتشتغل.
+      </p>
+    </div>
+
+    <div class="code"><pre>
+main_menu = [["banana", "orange", "apple"], ["potato", "tomato"], [1, 2, 3, 4, 5]]
+main_menu[0].insert(2, "water melon")
+print(main_menu)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[['banana', 'orange', 'water melon', 'apple'], ['potato', 'tomato'], [1, 2, 3, 4, 5]]</pre></div>
+
+    <h4>4. الاستخدام العملي: جدول</h4>
+    <div class="code"><pre>
+students = [
+    ["Ahmed", 85, "A"],
+    ["Sara",  92, "A+"],
+    ["Ali",   67, "C"]
+]
+print(students[1][0])      # Sara
+print(students[1][1])      # 92
+print(len(students))       # 3   عدد الطلاب
+print(len(students[0]))    # 3   عدد الأعمدة
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Sara
+92
+3
+3</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 بديل أوضح جاي في الوحدة 10</div>
+      <p>
+        <code class="inl">students[1][1]</code> شغّالة، بس مين فاكر إن العمود 1 هو الدرجة؟
+        الحل الأفضل هو <strong>القواميس</strong>:
+        <code class="inl">{"name": "Sara", "score": 92}</code> — بتوصل بالاسم مش بالرقم.
+      </p>
+    </div>
+    <!-- APPEND:u5-l4 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>جدول صغير</div>
+      <p>وصّل لعناصر جدول بفهرسين وعدّل واحد.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+grid = [[1, 2, 3], [4, 5, 6]]
+print(grid[1][2])
+grid[0][0] = 10
+print(grid)
+print(len(grid), len(grid[0]))
+students = [["سارة", 90], ["علي", 75]]
+print(students[1][0], students[0][1])
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>6
+[[10, 2, 3], [4, 5, 6]]
+2 3
+علي 90</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">[[1, 2], [3, 4]][1][0]</code>؟</p>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> [3, 4]</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. <code class="inl">m = [[0, 0], [0, 0]]</code> ثم <code class="inl">m[0].append(5)</code> — m؟</p>
+        <label><input type="radio"> [[0, 0], [0, 0], 5]</label>
+        <label><input type="radio"> [[0, 0, 5], [0, 0, 5]]</label>
+        <label><input type="radio"> [[0, 0, 5], [0, 0]]</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. الفهرس الأول في <code class="inl">grid[i][j]</code> بيحدّد…</p>
+        <label><input type="radio"> الصف</label>
+        <label><input type="radio"> العمود</label>
+        <label><input type="radio"> القيمة</label>
+        <label><input type="radio"> الطول</label>
+      </div>
+    </div>
+    <!-- /APPEND:u5-l4 -->
+                <!-- SUM:u5-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>القائمة ممكن تحتوي قوائم (جدول).</li><li><code class="inl">grid[r][c]</code> = الصف ثم العمود.</li><li>القوائم الداخلية بتتعدّل في مكانها.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 5.5 -->
+  <article class="lesson" id="u5-l5">
+    <h3>نسخ القوائم: الفخ اللي بيوقّع المحترفين <span class="tag">درس 25 · مهم</span></h3>
+    <p class="goal">الهدف: تطبّق فهمك للـ Heap عمليًا وتتجنّب أخطاء غامضة جدًا.</p>
+
+    <h4>1. المشكلة</h4>
+    <div class="code"><pre>
+original = ["a", "b", "c"]
+copy = original          # ❌ ده مش نسخ!
+copy.append("d")
+print(original)   # ['a', 'b', 'c', 'd']   ← اتغيّرت!
+print(copy)       # ['a', 'b', 'c', 'd']
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['a', 'b', 'c', 'd']
+['a', 'b', 'c', 'd']</pre></div>
+    <p>
+      ليه؟ ارجع لدرس <a href="#u0-l5">Stack و Heap</a>: علامة <code class="inl">=</code>
+      بتنسخ <strong>العنوان</strong> مش المحتوى. الاسمين بقوا بيشاوروا على نفس القائمة
+      في الـ Heap.
+    </p>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">original</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+print(id(original))    # 140234...
+print(id(copy))        # 140234...   ← نفس الرقم! نفس الكائن
+print(original is copy)  # True
+</pre></div>
+    <p><code class="inl">id()</code> بترجّع عنوان الكائن في الذاكرة، و<code class="inl">is</code> بتقارن العناوين مش القيم.</p>
+
+    <h4>2. النسخ الحقيقي — 4 طرق</h4>
+    <div class="code"><pre>
+original = ["a", "b", "c"]
+copy1 = original.copy()      # الأوضح
+copy2 = list(original)
+copy3 = original[:]          # تقطيع كامل
+import copy as copy_module
+copy4 = copy_module.copy(original)
+copy1.append("d")
+print(original)   # ['a', 'b', 'c']        ← محميّة ✅
+print(copy1)      # ['a', 'b', 'c', 'd']
+print(original is copy1)   # False
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['a', 'b', 'c']
+['a', 'b', 'c', 'd']
+False</pre></div>
+
+    <h4>3. المستوى المتقدّم: النسخ السطحي مقابل العميق</h4>
+    <div class="code"><pre>
+original = [[1, 2], [3, 4]]
+shallow = original.copy()        # نسخ سطحي
+shallow[0].append(99)            # عدّلنا القائمة الداخلية
+print(original)   # [[1, 2, 99], [3, 4]]   ← اتأثّرت! 😱
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[[1, 2, 99], [3, 4]]</pre></div>
+    <div class="diagram">
+<pre>   original ──►┌───────────────┐
+               │  [ ●  ,  ● ]  │   ← قائمة خارجية جديدة
+   shallow ───►└───┼──────┼────┘        لكن العناصر نفس العناوين!
+                   │      │
+                   ▼      ▼
+                [1,2]   [3,4]    ← القوائم الداخلية مشتركة</pre>
+      <div class="cap">النسخ السطحي بينسخ المستوى الأول بس</div>
+    </div>
+    <p>الحل للقوائم المتداخلة: <strong>النسخ العميق</strong>.</p>
+    <div class="code"><pre>
+import copy
+original = [[1, 2], [3, 4]]
+deep = copy.deepcopy(original)
+deep[0].append(99)
+print(original)   # [[1, 2], [3, 4]]        ← سليمة ✅
+print(deep)       # [[1, 2, 99], [3, 4]]
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[[1, 2], [3, 4]]
+[[1, 2, 99], [3, 4]]</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 الخلاصة العملية</div>
+      <ul>
+        <li>قائمة بسيطة (أرقام/نصوص) → <code class="inl">.copy()</code> كفاية.</li>
+        <li>قائمة متداخلة → <code class="inl">copy.deepcopy()</code>.</li>
+        <li>عايز الاتنين يتغيّروا مع بعض عن قصد → <code class="inl">=</code> عادي.</li>
+      </ul>
+    </div>
+    <!-- APPEND:u5-l5 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>سطحي ولّا عميق؟</div>
+      <p>توقّع السطرين قبل التشغيل.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import copy
+menu = [["قهوة", 20], ["شاي", 10]]
+shallow = menu.copy()
+deep = copy.deepcopy(menu)
+menu[0][1] = 25
+print(shallow[0][1], deep[0][1])
+shallow.append(["عصير", 15])
+print(len(menu), len(shallow))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>25 20
+2 3</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. أنهي طريقة <strong>مش</strong> بتنسخ القائمة؟</p>
+        <label><input type="radio"> a.copy()</label>
+        <label><input type="radio"> list(a)</label>
+        <label><input type="radio"> a[:]</label>
+        <label><input type="radio"> b = a</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. قائمة فيها قوائم، ومحتاج نسخة مستقلّة تمامًا…</p>
+        <label><input type="radio"> a.copy()</label>
+        <label><input type="radio"> copy.deepcopy(a)</label>
+        <label><input type="radio"> a[:]</label>
+        <label><input type="radio"> مستحيل</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">a is b</code> بتسأل عن…</p>
+        <label><input type="radio"> هل الاتنين نفس الكائن في الذاكرة</label>
+        <label><input type="radio"> هل القيم متساوية</label>
+        <label><input type="radio"> هل النوع واحد</label>
+        <label><input type="radio"> هل الطول واحد</label>
+      </div>
+    </div>
+    <!-- /APPEND:u5-l5 -->
+                <!-- SUM:u5-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">b = a</code> ما بتنسخش — الاسمين بيشاوروا على نفس القائمة.</li><li>النسخ: <code class="inl">a.copy()</code> أو <code class="inl">a[:]</code> أو <code class="inl">list(a)</code>.</li><li>القوائم المتداخلة محتاجة <code class="inl">copy.deepcopy</code>.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 5.6 -->
+  <article class="lesson" id="u5-l6">
+    <h3>مرجع كامل: كل دوال القوائم <span class="tag">درس 26 · مرجع</span></h3>
+    <p class="goal">الهدف: صفحة واحدة ترجعلها في أي وقت.</p>
+
+    <h4>1. دوال الإضافة والحذف</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>#</th><th>الدالة</th><th>الوصف</th><th>بترجّع</th></tr>
+        <tr><td>1</td><td><code class="inl">.append(x)</code></td><td>تضيف العنصر <code class="inl">x</code> لآخر القائمة</td><td>None</td></tr>
+        <tr><td>2</td><td><code class="inl">.extend(iterable)</code></td><td>توسّع القائمة بإضافة عناصر من كائن قابل للتكرار</td><td>None</td></tr>
+        <tr><td>3</td><td><code class="inl">.insert(i, x)</code></td><td>تُدخل <code class="inl">x</code> في الموقع <code class="inl">i</code></td><td>None</td></tr>
+        <tr><td>4</td><td><code class="inl">.remove(x)</code></td><td>تحذف أول ظهور لـ <code class="inl">x</code></td><td>None</td></tr>
+        <tr><td>5</td><td><code class="inl">.pop([i])</code></td><td>تحذف وترجّع العنصر في <code class="inl">i</code>؛ من غير <code class="inl">i</code> بتحذف الأخير</td><td>العنصر</td></tr>
+        <tr><td>6</td><td><code class="inl">.clear()</code></td><td>تحذف كل العناصر</td><td>None</td></tr>
+      </table>
+    </div>
+
+    <h4>2. دوال البحث والإحصاء</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>#</th><th>الدالة</th><th>الوصف</th></tr>
+        <tr><td>7</td><td><code class="inl">.index(x[, start[, end]])</code></td><td>ترجّع فهرس أول ظهور لـ <code class="inl">x</code>، مع إمكانية تحديد نطاق البحث</td></tr>
+        <tr><td>8</td><td><code class="inl">.count(x)</code></td><td>ترجّع عدد مرّات ظهور <code class="inl">x</code></td></tr>
+      </table>
+    </div>
+
+    <h4>3. دوال الترتيب</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>#</th><th>الدالة</th><th>الوصف</th></tr>
+        <tr><td>9</td><td><code class="inl">.sort(key=None, reverse=False)</code></td><td>ترتّب تصاعديًا؛ و<code class="inl">reverse=True</code> تنازليًا</td></tr>
+        <tr><td>10</td><td><code class="inl">.reverse()</code></td><td>تعكس ترتيب العناصر</td></tr>
+        <tr><td>11</td><td><code class="inl">.copy()</code></td><td>ترجّع نسخة سطحية (shallow copy)</td></tr>
+      </table>
+    </div>
+
+    <h4>4. العمليات الخاصة (Dunder methods)</h4>
+    <p>
+      الدوال دي بتتنادى تلقائيًا لما تستخدم الصيغة المختصرة. مش هتكتبها بإيدك عادةً،
+      لكن فهمها بيوضّح إن بايثون بتشتغل إزاي من جوّه.
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>#</th><th>الدالة الداخلية</th><th>الصيغة اللي بتكتبها</th></tr>
+        <tr><td>12</td><td><code class="inl">__getitem__(i)</code></td><td><code class="inl">my_list[i]</code></td></tr>
+        <tr><td>13</td><td><code class="inl">__setitem__(i, x)</code></td><td><code class="inl">my_list[i] = x</code></td></tr>
+        <tr><td>14</td><td><code class="inl">__delitem__(i)</code></td><td><code class="inl">del my_list[i]</code></td></tr>
+        <tr><td>15</td><td><code class="inl">__iter__()</code></td><td><code class="inl">for x in my_list:</code></td></tr>
+        <tr><td>16</td><td><code class="inl">__contains__(x)</code></td><td><code class="inl">x in my_list</code></td></tr>
+        <tr><td>17</td><td><code class="inl">__len__()</code></td><td><code class="inl">len(my_list)</code></td></tr>
+      </table>
+    </div>
+    <div class="box info">
+      <div class="bt">ℹ️ ليه الأسماء بشرطتين؟</div>
+      <p>
+        الشرطتين قبل وبعد الاسم (<code class="inl">__name__</code>) اصطلاح في بايثون
+        معناه «دالة سحرية داخلية». بتتنطق «dunder» اختصارًا لـ double underscore.
+        لو دخلت تراك الـ OOP بعد الكورس ده، هتكتب دوال زي دي بإيدك عشان تخلّي الكائنات
+        بتاعتك تشتغل مع <code class="inl">len()</code> و<code class="inl">in</code> و<code class="inl">[]</code>.
+      </p>
+    </div>
+
+    <h4>5. الدوال العامة (بتشتغل على القوائم وغيرها)</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الدالة</th><th>الوصف</th><th>مثال</th></tr>
+        <tr><td><code class="inl">len(lst)</code></td><td>عدد العناصر</td><td><code class="inl">len([1,2,3])</code> → 3</td></tr>
+        <tr><td><code class="inl">sum(lst)</code></td><td>المجموع (أرقام بس)</td><td>→ 6</td></tr>
+        <tr><td><code class="inl">min(lst)</code> / <code class="inl">max(lst)</code></td><td>الأصغر / الأكبر</td><td>→ 1 / 3</td></tr>
+        <tr><td><code class="inl">sorted(lst)</code></td><td>نسخة مرتّبة</td><td>→ قائمة جديدة</td></tr>
+        <tr><td><code class="inl">list(x)</code></td><td>تحويل لقائمة</td><td><code class="inl">list("ab")</code> → ['a','b']</td></tr>
+        <tr><td><code class="inl">any(lst)</code></td><td>True لو عنصر واحد على الأقل صح</td><td></td></tr>
+        <tr><td><code class="inl">all(lst)</code></td><td>True لو كل العناصر صح</td><td></td></tr>
+      </table>
+    </div>
+
+    <h4>6. الإسناد للشرائح و del: تعديل جزء كامل مرّة واحدة</h4>
+    <p>
+      التقطيع مش للقراءة بس. مع القوائم (لأنها <strong>قابلة للتعديل</strong>) تقدر تحط الشريحة على <strong>شمال</strong> علامة <code class="inl">=</code>
+      فتستبدل أو تمسح أو تدرج مجموعة عناصر في خطوة واحدة — حاجة مستحيلة مع النصوص.
+    </p>
+    <div class="code"><pre>
+nums = [0, 1, 2, 3, 4, 5]
+nums[1:3] = [10, 20]
+print(nums)
+nums[1:3] = [7, 7, 7, 7]
+print(nums)
+nums[2:5] = []
+print(nums)
+del nums[::2]
+print(nums)
+nums[:0] = ["أول"]
+print(nums)
+nums[:] = []
+print(nums)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[0, 10, 20, 3, 4, 5]
+[0, 7, 7, 7, 7, 3, 4, 5]
+[0, 7, 3, 4, 5]
+[7, 4]
+['أول', 7, 4]
+[]</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ nums[:] = [] مقابل nums = []</div>
+      <p>
+        <code class="inl">nums = []</code> بتعمل <strong>قائمة جديدة</strong> وتوجّه الاسم ليها — أي متغيّر تاني كان بيشاور على القديمة هيفضل شايف العناصر.
+        <code class="inl">nums[:] = []</code> (أو <code class="inl">nums.clear()</code>) بتفرّغ <strong>نفس القائمة</strong> في مكانها، فكل الأسماء بتشوفها فاضية. رجوع لدرس المراجع في الوحدة صفر.
+      </p>
+    </div>
+    <!-- APPEND:u5-l6 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>جولة في المرجع</div>
+      <p>استخدم <code class="inl">count</code> و <code class="inl">index</code> و <code class="inl">reverse</code> و <code class="inl">any</code> و <code class="inl">all</code> — وخلّي بالك من آخر سطر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+nums = [5, 3, 8, 3, 1]
+print(nums.count(3), nums.index(8))
+nums.reverse()
+print(nums)
+print(any(nums), all(nums))
+nums.clear()
+print(nums, all(nums))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>2 2
+[1, 3, 8, 3, 5]
+True True
+[] True</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">["a", "b", "a"].index("a")</code>؟</p>
+        <label><input type="radio"> [0, 2]</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> 1</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">any([])</code>؟</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> False</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">nums[1:3] = []</code> بتعمل…</p>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> بتضيف قائمة فاضية</label>
+        <label><input type="radio"> بتفضّي القائمة كلها</label>
+        <label><input type="radio"> بتمسح العنصرين في الفهرس 1 و 2</label>
+      </div>
+    </div>
+    <!-- /APPEND:u5-l6 -->
+                <!-- SUM:u5-l6 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>مرجع لكل دوال القوائم ومين منها بيرجّع None.</li><li>الدوال السحرية (dunder) هي اللي ورا <code class="inl">len</code> و <code class="inl">in</code> و <code class="inl">[]</code>.</li><li>الإسناد لشريحة بيستبدل أو يمسح أو يدرج كذا عنصر مرّة واحدة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 5.P1 -->
+  <article class="lesson project" id="u5-p1">
+    <h3>مشروع 7: قائمة طعام المطعم <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: تطبيق شامل على القوائم المتداخلة والدوال.</p>
+
+    <div class="code" data-file="restaurant_menu.py"><pre>
+menu = [
+    ["فواكه", ["banana", "orange", "apple"]],
+    ["خضار",  ["potato", "tomato"]],
+    ["لحوم",  ["meat", "chicken"]]
+]
+print("=" * 34)
+print("قائمة المطعم")
+print("=" * 34)
+print(f"عدد الأقسام: {len(menu)}")
+print(f"القسم الأول: {menu[0][0]}")
+print(f"أصنافه: {', '.join(menu[0][1])}")
+# نضيف صنف لقسم الخضار
+menu[1][1].append("cucumber")
+print(f"خضار بعد الإضافة: {menu[1][1]}")
+# نرتّب أصناف الفواكه أبجديًا
+menu[0][1].sort()
+print(f"فواكه مرتّبة: {menu[0][1]}")
+# نحسب إجمالي الأصناف
+total = len(menu[0][1]) + len(menu[1][1]) + len(menu[2][1])
+print(f"إجمالي الأصناف: {total}")
+print("=" * 34)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>==================================
+قائمة المطعم
+==================================
+عدد الأقسام: 3
+القسم الأول: فواكه
+أصنافه: banana, orange, apple
+خضار بعد الإضافة: ['potato', 'tomato', 'cucumber']
+فواكه مرتّبة: ['apple', 'banana', 'orange']
+إجمالي الأصناف: 8
+==================================</pre></div>
+
+    <div class="box brain">
+      <div class="bt">🧠 لاحظ التكرار في آخر سطر</div>
+      <p>
+        <code class="inl">len(menu[0][1]) + len(menu[1][1]) + len(menu[2][1])</code> —
+        لو عندي 20 قسم هكتب 20 حد؟ دي بالظبط اللحظة اللي بتحتاج فيها
+        <strong>حلقة تكرار</strong>. والوحدة الجاية هي الحل.
+      </p>
+    </div>
+
+    <div class="ex">
+      <div class="bt">✍️ التحدّي</div>
+      <p>
+        اعمل قائمة درجات <code class="inl">scores = [78, 92, 45, 67, 88, 95, 52]</code>
+        واطبع: أعلى درجة، أقل درجة، المتوسط مقرّب لخانة عشرية، وعدد الدرجات فوق 70
+        (تلميح: استخدم القائمة المرتّبة أو جرّب تفكّر إزاي، والحل الكامل هيبقى أسهل بعد الوحدة 6).
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+scores = [78, 92, 45, 67, 88, 95, 52]
+print(f"أعلى: {max(scores)}")
+print(f"أقل: {min(scores)}")
+print(f"المتوسط: {round(sum(scores)/len(scores), 1)}")
+# عدد الدرجات فوق 70 — بأسلوب الوحدة 6
+above = [s for s in scores if s &gt; 70]
+print(f"فوق 70: {len(above)} درجات → {above}")
+</pre></div>
+      </details>
+    </div>
+  </article>
+  <!-- ADD:u5-ch -->
+  <!-- 5.CH -->
+  <article class="lesson" id="u5-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة الخامسة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">القوائم: الاختبارات بتتأكّد من النتيجة — وكمان إنك ما بوّظتش القائمة الأصلية من غير قصد.</p>
+
+    <div class="challenge" data-ch="u5-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — تحليل الدرجات <span class="lvl">⭐⭐</span></div>
+      <p>من القائمة <code class="inl">scores</code> اعمل 3 متغيّرات: <code class="inl">top3</code> (أعلى 3 من الأكبر للأصغر)، <code class="inl">spread</code> (الفرق بين أعلى وأقل)، <code class="inl">average</code> (المتوسّط مقرّب لخانة واحدة). <strong>من غير ما القائمة الأصلية تتغيّر.</strong></p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+scores = [70, 95, 40, 88, 60]
+
+# top3 = ...
+# spread = ...
+# average = ...
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_top3():
+    "top3 = [95, 88, 70]"
+    assert top3 == [95, 88, 70], f"top3 = {top3!r}"
+
+def test_original_untouched():
+    "القائمة الأصلية ما اتغيّرتش"
+    assert scores == [70, 95, 40, 88, 60], f"scores بقت {scores!r} — استخدم sorted بدل sort"
+
+def test_spread():
+    "spread = 55"
+    assert spread == 55, f"spread = {spread!r}"
+
+def test_average():
+    "average = 70.6"
+    assert average == 70.6, f"average = {average!r}"
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+scores = [70, 95, 40, 88, 60]
+top3 = sorted(scores, reverse=True)[:3]
+spread = max(scores) - min(scores)
+average = round(sum(scores) / len(scores), 1)
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u5-ch2">
+      <div class="ch-head">🐞 التحدّي 2 — النسخة الاحتياطية اللي بتتغيّر <span class="lvl">⭐⭐</span></div>
+      <p>المفروض <code class="inl">backup</code> تفضل <code class="inl">["قلم", "كشكول"]</code> حتى بعد ما نضيف للأصل. بس بتتغيّر معاه! صلّح سطر واحد.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+original = ["قلم", "كشكول"]
+backup = original
+original.append("مسطرة")
+print(backup)
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_backup():
+    "backup لسه [قلم، كشكول]"
+    assert backup == ["قلم", "كشكول"], f"backup = {backup!r}"
+
+def test_original():
+    "original اتضاف لها مسطرة"
+    assert original == ["قلم", "كشكول", "مسطرة"], f"original = {original!r}"
+
+def test_separate():
+    "backup و original قائمتين مختلفتين في الذاكرة"
+    assert backup is not original, "لسه الاسمين بيشاوروا على نفس القائمة"
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+original = ["قلم", "كشكول"]
+backup = original.copy()
+original.append("مسطرة")
+print(backup)
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u5-ch -->
+
+  <!-- 5.EX -->
+  <article class="lesson" id="u5-ex">
+    <h3>تمارين الوحدة الخامسة <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">التمارين دي من غير حلقات تكرار — عشان تتقن القوائم نفسها الأول.</p>
+
+    <h4>المستوى الأول</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — عمليات أساسية</div>
+      <p>
+        عندك <code class="inl">fruits = ["تفاح", "موز", "برتقال"]</code>. اعمل:
+        ضيف «عنب» في الآخر، ضيف «فراولة» في الأول، شيل «موز»، اطبع القائمة وطولها.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+fruits = ["تفاح", "موز", "برتقال"]
+fruits.append("عنب")
+fruits.insert(0, "فراولة")
+fruits.remove("موز")
+print(fruits)          # ['فراولة', 'تفاح', 'برتقال', 'عنب']
+print(len(fruits))     # 4
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — الإحصائيات</div>
+      <p>عندك <code class="inl">scores = [78, 92, 45, 67, 88, 95, 52]</code>. اطبع: الأعلى، الأقل، المجموع، المتوسط مقرّبًا لخانة واحدة، والقائمة مرتّبة تنازليًا.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+scores = [78, 92, 45, 67, 88, 95, 52]
+print(f"الأعلى: {max(scores)}")
+print(f"الأقل: {min(scores)}")
+print(f"المجموع: {sum(scores)}")
+print(f"المتوسط: {round(sum(scores)/len(scores), 1)}")
+print(f"مرتّبة: {sorted(scores, reverse=True)}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 3 — التقطيع</div>
+      <p>عندك <code class="inl">nums = [10, 20, 30, 40, 50, 60]</code>. اطبع: أول 3، آخر 2، من التاني للرابع، عنصر وسيب عنصر، والقائمة معكوسة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+nums = [10, 20, 30, 40, 50, 60]
+print(nums[:3])      # [10, 20, 30]
+print(nums[-2:])     # [50, 60]
+print(nums[1:4])     # [20, 30, 40]
+print(nums[::2])     # [10, 30, 50]
+print(nums[::-1])    # [60, 50, 40, 30, 20, 10]
+</pre></div>
+      </details>
+    </div>
+
+    <h4>المستوى الثاني</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — فخّ النسخ</div>
+      <p>توقّع ناتج الكود ده <strong>قبل</strong> ما تشغّله، وبعدين شغّله:</p>
+      <div class="code"><pre>
+a = [1, 2, 3]
+b = a
+c = a.copy()
+b.append(4)
+c.append(5)
+print(a)
+print(b)
+print(c)
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 3, 4]
+[1, 2, 3, 4]
+[1, 2, 3, 5]</pre></div>
+      <p>
+        <code class="inl">b = a</code> نسخ العنوان — فـ <code class="inl">b.append(4)</code>
+        عدّلت نفس الكائن اللي <code class="inl">a</code> شايفاه.<br>
+        <code class="inl">c = a.copy()</code> عمل كائن جديد — فـ <code class="inl">c</code> مستقلّة.
+      </p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 5 — جدول الطلاب</div>
+      <p>
+        عندك <code class="inl">students = [["Ahmed", 85], ["Sara", 92], ["Ali", 67]]</code>.
+        اطبع اسم أول طالب، درجة تاني طالب، وغيّر درجة علي لـ 75، وضيف طالب جديد.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+students = [["Ahmed", 85], ["Sara", 92], ["Ali", 67]]
+print(students[0][0])        # Ahmed
+print(students[1][1])        # 92
+students[2][1] = 75
+students.append(["Mona", 90])
+print(students)
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 6 — append ولا extend؟</div>
+      <p>توقّع الناتج:</p>
+      <div class="code"><pre>
+x = [1, 2]
+y = [1, 2]
+x.append([3, 4])
+y.extend([3, 4])
+print(x, len(x))
+print(y, len(y))
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, [3, 4]] 3
+[1, 2, 3, 4] 4</pre></div>
+      <p><code class="inl">append</code> بتضيف شيء واحد (القائمة كاملة كعنصر)، <code class="inl">extend</code> بتفكّها وتضيف عناصرها.</p>
+      </details>
+    </div>
+
+    <h4>المستوى الثالث</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 7 — الفخّ العميق</div>
+      <p>توقّع الناتج، وفسّر ليه:</p>
+      <div class="code"><pre>
+matrix = [[0, 0], [0, 0]]
+copy1 = matrix.copy()
+copy1[0][0] = 9
+print(matrix)
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>[[9, 0], [0, 0]]</pre></div>
+      <p>
+        <code class="inl">.copy()</code> بتعمل <strong>نسخ سطحي</strong>: بتنسخ القائمة الخارجية بس،
+        لكن العناصر جوّاها (اللي هي قوائم) لسه بتشاور على نفس الكائنات.
+        فتعديل <code class="inl">copy1[0][0]</code> بيعدّل القائمة الداخلية المشتركة.
+      </p>
+      <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">matrix</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+      <div class="code"><pre>
+import copy
+copy2 = copy.deepcopy(matrix)     # ✅ الحل الصح للقوائم المتداخلة
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 8 — الأخطاء الصامتة</div>
+      <p>الكود ده فيه 3 أخطاء. لقّطهم:</p>
+      <div class="code"><pre>
+items = [1, 2, 3]
+items = items.append(4)
+items = items.sort()
+print(items[0])
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <ol>
+        <li>
+          <code class="inl">items = items.append(4)</code> — <code class="inl">append</code>
+          بترجّع <code class="inl">None</code>، فـ <code class="inl">items</code> بقت
+          <code class="inl">None</code> والقائمة ضاعت.
+        </li>
+        <li>
+          <code class="inl">items = items.sort()</code> — نفس المشكلة، وكمان
+          <code class="inl">None.sort()</code> هترمي <code class="inl">AttributeError</code>.
+        </li>
+        <li>
+          <code class="inl">items[0]</code> — على <code class="inl">None</code> هترمي
+          <code class="inl">TypeError</code>.
+        </li>
+      </ol>
+      <div class="code"><pre>
+# الصح:
+items = [1, 2, 3]
+items.append(4)      # من غير إسناد
+items.sort()         # من غير إسناد
+print(items[0])      # 1
+</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">lst.append(x)</code> بترجّع…</p>
+        <label><input type="radio"> القائمة بعد الإضافة</label>
+        <label><input type="radio"> العنصر x</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> طول القائمة</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. الفرق بين <code class="inl">lst.sort()</code> و <code class="inl">sorted(lst)</code>؟</p>
+        <label><input type="radio"> مفيش فرق</label>
+        <label><input type="radio"> الأولى بتعدّل الأصل، التانية بترجّع نسخة جديدة</label>
+        <label><input type="radio"> الأولى بترجّع نسخة، التانية بتعدّل الأصل</label>
+        <label><input type="radio"> الأولى للأرقام والتانية للنصوص</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">[1,2,3][1:]</code> بترجّع…</p>
+        <label><input type="radio"> [2, 3]</label>
+        <label><input type="radio"> [1, 2]</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> [1]</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. أنهي دالة بتحذف وترجّع العنصر المحذوف؟</p>
+        <label><input type="radio"> remove()</label>
+        <label><input type="radio"> clear()</label>
+        <label><input type="radio"> del</label>
+        <label><input type="radio"> pop()</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">5. <code class="inl">menu[1][0]</code> على <code class="inl">[["a","b"],["c","d"]]</code> بترجّع…</p>
+        <label><input type="radio"> "b"</label>
+        <label><input type="radio"> "c"</label>
+        <label><input type="radio"> "a"</label>
+        <label><input type="radio"> ["c","d"]</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">6. <code class="inl">sum(["a","b"])</code> بتعمل إيه؟</p>
+        <label><input type="radio"> بترجّع "ab"</label>
+        <label><input type="radio"> بترجّع 2</label>
+        <label><input type="radio"> بترمي TypeError</label>
+        <label><input type="radio"> بترجّع 0</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:5 -->
+  <div class="checkpoint" data-unit="5">
+    <h4>✅ نقطة تفتيش: الوحدة الخامسة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أعمل قوائم وأضيف وأمسح وأرتّب عناصرها.</li><li>أعرف الفرق بين sort و sorted.</li><li>أنسخ قائمة صح وأفهم ليه b = a مش نسخ.</li><li>أتعامل مع القوائم المتداخلة.</li></ul>
+  </div>
+  <!-- /CP -->

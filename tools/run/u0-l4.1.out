@@ -1,0 +1,6 @@
+  2           0 RESUME                   0
+
+  3           2 LOAD_FAST                0 (price)
+              4 LOAD_CONST               1 (1.14)
+              6 BINARY_OP                5 (*)
+             10 RETURN_VALUE

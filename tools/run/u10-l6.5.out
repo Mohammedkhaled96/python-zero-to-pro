@@ -1,0 +1,5 @@
+Point(x=3, y=4)
+3 4
+7
+سارة 95
+Student(name='سارة', grade=97, city='الجيزة')

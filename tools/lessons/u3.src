@@ -1,0 +1,227 @@
+@@lesson u3-l5 before="<!-- 3.P1 -->"
+  <!-- 3.5 -->
+  <article class="lesson" id="u3-l5">
+    <h3>دوال نصوص متقدّمة: المحاذاة، التقسيم الذكي، والاستبدال الجماعي <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تكمّل صندوق أدوات النصوص بالدوال اللي بتفرق بين كود «شغّال» وكود «احترافي» — ومنها فخاخ بيقع فيها ناس بخبرة سنين.</p>
+
+    <h4>1. المحاذاة والحشو: center و ljust و rjust و zfill</h4>
+    <p>
+      لما تطبع جدول أو فاتورة في الـ Terminal، محتاج كل عمود ياخد <strong>عرض ثابت</strong>. الدوال دي بتكمّل النص بمسافات (أو أي حرف تختاره) لحد عرض معيّن.
+    </p>
+    @code run
+print("[" + "Python".center(12) + "]") ¦¦ `center(12)` بتخلّي النص في نص مساحة عرضها 12 حرف، وتكمّل بمسافات على الجانبين. الأقواس المربعة عشان نشوف المسافات.
+print("[" + "Python".ljust(12, ".") + "]") ¦¦ `ljust` = محاذاة شمال (النص في الأول والحشو بعده). الوسيط التاني = حرف الحشو (حرف واحد بس).
+print("[" + "Python".rjust(12, "-") + "]") ¦¦ `rjust` = محاذاة يمين: الحشو قبل النص. ممتازة للأرقام في الجداول.
+print("7".zfill(3)) ¦¦ `zfill` = zero fill: كمّل بأصفار على الشمال لحد 3 خانات ← `007`. مفيدة لأرقام الفواتير والتواريخ.
+print("-42".zfill(5)) ¦¦ ذكية: بتحط الأصفار **بعد** الإشارة مش قبلها ← `-0042`.
+print(f"[{'Python':^12}] [{'Python':.<12}] [{'Python':->12}]") ¦¦ نفس التلاتة جوّه f-string: `^` وسط، `<` شمال، `>` يمين، والحرف اللي قبلهم = الحشو.
+    @end
+    @out
+[   Python   ]
+[Python......]
+[------Python]
+007
+-0042
+[   Python   ] [Python......] [------Python]
+    @end
+    @code run
+item = "Coffee" ¦¦ اسم الصنف.
+price = 45.5 ¦¦ السعر.
+print(item.ljust(15, ".") + f"{price:>8.2f}") ¦¦ **سطر فاتورة**: الاسم محاذي شمال بنقط لحد 15 حرف، والسعر محاذي يمين في 8 خانات بخانتين عشريتين. أي صنف بعده هيتصفّ تحته بالظبط.
+    @end
+    @out
+Coffee.........   45.50
+    @end
+    <div class="box warn">
+      <div class="bt">⚠️ الحروف العربية والمحاذاة</div>
+      <p>
+        المحاذاة بتعدّ <strong>عدد الحروف</strong> مش عرضها على الشاشة. الحروف العربية بالتشكيل، والإيموجي، والحروف الصينية
+        ممكن تبوّظ الاصطفاف لأن عرضها المرئي مختلف. للجداول العربية المعقّدة استخدم مكتبة زي <code class="inl">rich</code> أو <code class="inl">tabulate</code> لاحقًا.
+      </p>
+    </div>
+
+    <h4>2. partition: قسّم عند أول ظهور — وارجع بـ 3 أجزاء دايمًا</h4>
+    <p>
+      <code class="inl">split</code> بترجّع عدد أجزاء متغيّر، وده بيعمل مشاكل لو الفاصل مش موجود. <code class="inl">partition</code> بترجّع
+      <strong>دايمًا 3 أجزاء</strong>: اللي قبل الفاصل، الفاصل نفسه، اللي بعده.
+    </p>
+    @code run
+email = "ahmed.ali@company.com" ¦¦ نص فيه فاصل واحد مهم: `@`.
+user, sep, domain = email.partition("@") ¦¦ `partition` بترجّع 3 قيم، وبنفكّهم في 3 متغيّرات مرّة واحدة (زي `a, b = 1, 2`).
+print(user) ¦¦ الجزء قبل `@`.
+print(domain) ¦¦ الجزء بعده.
+print("no-at-sign".partition("@")) ¦¦ **الفاصل مش موجود**؟ مفيش خطأ: النص كله في الأول، والجزئين التانيين نصوص فاضية. الأقواس دي tuple.
+path = "photos/2024/trip/beach.jpg" ¦¦ مسار فيه أكتر من `/`.
+print(path.rpartition("/")[2]) ¦¦ `rpartition` بتدوّر من **اليمين** (آخر ظهور). الجزء رقم 2 = اسم الملف.
+print(path.rpartition("/")[0]) ¦¦ الجزء رقم 0 = الفولدر اللي فيه الملف.
+    @end
+    @out
+ahmed.ali
+company.com
+('no-at-sign', '', '')
+beach.jpg
+photos/2024/trip
+    @end
+
+    <h4>3. split و rsplit بحدّ أقصى للتقسيم</h4>
+    @code run
+line = "2024-05-01,Cairo,Egypt,Africa" ¦¦ سطر CSV.
+print(line.split(",", 1)) ¦¦ الوسيط التاني `maxsplit=1`: **قسّم مرّة واحدة بس** من الشمال ← جزئين، والباقي يفضل مع بعض.
+print(line.rsplit(",", 1)) ¦¦ `rsplit` نفس الفكرة لكن بتبدأ من **اليمين** ← آخر جزء لوحده.
+filename = "report.final.v2.pdf" ¦¦ اسم ملف فيه كذا نقطة.
+print(filename.rsplit(".", 1)[1]) ¦¦ **الطريقة الصح لاستخراج الامتداد**: قسّم عند آخر نقطة بس. `split(".")[1]` كانت هترجّع `final` غلط.
+    @end
+    @out
+['2024-05-01', 'Cairo,Egypt,Africa']
+['2024-05-01,Cairo,Egypt', 'Africa']
+pdf
+    @end
+
+    <h4>4. فخ strip الشهير: removeprefix و removesuffix</h4>
+    <div class="box err">
+      <div class="bt">❌ الفخ</div>
+      <p>
+        <code class="inl">strip("abc")</code> <strong>مش</strong> بتشيل الكلمة «abc». بتشيل <strong>أي حرف من الحروف دي</strong> من الأطراف، مهما اتكرّر وبأي ترتيب.
+      </p>
+    </div>
+    @code run
+url = "https://site.com" ¦¦ رابط.
+print(url.lstrip("https://")) ¦¦ متوقّع `site.com`؟ الناتج `ite.com`! لأن `lstrip` شالت كل حرف من {h,t,p,s,:,/} — وحرف `s` بتاع site كان من ضمنهم.
+print(url.removeprefix("https://")) ¦¦ **الصح** (من بايثون 3.9): بتشيل البادئة **ككلمة كاملة** ومرّة واحدة، ولو مش موجودة بترجّع النص زي ما هو.
+file = "stats.csv" ¦¦ اسم ملف.
+print(file.rstrip(".csv")) ¦¦ نفس الفخ من اليمين: شالت v,s,c,. ثم لقت `s` بتاعة stats فشالتها ← `stat`.
+print(file.removesuffix(".csv")) ¦¦ الصح ← `stats`.
+    @end
+    @out
+ite.com
+site.com
+stat
+stats
+    @end
+
+    <h4>5. المقارنة من غير حساسية للحالة: casefold</h4>
+    @code run
+a = "Straße" ¦¦ كلمة ألماني فيها حرف ß (بيتنطق ss).
+b = "STRASSE" ¦¦ نفس الكلمة بحروف كبيرة.
+print(a.lower() == b.lower()) ¦¦ `lower` بتسيب ß زي ما هي، فالمقارنة بتفشل.
+print(a.casefold() == b.casefold()) ¦¦ `casefold` نسخة «أقوى» من lower مصمّمة **للمقارنة**: بتحوّل ß لـ ss. استخدمها لما تقارن مدخلات مستخدمين بلغات مختلفة.
+name = "photo.JPG" ¦¦ امتداد بحروف كبيرة.
+print(name.casefold().endswith((".jpg", ".png", ".gif"))) ¦¦ `endswith` (و `startswith`) بتقبل **tuple من الاحتمالات** — بدل ما تكتب 3 شروط.
+    @end
+    @out
+False
+True
+True
+    @end
+
+    <h4>6. الاستبدال الجماعي: maketrans و translate</h4>
+    <p>
+      <code class="inl">replace</code> بتستبدل نص واحد في كل مرّة. لو عايز تستبدل <strong>10 حروف مختلفة في خطوة واحدة</strong> —
+      اعمل «جدول ترجمة» بـ <code class="inl">str.maketrans</code> وطبّقه بـ <code class="inl">translate</code>. أسرع بكتير من 10 replace ورا بعض.
+    </p>
+    @code run
+table = str.maketrans("aeiou", "12345") ¦¦ جدول: كل حرف في النص الأول يقابله الحرف في نفس المكان في التاني (a→1، e→2…). لازم يكونوا بنفس الطول.
+print("education".translate(table)) ¦¦ تطبيق الجدول على النص كله مرّة واحدة.
+digits = str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789") ¦¦ **استخدام حقيقي جدًا**: تحويل الأرقام العربية (الهندية) لإنجليزي. المستخدمين العرب بيكتبوها كتير في النماذج.
+phone = "٠١٠١٢٣٤٥٦٧٨" ¦¦ رقم موبايل مكتوب بالأرقام العربية.
+print(phone.translate(digits)) ¦¦ اتحوّل وحافظنا على الصفر اللي على الشمال (لأنه لسه نص).
+clean = str.maketrans("", "", "!?.,") ¦¦ الوسيط **التالت** = حروف تتمسح خالص. الأولين فاضيين لأننا مش بنستبدل حاجة.
+print("Hello, World!! How?".translate(clean)) ¦¦ كل علامات الترقيم اتشالت في خطوة واحدة.
+    @end
+    @out
+2d5c1t34n
+01012345678
+Hello World How
+    @end
+
+    <h4>7. isdecimal و isdigit و isnumeric: التلات أخوات</h4>
+    @code run
+print("123".isdecimal(), "١٢٣".isdecimal(), "²".isdecimal(), "½".isdecimal()) ¦¦ `isdecimal` الأضيق: أرقام من 0–9 في **أي لغة** (العربي مقبول!) بس مش الأس ولا الكسور.
+print("123".isdigit(), "١٢٣".isdigit(), "²".isdigit(), "½".isdigit()) ¦¦ `isdigit` أوسع: بتقبل كمان رموز الأس زي ².
+print("123".isnumeric(), "١٢٣".isnumeric(), "²".isnumeric(), "½".isnumeric()) ¦¦ `isnumeric` الأوسع: حتى الكسور زي ½.
+print(int("١٢٣") + 1) ¦¦ مفاجأة لطيفة: `int` نفسها بتفهم الأرقام العربية مباشرةً!
+print("-5".isdecimal()) ¦¦ **فخ**: الإشارة السالبة مش رقم، فالتلاتة بيرجّعوا False لـ `"-5"` و `"3.5"`. عشان كده `try/except` (الوحدة 9) أضمن للتحقّق من الأرقام.
+    @end
+    @out
+True True False False
+True True True False
+True True True True
+124
+False
+    @end
+    <div class="box tip">
+      <div class="bt">💡 تستخدم أنهي واحدة؟</div>
+      <p>
+        للتحقّق إن المستخدم كتب رقم صحيح موجب يتحوّل بـ <code class="inl">int</code>: <strong><code class="inl">isdecimal</code></strong> هي الأدقّ.
+        <code class="inl">isdigit</code> ممكن ترجّع True لـ <code class="inl">"²"</code> وبعدين <code class="inl">int("²")</code> يرمي خطأ.
+      </p>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>منظّف رقم التليفون</div>
+      <p>المستخدم ممكن يكتب الرقم بأرقام عربية وبمسافات وشرط زي <code class="inl">٠١٠-١٢٣ ٤٥٦٧٨</code>. نظّفه لـ <code class="inl">01012345678</code> واطبع هل طوله 11.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+raw = "٠١٠-١٢٣ ٤٥٦٧٨" ¦¦ مدخل «وسخ» (ممكن تستبدله بـ `input`).
+table = str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789", " -") ¦¦ جدول واحد بيعمل الحاجتين: يحوّل الأرقام **ويمسح** المسافات والشرط (الوسيط التالت).
+phone = raw.translate(table) ¦¦ تطبيق.
+print(phone, len(phone) == 11) ¦¦ النتيجة وفحص الطول.
+      @end
+      @out
+01012345678 True
+      @end
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تقرير الملف</div>
+      <p>من المسار <code class="inl">"C:/Users/sara/Documents/cv.final.docx"</code> اطبع: اسم الملف، الامتداد، واسم الملف من غير امتداد.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+path = "C:/Users/sara/Documents/cv.final.docx" ¦¦ المسار.
+name = path.rpartition("/")[2] ¦¦ آخر جزء بعد آخر `/` = اسم الملف.
+stem, _, ext = name.rpartition(".") ¦¦ قسّم عند **آخر** نقطة. `_` اسم متعارف عليه لقيمة مش محتاجينها (الفاصل).
+print(name) ¦¦ cv.final.docx
+print(ext) ¦¦ docx
+print(stem) ¦¦ cv.final — النقطة اللي في النص فضلت سليمة.
+      @end
+      @out
+cv.final.docx
+docx
+cv.final
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">"banana".strip("ab")</code> ناتجها؟ (فكّر: بتشيل أي a أو b من الطرفين)</p>
+        <label><input type="radio"> "nana"</label>
+        <label><input type="radio"> "nan"</label>
+        <label><input type="radio"> "banana"</label>
+        <label><input type="radio"> "anan"</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. أضمن طريقة تجيب امتداد <code class="inl">"a.b.c.txt"</code>؟</p>
+        <label><input type="radio"> split(".")[1]</label>
+        <label><input type="radio"> strip(".")</label>
+        <label><input type="radio"> partition(".")[2]</label>
+        <label><input type="radio"> rsplit(".", 1)[1]</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">"5".zfill(3)</code>؟</p>
+        <label><input type="radio"> "005"</label>
+        <label><input type="radio"> "500"</label>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> "  5"</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. الوسيط التالت في <code class="inl">str.maketrans(a, b, c)</code> معناه…</p>
+        <label><input type="radio"> عدد مرّات الاستبدال</label>
+        <label><input type="radio"> حروف تتضاف في الآخر</label>
+        <label><input type="radio"> حروف تتمسح من النص</label>
+        <label><input type="radio"> اتجاه الترجمة</label>
+      </div>
+    </div>
+  </article>

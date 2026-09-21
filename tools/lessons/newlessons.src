@@ -1,0 +1,555 @@
+@@lesson u12-l9 before="<!-- ADD:u12-l5 -->"
+  <!-- 12.9 -->
+  <article class="lesson" id="u12-l9">
+    <h3>JSON: لغة تبادل البيانات بين البرامج <span class="tag">درس ؟ · مهم</span></h3>
+    <p class="goal">الهدف: تحوّل قواميس وقوائم بايثون لـ JSON والعكس، تحفظها في ملفات بأمان، وتتعامل مع العربي والأنواع اللي JSON ما يعرفهاش والملفات البايظة.</p>
+
+    <h4>1. إيه هو JSON وليه في كل مكان؟</h4>
+    <p>
+      <strong>JSON</strong> (JavaScript Object Notation) صيغة نصّية لتخزين بيانات منظّمة، شكلها قريب جدًا من القواميس والقوائم في بايثون.
+      هي اللغة المشتركة بين البرامج: الـ APIs بترجّع JSON، وملفات الإعدادات بتتكتب JSON، والمواقع والموبايلات بتتبادل بيها البيانات.
+      ومكتبة <code class="inl">json</code> جاية مع بايثون.
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>بايثون</th><th>JSON</th><th>ملاحظة</th></tr>
+        <tr><td><code class="inl">dict</code></td><td>object <code class="inl">{}</code></td><td>المفاتيح في JSON <strong>نصوص بس</strong></td></tr>
+        <tr><td><code class="inl">list</code> و <code class="inl">tuple</code></td><td>array <code class="inl">[]</code></td><td>الـ tuple بترجع list</td></tr>
+        <tr><td><code class="inl">str</code></td><td>string</td><td>علامات تنصيص مزدوجة <strong>بس</strong></td></tr>
+        <tr><td><code class="inl">int</code> و <code class="inl">float</code></td><td>number</td><td></td></tr>
+        <tr><td><code class="inl">True</code> / <code class="inl">False</code></td><td><code class="inl">true</code> / <code class="inl">false</code></td><td>حروف صغيرة</td></tr>
+        <tr><td><code class="inl">None</code></td><td><code class="inl">null</code></td><td></td></tr>
+        <tr><td><code class="inl">set</code> و <code class="inl">date</code> وكائناتك</td><td>❌ مش مدعومة</td><td>محتاجة تحويل (فقرة 6)</td></tr>
+      </table>
+    </div>
+
+    <h4>2. من بايثون لنص والعكس: dumps و loads</h4>
+    @code run
+import json ¦¦ مكتبة قياسية.
+ ¦¦
+student = {"name": "سارة", "age": 21, "skills": ["Python", "SQL"], "graduated": False, "gpa": None} ¦¦ قاموس فيه كل الأنواع الأساسية.
+text = json.dumps(student) ¦¦ `dumps` = dump **s**tring: بتحوّل الكائن لـ **نص** JSON.
+print(text) ¦¦ لاحظ: `false` و `null`، والحروف العربية اتحوّلت لأكواد `\u...` (الافتراضي بيحوّل أي حرف مش إنجليزي).
+print(type(text)) ¦¦ نص عادي — تقدر تبعته على الشبكة أو تكتبه في ملف.
+pretty = json.dumps(student, ensure_ascii=False, indent=2) ¦¦ `ensure_ascii=False` بتسيب العربي زي ما هو، و `indent=2` بتنسّقه على أسطر.
+print(pretty) ¦¦ مقروء للبشر.
+back = json.loads(text) ¦¦ `loads` = load **s**tring: نص JSON ← كائنات بايثون.
+print(back == student, type(back)) ¦¦ رجع قاموس مطابق.
+    @end
+    @out
+{"name": "\u0633\u0627\u0631\u0629", "age": 21, "skills": ["Python", "SQL"], "graduated": false, "gpa": null}
+&lt;class 'str'&gt;
+{
+  "name": "سارة",
+  "age": 21,
+  "skills": [
+    "Python",
+    "SQL"
+  ],
+  "graduated": false,
+  "gpa": null
+}
+True &lt;class 'dict'&gt;
+    @end
+
+    <h4>3. الفخاخ: اللي بيتغيّر في الرحلة</h4>
+    @code run
+import json ¦¦ استيراد.
+ ¦¦
+data = {"point": (3, 4), 1: "one", "ok": True} ¦¦ tuple، ومفتاح رقم.
+text = json.dumps(data) ¦¦ التحويل.
+print(text) ¦¦ الـ tuple بقت array، والمفتاح `1` بقى النص `"1"`.
+back = json.loads(text) ¦¦ الرجوع.
+print(back) ¦¦ `[3, 4]` قائمة، و `'1'` نص.
+print(back == data) ¦¦ ⚠️ **مش نفس البيانات** — فرق مهم لما تخزّن وتسترجع.
+try: ¦¦ نجرّب نوع مش مدعوم.
+    json.dumps({"tags": {"a", "b"}}) ¦¦ set.
+except TypeError as e: ¦¦ الخطأ.
+    print("خطأ:", e) ¦¦ الرسالة بتقول النوع اللي اتعطّل.
+    @end
+    @out
+{"point": [3, 4], "1": "one", "ok": true}
+{'point': [3, 4], '1': 'one', 'ok': True}
+False
+خطأ: Object of type set is not JSON serializable
+    @end
+
+    <h4>4. الملفات: dump و load</h4>
+    @code run
+import json ¦¦ استيراد.
+from pathlib import Path ¦¦ لعرض الملف.
+ ¦¦
+settings = {"theme": "dark", "font_size": 14, "recent": ["notes.txt", "todo.md"]} ¦¦ إعدادات برنامج.
+with open("settings.json", "w", encoding="utf-8") as f: ¦¦ `encoding` ضروري عشان العربي.
+    json.dump(settings, f, ensure_ascii=False, indent=2) ¦¦ `dump` (من غير s) بتكتب **في ملف** مباشرةً.
+ ¦¦
+with open("settings.json", encoding="utf-8") as f: ¦¦ القراءة.
+    loaded = json.load(f) ¦¦ `load` بتقرا من ملف وترجّع الكائن.
+print(loaded["recent"][0]) ¦¦ الوصول عادي زي أي قاموس.
+print(Path("settings.json").read_text(encoding="utf-8")) ¦¦ شكل الملف على القرص.
+    @end
+    @out
+notes.txt
+{
+  "theme": "dark",
+  "font_size": 14,
+  "recent": [
+    "notes.txt",
+    "todo.md"
+  ]
+}
+    @end
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الدالة</th><th>من</th><th>لـ</th><th>افتكرها كده</th></tr>
+        <tr><td><code class="inl">json.dumps(obj)</code></td><td>كائن</td><td>نص</td><td>الـ s = string</td></tr>
+        <tr><td><code class="inl">json.loads(text)</code></td><td>نص</td><td>كائن</td><td>الـ s = string</td></tr>
+        <tr><td><code class="inl">json.dump(obj, f)</code></td><td>كائن</td><td>ملف</td><td>من غير s = file</td></tr>
+        <tr><td><code class="inl">json.load(f)</code></td><td>ملف</td><td>كائن</td><td>من غير s = file</td></tr>
+      </table>
+    </div>
+
+    <h4>5. التحميل الآمن: ملف مش موجود أو بايظ</h4>
+    @code run
+import json ¦¦ استيراد.
+ ¦¦
+def load_settings(path, defaults): ¦¦ دالة تحميل «ما بتقعش».
+    try: ¦¦ نحاول نقرا.
+        with open(path, encoding="utf-8") as f: ¦¦ الفتح.
+            data = json.load(f) ¦¦ التحليل.
+    except FileNotFoundError: ¦¦ أول تشغيل للبرنامج: مفيش ملف لسه.
+        return dict(defaults) ¦¦ نسخة من الافتراضي (عشان محدش يعدّل الأصل).
+    except json.JSONDecodeError as e: ¦¦ الملف موجود بس مش JSON صحيح (حد عدّله بإيده وغلط).
+        print(f"⚠️ الملف بايظ (سطر {e.lineno}، عمود {e.colno}) — هنستخدم الافتراضي") ¦¦ الخطأ بيقولك **المكان** بالظبط.
+        return dict(defaults) ¦¦ الافتراضي.
+    return defaults | data ¦¦ دمج (الوحدة 10): الافتراضي + اللي المستخدم غيّره.
+ ¦¦
+DEFAULTS = {"theme": "light", "font_size": 12} ¦¦ الإعدادات الافتراضية.
+print(load_settings("missing.json", DEFAULTS)) ¦¦ ملف مش موجود.
+with open("broken.json", "w", encoding="utf-8") as f: ¦¦ ملف بايظ للتجربة…
+    f.write('{"theme": "dark",}') ¦¦ …فيه فاصلة زيادة في الآخر — مسموحة في بايثون لكن **ممنوعة في JSON**.
+print(load_settings("broken.json", DEFAULTS)) ¦¦ بيبلّغ ويكمّل.
+with open("user.json", "w", encoding="utf-8") as f: ¦¦ ملف سليم فيه جزء من الإعدادات.
+    f.write('{"font_size": 18}') ¦¦ المستخدم غيّر الخط بس.
+print(load_settings("user.json", DEFAULTS)) ¦¦ الدمج: الثيم من الافتراضي والخط من الملف.
+    @end
+    @out
+{'theme': 'light', 'font_size': 12}
+⚠️ الملف بايظ (سطر 1، عمود 18) — هنستخدم الافتراضي
+{'theme': 'light', 'font_size': 12}
+{'theme': 'light', 'font_size': 18}
+    @end
+    <div class="box err">
+      <div class="bt">❌ أشهر أخطاء كتابة JSON بإيدك</div>
+      <ul>
+        <li>علامات تنصيص مفردة <code class="inl">'name'</code> — JSON بيقبل المزدوجة بس.</li>
+        <li>فاصلة بعد آخر عنصر <code class="inl">[1, 2,]</code>.</li>
+        <li><code class="inl">True</code> و <code class="inl">None</code> بحروف بايثون بدل <code class="inl">true</code> و <code class="inl">null</code>.</li>
+        <li>تعليقات <code class="inl">#</code> أو <code class="inl">//</code> — JSON مالوش تعليقات.</li>
+      </ul>
+    </div>
+
+    <h4>6. أنواع مش مدعومة: default و object_hook</h4>
+    @code run
+import json ¦¦ استيراد.
+from datetime import date ¦¦ التواريخ (الوحدة 7).
+ ¦¦
+def to_json(obj): ¦¦ دالة بتتنادى لأي كائن JSON مش عارفه.
+    if isinstance(obj, date): ¦¦ تاريخ؟
+        return obj.isoformat() ¦¦ نحوّله لنص ISO.
+    if isinstance(obj, set): ¦¦ مجموعة؟
+        return sorted(obj) ¦¦ قائمة مرتّبة (عشان الناتج يبقى ثابت).
+    raise TypeError(f"مش عارف أحوّل {type(obj).__name__}") ¦¦ أي حاجة تانية: خطأ واضح بدل ما نخمّن.
+ ¦¦
+order = {"id": 17, "day": date(2025, 3, 15), "tags": {"urgent", "gift"}} ¦¦ بيانات فيها تاريخ و set.
+text = json.dumps(order, default=to_json) ¦¦ `default` = «لو قابلت نوع مش معروف، ابعته للدالة دي».
+print(text) ¦¦ اتحوّل بنجاح.
+ ¦¦
+def from_json(d): ¦¦ العكس: بتتنادى على **كل قاموس** بعد تحليله.
+    if "day" in d: ¦¦ لو فيه مفتاح تاريخ…
+        d["day"] = date.fromisoformat(d["day"]) ¦¦ …نرجّعه كائن date.
+    return d ¦¦ لازم نرجّع القاموس.
+ ¦¦
+back = json.loads(text, object_hook=from_json) ¦¦ `object_hook` بيطبّق الدالة أثناء التحميل.
+print(back["day"].year, type(back["day"]).__name__) ¦¦ رجع تاريخ حقيقي تقدر تحسب بيه.
+    @end
+    @out
+{"id": 17, "day": "2025-03-15", "tags": ["gift", "urgent"]}
+2025 date
+    @end
+
+    <h4>7. التنقّل في JSON متداخل (زي ردود الـ APIs)</h4>
+    @code run
+import json ¦¦ استيراد.
+ ¦¦
+response = ''' ¦¦ رد API بشكل حقيقي (في الواقع: `requests.get(url).json()`).
+{"city": "Cairo", "forecast": [ ¦¦ قاموس فيه قائمة…
+  {"day": "Sat", "temp": {"min": 18, "max": 29}}, ¦¦ …كل عنصر فيها قاموس فيه قاموس.
+  {"day": "Sun", "temp": {"min": 17, "max": 31}} ¦¦ يوم تاني.
+]} ¦¦ قفل.
+''' ¦¦ نهاية النص.
+data = json.loads(response) ¦¦ تحليل.
+for day in data["forecast"]: ¦¦ المرور على القائمة الداخلية.
+    print(day["day"], day["temp"]["max"]) ¦¦ وصول متداخل: قاموس ← قاموس ← قيمة.
+hottest = max(data["forecast"], key=lambda d: d["temp"]["max"]) ¦¦ أكبر عنصر بمفتاح متداخل (الوحدة 11).
+print("أحرّ يوم:", hottest["day"]) ¦¦ النتيجة.
+print(data.get("alerts", [])) ¦¦ مفتاح ممكن ما يرجعش في الرد — `get` بقيمة افتراضية بدل KeyError.
+    @end
+    @out
+Sat 29
+Sun 31
+أحرّ يوم: Sun
+[]
+    @end
+    @code terminal
+python -m json.tool settings.json ¦¦ أداة مدمجة بتتحقّق من ملف JSON وتعرضه منسّق — ولو فيه غلط بتقولك مكانه.
+    @end
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الصيغة</th><th>مناسبة لـ</th></tr>
+        <tr><td><strong>JSON</strong></td><td>بيانات متداخلة (قواميس جوّه قوائم)، إعدادات، تبادل مع APIs ومواقع</td></tr>
+        <tr><td><strong>CSV</strong></td><td>جداول بسيطة صف وأعمدة، بتتفتح في Excel</td></tr>
+        <tr><td><strong>SQLite</strong></td><td>بيانات كتير بتتسأل وتتعدّل وتتربط ببعض</td></tr>
+      </table>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>لوحة المتصدّرين</div>
+      <p>عندك نتايج لاعبين. احفظ أعلى 3 في ملف <code class="inl">leaderboard.json</code> كقائمة قواميس فيها الترتيب، واقراه واطبعه.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import json ¦¦ استيراد.
+ ¦¦
+scores = {"سارة": 920, "علي": 780, "منى": 990, "عمر": 640} ¦¦ النتايج.
+top = sorted(scores.items(), key=lambda kv: kv[1], reverse=True)[:3] ¦¦ أعلى 3 كأزواج.
+board = [{"rank": i, "name": n, "score": s} for i, (n, s) in enumerate(top, 1)] ¦¦ قائمة قواميس بالترتيب — شكل JSON نموذجي.
+with open("leaderboard.json", "w", encoding="utf-8") as f: ¦¦ الحفظ.
+    json.dump(board, f, ensure_ascii=False, indent=2) ¦¦ بالعربي ومنسّق.
+with open("leaderboard.json", encoding="utf-8") as f: ¦¦ القراءة.
+    for row in json.load(f): ¦¦ المرور مباشرةً على الناتج.
+        print(f"{row['rank']}. {row['name']} — {row['score']}") ¦¦ العرض.
+      @end
+      @out rtl
+1. منى — 990
+2. سارة — 920
+3. علي — 780
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. تكتب قاموس في ملف JSON تستخدم…</p>
+        <label><input type="radio"> json.dumps(d, f)</label>
+        <label><input type="radio"> json.dump(d, f)</label>
+        <label><input type="radio"> json.load(d)</label>
+        <label><input type="radio"> f.write(d)</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">json.loads(json.dumps({1: (2, 3)}))</code>؟</p>
+        <label><input type="radio"> {1: (2, 3)}</label>
+        <label><input type="radio"> {1: [2, 3]}</label>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> {'1': [2, 3]}</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. العربي بيطلع في الملف <code class="inl">\u0633\u0627…</code>. الحل؟</p>
+        <label><input type="radio"> ensure_ascii=False (مع encoding="utf-8")</label>
+        <label><input type="radio"> indent=2</label>
+        <label><input type="radio"> sort_keys=True</label>
+        <label><input type="radio"> مستحيل</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. أنهي نص JSON صحيح؟</p>
+        <label><input type="radio"> {'a': 1}</label>
+        <label><input type="radio"> {"a": True}</label>
+        <label><input type="radio"> {"a": [1, 2], "b": null}</label>
+        <label><input type="radio"> {"a": 1,}</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u15-l9 before="<!-- ADD:u15-l8 -->"
+  <!-- 15.9 -->
+  <article class="lesson" id="u15-l9">
+    <h3>dataclasses و Enum: كلاسات البيانات الحديثة <span class="tag">درس ؟ · مهم</span></h3>
+    <p class="goal">الهدف: تكتب كلاسات بيانات في سطور قليلة من غير تكرار <code class="inl">__init__</code> و <code class="inl">__repr__</code> و <code class="inl">__eq__</code>، وتستخدم <code class="inl">Enum</code> بدل النصوص السحرية زي <code class="inl">"done"</code> و <code class="inl">"todo"</code>.</p>
+
+    <h4>1. المشكلة: كود متكرّر في كل كلاس بيانات</h4>
+    @code run
+class PointOld: ¦¦ كلاس بالطريقة اللي اتعلّمناها.
+    def __init__(self, x, y): ¦¦ المهيّئ…
+        self.x = x ¦¦ …كل حقل بيتكتب مرّتين (وسيط + إسناد).
+        self.y = y ¦¦ حقل تاني.
+ ¦¦
+print(PointOld(1, 2) == PointOld(1, 2)) ¦¦ False! من غير `__eq__` المقارنة بتسأل «نفس الكائن؟» مش «نفس القيم؟».
+    @end
+    @out
+False
+    @end
+    <p>عشان يبقى الكلاس ده «محترم» محتاج <code class="inl">__init__</code> و <code class="inl">__repr__</code> و <code class="inl">__eq__</code> — عشرات السطور المتكرّرة. <code class="inl">@dataclass</code> بتكتبهم بدالك.</p>
+
+    <h4>2. أول dataclass</h4>
+    @code run
+from dataclasses import dataclass ¦¦ مكتبة قياسية (من بايثون 3.7).
+ ¦¦
+@dataclass ¦¦ decorator (الوحدة 11) بيقرا الحقول اللي تحت ويولّد الدوال السحرية.
+class Point: ¦¦ كلاس عادي.
+    x: float ¦¦ **حقل** = اسم + تلميح نوع (الوحدة 11). التلميح هنا إلزامي عشان dataclass تعرف إنه حقل.
+    y: float ¦¦ حقل تاني.
+ ¦¦
+p = Point(1, 2) ¦¦ `__init__` اتولّدت بالوسائط بنفس ترتيب الحقول.
+print(p) ¦¦ `__repr__` مقروء تلقائيًا.
+print(p == Point(1, 2)) ¦¦ `__eq__` بتقارن **القيم** ← True.
+p.x = 10 ¦¦ الحقول عادية تتعدّل (إلا لو frozen — فقرة 4).
+print(p.x) ¦¦ القيمة الجديدة.
+print(Point(y=5, x=3)) ¦¦ الوسائط بالاسم شغّالة.
+    @end
+    @out
+Point(x=1, y=2)
+True
+10
+Point(x=3, y=5)
+    @end
+    <div class="box info">
+      <div class="bt">ℹ️ التلميحات لسه مش بتتفرض</div>
+      <p><code class="inl">Point("a", "b")</code> هتشتغل عادي — dataclass بتستخدم التلميحات عشان تعرف الحقول، مش عشان تتحقّق منها. التحقّق بتعمله إنت (الفقرة الجاية)، أو بمكتبة زي <strong>Pydantic</strong>.</p>
+    </div>
+
+    <h4>3. قيم افتراضية، تحقّق، ودوال</h4>
+    @code run
+from dataclasses import dataclass, field ¦¦ `field` لإعدادات حقل معيّن.
+ ¦¦
+@dataclass ¦¦ التحويل.
+class Product: ¦¦ منتج.
+    name: str ¦¦ حقل إلزامي.
+    price: float ¦¦ حقل إلزامي.
+    tags: list[str] = field(default_factory=list) ¦¦ ⚠️ **قائمة افتراضية لازم بـ `default_factory`** — `= []` كانت هتخلّي كل المنتجات تشارك قائمة واحدة (نفس فخ الوحدة 11)، وdataclass بترفضها أصلًا.
+    qty: int = 0 ¦¦ قيمة افتراضية بسيطة. الحقول اللي ليها افتراضي لازم تيجي **بعد** الإلزامية.
+ ¦¦
+    def __post_init__(self): ¦¦ بتتنفّذ **بعد** `__init__` المولّدة — مكان التحقّق والتنظيف.
+        if self.price < 0: ¦¦ قاعدة عمل.
+            raise ValueError("السعر ما ينفعش يكون سالب") ¦¦ رمي.
+        self.name = self.name.strip().title() ¦¦ تنظيف الاسم.
+ ¦¦
+    @property ¦¦ الدوال والـ properties بتتكتب عادي.
+    def total(self): ¦¦ قيمة محسوبة.
+        return self.price * self.qty ¦¦ السعر × الكمية.
+ ¦¦
+p = Product("  laptop ", 25000, qty=2) ¦¦ إنشاء بالافتراضي للـ tags.
+print(p) ¦¦ الاسم اتنظّف.
+print(p.total) ¦¦ الإجمالي.
+p.tags.append("tech") ¦¦ تعديل قائمة المنتج ده.
+print(Product("mouse", 300).tags) ¦¦ منتج جديد قائمته فاضية — مستقلّة فعلًا.
+try: ¦¦ نجرّب سعر غلط.
+    Product("x", -1) ¦¦ سالب.
+except ValueError as e: ¦¦ الخطأ من `__post_init__`.
+    print(e) ¦¦ الرسالة.
+    @end
+    @out
+Product(name='Laptop', price=25000, tags=[], qty=2)
+50000
+[]
+السعر ما ينفعش يكون سالب
+    @end
+
+    <h4>4. frozen و order وأدوات المكتبة</h4>
+    @code run
+from dataclasses import dataclass, asdict, astuple, replace ¦¦ أدوات مساعدة.
+ ¦¦
+@dataclass(frozen=True, order=True) ¦¦ `frozen` = غير قابل للتعديل (وقابل يبقى مفتاح قاموس). `order` = يولّد `<` و `>` بمقارنة الحقول بالترتيب.
+class Version: ¦¦ رقم نسخة.
+    major: int ¦¦ الرقم الكبير.
+    minor: int ¦¦ الصغير.
+    patch: int = 0 ¦¦ التصليح.
+ ¦¦
+v1 = Version(3, 12, 1) ¦¦ نسخة.
+v2 = Version(3, 9) ¦¦ نسخة أقدم.
+print(v1 > v2) ¦¦ المقارنة زي الـ tuples: 3 = 3، ثم 12 > 9.
+print(sorted([v1, v2, Version(3, 12)])) ¦¦ الترتيب بقى ممكن.
+print(asdict(v1)) ¦¦ `asdict` ← قاموس (جاهز لـ JSON).
+print(astuple(v1)) ¦¦ `astuple` ← tuple.
+print(replace(v1, patch=2)) ¦¦ `replace` = نسخة جديدة بحقل مختلف (زي `_replace` في namedtuple).
+try: ¦¦ نجرّب نعدّل.
+    v1.major = 4 ¦¦ ممنوع.
+except Exception as e: ¦¦ الخطأ.
+    print(type(e).__name__) ¦¦ `FrozenInstanceError`.
+print({v1: "current"}[Version(3, 12, 1)]) ¦¦ frozen ← قابل للـ hash ← ينفع مفتاح قاموس، ونسخة جديدة بنفس القيم بتلاقيه.
+    @end
+    @out
+True
+[Version(major=3, minor=9, patch=0), Version(major=3, minor=12, patch=0), Version(major=3, minor=12, patch=1)]
+{'major': 3, 'minor': 12, 'patch': 1}
+(3, 12, 1)
+Version(major=3, minor=12, patch=2)
+FrozenInstanceError
+current
+    @end
+
+    <h4>5. dataclass و JSON</h4>
+    @code run
+import json ¦¦ درس JSON.
+from dataclasses import dataclass, asdict ¦¦ استيراد.
+ ¦¦
+@dataclass ¦¦ التحويل.
+class Task: ¦¦ مهمّة.
+    title: str ¦¦ العنوان.
+    done: bool = False ¦¦ الحالة.
+ ¦¦
+tasks = [Task("مذاكرة"), Task("رياضة", True)] ¦¦ قائمة كائنات.
+text = json.dumps([asdict(t) for t in tasks], ensure_ascii=False) ¦¦ **الحفظ**: كل كائن ← قاموس ← JSON.
+print(text) ¦¦ النص.
+loaded = [Task(**d) for d in json.loads(text)] ¦¦ **التحميل**: كل قاموس ← `Task(**d)` (فرد القاموس كوسائط بالاسم — الوحدة 10).
+print(loaded) ¦¦ كائنات تاني.
+print(loaded == tasks) ¦¦ مطابقة بفضل `__eq__` المولّدة.
+    @end
+    @out
+[{"title": "مذاكرة", "done": false}, {"title": "رياضة", "done": true}]
+[Task(title='مذاكرة', done=False), Task(title='رياضة', done=True)]
+True
+    @end
+
+    <h4>6. Enum: قيم ثابتة بأسماء</h4>
+    <p>
+      لو حالة المهمّة نص <code class="inl">"done"</code>، أي غلطة كتابة (<code class="inl">"Done"</code> أو <code class="inl">"dnoe"</code>) هتعدّي من غير ما حد يلاحظ.
+      <code class="inl">Enum</code> بتعرّف <strong>مجموعة مقفولة من القيم المسموحة</strong>، وأي قيمة تانية بترمي خطأ فورًا.
+    </p>
+    @code run
+from enum import Enum, auto ¦¦ مكتبة قياسية.
+ ¦¦
+class Status(Enum): ¦¦ كلاس بيورث من Enum.
+    TODO = "todo" ¦¦ كل عضو: اسم (بحروف كبيرة اصطلاحًا) = قيمة.
+    DOING = "doing" ¦¦ عضو.
+    DONE = "done" ¦¦ عضو.
+ ¦¦
+s = Status.DOING ¦¦ الوصول بالاسم — المحرّر بيكمّل لك ومستحيل تغلط في الكتابة من غير ما يبان.
+print(s, s.name, s.value) ¦¦ العضو، واسمه، وقيمته.
+print(s is Status.DOING) ¦¦ كل عضو كائن **واحد** — فالمقارنة بـ `is` آمنة.
+print(Status("done")) ¦¦ من القيمة للعضو — مفيد لما القيمة جاية من JSON أو قاعدة بيانات.
+print([m.value for m in Status]) ¦¦ الـ Enum بتتلف عليها بالترتيب.
+try: ¦¦ قيمة مش موجودة.
+    Status("finished") ¦¦ مش من الاختيارات.
+except ValueError as e: ¦¦ خطأ فوري.
+    print(e) ¦¦ الرسالة.
+ ¦¦
+class Priority(Enum): ¦¦ Enum تانية.
+    LOW = auto() ¦¦ `auto()` = «اختار رقم لوحدك» لما القيمة نفسها مش مهمّة.
+    HIGH = auto() ¦¦ بيدّيها الرقم اللي بعده.
+print(Priority.HIGH.value) ¦¦ 2.
+    @end
+    @out
+Status.DOING DOING doing
+True
+Status.DONE
+['todo', 'doing', 'done']
+'finished' is not a valid Status
+2
+    @end
+
+    <h4>7. الاتنين مع بعض</h4>
+    @code run
+from dataclasses import dataclass ¦¦ استيراد.
+from enum import Enum ¦¦ استيراد.
+ ¦¦
+class Status(Enum): ¦¦ الحالات بالترتيب.
+    TODO = "todo" ¦¦ جديدة.
+    DOING = "doing" ¦¦ شغّالة.
+    DONE = "done" ¦¦ خلصت.
+ ¦¦
+@dataclass ¦¦ كلاس بيانات…
+class Ticket: ¦¦ …تذكرة دعم.
+    title: str ¦¦ العنوان.
+    status: Status = Status.TODO ¦¦ حقل نوعه Enum بقيمة افتراضية (Enum غير قابلة للتعديل فآمنة كافتراضي).
+ ¦¦
+    def advance(self): ¦¦ نقل للحالة اللي بعدها.
+        order = list(Status) ¦¦ الأعضاء بترتيب التعريف.
+        i = order.index(self.status) ¦¦ مكان الحالة الحالية.
+        if i < len(order) - 1: ¦¦ لو مش آخر حالة…
+            self.status = order[i + 1] ¦¦ …انقل للي بعدها.
+ ¦¦
+t = Ticket("تصليح الباج") ¦¦ تذكرة جديدة.
+t.advance() ¦¦ TODO ← DOING.
+print(t) ¦¦ الـ repr بيعرض العضو.
+t.advance() ¦¦ DOING ← DONE.
+t.advance() ¦¦ مفيش بعد DONE — ما بيحصلش حاجة.
+match t.status: ¦¦ **match مع Enum** (الوحدة 11): مقروء وآمن.
+    case Status.DONE: ¦¦ نمط قيمة بالاسم المنقّط.
+        print("✅ خلصت") ¦¦ الفعل.
+    case _: ¦¦ غير كده.
+        print("لسه") ¦¦ الفعل.
+    @end
+    @out
+Ticket(title='تصليح الباج', status=&lt;Status.DOING: 'doing'&gt;)
+✅ خلصت
+    @end
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الأداة</th><th>استخدمها لما…</th></tr>
+        <tr><td><code class="inl">dict</code></td><td>بيانات مؤقّتة أو شكلها متغيّر (زي رد API)</td></tr>
+        <tr><td><code class="inl">namedtuple</code></td><td>سجل صغير ثابت خفيف</td></tr>
+        <tr><td><code class="inl">@dataclass</code></td><td><strong>أغلب كلاسات البيانات</strong>: حقول معروفة + شوية سلوك</td></tr>
+        <tr><td>كلاس عادي</td><td>السلوك هو الأساس والبيانات تفاصيل داخلية (زي BankAccount)</td></tr>
+        <tr><td><code class="inl">Enum</code></td><td>قيمة لازم تكون من اختيارات محدّدة (حالة، دور، مستوى)</td></tr>
+      </table>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>كتالوج الكتب</div>
+      <p>اعمل dataclass اسمها <code class="inl">Book</code> (عنوان، مؤلّف، سنة) قابلة للترتيب بالسنة بس، ورتّب قائمة كتب.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+from dataclasses import dataclass, field ¦¦ استيراد.
+ ¦¦
+@dataclass(order=True) ¦¦ الترتيب بيقارن الحقول بالترتيب…
+class Book: ¦¦ الكلاس.
+    year: int ¦¦ …فحطّينا السنة **أول حقل** عشان تبقى أساس المقارنة.
+    title: str = field(compare=False) ¦¦ `compare=False` = الحقل ده ما يدخلش في المقارنة والترتيب.
+    author: str = field(compare=False) ¦¦ نفس الحكاية.
+ ¦¦
+books = [Book(2008, "Clean Code", "Martin"), Book(1994, "Design Patterns", "GoF"), Book(2019, "Fluent Python", "Ramalho")] ¦¦ كتب.
+for b in sorted(books): ¦¦ الترتيب بالسنة.
+    print(b.year, b.title) ¦¦ العرض.
+      @end
+      @out
+1994 Design Patterns
+2008 Clean Code
+2019 Fluent Python
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">@dataclass</code> بتولّد تلقائيًا…</p>
+        <label><input type="radio"> قاعدة بيانات</label>
+        <label><input type="radio"> ملف JSON</label>
+        <label><input type="radio"> __init__ و __repr__ و __eq__</label>
+        <label><input type="radio"> تحقّق من الأنواع</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. حقل قائمة بقيمة افتراضية فاضية يتكتب…</p>
+        <label><input type="radio"> items: list = field(default_factory=list)</label>
+        <label><input type="radio"> items: list = []</label>
+        <label><input type="radio"> items = list</label>
+        <label><input type="radio"> items: list = None فقط</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">frozen=True</code> معناها…</p>
+        <label><input type="radio"> الكائن بيتحفظ في ملف</label>
+        <label><input type="radio"> ما ينفعش تعمل منه كائنات</label>
+        <label><input type="radio"> أسرع في الحساب</label>
+        <label><input type="radio"> الحقول ما تتعدّلش والكائن ينفع مفتاح قاموس</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">4. <code class="inl">Status("finished")</code> والقيمة مش من الاختيارات؟</p>
+        <label><input type="radio"> بترجّع None</label>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> بتضيفها للـ Enum</label>
+        <label><input type="radio"> بترجّع أول عضو</label>
+      </div>
+    </div>
+  </article>

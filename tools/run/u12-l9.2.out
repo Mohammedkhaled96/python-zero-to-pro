@@ -1,0 +1,4 @@
+{"point": [3, 4], "1": "one", "ok": true}
+{'point': [3, 4], '1': 'one', 'ok': True}
+False
+خطأ: Object of type set is not JSON serializable

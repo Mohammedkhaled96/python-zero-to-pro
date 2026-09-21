@@ -1,0 +1,1310 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة الثانية · التفاعل</div>
+    <h2>خلّي البرنامج يتكلّم مع المستخدم: input والعمليات الحسابية</h2>
+    <p>
+      لحد دلوقتي البرنامج بتاعنا بيعمل نفس الحاجة كل مرّة. الوحدة دي بتخلّيه
+      <strong>يستقبل بيانات من المستخدم</strong> ويشتغل عليها — وهنا البرنامج بيبقى «حيّ».
+      وهنقابل هنا أشهر خطأ في تاريخ المبتدئين وهو خطأ الأنواع.
+    </p>
+  </div>
+
+  <!-- 2.1 -->
+  <article class="lesson" id="u2-l1">
+    <h3>دالة input: استقبال بيانات من المستخدم <span class="tag">درس 8</span></h3>
+    <p class="goal">الهدف: تخلّي البرنامج يسأل المستخدم ويستنى إجابته.</p>
+
+    <h4>1. أبسط استخدام</h4>
+    <div class="code"><pre>
+user_name = input("Please enter your name\n")
+print(user_name)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج (لو المستخدم كتب Farid)</div><pre>Please enter your name
+Farid
+Farid</pre></div>
+    <p>بيحصل إيه بالظبط في السطر ده؟</p>
+    <ol>
+      <li>بايثون بتطبع الرسالة اللي جوّه القوسين (اسمها <strong>prompt</strong>).</li>
+      <li>البرنامج <strong>بيقف تمامًا</strong> ويستنى لحد ما المستخدم يكتب ويدوس Enter.</li>
+      <li>اللي المستخدم كتبه بيرجع كقيمة، وبيتخزّن في <code class="inl">user_name</code>.</li>
+    </ol>
+    <p>
+      لاحظنا حطّينا <code class="inl">\n</code> آخر الرسالة عشان المستخدم يكتب في سطر جديد
+      تحت السؤال — ده أنضف بصريًا.
+    </p>
+
+    <h4>2. القاعدة الذهبية: input بترجّع نص دايمًا</h4>
+    <div class="box err">
+      <div class="bt">💥 أهم معلومة في الدرس ده</div>
+      <p>
+        <strong><code class="inl">input()</code> بترجّع <code class="inl">str</code> دايمًا وأبدًا</strong> —
+        حتى لو المستخدم كتب أرقام!
+      </p>
+      <div class="code"><pre>
+age = input("Enter your age: ")   # المستخدم كتب 25
+print(type(age))                  # &lt;class 'str'&gt;
+print(age + 5)                    # ❌ TypeError!
+</pre></div>
+      <p>وده اللي هنحلّه في الدرس اللي بعده مباشرةً.</p>
+    </div>
+
+    <h4>3. أكتر من مُدخل</h4>
+    <div class="code"><pre>
+user_name = input("Please enter your name\n")
+email = input("Please enter your mail\n")
+print(user_name, email)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Please enter your name
+Farid
+Please enter your mail
+farid@gmail.com
+Farid farid@gmail.com</pre></div>
+    <p>هنا استخدمنا الفاصلة في <code class="inl">print</code> فحطّت مسافة بين القيمتين.</p>
+
+    <p>ولو عايزهم في سطرين:</p>
+    <div class="code"><pre>
+user_name = input("Please enter your name\n")
+email = input("Please enter your mail\n")
+print(user_name + "\n" + email)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Farid
+farid@gmail.com</pre></div>
+
+    <h4>4. دمج input مع f-string</h4>
+    <div class="code"><pre>
+user = input("please enter your name here\n")
+print(f"welcome {user} in my program")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>please enter your name here
+Ahmed
+welcome Ahmed in my program</pre></div>
+
+    <h4>5. برنامج تفاعلي كامل لجمع بيانات المستخدم</h4>
+    <div class="code" data-file="user_profile.py"><pre>
+name = input("please enter your name here\n")
+phone_number = input("Please enter your phone number\n")
+age = input("Please enter your age\n")
+email = input("Please enter your email\n")
+short_description = input("Please talk about you\n")
+print(f"""welcome for you {name},
+your phone number is {phone_number}
+your age is {age}
+your mail is {email}
+you are \"{short_description}\"""")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>welcome for you Farid,
+your phone number is 01020621983
+your age is 32
+your mail is farid@gmail.com
+you are "a python learner"</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 لاحظ الفرق عن مشروع الوحدة الأولى</div>
+      <p>
+        في مشروع 1 كتبنا البيانات بإيدينا في الكود، فالبرنامج بيدّي نفس النتيجة كل مرّة.
+        هنا البرنامج بيشتغل مع <strong>أي مستخدم</strong>. ده الفرق بين «سكريبت» و«برنامج».
+      </p>
+    </div>
+
+    <h4>6. تنظيف مدخلات المستخدم</h4>
+    <p>
+      المستخدم بيغلط: بيكتب مسافات زايدة، بيكتب حروف كابيتال. عادة كويسة إنك تنضّف
+      المدخل على طول:
+    </p>
+    <div class="code"><pre>
+name = input("Enter your name: ").strip().lower()
+#                                 │        └── يحوّل لحروف صغيرة
+#                                 └── يشيل المسافات من الأول والآخر
+print(f"[{name}]")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج (لو المستخدم كتب "   FaRiD   ")</div><pre>[farid]</pre></div>
+    <p>
+      الأسلوب ده اسمه <strong>method chaining</strong> — تنفّذ دالة على ناتج دالة قبلها.
+      هنستخدمه كتير جدًا.
+    </p>
+    <!-- APPEND:u2-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>بطاقة زائر</div>
+      <p>اطلب الاسم والمدينة، ونظّف الاتنين (مسافات وحالة الحروف)، واطبع جملة ترحيب.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+name = input("اسمك: ").strip().title()
+city = input("مدينتك: ").strip()
+print(f"أهلًا يا {name} من {city}!")
+</pre></div>
+      <p>جرّبه بمدخل زي <code class="inl">"   sara   "</code> — هيطبع <code class="inl">Sara</code> نضيفة.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="0">
+        <p class="qt">1. <code class="inl">input()</code> بترجّع دايمًا…</p>
+        <label><input type="radio"> نص (str)</label>
+        <label><input type="radio"> رقم لو المستخدم كتب رقم</label>
+        <label><input type="radio"> قائمة</label>
+        <label><input type="radio"> None</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. <code class="inl">input("اسمك: ")</code> — النص اللي جوّه الأقواس…</p>
+        <label><input type="radio"> القيمة الافتراضية</label>
+        <label><input type="radio"> اسم المتغيّر</label>
+        <label><input type="radio"> رسالة بتظهر للمستخدم قبل ما يكتب</label>
+        <label><input type="radio"> بيتجاهل</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. المستخدم كتب <code class="inl">"  ali "</code>. تشيل المسافات بـ…</p>
+        <label><input type="radio"> .title()</label>
+        <label><input type="radio"> .strip()</label>
+        <label><input type="radio"> .upper()</label>
+        <label><input type="radio"> int()</label>
+      </div>
+    </div>
+    <!-- /APPEND:u2-l1 -->
+                <!-- SUM:u2-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">input</code> بتوقف البرنامج لحد ما المستخدم يكتب ويضغط Enter.</li><li><strong>بترجّع نص دايمًا</strong> — حتى لو المستخدم كتب رقم.</li><li>نظّف المدخل بـ <code class="inl">strip()</code> قبل ما تستخدمه.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 2.2 -->
+  <article class="lesson" id="u2-l2">
+    <h3>التحويل بين الأنواع (Type Casting) <span class="tag">درس 9 · حاسم</span></h3>
+    <p class="goal">الهدف: تحوّل النص لرقم والعكس — الحل النهائي لأشهر خطأ عند المبتدئين.</p>
+
+    <h4>1. المشكلة</h4>
+    <div class="code"><pre>
+first = input("رقم أول: ")    # "10"
+second = input("رقم تاني: ")  # "5"
+print(first + second)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>105</pre></div>
+    <p>
+      مش 15! لأن الاتنين نصوص، وعلامة <code class="inl">+</code> بين نصين معناها
+      <strong>دمج</strong> مش جمع. لازم نحوّلهم لأرقام.
+    </p>
+
+    <h4>2. دوال التحويل</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الدالة</th><th>بتحوّل إلى</th><th>مثال</th><th>الناتج</th></tr>
+        <tr><td><code class="inl">int()</code></td><td>عدد صحيح</td><td><code class="inl">int("25")</code></td><td><code class="inl">25</code></td></tr>
+        <tr><td><code class="inl">float()</code></td><td>عدد عشري</td><td><code class="inl">float("3.5")</code></td><td><code class="inl">3.5</code></td></tr>
+        <tr><td><code class="inl">str()</code></td><td>نص</td><td><code class="inl">str(25)</code></td><td><code class="inl">"25"</code></td></tr>
+        <tr><td><code class="inl">bool()</code></td><td>صح/غلط</td><td><code class="inl">bool(0)</code></td><td><code class="inl">False</code></td></tr>
+      </table>
+    </div>
+
+    <h4>3. الحل الصح</h4>
+    <div class="code"><pre>
+first_number = int(input("Please enter your first number here\n"))
+second_number = int(input("Please enter your second number here\n"))
+print(first_number + second_number)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>15</pre></div>
+    <p>اقرا السطر ده من جوّه لبره — وده أسلوب مهم تتعلّمه:</p>
+    <div class="diagram">
+<pre>  int( input("Please enter...") )
+   │      │
+   │      └─ [2] المستخدم بيكتب "10" → بترجّع النص "10"
+   │
+   └──────── [3] بتحوّل النص "10" لرقم 10
+
+  [1] بايثون بتبدأ من الدالة الداخلية للخارجية</pre>
+      <div class="cap">الدوال المتداخلة بتتنفّذ من الداخل للخارج</div>
+    </div>
+
+    <h4>4. int ولّا float؟</h4>
+    <div class="code"><pre>
+age = int(input("سنك: "))        # 25    ← الأعمار أعداد صحيحة
+price = float(input("السعر: "))  # 19.99 ← الأسعار ممكن تبقى عشرية
+</pre></div>
+    <p>
+      لو المستخدم ممكن يدخل رقم عشري، استخدم <code class="inl">float()</code>.
+      لو استخدمت <code class="inl">int()</code> وهو كتب <code class="inl">19.99</code> هيحصل خطأ.
+    </p>
+
+    <h4>5. متى يفشل التحويل؟</h4>
+    <div class="code"><pre>
+print(int("25"))       # ✅ 25
+print(int("25.7"))     # ❌ ValueError — int ما بتقبلش نقطة عشرية في نص
+print(float("25.7"))   # ✅ 25.7
+print(int(25.7))       # ✅ 25 ← بتقص الكسر مش بتقرّب!
+print(int("abc"))      # ❌ ValueError
+</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ int() بتقصّ مش بتقرّب</div>
+      <p>
+        <code class="inl">int(9.99)</code> بترجّع <strong>9</strong> مش 10.
+        لو عايز تقريب حقيقي استخدم <code class="inl">round(9.99)</code> اللي بترجّع 10.
+      </p>
+    </div>
+    <div class="box err">
+      <div class="bt">💥 البرنامج بيقع لو المستخدم كتب حروف</div>
+      <div class="code"><pre>
+age = int(input("سنك: "))   # المستخدم كتب "خمسة وعشرين"
+# ValueError: invalid literal for int() with base 10: 'خمسة وعشرين'
+</pre></div>
+      <p>
+        الحل الكامل هو <code class="inl">try / except</code> في الوحدة 9.
+        دلوقتي بس اعرف إن ده هيحصل، وإن ده تصرّف طبيعي من بايثون.
+      </p>
+    </div>
+
+    <h4>6. الاتجاه العكسي: str()</h4>
+    <div class="code"><pre>
+mobile = int(input("Please enter your phone\n"))
+mobile1 = str(mobile)
+print(mobile1[-2:])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج (لو دخل 12345678)</div><pre>78</pre></div>
+    <p>
+      ليه حوّلناه لنص؟ عشان <strong>الفهرسة</strong> (<code class="inl">[-2:]</code>) بتشتغل على
+      النصوص مش على الأرقام. الأرقام مالهاش «حرف أول» و«حرف تاني» — النصوص بس اللي ليها.
+      هنشرح الفهرسة كاملة في الوحدة 3.
+    </p>
+    <!-- APPEND:u2-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>حوّل واجمع</div>
+      <p>عندك قيمتين جايين كنصوص (زي ما بيجوا من input). اجمعهم كأرقام، وبعدين اعرض الناتج جوّه جملة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+a = "12"
+b = "3.5"
+total = int(a) + float(b)
+print(total)
+print("المجموع: " + str(total))
+print(a + b)
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>15.5
+المجموع: 15.5
+123.5</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">int("3.5")</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 3.5</label>
+        <label><input type="radio"> ValueError</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">int(3.9)</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 3.9</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">float("7")</code>؟</p>
+        <label><input type="radio"> 7</label>
+        <label><input type="radio"> "7.0"</label>
+        <label><input type="radio"> 7.0</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+    </div>
+    <!-- /APPEND:u2-l2 -->
+                <!-- SUM:u2-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">int()</code> و <code class="inl">float()</code> و <code class="inl">str()</code> بيحوّلوا بين الأنواع.</li><li>التحويل بيفشل بـ <code class="inl">ValueError</code> لو النص مش رقم صالح.</li><li><code class="inl">int(input())</code> النمط الأشهر لقراءة رقم.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 2.3 -->
+  <article class="lesson" id="u2-l3">
+    <h3>العمليات الحسابية وأولويّاتها <span class="tag">درس 10</span></h3>
+    <p class="goal">الهدف: تتقن السبع عوامل الحسابية وتعرف مين بيتنفّذ الأول.</p>
+
+    <h4>1. جدول العوامل الحسابية</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>العامل</th><th>الاسم</th><th>مثال</th><th>الناتج</th><th>ملاحظة</th></tr>
+        <tr><td><code class="inl">+</code></td><td>جمع</td><td><code class="inl">7 + 3</code></td><td><code class="inl">10</code></td><td></td></tr>
+        <tr><td><code class="inl">-</code></td><td>طرح</td><td><code class="inl">7 - 3</code></td><td><code class="inl">4</code></td><td></td></tr>
+        <tr><td><code class="inl">*</code></td><td>ضرب</td><td><code class="inl">7 * 3</code></td><td><code class="inl">21</code></td><td></td></tr>
+        <tr><td><code class="inl">/</code></td><td>قسمة</td><td><code class="inl">7 / 3</code></td><td><code class="inl">2.333…</code></td><td><strong>بترجّع float دايمًا</strong></td></tr>
+        <tr><td><code class="inl">//</code></td><td>قسمة صحيحة</td><td><code class="inl">7 // 3</code></td><td><code class="inl">2</code></td><td>بتاخد الجزء الصحيح بس</td></tr>
+        <tr><td><code class="inl">%</code></td><td>باقي القسمة</td><td><code class="inl">7 % 3</code></td><td><code class="inl">1</code></td><td>مفيدة جدًا</td></tr>
+        <tr><td><code class="inl">**</code></td><td>أس</td><td><code class="inl">7 ** 2</code></td><td><code class="inl">49</code></td><td></td></tr>
+      </table>
+    </div>
+
+    <h4>2. ليه القسمة بترجّع float حتى لو القسمة كاملة؟</h4>
+    <div class="code"><pre>
+print(10 / 5)     # 2.0   مش 2
+print(type(10/5)) # &lt;class 'float'&gt;
+print(10 // 5)    # 2     ← دي اللي بترجّع int
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>2.0
+&lt;class 'float'&gt;
+2</pre></div>
+    <p>
+      السبب إن مصمّمي بايثون قرّروا إن <code class="inl">/</code> يبقى معناها ثابت دايمًا:
+      «قسمة رياضية حقيقية». فلو عايز عدد صحيح استخدم <code class="inl">//</code>.
+    </p>
+
+    <h4>3. عامل الباقي % — مش رفاهية</h4>
+    <p>الباقي من أكتر العوامل استخدامًا في البرمجة العملية. أشهر استخداماته:</p>
+    <div class="code"><pre>
+# 1) هل الرقم زوجي؟
+number = 14
+print(number % 2 == 0)     # True → زوجي
+# 2) استخراج آخر رقم من عدد
+print(12345 % 10)          # 5
+# 3) تحويل الثواني لدقايق وثواني
+total = 200
+print(f"{total // 60} دقيقة و {total % 60} ثانية")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>True
+5
+3 دقيقة و 20 ثانية</pre></div>
+
+    <h4>4. أولويّة العمليات</h4>
+    <p>بايثون بتتبع نفس ترتيب الرياضيات:</p>
+    <div class="diagram">
+<pre>  1.  ( )         الأقواس         ← الأعلى أولوية
+  2.  **          الأس
+  3.  * / // %    الضرب والقسمة    ← من الشمال لليمين
+  4.  + -         الجمع والطرح     ← من الشمال لليمين</pre>
+      <div class="cap">ترتيب تنفيذ العمليات</div>
+    </div>
+    <div class="code"><pre>
+print(2 + 3 * 4)       # 14   الضرب الأول
+print((2 + 3) * 4)     # 20   الأقواس غيّرت الترتيب
+print(2 ** 3 ** 2)     # 512  الأس بيتنفّذ من اليمين: 2**(3**2) = 2**9
+print(10 - 4 - 3)      # 3    الطرح من الشمال: (10-4)-3
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>14
+20
+512
+3</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 نصيحة عملية</div>
+      <p>
+        <strong>حط أقواس حتى لو مش محتاجها.</strong> <code class="inl">(a + b) / 2</code>
+        أوضح من <code class="inl">a + b / 2</code> وبتمنع أخطاء منطقية صامتة.
+        الكود بيتقرا أكتر بكتير مما بيتكتب.
+      </p>
+    </div>
+
+    <h4>5. مفاجأة الأرقام العشرية</h4>
+    <div class="code"><pre>
+print(0.1 + 0.2)             # 0.30000000000000004  😳
+print(0.1 + 0.2 == 0.3)      # False
+print(round(0.1 + 0.2, 2))   # 0.3   ← الحل
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>0.30000000000000004
+False
+0.3</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ ليه؟ (رجوع للوحدة صفر)</div>
+      <p>
+        افتكر إن الكمبيوتر بيخزّن كل حاجة بالنظام الثنائي. الكسر <code class="inl">0.1</code>
+        في النظام الثنائي كسر <strong>دوري لا نهائي</strong> — زي <code class="inl">1/3</code>
+        عندنا في العشري (0.3333…). فالكمبيوتر بيقرّبه، والتقريب بيسيب خطأ ضئيل.
+        دي مش مشكلة في بايثون، دي في <em>كل</em> لغات البرمجة.
+        <strong>القاعدة: ما تقارنش أرقام عشرية بـ <code class="inl">==</code> مباشرةً</strong> — قرّبها الأول.
+      </p>
+    </div>
+    <!-- APPEND:u2-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>ثواني لساعات</div>
+      <p>حوّل 3725 ثانية لـ ساعات ودقايق وثواني.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+total = 3725
+hours = total // 3600
+rest = total % 3600
+minutes = rest // 60
+seconds = rest % 60
+print(f"{hours} ساعة و {minutes} دقيقة و {seconds} ثانية")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>1 ساعة و 2 دقيقة و 5 ثانية</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">2 + 3 * 2</code>؟</p>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> 8</label>
+        <label><input type="radio"> 7</label>
+        <label><input type="radio"> 12</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">17 % 5</code>؟</p>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 3.4</label>
+        <label><input type="radio"> 12</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">10 / 5</code>؟</p>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> "2"</label>
+        <label><input type="radio"> 2.0</label>
+      </div>
+    </div>
+    <!-- /APPEND:u2-l3 -->
+                <!-- SUM:u2-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>العوامل: <code class="inl">+ - * / // % **</code>، و <code class="inl">/</code> بترجّع float دايمًا.</li><li><code class="inl">%</code> (الباقي) مفيد للزوجي والفردي وآخر خانة وتحويل الوقت.</li><li>الأولويّة: الأقواس ثم الأس ثم الضرب والقسمة ثم الجمع والطرح — وحط أقواس للوضوح.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ADD:u2-l4 -->
+  <!-- 2.4 -->
+  <article class="lesson" id="u2-l4">
+    <h3>الأعداد بعمق: الأنظمة العددية والعوامل الثنائية <span class="tag">درس 11</span></h3>
+    <p class="goal">الهدف: تشوف الرقم بعيون الكمبيوتر — ثنائي وثماني وسادس عشر — وتتعامل مع البتّات مباشرةً، وتعرف ليه أعداد بايثون الصحيحة «مالهاش سقف».</p>
+
+    <h4>1. ليه نرجع للنظام الثنائي تاني؟</h4>
+    <p>
+      في الوحدة صفر عرفنا إن الكمبيوتر ما بيفهمش غير <strong>0 و 1</strong>. الرقم <code class="inl">13</code> اللي بتكتبه
+      بيتخزّن فعليًا كده: <code class="inl">1101</code>. في الدرس ده هنخلّي بايثون تورّينا الشكل ده، وهنتعامل معاه بإيدينا.
+      هتقابل الكلام ده في: <strong>ألوان الويب</strong> (<code class="inl">#FF8800</code> ده سادس عشر)،
+      <strong>صلاحيات الملفات في Linux</strong> (<code class="inl">chmod 755</code> ده ثماني)، <strong>عناوين الذاكرة</strong>،
+      <strong>الشبكات</strong> (عناوين IP والـ subnet)، والتشفير.
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>النظام</th><th>الأساس</th><th>الأرقام المستخدمة</th><th>البادئة في بايثون</th><th>مثال = 255</th></tr>
+        <tr><td>عشري (Decimal)</td><td>10</td><td>0–9</td><td>—</td><td><code class="inl">255</code></td></tr>
+        <tr><td>ثنائي (Binary)</td><td>2</td><td>0 و 1</td><td><code class="inl">0b</code></td><td><code class="inl">0b11111111</code></td></tr>
+        <tr><td>ثماني (Octal)</td><td>8</td><td>0–7</td><td><code class="inl">0o</code></td><td><code class="inl">0o377</code></td></tr>
+        <tr><td>سادس عشر (Hexadecimal)</td><td>16</td><td>0–9 و A–F</td><td><code class="inl">0x</code></td><td><code class="inl">0xFF</code></td></tr>
+      </table>
+    </div>
+    <div class="diagram">
+<pre>  الرقم 13 بالنظام الثنائي = 1101
+
+  الخانة:     1      1      0      1
+  قيمتها:   2³=8   2²=4   2¹=2   2⁰=1
+  الحساب:    8   +  4   +  0   +  1   = 13</pre>
+      <div class="cap">كل خانة في النظام الثنائي قيمتها ضعف اللي على يمينها</div>
+    </div>
+
+    <h4>2. كتابة الأرقام بأنظمة مختلفة جوّه الكود</h4>
+    <div class="code"><pre>
+a = 0b1010
+b = 0o17
+c = 0xFF
+big = 1_000_000
+print(a, b, c, big)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>10 15 255 1000000</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 الفكرة الجوهرية</div>
+      <p>
+        <code class="inl">0xFF</code> و <code class="inl">255</code> و <code class="inl">0b11111111</code> <strong>نفس الرقم بالظبط</strong> —
+        نفس النوع <code class="inl">int</code> ونفس القيمة في الذاكرة. الفرق بس في <em>إزاي إنت كتبته</em>.
+        زي ما «خمسة» و «5» و «V» نفس العدد.
+      </p>
+    </div>
+
+    <h4>3. من عشري لأي نظام: bin و oct و hex</h4>
+    <div class="code"><pre>
+n = 255
+print(bin(n))
+print(oct(n))
+print(hex(n))
+print(type(bin(n)))
+print(bin(n)[2:])
+print(f"{n:b} {n:o} {n:x} {n:X}")
+print(f"{5:08b}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>0b11111111
+0o377
+0xff
+&lt;class 'str'&gt;
+11111111
+11111111 377 ff FF
+00000101</pre></div>
+
+    <h4>4. من أي نظام لعشري: int(نص, الأساس)</h4>
+    <p>
+      دالة <code class="inl">int</code> اللي عرفناها في درس التحويل ليها <strong>وسيط تاني اختياري</strong>: الأساس اللي النص مكتوب بيه.
+    </p>
+    <div class="code"><pre>
+print(int("1010", 2))
+print(int("ff", 16))
+print(int("0xff", 16))
+print(int("777", 8))
+print(int("z", 36))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>10
+255
+255
+511
+35</pre></div>
+    <div class="box err">
+      <div class="bt">❌ خطأ متوقّع</div>
+      <p>
+        <code class="inl">int("102", 2)</code> ← <code class="inl">ValueError: invalid literal for int() with base 2: '102'</code>
+        — لأن الرقم <code class="inl">2</code> مش موجود أصلًا في النظام الثنائي. نفس الخطأ اللي شفناه لما حاولنا نحوّل <code class="inl">"abc"</code> لرقم.
+      </p>
+    </div>
+
+    <h4>5. العوامل الثنائية (Bitwise Operators)</h4>
+    <p>
+      العوامل دي بتشتغل على الرقم <strong>بت بت</strong> — كأنك حطّيت الرقمين فوق بعض بالثنائي وقارنت كل خانة بالخانة اللي تحتها.
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>العامل</th><th>الاسم</th><th>القاعدة لكل بت</th></tr>
+        <tr><td><code class="inl">&amp;</code></td><td>AND</td><td>1 لو <strong>الاتنين</strong> 1</td></tr>
+        <tr><td><code class="inl">|</code></td><td>OR</td><td>1 لو <strong>واحد على الأقل</strong> 1</td></tr>
+        <tr><td><code class="inl">^</code></td><td>XOR</td><td>1 لو <strong>مختلفين</strong></td></tr>
+        <tr><td><code class="inl">~</code></td><td>NOT</td><td>بيقلب كل البتّات (والنتيجة في بايثون = <code class="inl">-(n+1)</code>)</td></tr>
+        <tr><td><code class="inl">&lt;&lt;</code></td><td>إزاحة شمال</td><td>بيزوّد أصفار على اليمين = ضرب في 2 لكل خطوة</td></tr>
+        <tr><td><code class="inl">&gt;&gt;</code></td><td>إزاحة يمين</td><td>بيشيل خانات من اليمين = قسمة صحيحة على 2 لكل خطوة</td></tr>
+      </table>
+    </div>
+    <div class="diagram">
+<pre>      12  =  1 1 0 0
+      10  =  1 0 1 0
+     ─────────────────
+  &amp;  AND  =  1 0 0 0   = 8
+  |  OR   =  1 1 1 0   = 14
+  ^  XOR  =  0 1 1 0   = 6</pre>
+      <div class="cap">كل عمود بيتحسب لوحده</div>
+    </div>
+    <div class="code"><pre>
+a = 0b1100
+b = 0b1010
+print(a &amp; b, bin(a &amp; b))
+print(a | b, bin(a | b))
+print(a ^ b, bin(a ^ b))
+print(~a)
+print(a &lt;&lt; 1, a &lt;&lt; 3)
+print(a &gt;&gt; 2)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>8 0b1000
+14 0b1110
+6 0b110
+-13
+24 96
+3</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ ما تخلطش بين &amp; و and</div>
+      <p>
+        في الوحدة الجاية هتتعلّم <code class="inl">and</code> و <code class="inl">or</code> — دول عوامل <strong>منطقية</strong> بتشتغل على
+        «الحقيقة» كلها. أما <code class="inl">&amp;</code> و <code class="inl">|</code> فبتشتغل على <strong>كل بت لوحده</strong>.
+        <code class="inl">5 and 3</code> ناتجها <code class="inl">3</code>، لكن <code class="inl">5 &amp; 3</code> ناتجها <code class="inl">1</code>. شكلهم قريب ومعناهم مختلف تمامًا.
+      </p>
+    </div>
+
+    <h4>6. استخدام حقيقي: الصلاحيات بالبتّات (Flags)</h4>
+    <p>
+      نظام Linux بيخزّن صلاحيات الملف (قراءة/كتابة/تنفيذ) في <strong>3 بتّات</strong>. ده اللي بيخلّي <code class="inl">chmod 7</code> تعني «كل الصلاحيات».
+      الفكرة دي بتتكرّر في كل مكان: إعدادات الألعاب، صلاحيات المستخدمين، خيارات الدوال.
+    </p>
+    <div class="code"><pre>
+READ = 4
+WRITE = 2
+EXECUTE = 1
+perms = READ | WRITE
+print(perms)
+print(bool(perms &amp; WRITE))
+print(bool(perms &amp; EXECUTE))
+perms = perms | EXECUTE
+print(perms, bin(perms))
+perms = perms &amp; ~WRITE
+print(perms, bin(perms))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>6
+True
+False
+7 0b111
+5 0b101</pre></div>
+
+    <h4>7. الأعداد الصحيحة في بايثون مالهاش سقف</h4>
+    <p>
+      في لغات زي C وJava، الـ <code class="inl">int</code> ليه حجم ثابت (غالبًا 32 أو 64 بت). لو عدّيت أكبر رقم يحصل
+      <strong>Overflow</strong>: الرقم «يلف» ويبقى سالب! ده سبّب كوارث حقيقية (زي انفجار صاروخ Ariane 5 سنة 1996).
+      في بايثون، الـ <code class="inl">int</code> <strong>بيكبر على قدّ ما محتاج</strong> — لأنه كائن في الـ Heap (افتكر الوحدة صفر) بياخد مساحة زيادة كل ما الرقم يكبر.
+    </p>
+    <div class="code"><pre>
+print(2 ** 63 - 1)
+print(2 ** 100)
+print(len(str(2 ** 1000)))
+x = 9_999_999_999_999_999
+print(x + 1)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>9223372036854775807
+1267650600228229401496703205376
+302
+10000000000000000</pre></div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>محوّل الأنظمة</div>
+      <p>اطلب من المستخدم رقم عشري، واعرضه بالثنائي (بعرض 8 خانات) والثماني والسادس عشر (بحروف كبيرة).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+n = int(input("اكتب رقم: "))
+print(f"ثنائي : {n:08b}")
+print(f"ثماني : {n:o}")
+print(f"سادس عشر: {n:X}")
+</pre></div>
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>هل الرقم زوجي؟ بالبتّات</div>
+      <p>من غير <code class="inl">%</code>: اعرف هل الرقم زوجي. (تلميح: الرقم الفردي آخر بت فيه دايمًا 1.)</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+n = int(input("اكتب رقم: "))
+print((n &amp; 1) == 0)
+</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. ناتج <code class="inl">type(hex(255))</code>؟</p>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> hex</label>
+        <label><input type="radio"> str</label>
+        <label><input type="radio"> float</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">int("11", 2)</code> بترجّع…</p>
+        <label><input type="radio"> 11</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> ValueError</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">6 ^ 3</code> ناتجها؟ (6 = 110 و 3 = 011)</p>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> 216</label>
+        <label><input type="radio"> 7</label>
+        <label><input type="radio"> 2</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. <code class="inl">7 &lt;&lt; 2</code> ناتجها؟</p>
+        <label><input type="radio"> 49</label>
+        <label><input type="radio"> 14</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 28</label>
+      </div>
+    </div>
+                <!-- SUM:u2-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>نفس الرقم ممكن يتكتب ثنائي <code class="inl">0b</code> أو ثماني <code class="inl">0o</code> أو سادس عشر <code class="inl">0x</code>.</li><li><code class="inl">bin</code> و <code class="inl">hex</code> بيرجّعوا نصوص، و <code class="inl">int(نص, الأساس)</code> بترجّع رقم.</li><li>العوامل الثنائية <code class="inl">&amp; | ^ ~ &lt;&lt; &gt;&gt;</code> بتشتغل بت بت، و int في بايثون مالوش سقف.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u2-l4 -->
+
+  <!-- ADD:u2-l5 -->
+  <!-- 2.5 -->
+  <article class="lesson" id="u2-l5">
+    <h3>أسرار الحسابات: القسمة السالبة، round البنكي، وحدود float <span class="tag">درس 12</span></h3>
+    <p class="goal">الهدف: تعرف السلوكيات «الغريبة» اللي بتوقّع المحترفين قبل المبتدئين — وتفهم ليه بتحصل بدل ما تحفظها.</p>
+
+    <h4>1. القسمة الصحيحة والباقي مع الأرقام السالبة</h4>
+    <p>
+      <code class="inl">//</code> في بايثون مش «بتشيل الكسر» — هي بتقرّب <strong>لتحت</strong> (ناحية سالب ما لا نهاية)، واسمها <em>floor division</em>.
+      مع الموجب مش هتفرق، لكن مع السالب النتيجة بتفاجئ.
+    </p>
+    <div class="code"><pre>
+print(7 // 2)
+print(-7 // 2)
+print(int(-7 / 2))
+print(-7 % 3)
+print(7 % -3)
+print(divmod(17, 5))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>3
+-4
+-3
+2
+-2
+(3, 2)</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 ليه بايثون اختارت كده؟</div>
+      <p>
+        عشان القاعدة دي تفضل صحيحة <strong>دايمًا</strong>: <code class="inl">(a // b) * b + (a % b) == a</code>.
+        وعشان <code class="inl">% 7</code> مثلًا يرجّع رقم من 0 لـ 6 حتى لو الرقم سالب — مفيد جدًا في حساب أيام الأسبوع
+        والتشفير (زي مشروع قيصر الجاي) لما تلف لورا.
+      </p>
+    </div>
+
+    <h4>2. round مش زي ما اتعلّمت في المدرسة</h4>
+    <div class="code"><pre>
+print(round(2.5))
+print(round(3.5))
+print(round(0.5), round(1.5))
+print(round(2.675, 2))
+print(round(1234.5678, 1))
+print(round(1234, -2))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>2
+4
+0 2
+2.67
+1234.6
+1200</pre></div>
+
+    <h4>3. الترميز العلمي وحدود float</h4>
+    <div class="code"><pre>
+print(1e3)
+print(2.5e-4)
+print(0.00001)
+print(10 ** 20 // 3)
+print(10 ** 20 / 3)
+print(int(1e23))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1000.0
+0.00025
+1e-05
+33333333333333333333
+3.333333333333333e+19
+99999999999999991611392</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 القاعدة الذهبية</div>
+      <p>
+        <strong>int = دقيق وبلا حدود. float = سريع وتقريبي.</strong>
+        الفلوس؟ عمرك ما تخزّنها float. خزّنها كقروش بـ int (<code class="inl">1999</code> بدل <code class="inl">19.99</code>)
+        أو استخدم <code class="inl">Decimal</code> اللي هنتعلّمها في وحدة المكتبات.
+      </p>
+    </div>
+
+    <h4>4. ما لا نهاية و «مش رقم»: inf و nan</h4>
+    <div class="code"><pre>
+big = float("inf")
+print(big, -big)
+print(big &gt; 10 ** 300)
+print(1e308 * 10)
+nan = float("nan")
+print(big - big)
+print(nan == nan)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>inf -inf
+True
+inf
+nan
+False</pre></div>
+
+    <h4>5. المقارنة الآمنة للأرقام العشرية + دوال رياضية جاهزة</h4>
+    <div class="code"><pre>
+a = 0.1 + 0.2
+print(a == 0.3)
+print(abs(a - 0.3) &lt; 1e-9)
+print(abs(-7.5))
+print(pow(2, 10))
+print(pow(2, 10, 1000))
+print(max(3, 9, 4), min(3, 9, 4))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>False
+True
+7.5
+1024
+24
+9 3</pre></div>
+
+    <h4>6. الأعداد العقدية: complex</h4>
+    <p>
+      بايثون فيها نوع رقمي تالث مدمج غير int و float: <strong>العدد العقدي</strong> (مركّب من جزء حقيقي وجزء تخيّلي).
+      مش هتحتاجه في البرامج اليومية، لكنه أساسي في الهندسة الكهربية، معالجة الإشارات والصوت، والفيزياء — ووجوده جاهز من غير مكتبات من أسباب انتشار بايثون في العلوم.
+    </p>
+    <div class="code"><pre>
+z = 3 + 4j
+print(type(z))
+print(z.real, z.imag)
+print(abs(z))
+print(z * (1 - 2j))
+print(complex(2, -1))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>&lt;class 'complex'&gt;
+3.0 4.0
+5.0
+(11-2j)
+(2-1j)</pre></div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>يوم الأسبوع</div>
+      <p>النهارده السبت (رقم 0). اطلب من المستخدم عدد أيام (ممكن يكون سالب يعني «من كام يوم») واطبع رقم اليوم من 0 لـ 6.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+days = int(input("بعد كام يوم؟ "))
+print((0 + days) % 7)
+</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">-9 // 4</code> ناتجها؟</p>
+        <label><input type="radio"> -2</label>
+        <label><input type="radio"> -3</label>
+        <label><input type="radio"> -2.25</label>
+        <label><input type="radio"> 2</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. <code class="inl">round(4.5)</code> ناتجها؟</p>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> 4.5</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. أنسب طريقة لتخزين سعر 19.99 جنيه في برنامج محاسبة؟</p>
+        <label><input type="radio"> int بالقروش: 1999</label>
+        <label><input type="radio"> float: 19.99</label>
+        <label><input type="radio"> نص: "19.99"</label>
+        <label><input type="radio"> round(19.99)</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. <code class="inl">float("nan") == float("nan")</code>؟</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> nan</label>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> False</label>
+      </div>
+    </div>
+                <!-- SUM:u2-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">//</code> بتقرّب لتحت حتى مع السالب، و <code class="inl">%</code> بتاخد إشارة المقسوم عليه.</li><li><code class="inl">round</code> بتستخدم التقريب البنكي (2.5 ← 2).</li><li>float تقريبي: قارن بـ <code class="inl">abs(a - b) &lt; 1e-9</code>، وخزّن الفلوس int بالقروش.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u2-l5 -->
+
+  <!-- 2.P1 -->
+  <article class="lesson project" id="u2-p1">
+    <h3>مشروع 2: آلة حاسبة تعرض كل العمليات <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: أول برنامج بياخد مدخلات ويعمل عليها حسابات ويعرض تقرير.</p>
+
+    <h4>الكود</h4>
+    <div class="code" data-file="calculator_v1.py"><pre>
+first_number = int(input("Please enter your first number here\n"))
+second_number = int(input("Please enter your second number here\n"))
+print(f"""your first number is {first_number}
+your second number is {second_number}
+in case of operation +: {first_number + second_number}
+in case of operation -: {first_number - second_number}
+in case of operation *: {first_number * second_number}
+in case of operation /: {first_number / second_number}""")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج (لو دخل 10 و 5)</div><pre>your first number is 10
+your second number is 5
+in case of operation +: 15
+in case of operation -: 5
+in case of operation *: 50
+in case of operation /: 2.0</pre></div>
+
+    <h4>التشريح</h4>
+    <ul>
+      <li>السطرين الأولين: قرا نصّين وحوّلهم لأرقام صحيحة بـ <code class="inl">int()</code>.</li>
+      <li>الـ f-string التلاثي: عرض متعدّد الأسطر، وكل قوس معقوف فيه <strong>عملية حسابية</strong> بتتحسب لحظة الطباعة.</li>
+      <li>ناتج القسمة <code class="inl">2.0</code> لأن <code class="inl">/</code> بترجّع float.</li>
+    </ul>
+
+    <h4>عيوب النسخة دي (وحلولها الجاية)</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المشكلة</th><th>الحل وهيجي فين</th></tr>
+        <tr><td>لو المستخدم كتب حروف → البرنامج بيقع</td><td><code class="inl">try/except</code> — الوحدة 9</td></tr>
+        <tr><td>لو الرقم التاني صفر → ZeroDivisionError</td><td><code class="inl">if</code> — الوحدة 4</td></tr>
+        <tr><td>بيعرض كل العمليات، المستخدم عايز واحدة بس</td><td><code class="inl">if / elif</code> — الوحدة 4</td></tr>
+        <tr><td>بيشتغل مرّة واحدة وبيقفل</td><td><code class="inl">while</code> — الوحدة 8</td></tr>
+      </table>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 لاحظ منهج الكورس</div>
+      <p>
+        الحاسبة دي هتتطوّر معانا <strong>4 مرّات</strong> على مدار الكورس، وكل مرّة نضيف
+        عليها المفهوم الجديد. دي أفضل طريقة تتعلّم بيها: تبني حاجة ناقصة وتحسّنها،
+        بدل ما تتفرّج على كود كامل مش فاهم أجزاءه.
+      </p>
+    </div>
+
+    <h4>نسخة مطوّرة بسيطة</h4>
+    <div class="code" data-file="calculator_v1b.py"><pre>
+first_number = float(input("Please enter your first number here\n"))
+second_number = float(input("Please enter your second number here\n"))
+print("-" * 34)
+print(f"{first_number} + {second_number} = {first_number + second_number}")
+print(f"{first_number} - {second_number} = {first_number - second_number}")
+print(f"{first_number} * {second_number} = {first_number * second_number}")
+print(f"{first_number} // {second_number} = {first_number // second_number}")
+print(f"{first_number} %  {second_number} = {first_number % second_number}")
+print(f"{first_number} ** {second_number} = {first_number ** second_number}")
+print("-" * 34)
+</pre></div>
+  </article>
+
+  <!-- 2.P2 -->
+  <article class="lesson project" id="u2-p2">
+    <h3>مشروع 3: مولّد معرّف فريد (ID Generator) <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: تبني منطق حقيقي بيدمج بيانات المستخدم في كود مميّز.</p>
+
+    <h4>الفكرة</h4>
+    <p>
+      البرنامج بياخد الاسم، رقم الموبايل، الرقم القومي، والعمر، وبيدمجهم بقاعدة معيّنة
+      عشان يطلّع معرّف مميّز لكل شخص.
+    </p>
+
+    <div class="code" data-file="id_generator.py"><pre>
+print("welcome in your Id Generator:")
+name = input("Please enter your name\n")
+mobile_number = input("Please enter your mobile number\n")
+national_id = input("Please enter your national ID number\n")
+age = int(input("Please enter your age here\n"))
+result = f"{name[0:3].capitalize()}/{str(int(national_id[-4:])*2)}/{str(int(mobile_number[-4:]))}/{age}"
+print(f"your ID number is: \n{result}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>welcome in your Id Generator:
+your ID number is:
+Far/2460/1983/32</pre></div>
+
+    <h4>تفكيك سطر النتيجة قطعة قطعة</h4>
+    <p>السطر ده مكثّف جدًا، فخلّينا نفكّه:</p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الجزء</th><th>بيعمل إيه</th><th>مثال</th></tr>
+        <tr>
+          <td><code class="inl">name[0:3]</code></td>
+          <td>ياخد أول 3 حروف من الاسم (تقطيع/slicing)</td>
+          <td><code class="inl">"farid"</code> → <code class="inl">"far"</code></td>
+        </tr>
+        <tr>
+          <td><code class="inl">.capitalize()</code></td>
+          <td>يخلّي أول حرف كابيتال والباقي صغير</td>
+          <td><code class="inl">"far"</code> → <code class="inl">"Far"</code></td>
+        </tr>
+        <tr>
+          <td><code class="inl">national_id[-4:]</code></td>
+          <td>آخر 4 حروف (فهرسة سالبة)</td>
+          <td><code class="inl">"…1230"</code> → <code class="inl">"1230"</code></td>
+        </tr>
+        <tr>
+          <td><code class="inl">int(…) * 2</code></td>
+          <td>يحوّلهم لرقم ويضربهم في 2</td>
+          <td><code class="inl">1230</code> → <code class="inl">2460</code></td>
+        </tr>
+        <tr>
+          <td><code class="inl">str(…)</code></td>
+          <td>يرجّعهم نص عشان يتدمجوا</td>
+          <td><code class="inl">2460</code> → <code class="inl">"2460"</code></td>
+        </tr>
+        <tr>
+          <td><code class="inl">int(mobile_number[-4:])</code></td>
+          <td>آخر 4 أرقام من الموبايل، والتحويل هنا بيشيل الأصفار البادئة</td>
+          <td><code class="inl">"1983"</code> → <code class="inl">1983</code></td>
+        </tr>
+      </table>
+    </div>
+    <div class="box info">
+      <div class="bt">ℹ️ ليه <code>str()</code> جوّه f-string أصلًا؟</div>
+      <p>
+        مش محتاجينها فعليًا — الـ f-string بتحوّل تلقائيًا. الكود ده مكتوب بأسلوب
+        دفاعي، لكن ممكن نبسّطه لـ
+        <code class="inl">{int(national_id[-4:]) * 2}</code> مباشرة.
+        <strong>وده درس مهم:</strong> الكود اللي بيشتغل ممكن يبقى فيه حاجات زايدة،
+        وشغلك كمبرمج إنك تشوفها وتنضّفها.
+      </p>
+    </div>
+
+    <h4>النسخة المبسّطة</h4>
+    <div class="code" data-file="id_generator_v2.py"><pre>
+print("welcome in your Id Generator:")
+name = input("Please enter your name\n").strip()
+mobile_number = input("Please enter your mobile number\n").strip()
+national_id = input("Please enter your national ID number\n").strip()
+age = int(input("Please enter your age here\n"))
+name_part = name[0:3].capitalize()
+id_part = int(national_id[-4:]) * 2
+mobile_part = mobile_number[-4:]
+result = f"{name_part}/{id_part}/{mobile_part}/{age}"
+print(f"your ID number is: \n{result}")
+</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 الدرس الأهم في المشروع ده</div>
+      <p>
+        <strong>فكّك السطر الطويل لمتغيّرات ليها أسماء.</strong> الكود التاني أطول بـ 3 سطور
+        لكن أسهل 10 مرّات في القراية والتعديل واكتشاف الأخطاء. المبرمج المحترف
+        بيكتب للبشر، مش للكمبيوتر.
+      </p>
+    </div>
+
+    <div class="ex">
+      <div class="bt">✍️ التحدّي</div>
+      <p>
+        عدّل البرنامج عشان الـ ID يبقى فيه كمان أول حرف من الاسم كابيتال + عدد حروف الاسم.
+        مثال: <code class="inl">F5/Far/2460/1983/32</code>.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">name</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+      <div class="code"><pre>
+prefix = f"{name[0].upper()}{len(name)}"
+result = f"{prefix}/{name_part}/{id_part}/{mobile_part}/{age}"
+print(result)
+</pre></div>
+      </details>
+    </div>
+  </article>
+  <!-- ADD:u2-ch -->
+  <!-- 2.CH -->
+  <article class="lesson" id="u2-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة الثانية <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">برامج بتستقبل مدخلات. الاختبارات بتشغّل برنامجك أكتر من مرّة بمدخلات مختلفة — زي مستخدمين حقيقيين.</p>
+
+    <div class="challenge" data-ch="u2-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — محوّل الدقايق <span class="lvl">⭐⭐</span></div>
+      <p>اطلب عدد دقايق، واطبع في آخر سطر: <code class="inl">2 ساعة و 15 دقيقة</code> (للمدخل 135).</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+minutes = input("عدد الدقايق: ")
+# حوّل المدخل لرقم، واحسب الساعات والدقايق الباقية، واطبع النتيجة
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def result(stdin):
+    out = run_program(stdin)
+    lines = [l for l in out.strip().splitlines() if l.strip()]
+    return (lines[-1].strip() if lines else ""), out
+
+def test_135():
+    "135 دقيقة ← 2 ساعة و 15 دقيقة"
+    line, out = result("135\n")
+    assert line.endswith("2 ساعة و 15 دقيقة"), out
+
+def test_59():
+    "59 دقيقة ← 0 ساعة و 59 دقيقة"
+    line, out = result("59\n")
+    assert line.endswith("0 ساعة و 59 دقيقة"), out
+
+def test_120():
+    "120 دقيقة ← 2 ساعة و 0 دقيقة"
+    line, out = result("120\n")
+    assert line.endswith("2 ساعة و 0 دقيقة"), out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+minutes = int(input("عدد الدقايق: "))
+hours = minutes // 60
+rest = minutes % 60
+print(f"{hours} ساعة و {rest} دقيقة")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u2-ch2">
+      <div class="ch-head">🐞 التحدّي 2 — متوسّط غلطان <span class="lvl">⭐⭐</span></div>
+      <p>البرنامج بيحسب متوسّط 3 أرقام، بس النتيجة غلط. لاقي الغلطة وصلّحها. (للمدخلات 3 و 6 و 9 لازم يطبع <code class="inl">المتوسط: 6.0</code>)</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+a = int(input())
+b = int(input())
+c = int(input())
+average = a + b + c / 3
+print(f"المتوسط: {round(average, 2)}")
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def last(stdin):
+    out = run_program(stdin)
+    return out.strip().splitlines()[-1].strip(), out
+
+def test_369():
+    "3 و 6 و 9 ← المتوسط: 6.0"
+    line, out = last("3\n6\n9\n")
+    assert line == "المتوسط: 6.0", out
+
+def test_124():
+    "1 و 2 و 4 ← المتوسط: 2.33"
+    line, out = last("1\n2\n4\n")
+    assert line == "المتوسط: 2.33", out
+
+def test_same():
+    "10 و 10 و 10 ← المتوسط: 10.0"
+    line, out = last("10\n10\n10\n")
+    assert line == "المتوسط: 10.0", out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+a = int(input())
+b = int(input())
+c = int(input())
+average = (a + b + c) / 3
+print(f"المتوسط: {round(average, 2)}")
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u2-ch -->
+
+  <!-- 2.EX -->
+  <article class="lesson" id="u2-ex">
+    <h3>تمارين الوحدة الثانية <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">كل تمرين هنا بياخد مدخلات من المستخدم — شغّله وجرّبه بمدخلات مختلفة.</p>
+
+    <h4>المستوى الأول</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — محوّل العملات</div>
+      <p>اطلب من المستخدم مبلغ بالدولار وسعر الصرف، واطبع المبلغ بالجنيه مقرّبًا لخانتين عشريتين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+dollars = float(input("المبلغ بالدولار: "))
+rate = float(input("سعر الصرف: "))
+print(f"{dollars} دولار = {dollars * rate:.2f} جنيه")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — حاسبة العمر</div>
+      <p>اطلب سنة الميلاد واطبع: العمر الحالي، والعمر بالشهور، وبالأيام تقريبًا.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+birth_year = int(input("سنة ميلادك: "))
+age = 2026 - birth_year
+print(f"عمرك: {age} سنة")
+print(f"بالشهور: {age * 12} شهر")
+print(f"بالأيام: {age * 365} يوم تقريبًا")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 3 — المساحة والمحيط</div>
+      <p>اطلب طول وعرض مستطيل، واطبع المساحة والمحيط وطول القطر (الجذر التربيعي لمجموع مربّعي الضلعين — استخدم <code class="inl">** 0.5</code>).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+w = float(input("العرض: "))
+h = float(input("الطول: "))
+print(f"المساحة: {w * h}")
+print(f"المحيط: {2 * (w + h)}")
+print(f"القطر: {(w**2 + h**2) ** 0.5:.2f}")
+</pre></div>
+      </details>
+    </div>
+
+    <h4>المستوى الثاني</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — محوّل الوقت</div>
+      <p>اطلب عدد ثواني، واطبعه بصيغة «س ساعة، د دقيقة، ث ثانية». استخدم <code class="inl">//</code> و<code class="inl">%</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+total = int(input("عدد الثواني: "))
+hours = total // 3600
+minutes = (total % 3600) // 60
+seconds = total % 60
+print(f"{hours} ساعة، {minutes} دقيقة، {seconds} ثانية")
+</pre></div>
+      <p>لاحظ <code class="inl">(total % 3600) // 60</code>: بناخد الباقي بعد الساعات، وبعدين نقسمه على 60.</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 5 — تقسيم الفاتورة</div>
+      <p>اطلب إجمالي الفاتورة وعدد الأشخاص ونسبة البقشيش، واطبع نصيب كل شخص.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+bill = float(input("إجمالي الفاتورة: "))
+people = int(input("عدد الأشخاص: "))
+tip_percent = float(input("نسبة البقشيش %: "))
+total = bill * (1 + tip_percent / 100)
+share = total / people
+print(f"الإجمالي مع البقشيش: {total:.2f}")
+print(f"نصيب الفرد: {share:.2f}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 6 — عكس الرقم</div>
+      <p>اطلب رقم من 3 خانات واطبع خاناته مقلوبة (123 ← 321) — مرّة بالتحويل لنص، ومرّة بالحساب باستخدام <code class="inl">//</code> و<code class="inl">%</code> بس.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+n = int(input("رقم من 3 خانات: "))
+# الطريقة 1: بالنصوص
+print(str(n)[::-1])
+# الطريقة 2: بالحساب
+ones = n % 10
+tens = (n // 10) % 10
+hundreds = n // 100
+print(ones * 100 + tens * 10 + hundreds)
+</pre></div>
+      </details>
+    </div>
+
+    <h4>المستوى الثالث</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 7 — مولّد اسم مستخدم</div>
+      <p>
+        اطلب الاسم الأول والأخير وسنة الميلاد، وولّد اسم مستخدم بالقاعدة دي:
+        أول 3 حروف من الاسم الأول (كابيتال أول حرف) + أول حرف من الاسم الأخير كابيتال
+        + آخر رقمين من سنة الميلاد. مثال: Farid / Mohammed / 1994 ← <code class="inl">FarM94</code>
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+first = input("الاسم الأول: ").strip()
+last = input("الاسم الأخير: ").strip()
+year = input("سنة الميلاد: ").strip()
+username = f"{first[0:3].capitalize()}{last[0].upper()}{year[-2:]}"
+print(f"اسم المستخدم: {username}")
+</pre></div>
+      <p>لاحظ إن سنة الميلاد اتقريت <strong>كنص</strong> عشان نقدر نعمل <code class="inl">[-2:]</code> عليها مباشرةً.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">input()</code> بترجّع دايمًا نوع…</p>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> يعتمد على اللي المستخدم كتبه</label>
+        <label><input type="radio"> str</label>
+        <label><input type="radio"> float</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. ناتج <code class="inl">print(10 / 5)</code>؟</p>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 2.0</label>
+        <label><input type="radio"> "2"</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ناتج <code class="inl">print(int(9.99))</code>؟</p>
+        <label><input type="radio"> 9</label>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> 9.99</label>
+        <label><input type="radio"> ValueError</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. <code class="inl">int("25.7")</code> بتعمل إيه؟</p>
+        <label><input type="radio"> بترجّع 25</label>
+        <label><input type="radio"> بترجّع 26</label>
+        <label><input type="radio"> بترجّع 25.7</label>
+        <label><input type="radio"> بترمي ValueError</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">5. ناتج <code class="inl">print(2 + 3 * 4)</code>؟</p>
+        <label><input type="radio"> 20</label>
+        <label><input type="radio"> 14</label>
+        <label><input type="radio"> 24</label>
+        <label><input type="radio"> 9</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">6. <code class="inl">17 % 5</code> بترجّع…</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 3.4</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 85</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:2 -->
+  <div class="checkpoint" data-unit="2">
+    <h4>✅ نقطة تفتيش: الوحدة الثانية</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أستقبل مدخلات وأحوّلها للنوع الصح.</li><li>أفهم ليه int("abc") بتقع.</li><li>أستخدم // و % في مسائل عملية.</li><li>أعرف ليه 0.1 + 0.2 مش 0.3 وأقارن الأرقام العشرية بأمان.</li></ul>
+  </div>
+  <!-- /CP -->

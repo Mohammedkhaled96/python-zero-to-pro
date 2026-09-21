@@ -1,0 +1,7 @@
+big = float("inf")
+print(big, -big)
+print(big > 10 ** 300)
+print(1e308 * 10)
+nan = float("nan")
+print(big - big)
+print(nan == nan)

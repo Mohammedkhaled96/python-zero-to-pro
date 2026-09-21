@@ -1,0 +1,1097 @@
+@@append u15-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>من القاموس للكلاس</div>
+      <p>حوّل «كتاب» مكتوب كقاموس لكلاس بسيط، ولاحظ الفرق لما تغلط في اسم خاصية.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+book_dict = {"title": "بايثون", "pages": 300} ¦¦ القاموس: مفيش شكل مضمون.
+print(book_dict.get("titel")) ¦¦ غلطة إملائية ← None بهدوء (خطأ مستخبّي).
+ ¦¦
+class Book: ¦¦ الكلاس = قالب بشكل ثابت.
+    def __init__(self, title, pages): ¦¦ كل كتاب لازم يتعمل بالبيانات دي.
+        self.title = title ¦¦ خاصية.
+        self.pages = pages ¦¦ خاصية.
+ ¦¦
+b = Book("بايثون", 300) ¦¦ كائن.
+print(b.title, b.pages) ¦¦ الوصول بالنقطة.
+try: ¦¦ نفس الغلطة الإملائية.
+    print(b.titel) ¦¦ خاصية مش موجودة.
+except AttributeError: ¦¦ خطأ واضح فورًا.
+    print("الكلاس كشف الغلطة") ¦¦ أحسن من None الصامتة.
+      @end
+      @out rtl
+None
+بايثون 300
+الكلاس كشف الغلطة
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. العلاقة بين الكلاس والكائن…</p>
+        <label><input type="radio"> نفس الحاجة</label>
+        <label><input type="radio"> الكلاس قالب، والكائن نسخة معمولة منه</label>
+        <label><input type="radio"> الكائن بيعمل كلاسات</label>
+        <label><input type="radio"> الكلاس دالة عادية</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. ميزة الكلاس على القاموس…</p>
+        <label><input type="radio"> أسرع دايمًا</label>
+        <label><input type="radio"> أصغر في الذاكرة دايمًا</label>
+        <label><input type="radio"> مفيش</label>
+        <label><input type="radio"> البيانات والسلوك مع بعض بشكل ثابت</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. في بايثون، <code class="inl">5</code> و <code class="inl">"hi"</code>…</p>
+        <label><input type="radio"> كائنات من كلاسات int و str</label>
+        <label><input type="radio"> مش كائنات</label>
+        <label><input type="radio"> كلاسات</label>
+        <label><input type="radio"> دوال</label>
+      </div>
+    </div>
+
+@@append u15-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>عدّاد خطوات</div>
+      <p>كلاس <code class="inl">StepCounter</code> فيه هدف يومي، ودالة بتزوّد خطوات، ودالة بترجّع النسبة المئوية.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+class StepCounter: ¦¦ الكلاس.
+    def __init__(self, goal=8000): ¦¦ هدف افتراضي.
+        self.goal = goal ¦¦ خاصية الهدف.
+        self.steps = 0 ¦¦ خاصية بتبدأ بصفر — مش جاية من برّه.
+ ¦¦
+    def walk(self, n): ¦¦ دالة بتعدّل حالة الكائن.
+        self.steps += n ¦¦ `self` = الكائن اللي نادى.
+ ¦¦
+    def progress(self): ¦¦ دالة بترجّع قيمة.
+        return round(self.steps / self.goal * 100) ¦¦ النسبة.
+ ¦¦
+me = StepCounter() ¦¦ كائن بالهدف الافتراضي.
+friend = StepCounter(4000) ¦¦ كائن تاني بهدف مختلف.
+me.walk(2000) ¦¦ بايثون بتحوّلها لـ `StepCounter.walk(me, 2000)`.
+me.walk(1000) ¦¦ تراكم.
+friend.walk(3000) ¦¦ حالة مستقلّة.
+print(me.steps, me.progress()) ¦¦ 3000 من 8000.
+print(friend.steps, friend.progress()) ¦¦ 3000 من 4000.
+      @end
+      @out
+3000 38
+3000 75
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">__init__</code> بتتنادى إمتى؟</p>
+        <label><input type="radio"> لازم تناديها بنفسك</label>
+        <label><input type="radio"> لما البرنامج يخلص</label>
+        <label><input type="radio"> أوتوماتيك لما تعمل كائن جديد</label>
+        <label><input type="radio"> مرّة واحدة للكلاس كله</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. نسيت <code class="inl">self</code> في <code class="inl">def walk(n):</code> ثم <code class="inl">me.walk(5)</code>…</p>
+        <label><input type="radio"> TypeError: takes 1 positional argument but 2 were given</label>
+        <label><input type="radio"> بتشتغل عادي</label>
+        <label><input type="radio"> n = self</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">steps = 0</code> من غير <code class="inl">self.</code> جوّه __init__…</p>
+        <label><input type="radio"> خاصية عادية</label>
+        <label><input type="radio"> متغيّر محلّي بيختفي بعد __init__</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> خاصية كلاس</label>
+      </div>
+    </div>
+
+@@append u15-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>سلة مشتريات بتتصرّف زي القائمة</div>
+      <p>اعمل كلاس <code class="inl">Cart</code> يدعم <code class="inl">len</code> و <code class="inl">in</code> و <code class="inl">print</code> و <code class="inl">+</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+class Cart: ¦¦ الكلاس.
+    def __init__(self, items=None): ¦¦ `None` بدل `[]` كافتراضي (القائمة الافتراضية بتتشارك بين الكائنات).
+        self.items = list(items or []) ¦¦ نسخة جديدة دايمًا.
+ ¦¦
+    def __len__(self): ¦¦ `len(cart)`.
+        return len(self.items) ¦¦ عدد العناصر.
+ ¦¦
+    def __contains__(self, item): ¦¦ `x in cart`.
+        return item in self.items ¦¦ نحوّل السؤال للقائمة.
+ ¦¦
+    def __add__(self, other): ¦¦ `cart1 + cart2`.
+        return Cart(self.items + other.items) ¦¦ كائن **جديد** — الأصلين ما اتغيّروش.
+ ¦¦
+    def __str__(self): ¦¦ `print(cart)`.
+        return "سلة: " + "، ".join(self.items) ¦¦ نص مقروء.
+ ¦¦
+a = Cart(["عيش", "لبن"]) ¦¦ سلة.
+b = Cart(["شاي"]) ¦¦ سلة تانية.
+both = a + b ¦¦ `__add__`.
+print(both) ¦¦ `__str__`.
+print(len(both), "شاي" in both, "بن" in both) ¦¦ `__len__` و `__contains__`.
+      @end
+      @out rtl
+سلة: عيش، لبن، شاي
+3 True False
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">a == b</code> بتنادي…</p>
+        <label><input type="radio"> __cmp__</label>
+        <label><input type="radio"> __is__</label>
+        <label><input type="radio"> __equal__</label>
+        <label><input type="radio"> __eq__</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. الفرق بين <code class="inl">__str__</code> و <code class="inl">__repr__</code>؟</p>
+        <label><input type="radio"> str للمستخدم، repr للمبرمج (ويظهر جوّه القوائم)</label>
+        <label><input type="radio"> مفيش فرق</label>
+        <label><input type="radio"> repr أسرع</label>
+        <label><input type="radio"> str للأرقام بس</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. لو الكلاس مفيهوش <code class="inl">__len__</code> و ناديت <code class="inl">len(obj)</code>…</p>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> 1</label>
+      </div>
+    </div>
+
+@@append u15-l4
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>عدّاد الكائنات</div>
+      <p>خاصية كلاس بتعدّ الكائنات المعمولة — وشوف الفخ لما تكتب عليها من الكائن.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+class Player: ¦¦ الكلاس.
+    count = 0 ¦¦ خاصية **كلاس**: نسخة واحدة مشتركة.
+ ¦¦
+    def __init__(self, name): ¦¦ الإنشاء.
+        self.name = name ¦¦ خاصية **كائن**.
+        Player.count += 1 ¦¦ نعدّل عن طريق اسم الكلاس — مش `self.count`.
+ ¦¦
+p1 = Player("علي") ¦¦ الأول.
+p2 = Player("منى") ¦¦ التاني.
+print(Player.count, p1.count) ¦¦ القراءة من الكائن بتوصل لخاصية الكلاس.
+p1.count = 100 ¦¦ ⚠️ ده بيعمل خاصية **جديدة** على p1 بس — بتغطّي على خاصية الكلاس.
+print(Player.count, p1.count, p2.count) ¦¦ الكلاس و p2 ما اتأثّروش.
+      @end
+      @out
+2 2
+2 100 2
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. خاصية معرّفة جوّه الكلاس برّه أي دالة…</p>
+        <label><input type="radio"> خاصية كائن</label>
+        <label><input type="radio"> خاصية كلاس مشتركة بين كل الكائنات</label>
+        <label><input type="radio"> متغيّر محلّي</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">class A: items = []</code> وكل كائن بيعمل <code class="inl">self.items.append(x)</code>…</p>
+        <label><input type="radio"> كل الكائنات بتشارك نفس القائمة — غالبًا bug</label>
+        <label><input type="radio"> كل كائن ليه قائمته</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> القائمة بتتمسح</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">@staticmethod</code>…</p>
+        <label><input type="radio"> بتاخد self</label>
+        <label><input type="radio"> بتاخد cls</label>
+        <label><input type="radio"> بتتنادى مرّة واحدة بس</label>
+        <label><input type="radio"> مش بتاخد self ولا cls — دالة عادية جوّه الكلاس</label>
+      </div>
+    </div>
+
+@@append u15-l5
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>موظفين</div>
+      <p>كلاس <code class="inl">Employee</code> بمرتّب، و <code class="inl">Manager</code> بيورث منه وبيضيف مكافأة باستخدام <code class="inl">super()</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+class Employee: ¦¦ الأب.
+    def __init__(self, name, salary): ¦¦ الإنشاء.
+        self.name = name ¦¦ الاسم.
+        self.salary = salary ¦¦ المرتّب.
+ ¦¦
+    def pay(self): ¦¦ الدفع.
+        return self.salary ¦¦ المرتّب بس.
+ ¦¦
+class Manager(Employee): ¦¦ الابن بيورث كل حاجة.
+    def __init__(self, name, salary, bonus): ¦¦ بيانات زيادة.
+        super().__init__(name, salary) ¦¦ نسيب الأب يجهّز الجزء بتاعه.
+        self.bonus = bonus ¦¦ الجزء الجديد.
+ ¦¦
+    def pay(self): ¦¦ إعادة تعريف (override).
+        return super().pay() + self.bonus ¦¦ نبني على نسخة الأب بدل ما ننسخ الكود.
+ ¦¦
+staff = [Employee("علي", 8000), Manager("سارة", 12000, 3000)] ¦¦ قائمة مختلطة.
+for person in staff: ¦¦ نفس الاستدعاء لكل واحد.
+    print(person.name, person.pay()) ¦¦ كل كلاس بيرد بطريقته.
+print(isinstance(staff[1], Employee)) ¦¦ المدير «موظف» برضه.
+      @end
+      @out
+علي 8000
+سارة 15000
+True
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. الابن عرّف <code class="inl">__init__</code> ونسي <code class="inl">super().__init__</code>…</p>
+        <label><input type="radio"> بايثون بتناديها أوتوماتيك</label>
+        <label><input type="radio"> SyntaxError</label>
+        <label><input type="radio"> خصائص الأب ما اتعملتش — AttributeError بعدين</label>
+        <label><input type="radio"> مفيش مشكلة</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. «يورث» مناسبة لما العلاقة…</p>
+        <label><input type="radio"> «عنده» (has-a)</label>
+        <label><input type="radio"> «هو نوع من» (is-a)</label>
+        <label><input type="radio"> أي علاقة</label>
+        <label><input type="radio"> مفيش علاقة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">issubclass(Manager, Employee)</code>؟</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> False</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> None</label>
+      </div>
+    </div>
+
+@@append u15-l6
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>درجة حرارة بحماية</div>
+      <p>كلاس بخاصية <code class="inl">celsius</code> محمية (مينفعش تقل عن -273.15)، وخاصية <code class="inl">fahrenheit</code> محسوبة للقراءة بس.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+class Temperature: ¦¦ الكلاس.
+    def __init__(self, celsius): ¦¦ الإنشاء.
+        self.celsius = celsius ¦¦ ده بيعدّي على الـ setter تحت — حتى الإنشاء محمي.
+ ¦¦
+    @property ¦¦ قراءة.
+    def celsius(self): ¦¦ `t.celsius`.
+        return self._celsius ¦¦ القيمة المخزّنة (الشرطة = «داخلي»).
+ ¦¦
+    @celsius.setter ¦¦ كتابة.
+    def celsius(self, value): ¦¦ `t.celsius = x`.
+        if value < -273.15: ¦¦ تحقّق.
+            raise ValueError("أقل من الصفر المطلق") ¦¦ نرفض.
+        self._celsius = value ¦¦ نحفظ.
+ ¦¦
+    @property ¦¦ خاصية محسوبة من غير setter.
+    def fahrenheit(self): ¦¦ `t.fahrenheit`.
+        return self._celsius * 9 / 5 + 32 ¦¦ التحويل.
+ ¦¦
+t = Temperature(25) ¦¦ كائن.
+print(t.celsius, t.fahrenheit) ¦¦ من غير أقواس — شكلها خاصية.
+try: ¦¦ قيمة مستحيلة.
+    t.celsius = -300 ¦¦ الـ setter بيرفض.
+except ValueError as e: ¦¦ نمسك.
+    print("مرفوض:", e) ¦¦ الرسالة.
+try: ¦¦ كتابة على خاصية للقراءة بس.
+    t.fahrenheit = 100 ¦¦ مفيش setter.
+except AttributeError: ¦¦ نمسك.
+    print("fahrenheit للقراءة بس") ¦¦ الرسالة.
+      @end
+      @out rtl
+25 77.0
+مرفوض: أقل من الصفر المطلق
+fahrenheit للقراءة بس
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">_balance</code> (شرطة واحدة) معناها…</p>
+        <label><input type="radio"> ممنوع الوصول ليها نهائيًا</label>
+        <label><input type="radio"> ثابت</label>
+        <label><input type="radio"> خاصية كلاس</label>
+        <label><input type="radio"> اتفاق: «داخلية، ما تلمسهاش من برّه»</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. property من غير setter وحاولت تكتب عليها…</p>
+        <label><input type="radio"> بتتكتب عادي</label>
+        <label><input type="radio"> AttributeError</label>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> بتتجاهل بصمت</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. بتقرا property إزاي؟</p>
+        <label><input type="radio"> t.celsius()</label>
+        <label><input type="radio"> t.get_celsius()</label>
+        <label><input type="radio"> t.celsius</label>
+        <label><input type="radio"> Temperature.celsius(t)()</label>
+      </div>
+    </div>
+
+@@append u15-l7
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>طرق دفع</div>
+      <p>تلات كلاسات مالهمش أب مشترك، بس كلهم فيهم <code class="inl">pay(amount)</code> — دالة واحدة تتعامل معاهم كلهم (Duck Typing).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+class Cash: ¦¦ طريقة أولى.
+    def pay(self, amount): ¦¦ نفس الاسم.
+        return f"كاش: {amount}" ¦¦ سلوكها.
+ ¦¦
+class Card: ¦¦ طريقة تانية.
+    def pay(self, amount): ¦¦ نفس الاسم.
+        return f"فيزا: {amount} + رسوم {amount * 0.02}" ¦¦ سلوك مختلف.
+ ¦¦
+class Wallet: ¦¦ طريقة تالتة.
+    def pay(self, amount): ¦¦ نفس الاسم.
+        return f"محفظة: {amount}" ¦¦ سلوكها.
+ ¦¦
+def checkout(method, amount): ¦¦ مش مهم النوع — المهم «بيعرف يدفع».
+    print(method.pay(amount)) ¦¦ تعدّد الأشكال.
+ ¦¦
+for m in [Cash(), Card(), Wallet()]: ¦¦ كائنات مختلفة.
+    checkout(m, 500) ¦¦ نفس الاستدعاء.
+      @end
+      @out rtl
+كاش: 500
+فيزا: 500 + رسوم 10.0
+محفظة: 500
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="0">
+        <p class="qt">1. Duck Typing معناه…</p>
+        <label><input type="radio"> المهم الكائن يعرف يعمل المطلوب، مش نوعه</label>
+        <label><input type="radio"> لازم كل الكلاسات تورث من أب واحد</label>
+        <label><input type="radio"> لازم تفحص النوع بـ type</label>
+        <label><input type="radio"> نوع بيانات جديد</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. <code class="inl">len("abc")</code> و <code class="inl">len([1, 2])</code> مثال على…</p>
+        <label><input type="radio"> الوراثة</label>
+        <label><input type="radio"> التغليف</label>
+        <label><input type="radio"> تعدّد الأشكال</label>
+        <label><input type="radio"> الاسترجاع</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. كلاس بيورث من ABC ومش معرّف الدالة المجرّدة، وحاولت تعمل منه كائن…</p>
+        <label><input type="radio"> بيشتغل عادي</label>
+        <label><input type="radio"> الدالة بترجّع None</label>
+        <label><input type="radio"> تحذير</label>
+        <label><input type="radio"> TypeError</label>
+      </div>
+    </div>
+
+@@append u16-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>اختبر قبل ما تثق</div>
+      <p>الدالة دي «شكلها صح». اكتب 3 فحوصات بسيطة تكشف مشكلتها.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def is_adult(age): ¦¦ الدالة تحت الاختبار.
+    return age > 18 ¦¦ ⚠️ المفروض `>=`.
+ ¦¦
+cases = [(20, True), (10, False), (18, True)] ¦¦ (مدخل، المتوقّع) — لازم نجرّب **الحدّ** نفسه.
+for age, expected in cases: ¦¦ على كل حالة.
+    got = is_adult(age) ¦¦ الناتج الفعلي.
+    status = "✓" if got == expected else "✗" ¦¦ مقارنة.
+    print(status, age, "متوقّع", expected, "طلع", got) ¦¦ تقرير.
+      @end
+      @out rtl
+✓ 20 متوقّع True طلع True
+✓ 10 متوقّع False طلع False
+✗ 18 متوقّع True طلع False
+      @end
+      <p>الحالة الحدّية (18) هي اللي كشفت الخطأ — الحدود أكتر مكان بتستخبّى فيه الأخطاء.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. أهم فايدة للاختبارات الآلية…</p>
+        <label><input type="radio"> البرنامج يبقى أسرع</label>
+        <label><input type="radio"> تغيّر الكود وأنت واثق إنك ما كسرتش حاجة</label>
+        <label><input type="radio"> بتلغي الحاجة للتوثيق</label>
+        <label><input type="radio"> بتصلّح الأخطاء لوحدها</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. اختبار الوحدة (unit test) بيختبر…</p>
+        <label><input type="radio"> البرنامج كله مع قاعدة البيانات</label>
+        <label><input type="radio"> الواجهة بس</label>
+        <label><input type="radio"> سرعة الإنترنت</label>
+        <label><input type="radio"> جزء صغير معزول (دالة مثلًا)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. حالات لازم تجرّبها دايمًا…</p>
+        <label><input type="radio"> العادية، والحدود، والمدخلات الغلط</label>
+        <label><input type="radio"> العادية بس</label>
+        <label><input type="radio"> العشوائية بس</label>
+        <label><input type="radio"> أول وآخر سطر</label>
+      </div>
+    </div>
+
+@@append u16-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>assert برسالة</div>
+      <p>اكتب assert لدالة تكبير أول حرف، وخلّي الفاشلة تطبع رسالة مفيدة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def cap(word): ¦¦ الدالة.
+    return word[:1].upper() + word[1:] ¦¦ `[:1]` بدل `[0]` عشان النص الفاضي ما يرميش IndexError.
+ ¦¦
+assert cap("python") == "Python" ¦¦ بتعدّي بصمت.
+assert cap("") == "" ¦¦ الحالة الحدّية.
+try: ¦¦ نجرّب واحدة فاشلة عن قصد.
+    assert cap("ali") == "ALI", f"متوقّع ALI لكن طلع {cap('ali')}" ¦¦ الرسالة بعد الفاصلة.
+except AssertionError as e: ¦¦ نمسكها عشان نشوف الرسالة.
+    print("فشل:", e) ¦¦ الرسالة.
+print("خلصنا") ¦¦ النهاية.
+      @end
+      @out rtl
+فشل: متوقّع ALI لكن طلع Ali
+خلصنا
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">assert 1 + 1 == 2</code> بتطبع…</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> OK</label>
+        <label><input type="radio"> ولا حاجة</label>
+        <label><input type="radio"> 2</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ليه ما نستخدمش assert للتحقّق من مدخلات المستخدم في البرنامج الحقيقي؟</p>
+        <label><input type="radio"> لأنها بتتلغي لو بايثون اشتغلت بـ <code class="inl">-O</code></label>
+        <label><input type="radio"> أبطأ</label>
+        <label><input type="radio"> مش بتشتغل مع النصوص</label>
+        <label><input type="radio"> مفيش سبب</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">assert (x > 0, "رسالة")</code> — المشكلة؟</p>
+        <label><input type="radio"> مفيش</label>
+        <label><input type="radio"> SyntaxError</label>
+        <label><input type="radio"> بتفشل دايمًا</label>
+        <label><input type="radio"> tuple غير فاضي = True دايمًا، فعمرها ما تفشل</label>
+      </div>
+    </div>
+
+@@append u16-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>ملف اختبار كامل</div>
+      <p>اكتب <code class="inl">test_discount.py</code> بتلات اختبارات منهم واحد بـ <code class="inl">pytest.raises</code>. (التشغيل الحقيقي: <code class="inl">pytest -v</code>؛ هنا بنناديهم يدويًا عشان تشوف النتيجة في الصفحة.)</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code test_discount.py run
+import pytest ¦¦ المكتبة.
+ ¦¦
+def discount(price, percent): ¦¦ الكود المختبَر (في مشروع حقيقي بيبقى في ملف لوحده).
+    if not 0 <= percent <= 100: ¦¦ تحقّق.
+        raise ValueError("النسبة لازم بين 0 و 100") ¦¦ خطأ واضح.
+    return price * (100 - percent) / 100 ¦¦ الحساب.
+ ¦¦
+def test_normal(): ¦¦ اسم بيبدأ بـ `test_` ← pytest بيلاقيه لوحده.
+    assert discount(200, 25) == 150 ¦¦ assert عادية — pytest بيشرح الفشل بالتفصيل.
+ ¦¦
+def test_zero(): ¦¦ حالة حدّية.
+    assert discount(99, 0) == 99 ¦¦ من غير خصم.
+ ¦¦
+def test_invalid(): ¦¦ اختبار إن الخطأ **بيحصل**.
+    with pytest.raises(ValueError): ¦¦ بتنجح بس لو الكود جوّاها رمى ValueError.
+        discount(100, 150) ¦¦ نسبة مستحيلة.
+ ¦¦
+for t in [test_normal, test_zero, test_invalid]: ¦¦ محاكاة بسيطة لـ pytest (مش محتاجها في الحقيقة).
+    t() ¦¦ لو فشل هيرمي AssertionError.
+    print("PASSED", t.__name__) ¦¦ تقرير.
+      @end
+      @out
+PASSED test_normal
+PASSED test_zero
+PASSED test_invalid
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. pytest بيلاقي الاختبارات إزاي؟</p>
+        <label><input type="radio"> لازم تسجّلها في قائمة</label>
+        <label><input type="radio"> ملفات <code class="inl">test_*.py</code> ودوال بتبدأ بـ <code class="inl">test_</code></label>
+        <label><input type="radio"> أي دالة في المشروع</label>
+        <label><input type="radio"> الدوال اللي فيها assert</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">pytest.raises(ValueError)</code> والكود ما رماش خطأ…</p>
+        <label><input type="radio"> الاختبار بيفشل</label>
+        <label><input type="radio"> الاختبار بينجح</label>
+        <label><input type="radio"> بيتخطّى</label>
+        <label><input type="radio"> pytest بيقف</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">pytest -k discount</code>…</p>
+        <label><input type="radio"> بتمسح الاختبارات</label>
+        <label><input type="radio"> بتشغّل كل حاجة</label>
+        <label><input type="radio"> بتشغّل الاختبارات اللي اسمها فيه discount بس</label>
+        <label><input type="radio"> بتعمل تقرير تغطية</label>
+      </div>
+    </div>
+
+@@append u16-l4
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>parametrize و fixture</div>
+      <p>حوّل 4 اختبارات متشابهة لاختبار واحد بجدول، واستخدم fixture لتجهيز بيانات. (الكود للتشغيل بـ <code class="inl">pytest</code> في الطرفية.)</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code test_grades.py norun
+import pytest ¦¦ المكتبة.
+ ¦¦
+def grade(score): ¦¦ الدالة المختبَرة.
+    return "A" if score >= 90 else "B" if score >= 75 else "F" ¦¦ شرط مختصر متسلسل.
+ ¦¦
+@pytest.mark.parametrize("score, expected", [ ¦¦ أسماء الوسائط، ثم جدول الحالات.
+    (95, "A"), ¦¦ عادية.
+    (90, "A"), ¦¦ حدّ.
+    (89, "B"), ¦¦ تحت الحدّ مباشرةً.
+    (10, "F"), ¦¦ قليلة.
+]) ¦¦ كل صف = اختبار مستقل في التقرير.
+def test_grade(score, expected): ¦¦ الوسائط بتيجي من الجدول.
+    assert grade(score) == expected ¦¦ نفس الفحص.
+ ¦¦
+@pytest.fixture ¦¦ تجهيز مشترك.
+def class_scores(): ¦¦ pytest بينادي الدالة دي قبل كل اختبار بيطلبها.
+    return {"علي": 95, "منى": 70} ¦¦ بيانات جديدة لكل اختبار (مفيش تأثير متبادل).
+ ¦¦
+def test_top_student(class_scores): ¦¦ طلب الـ fixture باسمها كوسيط.
+    best = max(class_scores, key=class_scores.get) ¦¦ صاحب أعلى درجة.
+    assert grade(class_scores[best]) == "A" ¦¦ الفحص.
+      @end
+      @out
+$ pytest test_grades.py -v
+test_grades.py::test_grade[95-A] PASSED
+test_grades.py::test_grade[90-A] PASSED
+test_grades.py::test_grade[89-B] PASSED
+test_grades.py::test_grade[10-F] PASSED
+test_grades.py::test_top_student PASSED
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. parametrize بجدول 4 صفوف بيطلع كام اختبار؟</p>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 8</label>
+        <label><input type="radio"> 4</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. الاختبار بياخد الـ fixture إزاي؟</p>
+        <label><input type="radio"> بـ import</label>
+        <label><input type="radio"> بكتابة اسمها كوسيط في دالة الاختبار</label>
+        <label><input type="radio"> بنداها يدويًا</label>
+        <label><input type="radio"> بـ global</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ليه كل اختبار ياخد بيانات جديدة من الـ fixture؟</p>
+        <label><input type="radio"> عشان اختبار ما يأثّرش على التاني</label>
+        <label><input type="radio"> أسرع</label>
+        <label><input type="radio"> إجباري في بايثون</label>
+        <label><input type="radio"> عشان التقرير يبقى أطول</label>
+      </div>
+    </div>
+
+@@append u16-l7
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>اختبر من غير إنترنت</div>
+      <p>دالة بتجيب سعر الدولار من API. اختبرها بـ <code class="inl">mock</code> عشان الاختبار ما يعتمدش على النت ولا يتغيّر ناتجه.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+from unittest.mock import patch, Mock ¦¦ أدوات المحاكاة (مدمجة).
+ ¦¦
+def fetch_rate(): ¦¦ الدالة الحقيقية بتكلّم النت.
+    from urllib.request import urlopen ¦¦ مكتبة الشبكة القياسية (بتتنفّذ بس لو الدالة اتنادت فعلًا — وفي الاختبار مش هتتنادى).
+    with urlopen("https://api.example.com/usd", timeout=10) as r: ¦¦ طلب حقيقي بطيء وممكن يفشل.
+        return float(r.read()) ¦¦ السعر.
+ ¦¦
+def price_in_egp(usd): ¦¦ الدالة اللي عايزين نختبرها.
+    return round(usd * fetch_rate(), 2) ¦¦ بتعتمد على النت.
+ ¦¦
+with patch.dict(globals(), {"fetch_rate": lambda: 50.0}): ¦¦ طول الـ with: الاسم `fetch_rate` بيشاور على دالة مزيّفة بترجّع 50، وبعدها بيرجع زي ما كان. (في مشروع حقيقي بتكتب `patch("shop.fetch_rate", return_value=50.0)` باسم الموديول.)
+    print(price_in_egp(3)) ¦¦ من غير أي طلب شبكة.
+ ¦¦
+fake = Mock(return_value=48.5) ¦¦ Mock لوحدها: بتسجّل كل نداء.
+with patch.dict(globals(), {"fetch_rate": fake}): ¦¦ نستخدمها بدل الدالة.
+    price_in_egp(2) ¦¦ نداء.
+    price_in_egp(4) ¦¦ نداء تاني.
+print(fake.call_count) ¦¦ نتأكّد إن الدالة اتنادت مرّتين.
+      @end
+      @out
+150.0
+2
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. ليه نعمل mock للـ API في الاختبارات؟</p>
+        <label><input type="radio"> عشان نختبر النت نفسه</label>
+        <label><input type="radio"> إجباري</label>
+        <label><input type="radio"> سرعة وثبات: الاختبار ما يعتمدش على شبكة أو بيانات بتتغيّر</label>
+        <label><input type="radio"> عشان الكود يبقى أقصر</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. تقرير coverage بيقول 100%. ده معناه…</p>
+        <label><input type="radio"> كل سطر اتنفّذ في الاختبارات — مش ضمان إن مفيش أخطاء</label>
+        <label><input type="radio"> مفيش أي خطأ في الكود</label>
+        <label><input type="radio"> كل الاختبارات نجحت</label>
+        <label><input type="radio"> الكود سريع</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. أمر تشغيل التغطية…</p>
+        <label><input type="radio"> python coverage.py</label>
+        <label><input type="radio"> pytest --mock</label>
+        <label><input type="radio"> pip coverage</label>
+        <label><input type="radio"> coverage run -m pytest ثم coverage report</label>
+      </div>
+    </div>
+
+@@append u16-l8
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>جلسة تنقيح</div>
+      <p>الدالة بترجّع متوسّط غلط. حط <code class="inl">breakpoint()</code> جوّه الحلقة وتابع المتغيّرات بأوامر pdb لحد ما تلاقي المشكلة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code avg.py norun
+def average(nums): ¦¦ الدالة.
+    total = 0 ¦¦ التجميع.
+    for i in range(1, len(nums)): ¦¦ ⚠️ البداية من 1 — بتتخطّى أول عنصر.
+        breakpoint() ¦¦ البرنامج بيقف هنا ويفتح pdb.
+        total += nums[i] ¦¦ الجمع.
+    return total / len(nums) ¦¦ القسمة.
+ ¦¦
+print(average([10, 20, 30])) ¦¦ المتوقّع 20.0 … الفعلي 16.666…
+      @end
+      @out
+> avg.py(5)average()
+-> total += nums[i]
+(Pdb) p i, total
+(1, 0)
+(Pdb) p nums[i]
+20
+(Pdb) c
+...
+      @end
+      <p>أول وقفة بتوريك <code class="inl">i = 1</code> والعنصر <code class="inl">20</code> — يعني الـ 10 اتنسى. الحل: <code class="inl">for i in range(len(nums))</code> أو أبسط: <code class="inl">sum(nums) / len(nums)</code>. متنساش تشيل <code class="inl">breakpoint()</code> بعد ما تخلص.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. أمر pdb لتنفيذ السطر الجاي من غير الدخول في الدوال…</p>
+        <label><input type="radio"> s</label>
+        <label><input type="radio"> n</label>
+        <label><input type="radio"> c</label>
+        <label><input type="radio"> q</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">s</code> (step) بتعمل…</p>
+        <label><input type="radio"> بتدخل جوّه الدالة اللي في السطر</label>
+        <label><input type="radio"> بتكمّل لحد الوقفة الجاية</label>
+        <label><input type="radio"> بتخرج</label>
+        <label><input type="radio"> بتطبع المتغيّرات</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">c</code> في pdb…</p>
+        <label><input type="radio"> بتمسح الشاشة</label>
+        <label><input type="radio"> بتطبع الكود</label>
+        <label><input type="radio"> بتكمّل التشغيل لحد الوقفة الجاية أو النهاية</label>
+        <label><input type="radio"> بتلغي البرنامج</label>
+      </div>
+    </div>
+
+@@append u16-l9
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>مستويات السجل</div>
+      <p>اضبط logging يطبع من WARNING وفوق بس، وشوف مين بيظهر. وبعدين غيّر المستوى لـ DEBUG.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import logging ¦¦ الوحدة.
+import sys ¦¦ عشان نوجّه السجل للمخرجات العادية.
+ ¦¦
+logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s", stream=sys.stdout, force=True) ¦¦ المستوى + الشكل + المكان. `force=True` بتسمح بإعادة الضبط.
+log = logging.getLogger("shop") ¦¦ سجل باسم الجزء ده من البرنامج.
+log.debug("تفاصيل داخلية") ¦¦ أقل من WARNING ← مش هيظهر.
+log.info("طلب جديد") ¦¦ مش هيظهر.
+log.warning("المخزون قرب يخلص") ¦¦ هيظهر.
+log.error("فشل الدفع") ¦¦ هيظهر.
+log.setLevel(logging.DEBUG) ¦¦ نفتح كل المستويات لسجل shop.
+log.debug("دلوقتي التفاصيل ظاهرة") ¦¦ ظهر.
+      @end
+      @out rtl
+WARNING: المخزون قرب يخلص
+ERROR: فشل الدفع
+DEBUG: دلوقتي التفاصيل ظاهرة
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. ترتيب المستويات من الأقل للأعلى…</p>
+        <label><input type="radio"> ERROR, WARNING, INFO, DEBUG</label>
+        <label><input type="radio"> INFO, DEBUG, ERROR, WARNING</label>
+        <label><input type="radio"> DEBUG, WARNING, INFO, CRITICAL</label>
+        <label><input type="radio"> DEBUG, INFO, WARNING, ERROR, CRITICAL</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ميزة logging على print…</p>
+        <label><input type="radio"> مستويات تتحكّم فيها من مكان واحد، ووقت، وملفات</label>
+        <label><input type="radio"> أسرع دايمًا</label>
+        <label><input type="radio"> بتصلّح الأخطاء</label>
+        <label><input type="radio"> مفيش</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. جوّه except، تسجّل الخطأ ومعاه الـ traceback بـ…</p>
+        <label><input type="radio"> log.info</label>
+        <label><input type="radio"> log.exception</label>
+        <label><input type="radio"> log.debug</label>
+        <label><input type="radio"> print</label>
+      </div>
+    </div>
+
+@@append u17-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تلات دوال استرجاعية</div>
+      <p>مجموع أرقام عدد، عكس نص، وأس — كل واحدة بحالة أساس وخطوة بتصغّر المشكلة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def digit_sum(n): ¦¦ مجموع الأرقام.
+    if n < 10: ¦¦ حالة الأساس: رقم واحد.
+        return n ¦¦ نرجّعه.
+    return n % 10 + digit_sum(n // 10) ¦¦ آخر رقم + مجموع الباقي.
+ ¦¦
+def reverse(s): ¦¦ عكس نص.
+    if len(s) <= 1: ¦¦ الأساس: نص فاضي أو حرف.
+        return s ¦¦ عكسه هو نفسه.
+    return reverse(s[1:]) + s[0] ¦¦ عكس الباقي + الحرف الأول في الآخر.
+ ¦¦
+def power(base, exp): ¦¦ أس.
+    if exp == 0: ¦¦ الأساس.
+        return 1 ¦¦ أي حاجة أس صفر = 1.
+    return base * power(base, exp - 1) ¦¦ المشكلة بتصغر بواحد كل مرّة.
+ ¦¦
+print(digit_sum(2026)) ¦¦ 2+0+2+6.
+print(reverse("بايثون")) ¦¦ مقلوب.
+print(power(2, 10)) ¦¦ 1024.
+      @end
+      @out
+10
+نوثياب
+1024
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. دالة استرجاعية من غير حالة أساس…</p>
+        <label><input type="radio"> بترجّع None</label>
+        <label><input type="radio"> بتشتغل مرّة</label>
+        <label><input type="radio"> RecursionError</label>
+        <label><input type="radio"> حلقة لا نهائية من غير خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">def f(n): return 0 if n == 0 else n + f(n - 1)</code> — <code class="inl">f(4)</code>؟</p>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 24</label>
+        <label><input type="radio"> 0</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. الحدّ الافتراضي لعمق الاسترجاع في بايثون تقريبًا…</p>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> مفيش حدّ</label>
+        <label><input type="radio"> مليون</label>
+        <label><input type="radio"> 1000</label>
+      </div>
+    </div>
+
+@@append u17-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>عدّ الخطوات</div>
+      <p>اعدّ عدد عمليات المقارنة في حلقة واحدة وحلقتين متداخلتين لما n تتضاعف — وشوف O(n) و O(n²) بعينك.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def linear_ops(n): ¦¦ حلقة واحدة.
+    ops = 0 ¦¦ عدّاد.
+    for i in range(n): ¦¦ n مرّة.
+        ops += 1 ¦¦ عملية.
+    return ops ¦¦ = n.
+ ¦¦
+def pairs_ops(n): ¦¦ حلقتين.
+    ops = 0 ¦¦ عدّاد.
+    for i in range(n): ¦¦ n مرّة…
+        for j in range(n): ¦¦ …في n مرّة.
+            ops += 1 ¦¦ عملية.
+    return ops ¦¦ = n².
+ ¦¦
+for n in [10, 20, 40]: ¦¦ نضاعف الحجم.
+    print(n, linear_ops(n), pairs_ops(n)) ¦¦ الخطّي بيتضاعف، والتربيعي بيتضرب في 4.
+      @end
+      @out
+10 10 100
+20 20 400
+40 40 1600
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">x in my_set</code> تعقيدها…</p>
+        <label><input type="radio"> O(n)</label>
+        <label><input type="radio"> O(1) في المتوسّط</label>
+        <label><input type="radio"> O(n²)</label>
+        <label><input type="radio"> O(log n)</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">x in my_list</code> تعقيدها…</p>
+        <label><input type="radio"> O(1)</label>
+        <label><input type="radio"> O(log n)</label>
+        <label><input type="radio"> O(n²)</label>
+        <label><input type="radio"> O(n)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. خوارزمية بتقسم المشكلة نصّين كل خطوة…</p>
+        <label><input type="radio"> O(log n)</label>
+        <label><input type="radio"> O(n)</label>
+        <label><input type="radio"> O(2ⁿ)</label>
+        <label><input type="radio"> O(1)</label>
+      </div>
+    </div>
+
+@@append u17-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>أول ظهور</div>
+      <p>عدّل البحث الثنائي بحيث يرجّع مكان <strong>أول</strong> ظهور لرقم متكرّر، وقارن بـ <code class="inl">bisect</code> المدمجة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import bisect ¦¦ البحث الثنائي الجاهز.
+ ¦¦
+def first_index(items, target): ¦¦ القائمة لازم تكون مرتّبة.
+    low, high = 0, len(items) - 1 ¦¦ الحدود.
+    answer = -1 ¦¦ لو ما لقيناش.
+    while low <= high: ¦¦ طول ما فيه مدى.
+        mid = (low + high) // 2 ¦¦ النص.
+        if items[mid] == target: ¦¦ لقيناه…
+            answer = mid ¦¦ …نسجّله…
+            high = mid - 1 ¦¦ …ونكمّل يمين-شمال عشان نلاقي ظهور أبكر.
+        elif items[mid] < target: ¦¦ الهدف أكبر.
+            low = mid + 1 ¦¦ النص اليمين.
+        else: ¦¦ الهدف أصغر.
+            high = mid - 1 ¦¦ النص الشمال.
+    return answer ¦¦ النتيجة.
+ ¦¦
+data = [1, 3, 3, 3, 5, 8, 8, 9] ¦¦ مرتّبة وفيها تكرار.
+print(first_index(data, 3), first_index(data, 8), first_index(data, 4)) ¦¦ أول 3، أول 8، مش موجود.
+print(bisect.bisect_left(data, 3), bisect.bisect_left(data, 8)) ¦¦ `bisect_left` بترجّع نفس المكان.
+      @end
+      @out
+1 5 -1
+1 5
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. شرط البحث الثنائي…</p>
+        <label><input type="radio"> القائمة فيها أرقام بس</label>
+        <label><input type="radio"> القائمة صغيرة</label>
+        <label><input type="radio"> القائمة مرتّبة</label>
+        <label><input type="radio"> مفيش تكرار</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. قائمة مليون عنصر — البحث الثنائي محتاج تقريبًا كام مقارنة؟</p>
+        <label><input type="radio"> 20</label>
+        <label><input type="radio"> 1000</label>
+        <label><input type="radio"> 500000</label>
+        <label><input type="radio"> مليون</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. قائمة 10 عناصر غير مرتّبة وهتبحث مرّة واحدة — الأنسب؟</p>
+        <label><input type="radio"> ترتّب وبعدين ثنائي</label>
+        <label><input type="radio"> مستحيل</label>
+        <label><input type="radio"> ثنائي على طول</label>
+        <label><input type="radio"> البحث الخطّي (أو in)</label>
+      </div>
+    </div>
+
+@@append u17-l4
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>ترتيب بالإدراج</div>
+      <p>نفّذ Insertion Sort (زي ما بترتّب كروت في إيدك) وقارنه بـ <code class="inl">sorted</code>، وبعدين رتّب طلاب بمفتاحين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def insertion_sort(items): ¦¦ الخوارزمية.
+    items = items[:] ¦¦ نسخة — ما نبوّظش الأصل.
+    for i in range(1, len(items)): ¦¦ من العنصر التاني.
+        current = items[i] ¦¦ الكارت اللي في إيدنا.
+        j = i - 1 ¦¦ نبص على الجزء المرتّب قبله.
+        while j >= 0 and items[j] > current: ¦¦ طول ما اللي قبله أكبر…
+            items[j + 1] = items[j] ¦¦ …نزحلقه خطوة لليمين.
+            j -= 1 ¦¦ ونرجع خطوة.
+        items[j + 1] = current ¦¦ نحط الكارت في مكانه.
+    return items ¦¦ النتيجة. أسوأ حالة O(n²)، لكن سريعة جدًا لو القائمة شبه مرتّبة.
+ ¦¦
+nums = [5, 2, 9, 1, 5] ¦¦ بيانات.
+print(insertion_sort(nums), insertion_sort(nums) == sorted(nums)) ¦¦ نتأكّد بالمقارنة.
+students = [("منى", 90), ("علي", 85), ("سارة", 90)] ¦¦ (اسم، درجة).
+print(sorted(students, key=lambda s: (-s[1], s[0]))) ¦¦ مفتاح tuple: الدرجة تنازلي (بالسالب)، ثم الاسم أبجدي.
+      @end
+      @out
+[1, 2, 5, 5, 9] True
+[('سارة', 90), ('منى', 90), ('علي', 85)]
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. تعقيد <code class="inl">sorted</code> في بايثون (Timsort)…</p>
+        <label><input type="radio"> O(n²)</label>
+        <label><input type="radio"> O(n log n)</label>
+        <label><input type="radio"> O(n)</label>
+        <label><input type="radio"> O(1)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. الترتيب «المستقر» (stable) معناه…</p>
+        <label><input type="radio"> العناصر المتساوية بتفضل بترتيبها الأصلي</label>
+        <label><input type="radio"> مابيقعش</label>
+        <label><input type="radio"> بيرتّب الأرقام بس</label>
+        <label><input type="radio"> سرعته ثابتة</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. في الواقع العملي، ترتّب إزاي؟</p>
+        <label><input type="radio"> تكتب Bubble Sort</label>
+        <label><input type="radio"> تكتب Insertion Sort</label>
+        <label><input type="radio"> sorted أو list.sort مع key</label>
+        <label><input type="radio"> مكتبة خارجية دايمًا</label>
+      </div>
+    </div>
+
+@@append u17-l5
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>الأقواس المتوازنة + طابور طباعة</div>
+      <p>استخدم مكدّس عشان تتأكّد إن الأقواس متوازنة، وطابور <code class="inl">deque</code> لمحاكاة طابور طباعة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+from collections import deque ¦¦ الطابور الكفء.
+ ¦¦
+def balanced(text): ¦¦ فحص الأقواس.
+    pairs = {")": "(", "]": "[", "}": "{"} ¦¦ كل قوس قفل وقوس فتحه.
+    stack = [] ¦¦ المكدّس (LIFO): قائمة عادية.
+    for ch in text: ¦¦ حرف حرف.
+        if ch in "([{": ¦¦ فتح؟
+            stack.append(ch) ¦¦ push.
+        elif ch in pairs: ¦¦ قفل؟
+            if not stack or stack.pop() != pairs[ch]: ¦¦ مفيش فتح، أو آخر فتح مش من نوعه.
+                return False ¦¦ مش متوازن.
+    return not stack ¦¦ لازم المكدّس يفضى في الآخر.
+ ¦¦
+for t in ["(a[b]{c})", "(]", "((x)"]: ¦¦ حالات.
+    print(t, balanced(t)) ¦¦ النتيجة.
+ ¦¦
+printer = deque(["تقرير", "فاتورة"]) ¦¦ الطابور (FIFO).
+printer.append("صورة") ¦¦ يدخل من الآخر.
+while printer: ¦¦ طول ما فيه شغل.
+    print("طباعة:", printer.popleft()) ¦¦ يخرج من الأول — O(1).
+      @end
+      @out
+(a[b]{c}) True
+(] False
+((x) False
+طباعة: تقرير
+طباعة: فاتورة
+طباعة: صورة
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. زرار «تراجع» (Undo) في برنامج بيستخدم…</p>
+        <label><input type="radio"> طابور</label>
+        <label><input type="radio"> قاموس</label>
+        <label><input type="radio"> مجموعة</label>
+        <label><input type="radio"> مكدّس</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ليه <code class="inl">deque</code> بدل <code class="inl">list.pop(0)</code>؟</p>
+        <label><input type="radio"> pop(0) بتزحلق كل العناصر O(n)، و popleft هي O(1)</label>
+        <label><input type="radio"> list ما بتقبلش pop(0)</label>
+        <label><input type="radio"> deque أصغر دايمًا</label>
+        <label><input type="radio"> مفيش فرق</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. push 1 ثم 2 ثم 3 على مكدّس، ثم pop — الناتج؟</p>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> [1, 2]</label>
+      </div>
+    </div>

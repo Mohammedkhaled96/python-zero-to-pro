@@ -1,0 +1,302 @@
+@@lesson u12-l7 before="<!-- 12.P1 -->"
+  <!-- 12.7 -->
+  <article class="lesson" id="u12-l7">
+    <h3>قواعد البيانات: SQL و sqlite3 <span class="tag">درس ؟ · مهم</span></h3>
+    <p class="goal">الهدف: تخزّن بياناتك في قاعدة بيانات حقيقية بدل ملفات النصوص وJSON، وتكتب أهم أوامر SQL، وتحمي برنامجك من أشهر ثغرة في التاريخ (SQL Injection).</p>
+
+    <h4>1. ليه قاعدة بيانات؟</h4>
+    <p>
+      الملفات كويسة لحد ما البيانات تكبر: عايز «كل الطلاب اللي درجتهم فوق 80 من القاهرة مرتّبين»؟ مع ملف لازم تقرا كل حاجة وتفلتر بإيدك.
+      <strong>قاعدة البيانات</strong> بتخزّن البيانات في <strong>جداول</strong> (زي Excel)، وبتسألها بلغة اسمها <strong>SQL</strong> — وهي تجيبلك النتيجة بسرعة، حتى مع ملايين الصفوف، ومن غير ما البيانات تبوظ لو اتنين كتبوا في نفس الوقت.
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المصطلح</th><th>معناه</th><th>زي إيه في Excel</th></tr>
+        <tr><td>جدول (table)</td><td>مجموعة بيانات من نوع واحد</td><td>شيت</td></tr>
+        <tr><td>صف (row)</td><td>سجل واحد (طالب واحد)</td><td>صف</td></tr>
+        <tr><td>عمود (column)</td><td>خاصية ليها نوع (الاسم، الدرجة)</td><td>عمود</td></tr>
+        <tr><td>مفتاح أساسي (primary key)</td><td>رقم مميّز لكل صف، ما بيتكرّرش</td><td>رقم الصف</td></tr>
+      </table>
+    </div>
+    <div class="box info">
+      <div class="bt">ℹ️ ليه sqlite3؟</div>
+      <p>
+        SQLite قاعدة بيانات كاملة في <strong>ملف واحد</strong>، ومكتبتها <code class="inl">sqlite3</code> جاية مع بايثون من غير تسطيب.
+        موجودة في كل موبايل ومتصفّح في العالم تقريبًا. والـ SQL اللي هتتعلّمه هنا هو نفسه تقريبًا في PostgreSQL و MySQL اللي بتشغّل المواقع الكبيرة.
+      </p>
+    </div>
+
+    <h4>2. إنشاء جدول وإضافة بيانات</h4>
+    @code run
+import sqlite3 ¦¦ مكتبة قياسية.
+ ¦¦
+conn = sqlite3.connect(":memory:") ¦¦ **الاتصال** بقاعدة بيانات. `":memory:"` = قاعدة مؤقّتة في الذاكرة (للتجربة). في برنامج حقيقي بتكتب اسم ملف زي `"school.db"`.
+cur = conn.cursor() ¦¦ **المؤشّر**: الأداة اللي بتنفّذ بيها الأوامر وتقرا النتايج.
+cur.execute(""" ¦¦ `execute` بتنفّذ أمر SQL واحد. بنكتبه بين تلات علامات تنصيص عشان ياخد كذا سطر.
+    CREATE TABLE students ( ¦¦ **CREATE TABLE**: إنشاء جدول اسمه students. (الاصطلاح: أوامر SQL بحروف كبيرة.)
+        id INTEGER PRIMARY KEY, ¦¦ عمود رقم مميّز — SQLite بيملاه تلقائيًا 1، 2، 3…
+        name TEXT NOT NULL, ¦¦ نص إلزامي (`NOT NULL` = ممنوع يبقى فاضي).
+        city TEXT, ¦¦ نص اختياري.
+        score INTEGER ¦¦ رقم صحيح.
+    ) ¦¦ قفل تعريف الجدول.
+""") ¦¦ قفل النص والاستدعاء.
+cur.execute("INSERT INTO students (name, city, score) VALUES (?, ?, ?)", ("سارة", "القاهرة", 91)) ¦¦ **INSERT**: إضافة صف. علامات `?` أماكن فاضية، والقيم بتتبعت **منفصلة** في tuple — دي أهم عادة أمان في الدرس (شوف الفقرة 5).
+rows = [("أحمد", "الجيزة", 78), ("منى", "القاهرة", 85), ("علي", "طنطا", 62)] ¦¦ كذا صف في قائمة.
+cur.executemany("INSERT INTO students (name, city, score) VALUES (?, ?, ?)", rows) ¦¦ `executemany` = نفس الأمر لكل عنصر في القائمة.
+conn.commit() ¦¦ **الحفظ الفعلي**: التعديلات ما بتتثبّتش غير بعد `commit`. لو البرنامج وقع قبلها، كأنها ما حصلتش.
+for row in cur.execute("SELECT id, name, score FROM students"): ¦¦ **SELECT**: اقرا أعمدة معيّنة من الجدول. النتيجة بتتلف عليها صف صف.
+    print(row) ¦¦ كل صف = tuple بالقيم بنفس ترتيب الأعمدة.
+    @end
+    @out
+(1, 'سارة', 91)
+(2, 'أحمد', 78)
+(3, 'منى', 85)
+(4, 'علي', 62)
+    @end
+
+    <h4>3. الاستعلامات: فلترة وترتيب وتجميع</h4>
+    @code run
+print(cur.execute("SELECT name, score FROM students WHERE score >= 80 ORDER BY score DESC").fetchall()) ¦¦ `WHERE` = الشرط، `ORDER BY … DESC` = الترتيب تنازلي. `fetchall` بترجّع كل النتايج كقائمة.
+print(cur.execute("SELECT COUNT(*), AVG(score), MAX(score) FROM students").fetchone()) ¦¦ **دوال التجميع**: العدد والمتوسّط والأكبر في سطر. `fetchone` = صف واحد بس.
+for city, count, avg in cur.execute("SELECT city, COUNT(*), ROUND(AVG(score), 1) FROM students GROUP BY city ORDER BY city"): ¦¦ **GROUP BY**: جمّع الصفوف حسب المدينة واحسب لكل مجموعة — زي Counter و defaultdict بس جوّه قاعدة البيانات.
+    print(city, count, avg) ¦¦ المدينة وعدد طلابها ومتوسّطهم.
+    @end
+    @pre
+import sqlite3
+conn = sqlite3.connect(":memory:")
+cur = conn.cursor()
+cur.execute("CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT NOT NULL, city TEXT, score INTEGER)")
+cur.executemany("INSERT INTO students (name, city, score) VALUES (?, ?, ?)", [("سارة", "القاهرة", 91), ("أحمد", "الجيزة", 78), ("منى", "القاهرة", 85), ("علي", "طنطا", 62)])
+conn.commit()
+    @end
+    @out
+[('سارة', 91), ('منى', 85)]
+(4, 79.0, 91)
+الجيزة 1 78.0
+القاهرة 2 88.0
+طنطا 1 62.0
+    @end
+    <div class="box tip">
+      <div class="bt">💡 شغّل الأمثلة بالترتيب</div>
+      <p>لو بتشغّل الأمثلة جوّه الصفحة، شغّل مثال الفقرة 2 الأول — هو اللي بيعمل <code class="inl">conn</code> و <code class="inl">cur</code> والجدول، والأمثلة اللي بعده بتكمّل عليه.</p>
+    </div>
+
+    <h4>4. التعديل والحذف</h4>
+    @code run
+cur.execute("UPDATE students SET score = score + 5 WHERE city = ?", ("طنطا",)) ¦¦ **UPDATE**: عدّل الصفوف اللي بتحقّق الشرط. لاحظ الفاصلة في `("طنطا",)` — لازم tuple حتى لو قيمة واحدة.
+print(cur.rowcount) ¦¦ `rowcount` = عدد الصفوف اللي اتأثّرت.
+cur.execute("DELETE FROM students WHERE score < ?", (70,)) ¦¦ **DELETE**: امسح الصفوف اللي بتحقّق الشرط. علي بقى 67 فاتمسح. ⚠️ `DELETE FROM students` **من غير WHERE بتمسح الجدول كله**.
+print(cur.rowcount) ¦¦ صف واحد اتمسح.
+conn.commit() ¦¦ تثبيت التعديلات.
+student = cur.execute("SELECT name, score FROM students WHERE name = ?", ("علي",)).fetchone() ¦¦ ندوّر عليه.
+print(student) ¦¦ `fetchone` بترجّع None لو مفيش نتيجة — افحصها قبل ما تستخدمها.
+    @end
+    @pre
+import sqlite3
+conn = sqlite3.connect(":memory:")
+cur = conn.cursor()
+cur.execute("CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT NOT NULL, city TEXT, score INTEGER)")
+cur.executemany("INSERT INTO students (name, city, score) VALUES (?, ?, ?)", [("سارة", "القاهرة", 91), ("أحمد", "الجيزة", 78), ("منى", "القاهرة", 85), ("علي", "طنطا", 62)])
+conn.commit()
+    @end
+    @out
+1
+1
+None
+    @end
+
+    <h4>5. SQL Injection: ليه لازم علامات الاستفهام؟</h4>
+    <p>أغرب وأخطر ثغرة: لو ركّبت الأمر بـ f-string، المستخدم يقدر يكتب <strong>SQL</strong> مكان اسمه — ويغيّر معنى الأمر كله.</p>
+    @code run
+name = "x' OR '1'='1" ¦¦ «اسم» كتبه مستخدم خبيث.
+unsafe = f"SELECT COUNT(*) FROM students WHERE name = '{name}'" ¦¦ ❌ **لصق المدخل جوّه الأمر**.
+print(unsafe) ¦¦ شوف الأمر النهائي: الشرط بقى «الاسم x **أو** 1 = 1» — و 1 = 1 صح دايمًا!
+print(cur.execute(unsafe).fetchone()) ¦¦ رجّع **كل** الصفوف. في شاشة تسجيل دخول، ده معناه دخول من غير كلمة سر.
+print(cur.execute("SELECT COUNT(*) FROM students WHERE name = ?", (name,)).fetchone()) ¦¦ ✅ مع `?` المكتبة بتتعامل مع المدخل كـ **قيمة نصّية بس** مهما كان فيه — مفيش طالب اسمه كده.
+    @end
+    @pre
+import sqlite3
+conn = sqlite3.connect(":memory:")
+cur = conn.cursor()
+cur.execute("CREATE TABLE students (id INTEGER PRIMARY KEY, name TEXT NOT NULL, city TEXT, score INTEGER)")
+cur.executemany("INSERT INTO students (name, city, score) VALUES (?, ?, ?)", [("سارة", "القاهرة", 91), ("أحمد", "الجيزة", 78), ("منى", "القاهرة", 85), ("علي", "طنطا", 62)])
+conn.commit()
+cur.execute("UPDATE students SET score = score + 5 WHERE city = ?", ("طنطا",))
+cur.execute("DELETE FROM students WHERE score < ?", (70,))
+conn.commit()
+    @end
+    @out
+SELECT COUNT(*) FROM students WHERE name = 'x' OR '1'='1'
+(3,)
+(0,)
+    @end
+    <div class="box err">
+      <div class="bt">❌ القاعدة اللي مفيهاش استثناء</div>
+      <p><strong>عمرك ما تحط مدخلات (من مستخدم، ملف، API) جوّه أمر SQL بـ f-string أو + أو format.</strong> استخدم دايمًا <code class="inl">?</code> والقيم منفصلة. الثغرة دي سبب تسريبات بيانات لملايين الناس.</p>
+    </div>
+
+    <h4>6. ملف حقيقي، أعمدة بأسمائها، وربط جدولين (JOIN)</h4>
+    @code run school.py
+import sqlite3 ¦¦ استيراد.
+ ¦¦
+with sqlite3.connect("school.db") as conn: ¦¦ ملف حقيقي على القرص (بيتعمل لو مش موجود). `with` هنا بتعمل **commit تلقائي** لو كله تمام، و **rollback** (تراجع) لو حصل خطأ.
+    conn.row_factory = sqlite3.Row ¦¦ الصفوف ترجع بشكل يسمح بالوصول **بالاسم**: `row["title"]` بدل `row[1]`.
+    conn.executescript(""" ¦¦ `executescript` بتنفّذ كذا أمر مفصولين بـ `;`.
+        DROP TABLE IF EXISTS courses; ¦¦ امسح الجدول لو موجود (عشان المثال يتكرّر من غير أخطاء).
+        DROP TABLE IF EXISTS enrollments; ¦¦ نفس الحكاية.
+        CREATE TABLE courses (id INTEGER PRIMARY KEY, title TEXT); ¦¦ جدول الكورسات.
+        CREATE TABLE enrollments (student TEXT, course_id INTEGER REFERENCES courses(id)); ¦¦ جدول التسجيلات: `course_id` **بيشاور** على كورس في الجدول التاني (مفتاح أجنبي).
+        INSERT INTO courses VALUES (1, 'Python'), (2, 'SQL'); ¦¦ كورسين.
+        INSERT INTO enrollments VALUES ('سارة', 1), ('سارة', 2), ('أحمد', 1); ¦¦ مين مسجّل في إيه — بالأرقام بس، من غير تكرار اسم الكورس.
+    """) ¦¦ قفل السكريبت.
+    query = """ ¦¦ استعلام بيجمع الجدولين.
+        SELECT e.student, c.title ¦¦ أعمدة من الجدولين. `e` و `c` أسماء مختصرة (aliases).
+        FROM enrollments AS e ¦¦ الجدول الأول.
+        JOIN courses AS c ON c.id = e.course_id ¦¦ **JOIN**: لكل تسجيل، هات الكورس اللي رقمه مطابق.
+        ORDER BY c.title, e.student ¦¦ ترتيب بعمودين.
+    """ ¦¦ قفل.
+    for row in conn.execute(query): ¦¦ الاتصال نفسه عنده `execute` مختصرة (من غير cursor).
+        print(row["student"], "←", row["title"]) ¦¦ الوصول بالاسم بفضل `row_factory`.
+conn.close() ¦¦ ⚠️ `with` بتعمل commit **لكن مش بتقفل** الاتصال — لازم تقفله بنفسك.
+    @end
+    @out rtl
+أحمد ← Python
+سارة ← Python
+سارة ← SQL
+    @end
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الأمر</th><th>بيعمل إيه</th><th>مثال</th></tr>
+        <tr><td><code class="inl">CREATE TABLE</code></td><td>إنشاء جدول</td><td><code class="inl">CREATE TABLE t (id INTEGER PRIMARY KEY, name TEXT)</code></td></tr>
+        <tr><td><code class="inl">INSERT</code></td><td>إضافة صف</td><td><code class="inl">INSERT INTO t (name) VALUES (?)</code></td></tr>
+        <tr><td><code class="inl">SELECT … WHERE</code></td><td>قراءة بشرط</td><td><code class="inl">SELECT * FROM t WHERE id = ?</code></td></tr>
+        <tr><td><code class="inl">ORDER BY / LIMIT</code></td><td>ترتيب وتحديد العدد</td><td><code class="inl">… ORDER BY score DESC LIMIT 3</code></td></tr>
+        <tr><td><code class="inl">COUNT / SUM / AVG</code></td><td>تجميع</td><td><code class="inl">SELECT AVG(score) FROM t</code></td></tr>
+        <tr><td><code class="inl">GROUP BY</code></td><td>تجميع لكل مجموعة</td><td><code class="inl">… GROUP BY city</code></td></tr>
+        <tr><td><code class="inl">UPDATE</code></td><td>تعديل</td><td><code class="inl">UPDATE t SET name = ? WHERE id = ?</code></td></tr>
+        <tr><td><code class="inl">DELETE</code></td><td>حذف (<strong>مع WHERE دايمًا</strong>)</td><td><code class="inl">DELETE FROM t WHERE id = ?</code></td></tr>
+        <tr><td><code class="inl">JOIN</code></td><td>ربط جدولين</td><td><code class="inl">… JOIN c ON c.id = e.course_id</code></td></tr>
+      </table>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 الخطوة الجاية</div>
+      <p>
+        في المواقع الكبيرة بتستخدم قواعد بيانات سيرفر زي <strong>PostgreSQL</strong>، وغالبًا من خلال <strong>ORM</strong> زي SQLAlchemy أو Django ORM
+        (بتكتب كلاسات بايثون وهي تكتب الـ SQL). لكن فهمك للـ SQL نفسه هو اللي هيخلّيك تعرف المكتبات دي بتعمل إيه من ورا الستارة.
+      </p>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. التعديلات في sqlite3 بتتثبّت إمتى؟</p>
+        <label><input type="radio"> فورًا بعد execute</label>
+        <label><input type="radio"> لما البرنامج يخلص</label>
+        <label><input type="radio"> بعد commit (أو نهاية with بنجاح)</label>
+        <label><input type="radio"> بعد fetchall</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. أنهي طريقة آمنة لتمرير اسم كتبه المستخدم؟</p>
+        <label><input type="radio"> execute("… WHERE name = ?", (name,))</label>
+        <label><input type="radio"> execute(f"… WHERE name = '{name}'")</label>
+        <label><input type="radio"> execute("… WHERE name = '" + name + "'")</label>
+        <label><input type="radio"> كلهم آمنين</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. «عدد الطلاب في كل مدينة» محتاج…</p>
+        <label><input type="radio"> ORDER BY</label>
+        <label><input type="radio"> JOIN</label>
+        <label><input type="radio"> DELETE</label>
+        <label><input type="radio"> COUNT مع GROUP BY</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u12-p4 before="<!-- 12.EX -->"
+  <!-- 12.P4 -->
+  <article class="lesson project" id="u12-p4">
+    <h3>مشروع ؟: دفتر المصروفات بقاعدة بيانات <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: تبني طبقة بيانات نضيفة — دوال صغيرة كل واحدة بتكلّم قاعدة البيانات بأمان — وتطلع منها تقرير شهري.</p>
+
+    <h4>الكود</h4>
+    @code run expenses.py
+import sqlite3 ¦¦ قاعدة البيانات.
+from datetime import date ¦¦ التواريخ (الوحدة 7).
+ ¦¦
+def init_db(conn): ¦¦ تجهيز الجدول — آمنة تتنادى أكتر من مرّة.
+    conn.execute(""" ¦¦ أمر الإنشاء.
+        CREATE TABLE IF NOT EXISTS expenses ( ¦¦ `IF NOT EXISTS`: ما يرميش خطأ لو الجدول موجود.
+            id INTEGER PRIMARY KEY, ¦¦ الرقم المميّز.
+            day TEXT NOT NULL, ¦¦ التاريخ كنص ISO (`2025-03-02`) — بيترتّب ويتقارن صح كنص.
+            category TEXT NOT NULL, ¦¦ التصنيف.
+            amount REAL NOT NULL CHECK (amount > 0), ¦¦ `REAL` = عشري. **`CHECK`**: قاعدة البيانات نفسها بترفض أي مبلغ صفر أو سالب — حماية حتى لو الكود نسي.
+            note TEXT DEFAULT '' ¦¦ ملاحظة اختيارية بقيمة افتراضية.
+        ) ¦¦ قفل.
+    """) ¦¦ قفل الأمر.
+ ¦¦
+def add_expense(conn, day, category, amount, note=""): ¦¦ إضافة مصروف.
+    with conn: ¦¦ **معاملة (transaction)**: commit لو نجحت، و rollback لو وقعت — مفيش بيانات نص-متسجّلة.
+        conn.execute( ¦¦ الأمر.
+            "INSERT INTO expenses (day, category, amount, note) VALUES (?, ?, ?, ?)", ¦¦ أماكن القيم.
+            (day.isoformat(), category.strip().lower(), amount, note), ¦¦ **تنظيف قبل التخزين**: التاريخ كنص ISO، والتصنيف من غير مسافات وبحروف صغيرة عشان «Food» و «food » يتجمّعوا مع بعض.
+        ) ¦¦ قفل.
+ ¦¦
+def month_total(conn, year, month): ¦¦ إجمالي شهر.
+    prefix = f"{year:04d}-{month:02d}-%" ¦¦ نمط `LIKE`: `%` = أي حاجة بعده. مارس 2025 ← `2025-03-%`.
+    row = conn.execute("SELECT COALESCE(SUM(amount), 0) FROM expenses WHERE day LIKE ?", (prefix,)).fetchone() ¦¦ `SUM` بترجّع NULL لو مفيش صفوف، و `COALESCE` بتحوّلها لصفر.
+    return row[0] ¦¦ القيمة.
+ ¦¦
+def by_category(conn, year, month): ¦¦ تقرير حسب التصنيف.
+    prefix = f"{year:04d}-{month:02d}-%" ¦¦ نفس النمط.
+    return conn.execute( ¦¦ الاستعلام.
+        """SELECT category, SUM(amount) AS total, COUNT(*) AS n ¦¦ `AS` بتدّي أسماء للأعمدة المحسوبة.
+           FROM expenses WHERE day LIKE ? ¦¦ الشهر المطلوب.
+           GROUP BY category ORDER BY total DESC""", ¦¦ تجميع وترتيب من الأكبر.
+        (prefix,), ¦¦ القيمة.
+    ).fetchall() ¦¦ كل الصفوف.
+ ¦¦
+conn = sqlite3.connect(":memory:") ¦¦ قاعدة مؤقّتة للتجربة (في الحقيقة: `"expenses.db"`).
+init_db(conn) ¦¦ تجهيز.
+add_expense(conn, date(2025, 3, 2), "Food", 120) ¦¦ مصروفات مارس…
+add_expense(conn, date(2025, 3, 5), "transport", 45.5, "مترو") ¦¦ …بملاحظة.
+add_expense(conn, date(2025, 3, 9), "food ", 80) ¦¦ …«food » بمسافة هتتوحّد مع Food.
+add_expense(conn, date(2025, 3, 20), "bills", 650) ¦¦ …فواتير.
+add_expense(conn, date(2025, 4, 1), "food", 60) ¦¦ مصروف أبريل — مش المفروض يدخل في تقرير مارس.
+ ¦¦
+print(f"إجمالي مارس: {month_total(conn, 2025, 3):.2f}") ¦¦ 120 + 45.5 + 80 + 650.
+for category, total, n in by_category(conn, 2025, 3): ¦¦ التقرير.
+    print(f"{category:<10} {total:>8.2f}  ({n} عملية)") ¦¦ جدول بمحاذاة (الوحدة 3).
+ ¦¦
+try: ¦¦ نجرّب نكسر القاعدة.
+    add_expense(conn, date(2025, 3, 21), "food", -5) ¦¦ مبلغ سالب.
+except sqlite3.IntegrityError as e: ¦¦ `CHECK` رفضته.
+    print("اترفض:", e) ¦¦ الرسالة.
+print(month_total(conn, 2025, 3)) ¦¦ الإجمالي ما اتغيّرش — `with conn` عملت rollback.
+    @end
+    @out
+إجمالي مارس: 895.50
+bills        650.00  (1 عملية)
+food         200.00  (2 عملية)
+transport     45.50  (1 عملية)
+اترفض: CHECK constraint failed: amount > 0
+895.5
+    @end
+
+    <h4>القرارات المعمارية</h4>
+    <ul>
+      <li><strong>كل دالة بتاخد <code class="inl">conn</code></strong> بدل ما تفتح اتصال بنفسها — فتقدر تختبرها بقاعدة في الذاكرة (وحدة الاختبارات: fixture بترجّع <code class="inl">sqlite3.connect(":memory:")</code>).</li>
+      <li><strong>القواعد في مكانين</strong>: الكود بينظّف، وقاعدة البيانات بتفرض (<code class="inl">NOT NULL</code>، <code class="inl">CHECK</code>). لو حد كتب في القاعدة من برنامج تاني، القواعد لسه شغّالة.</li>
+      <li><strong>التاريخ كنص ISO</strong>: بيخلّي الترتيب والفلترة بالشهر شغّالين بمقارنة نصوص بسيطة.</li>
+    </ul>
+
+    <h4>طوّره بنفسك</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تحسينات</div>
+      <ol>
+        <li>دالة <code class="inl">delete_expense(conn, expense_id)</code> بترجّع True لو اتمسح فعلًا (استخدم <code class="inl">rowcount</code>).</li>
+        <li>دالة <code class="inl">top_days(conn, n)</code> بترجّع أكتر n أيام صرف (<code class="inl">GROUP BY day ORDER BY … LIMIT ?</code>).</li>
+        <li>واجهة سطر أوامر بـ argparse: <code class="inl">add</code> و <code class="inl">report 2025 3</code>.</li>
+        <li>اختبارات pytest بـ fixture لقاعدة في الذاكرة.</li>
+      </ol>
+    </div>
+  </article>

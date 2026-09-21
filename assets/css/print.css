@@ -1,0 +1,9 @@
+/* الطباعة */
+@media print{
+  #sidebar,#topbar,#top-btn,.copy-btn,.done-btn,#overlay{display:none!important}
+  .lesson{break-inside:avoid}
+}
+@media print{
+  .run-btn,.edit-btn,.run-panel,.side-tools,.toast,.lesson-foot,.ch-tools,.run-na{display:none!important}
+}
+@media print{ .modal, .modal-back, .lesson-nav{display:none!important} }

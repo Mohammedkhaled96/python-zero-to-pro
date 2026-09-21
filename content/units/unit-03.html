@@ -1,0 +1,1186 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة الثالثة · النصوص</div>
+    <h2>النصوص بعمق: الفهرسة، التقطيع، والدوال الجاهزة</h2>
+    <p>
+      النص مش مجرّد كلام — هو <strong>سلسلة حروف مرقّمة</strong> تقدر توصل لأي جزء منها.
+      الوحدة دي بتفتح لك باب التعامل الاحترافي مع النصوص، وهي أساس نص الوحدات الجاية:
+      تقسيم المدخلات، التشفير، تحليل الملفات، كل ده بيبدأ من هنا.
+    </p>
+  </div>
+
+  <!-- 3.1 -->
+  <article class="lesson" id="u3-l1">
+    <h3>الفهرسة (Indexing): الوصول لحرف واحد <span class="tag">درس 13</span></h3>
+    <p class="goal">الهدف: تجيب أي حرف من نص برقمه، وتفهم ليه بايثون بتبدأ من صفر.</p>
+
+    <h4>1. كل حرف له رقم</h4>
+    <div class="diagram">
+<pre>       p    y    t    h    o    n
+       ↑    ↑    ↑    ↑    ↑    ↑
+ موجب  0    1    2    3    4    5
+ سالب -6   -5   -4   -3   -2   -1</pre>
+      <div class="cap">كلمة python بفهارسها الموجبة والسالبة</div>
+    </div>
+    <div class="code"><pre>
+word = "python"
+print(word[0])     # p   ← أول حرف
+print(word[3])     # h
+print(word[5])     # n   ← آخر حرف
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>p
+h
+n</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 ليه الترقيم بيبدأ من 0 مش 1؟</div>
+      <p>
+        السبب من أيام لغة C: الفهرس في الحقيقة معناه «كام خانة أبعد من بداية النص؟».
+        أول حرف بعده صفر خانات من البداية، فهو رقم 0. الحرف التاني بعده خانة واحدة، فهو 1.
+        الفكرة دي موجودة في أغلب لغات البرمجة (بايثون، C، Java، JavaScript)،
+        فاتعوّد عليها من دلوقتي.
+      </p>
+    </div>
+
+    <h4>2. الفهرسة السالبة — ميزة بايثون</h4>
+    <div class="code"><pre>
+word = "python"
+print(word[-1])    # n   ← آخر حرف
+print(word[-3])    # h   ← تالت حرف من الآخر
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>n
+h</pre></div>
+    <p>
+      ده أنضف بكتير من <code class="inl">word[len(word) - 1]</code>، ومش محتاج تعرف طول النص أصلًا.
+      قاعدة سهلة: <strong><code class="inl">-1</code> دايمًا آخر عنصر.</strong>
+    </p>
+
+    <h4>3. الخطأ الشهير IndexError</h4>
+    <div class="code"><pre>
+word = "python"          # 6 حروف، الفهارس من 0 لـ 5
+print(word[6])           # ❌ IndexError: string index out of range
+</pre></div>
+    <div class="box err">
+      <div class="bt">💥 قاعدة سهلة</div>
+      <p>
+        أكبر فهرس صالح = <code class="inl">len(text) - 1</code>. عدد الحروف 6 يعني آخر فهرس 5.
+        الخطأ ده هيقابلك كتير جدًا، وأول ما تشوفه اسأل نفسك: «الفهرس ده أكبر من الطول ناقص واحد؟»
+      </p>
+    </div>
+
+    <h4>4. النصوص غير قابلة للتعديل (Immutable)</h4>
+    <div class="code"><pre>
+word = "python"
+print(word[0])       # p   ← القراءة شغّالة
+word[0] = "P"        # ❌ TypeError: 'str' object does not support item assignment
+</pre></div>
+    <p>
+      افتكر من درس الذاكرة: <code class="inl">str</code> نوع <strong>immutable</strong>.
+      لو عايز تغيّر حرف، بتعمل نص <em>جديد</em>:
+    </p>
+    <div class="code"><pre>
+word = "python"
+new_word = "P" + word[1:]       # ناخد الباقي ونلزّق حرف جديد قدّامه
+print(new_word)                 # Python
+print(word.replace("p", "P"))   # أو نستخدم replace
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Python
+Python</pre></div>
+    <!-- APPEND:u3-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>أطراف الكلمة</div>
+      <p>اطبع أول حرف وآخر حرف والحرف التالت من كلمة، وعدد حروفها.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+word = "Python"
+print(word[0], word[-1], word[2])
+print(len(word))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>P n t
+6</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">"abc"[-1]</code>؟</p>
+        <label><input type="radio"> a</label>
+        <label><input type="radio"> b</label>
+        <label><input type="radio"> c</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">"abc"[3]</code>؟</p>
+        <label><input type="radio"> c</label>
+        <label><input type="radio"> ""</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> IndexError</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">s = "cat"</code> ثم <code class="inl">s[0] = "b"</code>؟</p>
+        <label><input type="radio"> TypeError — النصوص مش بتتعدّل</label>
+        <label><input type="radio"> s بقت bat</label>
+        <label><input type="radio"> s بقت bcat</label>
+        <label><input type="radio"> ما بيحصلش حاجة</label>
+      </div>
+    </div>
+    <!-- /APPEND:u3-l1 -->
+                <!-- SUM:u3-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>كل حرف ليه فهرس يبدأ من 0، والسالب بيعدّ من الآخر.</li><li>فهرس خارج النطاق ← <code class="inl">IndexError</code>.</li><li>النصوص غير قابلة للتعديل: بتعمل نص جديد بدل ما تعدّل.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 3.2 -->
+  <article class="lesson" id="u3-l2">
+    <h3>التقطيع (Slicing): استخراج جزء من النص <span class="tag">درس 14</span></h3>
+    <p class="goal">الهدف: تتقن الصيغة <code>[start:end:step]</code> — أقوى أداة نصّية في بايثون.</p>
+
+    <h4>1. الصيغة الأساسية</h4>
+    <div class="diagram">
+<pre>   text[ start : end : step ]
+          │      │      │
+          │      │      └── الخطوة (اختيارية، الافتراضي 1)
+          │      └───────── نهاية (غير مشمولة!)
+          └──────────────── بداية (مشمولة)</pre>
+      <div class="cap">أجزاء التقطيع التلاتة</div>
+    </div>
+    <div class="code"><pre>
+word = "python"
+print(word[0:3])   # pyt     ← الفهارس 0,1,2  (3 مش مشمول)
+print(word[0:5])   # pytho   ← الفهارس 0..4
+print(word[2:5])   # tho
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>pyt
+pytho
+tho</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ النهاية غير مشمولة — أهم نقطة</div>
+      <p>
+        <code class="inl">word[0:3]</code> بترجّع 3 حروف بس (0، 1، 2) — الفهرس 3 <strong>مش</strong> منها.
+        <br>القاعدة السريعة: <strong>عدد الحروف الراجعة = end − start</strong>.
+        <br>الفايدة: <code class="inl">word[0:3] + word[3:]</code> بيرجّعوا النص كامل من غير تكرار ولا نقص.
+      </p>
+    </div>
+
+    <h4>2. حذف الأطراف</h4>
+    <div class="code"><pre>
+word = "python"
+print(word[0:])    # python   ← من البداية للنهاية
+print(word[:3])    # pyt      ← من الأول لحد 3
+print(word[2:])    # thon     ← من 2 للآخر
+print(word[:])     # python   ← نسخة كاملة
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>python
+pyt
+thon
+python</pre></div>
+
+    <h4>3. التقطيع بالفهارس السالبة</h4>
+    <div class="code"><pre>
+word = "python"
+print(word[-4:-1])   # tho    ← من -4 لحد -1 (مش مشمول)
+print(word[-3:])     # hon    ← آخر 3 حروف
+print(word[:-2])     # pyth   ← كل حاجة ما عدا آخر حرفين
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>tho
+hon
+pyth</pre></div>
+
+    <h4>4. الخطوة (step) وعكس النص</h4>
+    <div class="code"><pre>
+word = "python"
+print(word[::2])     # pto     ← حرف وسيب حرف
+print(word[1::2])    # yhn     ← من الفهرس 1، حرف وسيب حرف
+print(word[::-1])    # nohtyp  ← عكس النص كامل!
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>pto
+yhn
+nohtyp</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 <code>[::-1]</code> — أشهر حيلة في بايثون</div>
+      <p>
+        خطوة سالبة معناها «امشِ للورا»، فبتقرا النص من الآخر للأول. هتلاقيها في كل
+        كود بايثون في الدنيا، وبتشتغل على القوائم كمان مش النصوص بس.
+      </p>
+    </div>
+
+    <h4>5. التقطيع ما بيرميش أخطاء</h4>
+    <div class="code"><pre>
+word = "python"
+print(word[10])      # ❌ IndexError
+print(word[2:100])   # ✅ "thon"  — بترجّع اللي موجود بس
+print(word[100:])    # ✅ ""      — نص فاضي
+</pre></div>
+    <p>
+      الفهرسة بحرف واحد بترمي خطأ لو خرجت عن الحدود، لكن <strong>التقطيع بيتصرّف بهدوء</strong>
+      وبيرجّع اللي متاح. الفرق ده مفيد لكن ممكن يخبّي عنك أخطاء منطقية، فخلي بالك.
+    </p>
+
+    <h4>6. تطبيق عملي: آخر رقمين من التليفون</h4>
+    <div class="code" data-file="last_two.py"><pre>
+mobile = int(input("Please enter your phone\n"))
+mobile1 = str(mobile)
+print(mobile1[-2:])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج (لو دخل 12345678)</div><pre>78</pre></div>
+    <div class="ex">
+      <div class="bt">✍️ جرّب بنفسك</div>
+      <p>
+        عندك <code class="inl">email = "farid5006@gmail.com"</code>. اطبع:
+        (أ) اسم المستخدم قبل <code class="inl">@</code>،
+        (ب) اسم الدومين بعده، من غير ما تستخدم أي دالة — بالتقطيع بس.
+        <br>تلميح: فهرس <code class="inl">@</code> هو 9.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+email = "farid5006@gmail.com"
+print(email[:9])     # farid5006
+print(email[10:])    # gmail.com
+# وطبعًا الطريقة الاحترافي:
+print(email.split("@")[0])
+print(email.split("@")[1])
+</pre></div>
+      </details>
+    </div>
+    <!-- APPEND:u3-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تقطيع رقم تليفون</div>
+      <p>من <code class="inl">"01012345678"</code>: اطبع كود الشبكة (أول 3)، وآخر 4 أرقام، والرقم مخفي ما عدا آخر رقمين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+phone = "01012345678"
+print(phone[:3])
+print(phone[-4:])
+print("*" * (len(phone) - 2) + phone[-2:])
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>010
+5678
+*********78</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">"python"[1:4]</code>؟</p>
+        <label><input type="radio"> pyt</label>
+        <label><input type="radio"> yth</label>
+        <label><input type="radio"> ytho</label>
+        <label><input type="radio"> ython</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. تعكس نص بـ…</p>
+        <label><input type="radio"> s[-1]</label>
+        <label><input type="radio"> s[::1]</label>
+        <label><input type="radio"> s[0:-1]</label>
+        <label><input type="radio"> s[::-1]</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">"abc"[10:20]</code>؟</p>
+        <label><input type="radio"> "" نص فاضي</label>
+        <label><input type="radio"> IndexError</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> "abc"</label>
+      </div>
+    </div>
+    <!-- /APPEND:u3-l2 -->
+                <!-- SUM:u3-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">text[start:stop:step]</code> — البداية مشمولة والنهاية لأ.</li><li><code class="inl">text[::-1]</code> بيعكس النص.</li><li>التقطيع ما بيرميش أخطاء حتى لو الحدود برّه النص.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 3.3 -->
+  <article class="lesson" id="u3-l3">
+    <h3>دوال النصوص الجاهزة (String Methods) <span class="tag">درس 15 · مرجع</span></h3>
+    <p class="goal">الهدف: تعرف أشهر 15 دالة نصّية هتستخدمها في كل مشروع.</p>
+
+    <h4>1. الفكرة: الدالة بتتنادى بنقطة</h4>
+    <p>
+      دوال النصوص بتتكتب بعد النص بنقطة: <code class="inl">text.method()</code>.
+      وأهم ملاحظة: <strong>كلها بترجّع نص جديد وما بتغيّرش الأصلي</strong> (لأن النصوص immutable).
+    </p>
+    <div class="code"><pre>
+name = "farid"
+name.upper()          # بترجّع "FARID" لكن ما اتخزّنتش في حتة
+print(name)           # farid   ← الأصلي زي ما هو!
+name = name.upper()   # ✅ لازم تخزّن الناتج
+print(name)           # FARID
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>farid
+FARID</pre></div>
+
+    <h4>2. دوال حالة الأحرف</h4>
+    <div class="code"><pre>
+text = "farid MOHAMMED ali"
+print(text.lower())        # farid mohammed ali
+print(text.upper())        # FARID MOHAMMED ALI
+print(text.capitalize())   # Farid mohammed ali   ← أول حرف بس
+print(text.title())        # Farid Mohammed Ali   ← أول حرف من كل كلمة
+print(text.swapcase())     # FARID mohammed ALI
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>farid mohammed ali
+FARID MOHAMMED ALI
+Farid mohammed ali
+Farid Mohammed Ali
+FARID mohammed ALI</pre></div>
+
+    <h4>3. التنظيف والتقليم</h4>
+    <div class="code"><pre>
+messy = "   farid mohammed   "
+print(f"[{messy.strip()}]")    # [farid mohammed]  ← من الجهتين
+print(f"[{messy.lstrip()}]")   # [farid mohammed   ]
+print(f"[{messy.rstrip()}]")   # [   farid mohammed]
+# strip ممكن تشيل حروف معيّنة مش مسافات بس
+print("###hello###".strip("#"))   # hello
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[farid mohammed]
+[farid mohammed   ]
+[   farid mohammed]
+hello</pre></div>
+
+    <h4>4. التقسيم والدمج — split و join</h4>
+    <p>
+      الاتنين دول من أهم دوال بايثون على الإطلاق، وهنستخدمهم في نص المشاريع الجاية.
+    </p>
+    <h5>split — من نص لقائمة</h5>
+    <div class="code"><pre>
+words = "Mohammed/Farid/Ali/juice/paper".split("/")
+print(words)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['Mohammed', 'Farid', 'Ali', 'juice', 'paper']</pre></div>
+    <div class="code"><pre>
+names = "ahmed, mohammed, sara".split(", ")
+print(names)
+sentence = "أنا بتعلّم بايثون"
+print(sentence.split())     # من غير وسيط → بيقسم على المسافات
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['ahmed', 'mohammed', 'sara']
+['أنا', 'بتعلّم', 'بايثون']</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ الفاصل لازم يطابق بالظبط</div>
+      <p>
+        <code class="inl">split(", ")</code> بفاصلة ومسافة ≠ <code class="inl">split(",")</code>
+        بفاصلة بس. لو المستخدم كتب <code class="inl">"ahmed,mohammed"</code> من غير مسافة،
+        الأولى هترجّع عنصر واحد بس! الحل الآمن:
+        <code class="inl">[n.strip() for n in text.split(",")]</code> —
+        بنقسم على الفاصلة وبعدين ننضّف كل عنصر.
+      </p>
+    </div>
+
+    <h5>join — من قائمة لنص</h5>
+    <div class="code"><pre>
+names = ["khaled", "abdallah", "marwa", "tarek", "randa"]
+print(", ".join(names))
+print(" | ".join(names))
+print("\n".join(names))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>khaled, abdallah, marwa, tarek, randa
+khaled | abdallah | marwa | tarek | randa
+khaled
+abdallah
+marwa
+tarek
+randa</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 لاحظ الترتيب الغريب</div>
+      <p>
+        الفاصل هو اللي بينادي الدالة: <code class="inl">"، ".join(list)</code> مش
+        <code class="inl">list.join("، ")</code>. السبب إن <code class="inl">join</code>
+        دالة تخصّ <strong>النصوص</strong>، وبتقبل أي شيء قابل للتكرار.
+        اقراها كده: «الفاصل ده، اربط بيه العناصر دي».
+      </p>
+    </div>
+
+    <h5>حيلة: تكرار كلمة بفاصل</h5>
+    <div class="code"><pre>
+language = "python"
+print("\n".join([language] * 3))
+print("/".join([language] * 3))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>python
+python
+python
+python/python/python</pre></div>
+    <p>
+      <code class="inl">[language] * 3</code> بتعمل قائمة فيها الكلمة 3 مرّات، وبعدين
+      <code class="inl">join</code> بتربطهم بالفاصل. حاجة <code class="inl">language * 3</code>
+      كانت هتلزّقهم من غير فاصل.
+    </p>
+
+    <h4>5. البحث والفحص</h4>
+    <div class="code"><pre>
+email = "farid5006@gmail.com"
+print(email.find("@"))            # 9      ← الفهرس، أو -1 لو مش موجود
+print(email.count("m"))           # 2
+print(email.replace("gmail", "yahoo"))
+print(email.startswith("farid"))  # True
+print(email.endswith(".com"))     # True
+print("@" in email)               # True   ← أبسط طريقة للفحص
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>9
+2
+farid5006@yahoo.com
+True
+True
+True</pre></div>
+
+    <h4>6. دوال الفحص (بترجّع True/False)</h4>
+    <div class="code"><pre>
+print("12345".isdigit())    # True   ← كله أرقام؟
+print("abc".isalpha())      # True   ← كله حروف؟
+print("abc123".isalnum())   # True   ← حروف وأرقام؟
+print("   ".isspace())      # True   ← كله مسافات؟
+print("Farid".istitle())    # True
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+True
+True
+True
+True</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 <code>isdigit()</code> = طريقة تتفادى بيها الأخطاء</div>
+      <div class="code"><pre>
+age = input("سنك: ")
+if age.isdigit():
+    age = int(age)
+    print(f"سنك {age}")
+else:
+    print("من فضلك اكتب أرقام بس")
+</pre></div>
+      <p>ده بيمنع <code class="inl">ValueError</code> من غير ما تحتاج try/except أصلًا.</p>
+    </div>
+
+    <h4>7. جدول مرجعي سريع</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الدالة</th><th>بتعمل إيه</th><th>مثال سريع</th></tr>
+        <tr><td><code class="inl">len(text)</code></td><td>عدد الحروف (دالة مش method)</td><td><code class="inl">len("farid")</code> → 5</td></tr>
+        <tr><td><code class="inl">.lower()</code> / <code class="inl">.upper()</code></td><td>تصغير / تكبير</td><td>→ <code class="inl">"FARID"</code></td></tr>
+        <tr><td><code class="inl">.capitalize()</code></td><td>أول حرف كابيتال</td><td>→ <code class="inl">"Farid"</code></td></tr>
+        <tr><td><code class="inl">.title()</code></td><td>أول حرف من كل كلمة</td><td>→ <code class="inl">"Farid Ali"</code></td></tr>
+        <tr><td><code class="inl">.strip()</code></td><td>يشيل المسافات الطرفية</td><td></td></tr>
+        <tr><td><code class="inl">.split(sep)</code></td><td>نص ← قائمة</td><td>→ <code class="inl">['a','b']</code></td></tr>
+        <tr><td><code class="inl">sep.join(list)</code></td><td>قائمة ← نص</td><td>→ <code class="inl">"a,b"</code></td></tr>
+        <tr><td><code class="inl">.replace(a, b)</code></td><td>يستبدل</td><td></td></tr>
+        <tr><td><code class="inl">.find(x)</code></td><td>فهرس أول ظهور أو -1</td><td></td></tr>
+        <tr><td><code class="inl">.count(x)</code></td><td>عدد مرّات الظهور</td><td></td></tr>
+        <tr><td><code class="inl">.startswith()</code> / <code class="inl">.endswith()</code></td><td>يبدأ / ينتهي بـ</td><td>True/False</td></tr>
+        <tr><td><code class="inl">.isdigit()</code> / <code class="inl">.isalpha()</code></td><td>كله أرقام / حروف؟</td><td>True/False</td></tr>
+      </table>
+    </div>
+    <!-- APPEND:u3-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تنظيف اسم كامل</div>
+      <p>من مدخل «وسخ» زي <code class="inl">"  ahmed   ALI hassan "</code>: اطبع الاسم منسّق، وعدد الأسماء، والأسماء مفصولة بشرطة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+raw = "  ahmed   ALI hassan "
+parts = raw.split()
+print(" ".join(parts).title())
+print(len(parts))
+print("-".join(parts).lower())
+print(raw.strip().startswith("ahmed"))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>Ahmed Ali Hassan
+3
+ahmed-ali-hassan
+True</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">"a,b,c".split(",")</code>؟</p>
+        <label><input type="radio"> "abc"</label>
+        <label><input type="radio"> ['a,b,c']</label>
+        <label><input type="radio"> ['a', 'b', 'c']</label>
+        <label><input type="radio"> ('a', 'b', 'c')</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">"python".find("z")</code>؟</p>
+        <label><input type="radio"> -1</label>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> ValueError</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">text.upper()</code> بتغيّر text نفسه؟</p>
+        <label><input type="radio"> أيوة</label>
+        <label><input type="radio"> لأ — بترجّع نص جديد، ولازم تخزّنه</label>
+        <label><input type="radio"> لو المتغيّر عالمي بس</label>
+        <label><input type="radio"> بترمي خطأ</label>
+      </div>
+    </div>
+    <!-- /APPEND:u3-l3 -->
+                <!-- SUM:u3-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>دوال النصوص بتتنادى بنقطة وبترجّع نص جديد.</li><li><code class="inl">split</code> و <code class="inl">join</code> عكس بعض — أهم تنين في الشغل الحقيقي.</li><li>دوال <code class="inl">is...</code> بترجّع True/False للفحص.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 3.4 -->
+  <article class="lesson" id="u3-l4">
+    <h3>ord و chr: الحروف كأرقام <span class="tag">درس 16</span></h3>
+    <p class="goal">الهدف: تحوّل بين الحرف ورقمه في Unicode — أساس التشفير اللي هنبنيه بعدين.</p>
+
+    <h4>1. رجوع للوحدة صفر</h4>
+    <p>
+      اتفقنا إن كل حاجة عند الكمبيوتر أرقام، وإن الحروف ليها جدول اسمه <strong>Unicode</strong>.
+      الدالتين دول هما البوابة للجدول ده.
+    </p>
+    <div class="code"><pre>
+print(ord("a"))    # 97      ← الحرف → رقمه
+print(chr(100))    # d       ← الرقم → حرفه
+print(chr(300))    # Ĭ
+print(ord("ا"))    # 1575    ← الألف العربية
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>97
+d
+Ĭ
+1575</pre></div>
+
+    <h4>2. النطاقات المهمّة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المجموعة</th><th>من</th><th>إلى</th><th>ملاحظة</th></tr>
+        <tr><td>أرقام <code class="inl">0-9</code></td><td>48</td><td>57</td><td></td></tr>
+        <tr><td>حروف كابيتال <code class="inl">A-Z</code></td><td>65</td><td>90</td><td></td></tr>
+        <tr><td>حروف صغيرة <code class="inl">a-z</code></td><td>97</td><td>122</td><td>الفرق عن الكابيتال = 32 بالظبط</td></tr>
+        <tr><td>حروف عربية <code class="inl">ا-ي</code></td><td>1575</td><td>1610</td><td></td></tr>
+      </table>
+    </div>
+    <div class="code"><pre>
+print(ord("A"), ord("a"))       # 65 97
+print(ord("a") - ord("A"))      # 32
+print(chr(ord("a") - 32))       # A  ← تحويل يدوي لكابيتال
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>65 97
+32
+A</pre></div>
+
+    <h4>3. ليه ده مهم؟</h4>
+    <p>
+      دي المعرفة اللي بتخلّيك تفهم إزاي:
+    </p>
+    <ul>
+      <li><strong>الترتيب الأبجدي بيشتغل</strong>: بايثون بتقارن الحروف بأرقامها. عشان كده
+        <code class="inl">"a" &lt; "b"</code> بترجّع <code class="inl">True</code>،
+        و<code class="inl">"Z" &lt; "a"</code> برضه <code class="inl">True</code> (90 أصغر من 97).</li>
+      <li><strong>التشفير البسيط بيشتغل</strong>: تزوّد رقم كل حرف بمقدار ثابت.</li>
+      <li><strong>توليد الحروف بحلقة</strong>: هنعمل ده في الوحدة 6.</li>
+    </ul>
+    <div class="code"><pre>
+print("a" &lt; "b")      # True
+print("Z" &lt; "a")      # True   ← لأن 90 &lt; 97
+print("apple" &lt; "banana")  # True
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+True
+True</pre></div>
+
+    <h4>4. تشفير حرف واحد (بروفة للمشروع)</h4>
+    <div class="code"><pre>
+char = "f"
+key = 3
+encrypted = chr(ord(char) + key)
+print(encrypted)          # i   ← f + 3 = i
+# وفكّ التشفير:
+print(chr(ord(encrypted) - key))   # f
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>i
+f</pre></div>
+    <p>
+      لسه ناقصنا نكرّر الكلام ده على <em>كل</em> حروف الرسالة — وده محتاج
+      <strong>حلقة تكرار</strong>، وهي موضوع الوحدة 6. المشروع الكامل هيبقى هناك.
+    </p>
+    <!-- APPEND:u3-l4 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>الحرف اللي بعده بـ 3</div>
+      <p>اطبع رقم الحرف A، والحرف رقم 66، والحرف اللي بعد <code class="inl">x</code> بـ 3 مع اللف لأول الأبجدية.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+print(ord("A"), chr(66))
+letter = "x"
+position = ord(letter) - ord("a")
+shifted = (position + 3) % 26
+print(chr(ord("a") + shifted))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>65 B
+a</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">chr(ord("a") + 1)</code>؟</p>
+        <label><input type="radio"> a1</label>
+        <label><input type="radio"> 98</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> b</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">ord</code> بترجّع…</p>
+        <label><input type="radio"> حرف</label>
+        <label><input type="radio"> رقم الحرف في Unicode</label>
+        <label><input type="radio"> ترتيبه في الكلمة</label>
+        <label><input type="radio"> True/False</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ليه بنستخدم <code class="inl">% 26</code> في التشفير؟</p>
+        <label><input type="radio"> عشان نلف لأول الأبجدية بعد z</label>
+        <label><input type="radio"> عشان نكبّر الحروف</label>
+        <label><input type="radio"> عشان نشيل المسافات</label>
+        <label><input type="radio"> مالهاش لازمة</label>
+      </div>
+    </div>
+    <!-- /APPEND:u3-l4 -->
+                <!-- SUM:u3-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">ord</code> بتحوّل الحرف لرقمه، و <code class="inl">chr</code> العكس.</li><li>الحروف المتتالية ليها أرقام متتالية.</li><li>ده أساس التشفير البسيط زي قيصر.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ADD:u3-l5 -->
+  <!-- 3.5 -->
+  <article class="lesson" id="u3-l5">
+    <h3>دوال نصوص متقدّمة: المحاذاة، التقسيم الذكي، والاستبدال الجماعي <span class="tag">درس 17</span></h3>
+    <p class="goal">الهدف: تكمّل صندوق أدوات النصوص بالدوال اللي بتفرق بين كود «شغّال» وكود «احترافي» — ومنها فخاخ بيقع فيها ناس بخبرة سنين.</p>
+
+    <h4>1. المحاذاة والحشو: center و ljust و rjust و zfill</h4>
+    <p>
+      لما تطبع جدول أو فاتورة في الـ Terminal، محتاج كل عمود ياخد <strong>عرض ثابت</strong>. الدوال دي بتكمّل النص بمسافات (أو أي حرف تختاره) لحد عرض معيّن.
+    </p>
+    <div class="code"><pre>
+print("[" + "Python".center(12) + "]")
+print("[" + "Python".ljust(12, ".") + "]")
+print("[" + "Python".rjust(12, "-") + "]")
+print("7".zfill(3))
+print("-42".zfill(5))
+print(f"[{'Python':^12}] [{'Python':.&lt;12}] [{'Python':-&gt;12}]")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[   Python   ]
+[Python......]
+[------Python]
+007
+-0042
+[   Python   ] [Python......] [------Python]</pre></div>
+    <div class="code"><pre>
+item = "Coffee"
+price = 45.5
+print(item.ljust(15, ".") + f"{price:&gt;8.2f}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Coffee.........   45.50</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ الحروف العربية والمحاذاة</div>
+      <p>
+        المحاذاة بتعدّ <strong>عدد الحروف</strong> مش عرضها على الشاشة. الحروف العربية بالتشكيل، والإيموجي، والحروف الصينية
+        ممكن تبوّظ الاصطفاف لأن عرضها المرئي مختلف. للجداول العربية المعقّدة استخدم مكتبة زي <code class="inl">rich</code> أو <code class="inl">tabulate</code> لاحقًا.
+      </p>
+    </div>
+
+    <h4>2. partition: قسّم عند أول ظهور — وارجع بـ 3 أجزاء دايمًا</h4>
+    <p>
+      <code class="inl">split</code> بترجّع عدد أجزاء متغيّر، وده بيعمل مشاكل لو الفاصل مش موجود. <code class="inl">partition</code> بترجّع
+      <strong>دايمًا 3 أجزاء</strong>: اللي قبل الفاصل، الفاصل نفسه، اللي بعده.
+    </p>
+    <div class="code"><pre>
+email = "ahmed.ali@company.com"
+user, sep, domain = email.partition("@")
+print(user)
+print(domain)
+print("no-at-sign".partition("@"))
+path = "photos/2024/trip/beach.jpg"
+print(path.rpartition("/")[2])
+print(path.rpartition("/")[0])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>ahmed.ali
+company.com
+('no-at-sign', '', '')
+beach.jpg
+photos/2024/trip</pre></div>
+
+    <h4>3. split و rsplit بحدّ أقصى للتقسيم</h4>
+    <div class="code"><pre>
+line = "2024-05-01,Cairo,Egypt,Africa"
+print(line.split(",", 1))
+print(line.rsplit(",", 1))
+filename = "report.final.v2.pdf"
+print(filename.rsplit(".", 1)[1])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['2024-05-01', 'Cairo,Egypt,Africa']
+['2024-05-01,Cairo,Egypt', 'Africa']
+pdf</pre></div>
+
+    <h4>4. فخ strip الشهير: removeprefix و removesuffix</h4>
+    <div class="box err">
+      <div class="bt">❌ الفخ</div>
+      <p>
+        <code class="inl">strip("abc")</code> <strong>مش</strong> بتشيل الكلمة «abc». بتشيل <strong>أي حرف من الحروف دي</strong> من الأطراف، مهما اتكرّر وبأي ترتيب.
+      </p>
+    </div>
+    <div class="code"><pre>
+url = "https://site.com"
+print(url.lstrip("https://"))
+print(url.removeprefix("https://"))
+file = "stats.csv"
+print(file.rstrip(".csv"))
+print(file.removesuffix(".csv"))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>ite.com
+site.com
+stat
+stats</pre></div>
+
+    <h4>5. المقارنة من غير حساسية للحالة: casefold</h4>
+    <div class="code"><pre>
+a = "Straße"
+b = "STRASSE"
+print(a.lower() == b.lower())
+print(a.casefold() == b.casefold())
+name = "photo.JPG"
+print(name.casefold().endswith((".jpg", ".png", ".gif")))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>False
+True
+True</pre></div>
+
+    <h4>6. الاستبدال الجماعي: maketrans و translate</h4>
+    <p>
+      <code class="inl">replace</code> بتستبدل نص واحد في كل مرّة. لو عايز تستبدل <strong>10 حروف مختلفة في خطوة واحدة</strong> —
+      اعمل «جدول ترجمة» بـ <code class="inl">str.maketrans</code> وطبّقه بـ <code class="inl">translate</code>. أسرع بكتير من 10 replace ورا بعض.
+    </p>
+    <div class="code"><pre>
+table = str.maketrans("aeiou", "12345")
+print("education".translate(table))
+digits = str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789")
+phone = "٠١٠١٢٣٤٥٦٧٨"
+print(phone.translate(digits))
+clean = str.maketrans("", "", "!?.,")
+print("Hello, World!! How?".translate(clean))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>2d5c1t34n
+01012345678
+Hello World How</pre></div>
+
+    <h4>7. isdecimal و isdigit و isnumeric: التلات أخوات</h4>
+    <div class="code"><pre>
+print("123".isdecimal(), "١٢٣".isdecimal(), "²".isdecimal(), "½".isdecimal())
+print("123".isdigit(), "١٢٣".isdigit(), "²".isdigit(), "½".isdigit())
+print("123".isnumeric(), "١٢٣".isnumeric(), "²".isnumeric(), "½".isnumeric())
+print(int("١٢٣") + 1)
+print("-5".isdecimal())
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True True False False
+True True True False
+True True True True
+124
+False</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 تستخدم أنهي واحدة؟</div>
+      <p>
+        للتحقّق إن المستخدم كتب رقم صحيح موجب يتحوّل بـ <code class="inl">int</code>: <strong><code class="inl">isdecimal</code></strong> هي الأدقّ.
+        <code class="inl">isdigit</code> ممكن ترجّع True لـ <code class="inl">"²"</code> وبعدين <code class="inl">int("²")</code> يرمي خطأ.
+      </p>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>منظّف رقم التليفون</div>
+      <p>المستخدم ممكن يكتب الرقم بأرقام عربية وبمسافات وشرط زي <code class="inl">٠١٠-١٢٣ ٤٥٦٧٨</code>. نظّفه لـ <code class="inl">01012345678</code> واطبع هل طوله 11.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+raw = "٠١٠-١٢٣ ٤٥٦٧٨"
+table = str.maketrans("٠١٢٣٤٥٦٧٨٩", "0123456789", " -")
+phone = raw.translate(table)
+print(phone, len(phone) == 11)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>01012345678 True</pre></div>
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تقرير الملف</div>
+      <p>من المسار <code class="inl">"C:/Users/sara/Documents/cv.final.docx"</code> اطبع: اسم الملف، الامتداد، واسم الملف من غير امتداد.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+path = "C:/Users/sara/Documents/cv.final.docx"
+name = path.rpartition("/")[2]
+stem, _, ext = name.rpartition(".")
+print(name)
+print(ext)
+print(stem)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>cv.final.docx
+docx
+cv.final</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">"banana".strip("ab")</code> ناتجها؟ (فكّر: بتشيل أي a أو b من الطرفين)</p>
+        <label><input type="radio"> "nana"</label>
+        <label><input type="radio"> "nan"</label>
+        <label><input type="radio"> "banana"</label>
+        <label><input type="radio"> "anan"</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. أضمن طريقة تجيب امتداد <code class="inl">"a.b.c.txt"</code>؟</p>
+        <label><input type="radio"> split(".")[1]</label>
+        <label><input type="radio"> strip(".")</label>
+        <label><input type="radio"> partition(".")[2]</label>
+        <label><input type="radio"> rsplit(".", 1)[1]</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">"5".zfill(3)</code>؟</p>
+        <label><input type="radio"> "005"</label>
+        <label><input type="radio"> "500"</label>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> "  5"</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. الوسيط التالت في <code class="inl">str.maketrans(a, b, c)</code> معناه…</p>
+        <label><input type="radio"> عدد مرّات الاستبدال</label>
+        <label><input type="radio"> حروف تتضاف في الآخر</label>
+        <label><input type="radio"> حروف تتمسح من النص</label>
+        <label><input type="radio"> اتجاه الترجمة</label>
+      </div>
+    </div>
+                <!-- SUM:u3-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">ljust</code> و <code class="inl">rjust</code> و <code class="inl">center</code> و <code class="inl">zfill</code> للمحاذاة.</li><li><code class="inl">partition</code> و <code class="inl">rsplit(sep, 1)</code> للتقسيم الآمن، و <code class="inl">removeprefix</code> بدل <code class="inl">strip</code> لإزالة كلمة.</li><li><code class="inl">maketrans</code> + <code class="inl">translate</code> لاستبدال حروف كتير في خطوة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u3-l5 -->
+
+  <!-- 3.P1 -->
+  <article class="lesson project" id="u3-p1">
+    <h3>مشروع 4: مكرّر الكلمات بفاصل مخصّص <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: برنامج تفاعلي بيدمج input + join + التكرار.</p>
+
+    <div class="code" data-file="word_repeater.py"><pre>
+name = input("Enter your name: ")
+print(f"hello {name}")
+word = input(f"Enter a word which you want, {name}: ")
+times = int(input(f"Enter how many times do you want, {name}: "))
+separator = input(f"Enter your separator, {name}: ")
+print(separator.join([word] * times))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Enter your name: Farid
+hello Farid
+Enter a word which you want, Farid: Python
+Enter how many times do you want, Farid: 3
+Enter your separator, Farid: -
+Python-Python-Python</pre></div>
+
+    <h4>تشريح السطر الأخير</h4>
+    <div class="diagram">
+<pre>  separator.join( [word] * times )
+      │              │       │
+      │              │       └── 3
+      │              └────────── ["Python"]
+      │
+      │        [word] * times  →  ["Python", "Python", "Python"]
+      │
+      └── "-".join([...])      →  "Python-Python-Python"</pre>
+      <div class="cap">من الداخل للخارج</div>
+    </div>
+
+    <h4>ملاحظات على الجودة</h4>
+    <ul>
+      <li>
+        <code class="inl">int()</code> ضرورية حوالين <code class="inl">times</code> لأن
+        <code class="inl">[word] * "3"</code> هيرمي <code class="inl">TypeError</code>.
+      </li>
+      <li>
+        استخدمنا الاسم جوّه رسايل الـ <code class="inl">input</code> نفسها عن طريق f-string —
+        ده بيدّي إحساس شخصي للبرنامج.
+      </li>
+      <li>
+        لو المستخدم كتب حروف في عدد المرّات، البرنامج هيقع. هنحصّنه في الوحدة 9.
+      </li>
+    </ul>
+
+    <div class="ex">
+      <div class="bt">✍️ التحدّي</div>
+      <p>
+        عدّل البرنامج عشان يطبع كمان: عدد الحروف الكلي في الناتج، والناتج معكوس.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">separator</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+      <div class="code"><pre>
+result = separator.join([word] * times)
+print(result)
+print(f"عدد الحروف: {len(result)}")
+print(f"معكوس: {result[::-1]}")
+</pre></div>
+      </details>
+    </div>
+  </article>
+  <!-- ADD:u3-ch -->
+  <!-- 3.CH -->
+  <article class="lesson" id="u3-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة الثالثة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">نظّف وقطّع نصوص مستخدمين حقيقيين — بمسافات زيادة وحروف كبيرة وصغيرة متلخبطة.</p>
+
+    <div class="challenge" data-ch="u3-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — تفكيك الإيميل <span class="lvl">⭐⭐</span></div>
+      <p>اطلب إيميل، واطبع <strong>في سطرين</strong>: اسم المستخدم (قبل @) ثم الدومين (بعد @) — الاتنين بحروف صغيرة ومن غير مسافات.</p>
+      <div class="out"><div class="out-head">▸ للمدخل "  Sara.Ahmed@Company.COM  "</div><pre>sara.ahmed
+company.com</pre></div>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+email = input("الإيميل: ")
+# اطبع اسم المستخدم في سطر، والدومين في السطر اللي بعده
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def last_two(stdin):
+    out = run_program(stdin)
+    lines = [l.strip() for l in out.strip().splitlines() if l.strip()]
+    return lines[-2:], out
+
+def test_messy():
+    "مسافات وحروف كبيرة ← sara.ahmed و company.com"
+    got, out = last_two("  Sara.Ahmed@Company.COM  \n")
+    assert got == ["sara.ahmed", "company.com"], out
+
+def test_short():
+    "ALI@X.IO ← ali و x.io"
+    got, out = last_two("ALI@X.IO\n")
+    assert got == ["ali", "x.io"], out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+email = input("الإيميل: ").strip().lower()
+user, _, domain = email.partition("@")
+print(user)
+print(domain)
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u3-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — الحروف الأولى <span class="lvl">⭐⭐</span></div>
+      <p>اطلب اسم ثلاثي (ممكن فيه مسافات زيادة)، واطبع أول حرف من كل اسم بحروف كبيرة ومفصولين بنقط: <code class="inl">M.A.A</code></p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+full_name = input("الاسم الثلاثي: ")
+# اطبع الحروف الأولى بالشكل: M.A.A
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def last(stdin):
+    out = run_program(stdin)
+    return out.strip().splitlines()[-1].strip(), out
+
+def test_simple():
+    "mohamed ahmed ali ← M.A.A"
+    line, out = last("mohamed ahmed ali\n")
+    assert line == "M.A.A", out
+
+def test_spaces():
+    "مسافات زيادة: '  sara   mahmoud hassan ' ← S.M.H"
+    line, out = last("  sara   mahmoud hassan \n")
+    assert line == "S.M.H", out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+full_name = input("الاسم الثلاثي: ")
+first, second, third = full_name.split()
+print(f"{first[0]}.{second[0]}.{third[0]}".upper())
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u3-ch -->
+
+  <!-- 3.EX -->
+  <article class="lesson" id="u3-ex">
+    <h3>تمارين الوحدة الثالثة <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">النصوص هي أكتر حاجة هتشتغل عليها في حياتك كمبرمج. اتمرّن عليها كويس.</p>
+
+    <h4>المستوى الأول</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — تشريح كلمة</div>
+      <p>عندك <code class="inl">word = "programming"</code>. اطبع: أول حرف، آخر حرف، أول 4 حروف، آخر 4 حروف، الكلمة معكوسة، وعدد حروفها.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+word = "programming"
+print(word[0])        # p
+print(word[-1])       # g
+print(word[:4])       # prog
+print(word[-4:])      # ming
+print(word[::-1])     # gnimmargorp
+print(len(word))      # 11
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — تنظيف مدخل</div>
+      <p>عندك <code class="inl">messy = "   FaRiD MoHaMMeD   "</code>. نضّفه وحوّله لـ «Farid Mohammed» في سطر واحد.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+messy = "   FaRiD MoHaMMeD   "
+print(messy.strip().title())      # Farid Mohammed
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 3 — split و join</div>
+      <p>حوّل <code class="inl">"أحمد-سارة-علي-منى"</code> لقائمة، وبعدين ارجّعها نص لكن مفصولة بـ « و ».</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+text = "أحمد-سارة-علي-منى"
+names = text.split("-")
+print(names)                  # ['أحمد', 'سارة', 'علي', 'منى']
+print(" و ".join(names))      # أحمد و سارة و علي و منى
+</pre></div>
+      </details>
+    </div>
+
+    <h4>المستوى الثاني</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — إخفاء الإيميل</div>
+      <p>عندك إيميل. اطبعه مخفي جزئيًا: أول حرفين + نجوم + <code class="inl">@</code> + الدومين. مثال: <code class="inl">farid5006@gmail.com</code> ← <code class="inl">fa*******@gmail.com</code></p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+email = "farid5006@gmail.com"
+user, domain = email.split("@")
+hidden = user[:2] + "*" * (len(user) - 2)
+print(f"{hidden}@{domain}")      # fa*******@gmail.com
+</pre></div>
+      <p>لاحظ التفكيك المباشر <code class="inl">user, domain = email.split("@")</code> — بيشتغل لأن split رجّعت عنصرين بالظبط.</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 5 — تشفير حرف</div>
+      <p>اطلب حرف ورقم مفتاح من المستخدم، واطبع الحرف مشفّرًا وبعدين مفكوكًا للتأكّد إنه رجع زي ما كان.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+char = input("حرف: ")
+key = int(input("المفتاح: "))
+encrypted = chr(ord(char) + key)
+decrypted = chr(ord(encrypted) - key)
+print(f"الأصلي: {char} (رقمه {ord(char)})")
+print(f"المشفّر: {encrypted}")
+print(f"بعد الفك: {decrypted}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 6 — الأحرف الأولى</div>
+      <p>عندك <code class="inl">"محمد خالد محمود"</code>. اطبع الأحرف الأولى مفصولة بنقط: <code class="inl">م.خ.م</code> — من غير حلقة تكرار (استخدم split والفهرسة).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+name = "محمد خالد محمود"
+parts = name.split()
+print(f"{parts[0][0]}.{parts[1][0]}.{parts[2][0]}")
+</pre></div>
+      <p>بعد الوحدة 6 هتقدر تكتبها بشكل يشتغل مع أي عدد أجزاء: <code class="inl">".".join(p[0] for p in parts)</code></p>
+      </details>
+    </div>
+
+    <h4>المستوى الثالث</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 7 — محلّل نص</div>
+      <p>
+        اطلب جملة من المستخدم واطبع: عدد الحروف، عدد الكلمات، عدد المسافات،
+        الجملة بحروف كابيتال، الجملة معكوسة، وهل فيها كلمة «python» (بغض النظر عن حالة الحروف).
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+text = input("اكتب جملة: ")
+print(f"عدد الحروف: {len(text)}")
+print(f"عدد الكلمات: {len(text.split())}")
+print(f"عدد المسافات: {text.count(' ')}")
+print(f"كابيتال: {text.upper()}")
+print(f"معكوسة: {text[::-1]}")
+print(f"فيها python؟ {'python' in text.lower()}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 8 — مولّد رمز الحجز</div>
+      <p>
+        اطلب اسم المدينة وتاريخ بصيغة <code class="inl">2026-09-08</code>، وولّد كود بالشكل:
+        أول 3 حروف من المدينة كابيتال + الشهر + اليوم. مثال: Cairo / 2026-09-08 ← <code class="inl">CAI0908</code>
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+city = input("المدينة: ").strip()
+date = input("التاريخ (YYYY-MM-DD): ").strip()
+year, month, day = date.split("-")
+code = f"{city[:3].upper()}{month}{day}"
+print(f"كود الحجز: {code}")
+</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">"python"[1:4]</code> بترجّع…</p>
+        <label><input type="radio"> "pyth"</label>
+        <label><input type="radio"> "yth"</label>
+        <label><input type="radio"> "ytho"</label>
+        <label><input type="radio"> "yt"</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">"python"[-2]</code> بترجّع…</p>
+        <label><input type="radio"> "o"</label>
+        <label><input type="radio"> "n"</label>
+        <label><input type="radio"> "h"</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">"python"[10]</code> بتعمل إيه؟</p>
+        <label><input type="radio"> بترجّع ""</label>
+        <label><input type="radio"> بترجّع "n"</label>
+        <label><input type="radio"> بترمي IndexError</label>
+        <label><input type="radio"> بترجّع None</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. أنهي واحدة بتعكس النص؟</p>
+        <label><input type="radio"> text[::1]</label>
+        <label><input type="radio"> text[0:-1]</label>
+        <label><input type="radio"> text.reverse()</label>
+        <label><input type="radio"> text[::-1]</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">5. <code class="inl">", ".join(["a","b"])</code> بترجّع…</p>
+        <label><input type="radio"> ["a, b"]</label>
+        <label><input type="radio"> "a, b"</label>
+        <label><input type="radio"> "ab"</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">6. ليه <code class="inl">word[0] = "P"</code> بترمي خطأ؟</p>
+        <label><input type="radio"> لأن النصوص immutable</label>
+        <label><input type="radio"> لأن الفهرس 0 محجوز</label>
+        <label><input type="radio"> لأن "P" كابيتال</label>
+        <label><input type="radio"> مش بترمي خطأ</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">7. <code class="inl">ord("a")</code> بترجّع 97، يبقى <code class="inl">chr(98)</code> بترجّع…</p>
+        <label><input type="radio"> "a"</label>
+        <label><input type="radio"> 98</label>
+        <label><input type="radio"> "b"</label>
+        <label><input type="radio"> "A"</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:3 -->
+  <div class="checkpoint" data-unit="3">
+    <h4>✅ نقطة تفتيش: الوحدة الثالثة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أوصل لأي حرف أو جزء من نص بالفهرسة والتقطيع.</li><li>أنظّف وأقسّم وأدمج نصوص بـ strip و split و join.</li><li>أعرف إن النصوص غير قابلة للتعديل.</li><li>أستخدم partition و translate و removeprefix في مكانهم الصح.</li></ul>
+  </div>
+  <!-- /CP -->

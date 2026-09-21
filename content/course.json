@@ -1,0 +1,1863 @@
+{
+ "title": "كورس بايثون الشامل — من الصفر إلى الاحتراف",
+ "author": "Mohammed Khaled",
+ "generated": "2026-09-20",
+ "stats": {
+  "units": 20,
+  "lessons": 122,
+  "projects": 36,
+  "code": 1019,
+  "challenges": 48,
+  "hours": 82
+ },
+ "units": [
+  {
+   "id": "unit-0",
+   "num": 0,
+   "title": "قبل ما تكتب أول سطر كود: إزاي الكمبيوتر بيفكر أصلًا؟",
+   "kicker": "الوحدة صفر · الأساس النظري",
+   "file": "units/unit-00.html",
+   "notes": "notes/unit-00.json",
+   "chars": 42316,
+   "code": 12,
+   "challenges": 0,
+   "minutes": 100,
+   "lessons": [
+    {
+     "id": "u0-l1",
+     "title": "ما هي البرمجة؟ وإزاي الكمبيوتر بيشتغل",
+     "project": false,
+     "minutes": 5,
+     "code": 0,
+     "challenges": 0
+    },
+    {
+     "id": "u0-l2",
+     "title": "لغات البرمجة: Low Level و High Level",
+     "project": false,
+     "minutes": 10,
+     "code": 1,
+     "challenges": 0
+    },
+    {
+     "id": "u0-l3",
+     "title": "الـ Compiler والـ Interpreter: مين بيترجم كودك؟",
+     "project": false,
+     "minutes": 10,
+     "code": 0,
+     "challenges": 0
+    },
+    {
+     "id": "u0-l4",
+     "title": "رحلة كودك: من ملف .py لحد ما يشتغل",
+     "project": false,
+     "minutes": 15,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u0-l5",
+     "title": "الذاكرة من جوه: Stack و Heap والمراجع",
+     "project": false,
+     "minutes": 20,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u0-l6",
+     "title": "تجهيز بيئة العمل وتشغيل أول برنامج",
+     "project": false,
+     "minutes": 15,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u0-ex",
+     "title": "تمارين ومراجعة الوحدة صفر",
+     "project": false,
+     "minutes": 25,
+     "code": 0,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-1",
+   "num": 1,
+   "title": "أول خطوة في الكود: الطباعة، المتغيّرات، والأنواع",
+   "kicker": "الوحدة الأولى · أول خطوة",
+   "file": "units/unit-01.html",
+   "notes": "notes/unit-01.json",
+   "chars": 52977,
+   "code": 58,
+   "challenges": 2,
+   "minutes": 205,
+   "lessons": [
+    {
+     "id": "u1-l1",
+     "title": "دالة print: أول حوار مع الكمبيوتر",
+     "project": false,
+     "minutes": 20,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u1-l2",
+     "title": "النصوص: علامات التنصيص وأحرف الهروب",
+     "project": false,
+     "minutes": 15,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u1-l3",
+     "title": "التعليقات: الكود اللي بايثون بتتجاهله",
+     "project": false,
+     "minutes": 15,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u1-l4",
+     "title": "المتغيّرات: تخزين القيم واستدعاؤها",
+     "project": false,
+     "minutes": 20,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u1-l5",
+     "title": "أنواع البيانات ودالة type",
+     "project": false,
+     "minutes": 15,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u1-l6",
+     "title": "دمج النصوص وتكرارها",
+     "project": false,
+     "minutes": 15,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u1-l7",
+     "title": "الـ f-strings: أنضف طريقة لتنسيق النصوص",
+     "project": false,
+     "minutes": 20,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u1-p1",
+     "title": "مشروع 1: بطاقة تعريف شخصية",
+     "project": true,
+     "minutes": 15,
+     "code": 3,
+     "challenges": 0
+    },
+    {
+     "id": "u1-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة الأولى",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    },
+    {
+     "id": "u1-ex",
+     "title": "تمارين الوحدة الأولى",
+     "project": false,
+     "minutes": 45,
+     "code": 7,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-2",
+   "num": 2,
+   "title": "خلّي البرنامج يتكلّم مع المستخدم: input والعمليات الحسابية",
+   "kicker": "الوحدة الثانية · التفاعل",
+   "file": "units/unit-02.html",
+   "notes": "notes/unit-02.json",
+   "chars": 52615,
+   "code": 49,
+   "challenges": 2,
+   "minutes": 200,
+   "lessons": [
+    {
+     "id": "u2-l1",
+     "title": "دالة input: استقبال بيانات من المستخدم",
+     "project": false,
+     "minutes": 20,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u2-l2",
+     "title": "التحويل بين الأنواع (Type Casting)",
+     "project": false,
+     "minutes": 20,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u2-l3",
+     "title": "العمليات الحسابية وأولويّاتها",
+     "project": false,
+     "minutes": 15,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u2-l4",
+     "title": "الأعداد بعمق: الأنظمة العددية والعوامل الثنائية",
+     "project": false,
+     "minutes": 30,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u2-l5",
+     "title": "أسرار الحسابات: القسمة السالبة، round البنكي، وحدود float",
+     "project": false,
+     "minutes": 20,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u2-p1",
+     "title": "مشروع 2: آلة حاسبة تعرض كل العمليات",
+     "project": true,
+     "minutes": 10,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u2-p2",
+     "title": "مشروع 3: مولّد معرّف فريد (ID Generator)",
+     "project": true,
+     "minutes": 15,
+     "code": 3,
+     "challenges": 0
+    },
+    {
+     "id": "u2-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة الثانية",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    },
+    {
+     "id": "u2-ex",
+     "title": "تمارين الوحدة الثانية",
+     "project": false,
+     "minutes": 45,
+     "code": 7,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-3",
+   "num": 3,
+   "title": "النصوص بعمق: الفهرسة، التقطيع، والدوال الجاهزة",
+   "kicker": "الوحدة الثالثة · النصوص",
+   "file": "units/unit-03.html",
+   "notes": "notes/unit-03.json",
+   "chars": 47230,
+   "code": 52,
+   "challenges": 2,
+   "minutes": 190,
+   "lessons": [
+    {
+     "id": "u3-l1",
+     "title": "الفهرسة (Indexing): الوصول لحرف واحد",
+     "project": false,
+     "minutes": 15,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u3-l2",
+     "title": "التقطيع (Slicing): استخراج جزء من النص",
+     "project": false,
+     "minutes": 25,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u3-l3",
+     "title": "دوال النصوص الجاهزة (String Methods)",
+     "project": false,
+     "minutes": 25,
+     "code": 11,
+     "challenges": 0
+    },
+    {
+     "id": "u3-l4",
+     "title": "ord و chr: الحروف كأرقام",
+     "project": false,
+     "minutes": 15,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u3-l5",
+     "title": "دوال نصوص متقدّمة: المحاذاة، التقسيم الذكي، والاستبدال الجماعي",
+     "project": false,
+     "minutes": 30,
+     "code": 10,
+     "challenges": 0
+    },
+    {
+     "id": "u3-p1",
+     "title": "مشروع 4: مكرّر الكلمات بفاصل مخصّص",
+     "project": true,
+     "minutes": 10,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u3-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة الثالثة",
+     "project": false,
+     "minutes": 20,
+     "code": 2,
+     "challenges": 2
+    },
+    {
+     "id": "u3-ex",
+     "title": "تمارين الوحدة الثالثة",
+     "project": false,
+     "minutes": 50,
+     "code": 8,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-4",
+   "num": 4,
+   "title": "القرارات: if و elif و else",
+   "kicker": "الوحدة الرابعة · القرارات",
+   "file": "units/unit-04.html",
+   "notes": "notes/unit-04.json",
+   "chars": 41197,
+   "code": 32,
+   "challenges": 2,
+   "minutes": 180,
+   "lessons": [
+    {
+     "id": "u4-l1",
+     "title": "عوامل المقارنة والقيم المنطقية",
+     "project": false,
+     "minutes": 25,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u4-l2",
+     "title": "جملة if و else والمسافات البادئة",
+     "project": false,
+     "minutes": 25,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u4-l3",
+     "title": "الشروط المتداخلة (Nested if)",
+     "project": false,
+     "minutes": 20,
+     "code": 3,
+     "challenges": 0
+    },
+    {
+     "id": "u4-p1",
+     "title": "مشروع 5: الآلة الحاسبة الشرطية",
+     "project": true,
+     "minutes": 15,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u4-p2",
+     "title": "مشروع 6: مستشار الملابس حسب الطقس",
+     "project": true,
+     "minutes": 15,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u4-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة الرابعة",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    },
+    {
+     "id": "u4-ex",
+     "title": "تمارين الوحدة الرابعة",
+     "project": false,
+     "minutes": 55,
+     "code": 7,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-5",
+   "num": 5,
+   "title": "القوائم (Lists): تخزين مجموعة قيم في متغيّر واحد",
+   "kicker": "الوحدة الخامسة · القوائم",
+   "file": "units/unit-05.html",
+   "notes": "notes/unit-05.json",
+   "chars": 54204,
+   "code": 56,
+   "challenges": 2,
+   "minutes": 220,
+   "lessons": [
+    {
+     "id": "u5-l1",
+     "title": "إنشاء القوائم والوصول لعناصرها",
+     "project": false,
+     "minutes": 20,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u5-l2",
+     "title": "إضافة وحذف العناصر",
+     "project": false,
+     "minutes": 25,
+     "code": 10,
+     "challenges": 0
+    },
+    {
+     "id": "u5-l3",
+     "title": "الترتيب والدوال العامة على القوائم",
+     "project": false,
+     "minutes": 25,
+     "code": 11,
+     "challenges": 0
+    },
+    {
+     "id": "u5-l4",
+     "title": "القوائم المتداخلة (Nested Lists)",
+     "project": false,
+     "minutes": 20,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u5-l5",
+     "title": "نسخ القوائم: الفخ اللي بيوقّع المحترفين",
+     "project": false,
+     "minutes": 20,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u5-l6",
+     "title": "مرجع كامل: كل دوال القوائم",
+     "project": false,
+     "minutes": 15,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u5-p1",
+     "title": "مشروع 7: قائمة طعام المطعم",
+     "project": true,
+     "minutes": 15,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u5-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة الخامسة",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    },
+    {
+     "id": "u5-ex",
+     "title": "تمارين الوحدة الخامسة",
+     "project": false,
+     "minutes": 55,
+     "code": 10,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-6",
+   "num": 6,
+   "title": "حلقة for: كرّر الشغل من غير ما تكرّر الكود",
+   "kicker": "الوحدة السادسة · التكرار",
+   "file": "units/unit-06.html",
+   "notes": "notes/unit-06.json",
+   "chars": 75687,
+   "code": 78,
+   "challenges": 3,
+   "minutes": 320,
+   "lessons": [
+    {
+     "id": "u6-l1",
+     "title": "حلقة for: المرور على العناصر",
+     "project": false,
+     "minutes": 25,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u6-l2",
+     "title": "دالة range: توليد سلسلة أرقام",
+     "project": false,
+     "minutes": 20,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u6-l3",
+     "title": "الحلقة بالفهارس: range(len())",
+     "project": false,
+     "minutes": 20,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u6-l4",
+     "title": "enumerate: الفهرس والقيمة مع بعض",
+     "project": false,
+     "minutes": 20,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u6-l5",
+     "title": "zip: المرور على قائمتين مع بعض",
+     "project": false,
+     "minutes": 20,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u6-l6",
+     "title": "break و continue: التحكم في مسار الحلقة",
+     "project": false,
+     "minutes": 20,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u6-l7",
+     "title": "بناء القوائم داخل الحلقات",
+     "project": false,
+     "minutes": 25,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u6-l8",
+     "title": "for...else والـ Comprehension بعمق",
+     "project": false,
+     "minutes": 35,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u6-p1",
+     "title": "مشروع 8: مشفّر الرسائل (Caesar Cipher)",
+     "project": true,
+     "minutes": 15,
+     "code": 3,
+     "challenges": 0
+    },
+    {
+     "id": "u6-p2",
+     "title": "مشروع 9: جدول الضرب",
+     "project": true,
+     "minutes": 10,
+     "code": 3,
+     "challenges": 0
+    },
+    {
+     "id": "u6-p3",
+     "title": "مشروع 10: منظّم المهام المرقّم",
+     "project": true,
+     "minutes": 5,
+     "code": 1,
+     "challenges": 0
+    },
+    {
+     "id": "u6-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة السادسة",
+     "project": false,
+     "minutes": 35,
+     "code": 3,
+     "challenges": 3
+    },
+    {
+     "id": "u6-ex",
+     "title": "تمارين الوحدة السادسة",
+     "project": false,
+     "minutes": 70,
+     "code": 10,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-7",
+   "num": 7,
+   "title": "المكتبات والعشوائية: استخدم شغل غيرك",
+   "kicker": "الوحدة السابعة · المكتبات",
+   "file": "units/unit-07.html",
+   "notes": "notes/unit-07.json",
+   "chars": 48602,
+   "code": 43,
+   "challenges": 2,
+   "minutes": 195,
+   "lessons": [
+    {
+     "id": "u7-l1",
+     "title": "الاستيراد (import) والوحدات",
+     "project": false,
+     "minutes": 20,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u7-l2",
+     "title": "مكتبة random: العشوائية",
+     "project": false,
+     "minutes": 20,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u7-l3",
+     "title": "مكتبة string: مجموعات الحروف الجاهزة",
+     "project": false,
+     "minutes": 20,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u7-l4",
+     "title": "مكتبات الأرقام: math و decimal و fractions و statistics",
+     "project": false,
+     "minutes": 20,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u7-l5",
+     "title": "التاريخ والوقت بعمق: datetime و timedelta",
+     "project": false,
+     "minutes": 35,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u7-p1",
+     "title": "مشروع 11: مولّد كلمات مرور قوية",
+     "project": true,
+     "minutes": 15,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u7-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة السابعة",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    },
+    {
+     "id": "u7-ex",
+     "title": "تمارين الوحدة السابعة",
+     "project": false,
+     "minutes": 40,
+     "code": 5,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-8",
+   "num": 8,
+   "title": "حلقة while: كرّر لحد ما يحصل شرط",
+   "kicker": "الوحدة الثامنة · التكرار الشرطي",
+   "file": "units/unit-08.html",
+   "notes": "notes/unit-08.json",
+   "chars": 46177,
+   "code": 40,
+   "challenges": 2,
+   "minutes": 210,
+   "lessons": [
+    {
+     "id": "u8-l1",
+     "title": "حلقة while الأساسية",
+     "project": false,
+     "minutes": 15,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u8-l2",
+     "title": "while True و break: الحلقة اللانهائية المتحكَّم فيها",
+     "project": false,
+     "minutes": 20,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u8-l3",
+     "title": "الحلقات المتداخلة (Nested Loops)",
+     "project": false,
+     "minutes": 20,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u8-l4",
+     "title": "الحلقات المتداخلة في سطر واحد + while...else",
+     "project": false,
+     "minutes": 30,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u8-p1",
+     "title": "مشروع 12: لعبة تخمين الرقم",
+     "project": true,
+     "minutes": 15,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u8-p2",
+     "title": "مشروع 13: مواجهة الكمبيوتر بالأرقام العشوائية",
+     "project": true,
+     "minutes": 15,
+     "code": 3,
+     "challenges": 0
+    },
+    {
+     "id": "u8-p3",
+     "title": "مشروع 14: لعبة «ملك أم كتابة»",
+     "project": true,
+     "minutes": 20,
+     "code": 3,
+     "challenges": 0
+    },
+    {
+     "id": "u8-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة الثامنة",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    },
+    {
+     "id": "u8-ex",
+     "title": "تمارين الوحدة الثامنة",
+     "project": false,
+     "minutes": 50,
+     "code": 8,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-9",
+   "num": 9,
+   "title": "معالجة الأخطاء: خلّي برنامجك ما يقعش",
+   "kicker": "الوحدة التاسعة · الأخطاء",
+   "file": "units/unit-09.html",
+   "notes": "notes/unit-09.json",
+   "chars": 60430,
+   "code": 51,
+   "challenges": 2,
+   "minutes": 245,
+   "lessons": [
+    {
+     "id": "u9-l1",
+     "title": "أنواع الأخطاء التلاتة",
+     "project": false,
+     "minutes": 15,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u9-l2",
+     "title": "try و except: القبض على الأخطاء",
+     "project": false,
+     "minutes": 20,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u9-l3",
+     "title": "أنواع الاستثناءات الشائعة",
+     "project": false,
+     "minutes": 20,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u9-l4",
+     "title": "معالجة أكتر من خطأ + else و finally",
+     "project": false,
+     "minutes": 20,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u9-l5",
+     "title": "دمج try مع الحلقات: النمط النهائي",
+     "project": false,
+     "minutes": 25,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u9-l6",
+     "title": "EAFP مقابل LBYL: تسأل قبل ما تعمل ولّا تعتذر بعدها؟",
+     "project": false,
+     "minutes": 25,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u9-p1",
+     "title": "مشروع 15: الآلة الحاسبة المحصّنة (النسخة النهائية)",
+     "project": true,
+     "minutes": 20,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u9-p2",
+     "title": "مشروع 16: حاسبة eval — والتحذير الأمني",
+     "project": true,
+     "minutes": 10,
+     "code": 3,
+     "challenges": 0
+    },
+    {
+     "id": "u9-p3",
+     "title": "مشروع 17: مغامرة الجزيرة",
+     "project": true,
+     "minutes": 15,
+     "code": 1,
+     "challenges": 0
+    },
+    {
+     "id": "u9-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة التاسعة",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    },
+    {
+     "id": "u9-ex",
+     "title": "تمارين الوحدة التاسعة",
+     "project": false,
+     "minutes": 50,
+     "code": 7,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-10",
+   "num": 10,
+   "title": "القواميس والمجموعات: بيانات منظّمة بأسماء",
+   "kicker": "الوحدة العاشرة · هياكل البيانات",
+   "file": "units/unit-10.html",
+   "notes": "notes/unit-10.json",
+   "chars": 63808,
+   "code": 58,
+   "challenges": 2,
+   "minutes": 260,
+   "lessons": [
+    {
+     "id": "u10-l1",
+     "title": "القاموس (Dictionary): مفتاح وقيمة",
+     "project": false,
+     "minutes": 20,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u10-l2",
+     "title": "المرور على القواميس ودوالها",
+     "project": false,
+     "minutes": 30,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u10-l3",
+     "title": "قوائم من قواميس: هيكل البيانات الأشهر",
+     "project": false,
+     "minutes": 20,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u10-l4",
+     "title": "Tuple و Set: النوعين المكمّلين",
+     "project": false,
+     "minutes": 30,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u10-l5",
+     "title": "التفكيك المتقدّم، دمج القواميس، واستيعاب القواميس والمجموعات",
+     "project": false,
+     "minutes": 35,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u10-l6",
+     "title": "مكتبة collections: Counter و defaultdict و namedtuple و deque",
+     "project": false,
+     "minutes": 30,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u10-p1",
+     "title": "مشروع 18: لعبة الأسئلة (Quiz Game)",
+     "project": true,
+     "minutes": 20,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u10-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة العاشرة",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    },
+    {
+     "id": "u10-ex",
+     "title": "تمارين الوحدة العاشرة",
+     "project": false,
+     "minutes": 50,
+     "code": 8,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-11",
+   "num": 11,
+   "title": "الدوال: نظّم كودك وأعد استخدامه",
+   "kicker": "الوحدة الحادية عشرة · الدوال",
+   "file": "units/unit-11.html",
+   "notes": "notes/unit-11.json",
+   "chars": 90796,
+   "code": 107,
+   "challenges": 4,
+   "minutes": 385,
+   "lessons": [
+    {
+     "id": "u11-l1",
+     "title": "تعريف الدالة: def",
+     "project": false,
+     "minutes": 20,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u11-l2",
+     "title": "الوسائط (Parameters و Arguments)",
+     "project": false,
+     "minutes": 20,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u11-l3",
+     "title": "return مقابل print — أهم درس في الوحدة",
+     "project": false,
+     "minutes": 25,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u11-l4",
+     "title": "النطاق (Scope): وين المتغيّر شغّال؟",
+     "project": false,
+     "minutes": 25,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u11-l5",
+     "title": "تلميحات النوع (Type Hints): وثّق دوالك بطريقة يفهمها المحرّر",
+     "project": false,
+     "minutes": 20,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u11-l6",
+     "title": "الدوال بعمق: lambda و map/filter والوسائط الإلزامية والـ Closures و functools",
+     "project": false,
+     "minutes": 35,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u11-l7",
+     "title": "المكرّرات والمولّدات: iter و next و yield",
+     "project": false,
+     "minutes": 35,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u11-l8",
+     "title": "جولة استكشافية: Decorators و match-case و Walrus و Context Managers",
+     "project": false,
+     "minutes": 40,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u11-l9",
+     "title": "قسّم مشروعك: وحداتك الخاصة و __name__ وسطر الأوامر",
+     "project": false,
+     "minutes": 30,
+     "code": 11,
+     "challenges": 0
+    },
+    {
+     "id": "u11-p1",
+     "title": "مشروع 19: مكتبة دوال التحقّق",
+     "project": true,
+     "minutes": 15,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u11-p2",
+     "title": "مشروع 20: إعادة بناء دوال بايثون بنفسك",
+     "project": true,
+     "minutes": 25,
+     "code": 10,
+     "challenges": 0
+    },
+    {
+     "id": "u11-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة الحادية عشرة",
+     "project": false,
+     "minutes": 45,
+     "code": 4,
+     "challenges": 4
+    },
+    {
+     "id": "u11-ex",
+     "title": "تمارين الوحدة الحادية عشرة",
+     "project": false,
+     "minutes": 50,
+     "code": 9,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-12",
+   "num": 12,
+   "title": "التعامل مع الملفات: خلّي بياناتك تعيش بعد ما البرنامج يقفل",
+   "kicker": "الوحدة الثانية عشرة · الملفات",
+   "file": "units/unit-12.html",
+   "notes": "notes/unit-12.json",
+   "chars": 126407,
+   "code": 86,
+   "challenges": 6,
+   "minutes": 455,
+   "lessons": [
+    {
+     "id": "u12-l1",
+     "title": "فتح الملفات: open و with وأوضاع الفتح",
+     "project": false,
+     "minutes": 20,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u12-l2",
+     "title": "قراءة الملفات",
+     "project": false,
+     "minutes": 20,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u12-l3",
+     "title": "الكتابة في الملفات",
+     "project": false,
+     "minutes": 25,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u12-l4",
+     "title": "ملفات CSV: الجداول اللي بتتبادل بين كل البرامج",
+     "project": false,
+     "minutes": 25,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u12-l9",
+     "title": "JSON: لغة تبادل البيانات بين البرامج",
+     "project": false,
+     "minutes": 35,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u12-l5",
+     "title": "pathlib و shutil و glob: إدارة الملفات والفولدرات",
+     "project": false,
+     "minutes": 25,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u12-l6",
+     "title": "النصوص مقابل البايتات: encode و decode والملفات الثنائية",
+     "project": false,
+     "minutes": 25,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u12-l8",
+     "title": "التعبيرات النمطية (Regular Expressions): البحث بالأنماط",
+     "project": false,
+     "minutes": 45,
+     "code": 12,
+     "challenges": 0
+    },
+    {
+     "id": "u12-l7",
+     "title": "قواعد البيانات: SQL و sqlite3",
+     "project": false,
+     "minutes": 30,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u12-p1",
+     "title": "مشروع 21: مفكّرة نصية",
+     "project": true,
+     "minutes": 20,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u12-p2",
+     "title": "مشروع 22: بناء قاموس إنجليزي-عربي من ملفين",
+     "project": true,
+     "minutes": 15,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u12-p3",
+     "title": "مشروع 23: محلّل إحصائيات الملفات",
+     "project": true,
+     "minutes": 15,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u12-p4",
+     "title": "مشروع 22: دفتر المصروفات بقاعدة بيانات",
+     "project": true,
+     "minutes": 15,
+     "code": 1,
+     "challenges": 0
+    },
+    {
+     "id": "u12-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة الثانية عشرة",
+     "project": false,
+     "minutes": 70,
+     "code": 6,
+     "challenges": 6
+    },
+    {
+     "id": "u12-p5",
+     "title": "مشروع 23: محلّل ملفات السجلّ (Log Analyzer)",
+     "project": true,
+     "minutes": 20,
+     "code": 1,
+     "challenges": 0
+    },
+    {
+     "id": "u12-ex",
+     "title": "تمارين الوحدة الثانية عشرة",
+     "project": false,
+     "minutes": 50,
+     "code": 6,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-13",
+   "num": 13,
+   "title": "مشاريع كبيرة: كل حاجة اتعلّمتها في مكان واحد",
+   "kicker": "الوحدة الثالثة عشرة · المشاريع الكاملة",
+   "file": "units/unit-13.html",
+   "notes": "notes/unit-13.json",
+   "chars": 32367,
+   "code": 9,
+   "challenges": 2,
+   "minutes": 125,
+   "lessons": [
+    {
+     "id": "u13-p1",
+     "title": "مشروع 24: لعبة الكلمة المخفيّة (Hangman)",
+     "project": true,
+     "minutes": 25,
+     "code": 3,
+     "challenges": 0
+    },
+    {
+     "id": "u13-p2",
+     "title": "مشروع 25: حجر ورقة مقص",
+     "project": true,
+     "minutes": 15,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u13-p3",
+     "title": "مشروع 26: مدير المهام الكامل (Task Manager)",
+     "project": true,
+     "minutes": 60,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u13-ch",
+     "title": "تحدّيات بتصحيح آلي: منطق الألعاب",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    }
+   ]
+  },
+  {
+   "id": "unit-14",
+   "num": 14,
+   "title": "المكتبات الخارجية والـ APIs: وصّل برنامجك بالعالم",
+   "kicker": "الوحدة الرابعة عشرة · العالم الخارجي",
+   "file": "units/unit-14.html",
+   "notes": "notes/unit-14.json",
+   "chars": 47179,
+   "code": 35,
+   "challenges": 2,
+   "minutes": 160,
+   "lessons": [
+    {
+     "id": "u14-l1",
+     "title": "pip: تثبيت المكتبات الخارجية",
+     "project": false,
+     "minutes": 20,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u14-l2",
+     "title": "مكتبة requests والـ APIs",
+     "project": false,
+     "minutes": 40,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u14-l3",
+     "title": "جولة في المكتبات الشهيرة",
+     "project": false,
+     "minutes": 40,
+     "code": 11,
+     "challenges": 0
+    },
+    {
+     "id": "u14-l4",
+     "title": "التزامن: async و await وasyncio",
+     "project": false,
+     "minutes": 35,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u14-ch",
+     "title": "تحدّيات بتصحيح آلي: بيانات الـ APIs",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    }
+   ]
+  },
+  {
+   "id": "unit-15",
+   "num": 15,
+   "title": "البرمجة الكائنية (OOP): اعمل أنواعك بنفسك",
+   "kicker": "الوحدة الخامسة عشرة · البرمجة الكائنية",
+   "file": "units/unit-15.html",
+   "notes": "notes/unit-15.json",
+   "chars": 103609,
+   "code": 65,
+   "challenges": 4,
+   "minutes": 410,
+   "lessons": [
+    {
+     "id": "u15-l1",
+     "title": "ليه الكائنات؟ من القاموس إلى الكلاس",
+     "project": false,
+     "minutes": 20,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u15-l2",
+     "title": "أول كلاس: __init__ و self",
+     "project": false,
+     "minutes": 25,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u15-l3",
+     "title": "الدوال السحرية (Dunder Methods)",
+     "project": false,
+     "minutes": 30,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u15-l4",
+     "title": "خصائص الكلاس مقابل خصائص الكائن",
+     "project": false,
+     "minutes": 25,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u15-l5",
+     "title": "الوراثة (Inheritance) و super()",
+     "project": false,
+     "minutes": 30,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u15-l6",
+     "title": "التغليف و @property",
+     "project": false,
+     "minutes": 35,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u15-l7",
+     "title": "تعدّد الأشكال و Duck Typing",
+     "project": false,
+     "minutes": 25,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u15-l9",
+     "title": "dataclasses و Enum: كلاسات البيانات الحديثة",
+     "project": false,
+     "minutes": 40,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u15-l8",
+     "title": "الاستثناءات المخصّصة: أخطاء بلغة مشروعك",
+     "project": false,
+     "minutes": 30,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u15-p1",
+     "title": "مشروع 27: إعادة بناء مدير المهام بالكلاسات",
+     "project": true,
+     "minutes": 20,
+     "code": 1,
+     "challenges": 0
+    },
+    {
+     "id": "u15-p2",
+     "title": "مشروع 28: نظام مكتبة بالوراثة",
+     "project": true,
+     "minutes": 20,
+     "code": 1,
+     "challenges": 0
+    },
+    {
+     "id": "u15-ch",
+     "title": "تحدّيات بتصحيح آلي: الوحدة الخامسة عشرة",
+     "project": false,
+     "minutes": 55,
+     "code": 4,
+     "challenges": 4
+    },
+    {
+     "id": "u15-ex",
+     "title": "تمارين الوحدة الخامسة عشرة",
+     "project": false,
+     "minutes": 55,
+     "code": 6,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-16",
+   "num": 16,
+   "title": "الاختبارات: إزاي تتأكّد إن كودك شغّال فعلًا",
+   "kicker": "الوحدة السادسة عشرة · الاختبارات",
+   "file": "units/unit-16.html",
+   "notes": "notes/unit-16.json",
+   "chars": 103862,
+   "code": 71,
+   "challenges": 2,
+   "minutes": 385,
+   "lessons": [
+    {
+     "id": "u16-l1",
+     "title": "ليه الاختبارات؟ والمشكلة اللي بتحلّها",
+     "project": false,
+     "minutes": 15,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u16-l2",
+     "title": "assert: أبسط أداة اختبار",
+     "project": false,
+     "minutes": 25,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u16-l3",
+     "title": "pytest: المكتبة القياسية للاختبارات",
+     "project": false,
+     "minutes": 30,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u16-l4",
+     "title": "تنظيم الاختبارات: fixtures و parametrize",
+     "project": false,
+     "minutes": 30,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u16-l5",
+     "title": "unittest: المكتبة المدمجة",
+     "project": false,
+     "minutes": 30,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u16-l6",
+     "title": "doctest: اختبارات جوّه التوثيق",
+     "project": false,
+     "minutes": 25,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u16-l7",
+     "title": "التغطية والمحاكاة: coverage و mock",
+     "project": false,
+     "minutes": 25,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u16-l8",
+     "title": "المنقّح (Debugger): بديل print",
+     "project": false,
+     "minutes": 20,
+     "code": 3,
+     "challenges": 0
+    },
+    {
+     "id": "u16-l9",
+     "title": "وحدة logging: سجلّ محترم بدل print",
+     "project": false,
+     "minutes": 25,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u16-p1",
+     "title": "مشروع 29: مكتبة تحقّق مختبرة بالكامل",
+     "project": true,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u16-p2",
+     "title": "مشروع 30: TDD — اكتب الاختبار قبل الكود",
+     "project": true,
+     "minutes": 25,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u16-p3",
+     "title": "مشروع 31: هيكلة مشروع مختبر كامل",
+     "project": true,
+     "minutes": 25,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u16-ch",
+     "title": "تحدّيات بتصحيح آلي: اكتب اختباراتك",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    },
+    {
+     "id": "u16-ex",
+     "title": "تمارين الوحدة السادسة عشرة",
+     "project": false,
+     "minutes": 60,
+     "code": 7,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-17",
+   "num": 17,
+   "title": "من «كورس بايثون» إلى «كورس برمجة»: الاسترجاع والخوارزميات",
+   "kicker": "الوحدة السابعة عشرة · أسس علوم الحاسب",
+   "file": "units/unit-17.html",
+   "notes": "notes/unit-17.json",
+   "chars": 59159,
+   "code": 39,
+   "challenges": 3,
+   "minutes": 235,
+   "lessons": [
+    {
+     "id": "u17-l1",
+     "title": "الاسترجاع (Recursion): دالة بتنادي نفسها",
+     "project": false,
+     "minutes": 30,
+     "code": 9,
+     "challenges": 0
+    },
+    {
+     "id": "u17-l2",
+     "title": "تعقيد الخوارزميات: Big-O",
+     "project": false,
+     "minutes": 25,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u17-l3",
+     "title": "البحث: الخطّي والثنائي",
+     "project": false,
+     "minutes": 25,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u17-l4",
+     "title": "الترتيب: إزاي sort بتشتغل من جوّه",
+     "project": false,
+     "minutes": 25,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u17-l5",
+     "title": "المكدّس والطابور (Stack و Queue)",
+     "project": false,
+     "minutes": 25,
+     "code": 6,
+     "challenges": 0
+    },
+    {
+     "id": "u17-p1",
+     "title": "مشروع 32: مدقّق الأقواس ومستكشف الفولدرات",
+     "project": true,
+     "minutes": 20,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u17-ch",
+     "title": "تحدّيات بتصحيح آلي: الخوارزميات",
+     "project": false,
+     "minutes": 35,
+     "code": 3,
+     "challenges": 3
+    },
+    {
+     "id": "u17-ex",
+     "title": "تمارين الوحدة السابعة عشرة",
+     "project": false,
+     "minutes": 50,
+     "code": 6,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-18",
+   "num": 18,
+   "title": "المراجع السريعة وخريطة طريقك الجاية",
+   "kicker": "الوحدة الثامنة عشرة · الختام",
+   "file": "units/unit-18.html",
+   "notes": "notes/unit-18.json",
+   "chars": 81055,
+   "code": 47,
+   "challenges": 2,
+   "minutes": 215,
+   "lessons": [
+    {
+     "id": "u18-l1",
+     "title": "المرجع السريع الشامل (Cheat Sheet)",
+     "project": false,
+     "minutes": 50,
+     "code": 21,
+     "challenges": 0
+    },
+    {
+     "id": "u18-l2",
+     "title": "أخطاء شائعة وحلولها",
+     "project": false,
+     "minutes": 5,
+     "code": 0,
+     "challenges": 0
+    },
+    {
+     "id": "u18-l3",
+     "title": "عادات المبرمج المحترف",
+     "project": false,
+     "minutes": 5,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u18-l4",
+     "title": "خريطة الطريق: تروح فين بعد كده؟",
+     "project": false,
+     "minutes": 10,
+     "code": 1,
+     "challenges": 0
+    },
+    {
+     "id": "u18-l5",
+     "title": "مصادر ومراجع",
+     "project": false,
+     "minutes": 5,
+     "code": 0,
+     "challenges": 0
+    },
+    {
+     "id": "u18-l6",
+     "title": "Git عملي: الفروع وسير العمل والتراجع عن الأخطاء",
+     "project": false,
+     "minutes": 20,
+     "code": 7,
+     "challenges": 0
+    },
+    {
+     "id": "u18-l7",
+     "title": "اعتمد على نفسك: اقرا التوثيق واسأل سؤال يتجاوب",
+     "project": false,
+     "minutes": 20,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u18-l8",
+     "title": "أساسيات الأمان: الأسرار وكلمات السر والمفاتيح",
+     "project": false,
+     "minutes": 30,
+     "code": 8,
+     "challenges": 0
+    },
+    {
+     "id": "u18-ch",
+     "title": "تحدّيات بتصحيح آلي: الأمان",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    },
+    {
+     "id": "u18-exam",
+     "title": "الاختبار النهائي الشامل",
+     "project": false,
+     "minutes": 20,
+     "code": 0,
+     "challenges": 0
+    },
+    {
+     "id": "u18-capstone",
+     "title": "مشاريع التخرّج: ابنِ حاجة بتاعتك",
+     "project": true,
+     "minutes": 10,
+     "code": 1,
+     "challenges": 0
+    },
+    {
+     "id": "u18-pilot",
+     "title": "للمدرّسين: جرّب الكورس مع طلاب حقيقيين وقيس النتايج",
+     "project": false,
+     "minutes": 15,
+     "code": 1,
+     "challenges": 0
+    }
+   ]
+  },
+  {
+   "id": "unit-19",
+   "num": 19,
+   "title": "بايثون في العالم الحقيقي: مدخل للذكاء الاصطناعي والمجالات المختلفة",
+   "kicker": "الوحدة التاسعة عشرة · آفاق بايثون",
+   "file": "units/unit-19.html",
+   "notes": "notes/unit-19.json",
+   "chars": 81906,
+   "code": 31,
+   "challenges": 2,
+   "minutes": 195,
+   "lessons": [
+    {
+     "id": "u19-l1",
+     "title": "ليه بايثون في كل مكان؟ خريطة المجالات",
+     "project": false,
+     "minutes": 10,
+     "code": 0,
+     "challenges": 0
+    },
+    {
+     "id": "u19-l2",
+     "title": "مدخل للذكاء الاصطناعي: يعني إيه الآلة «تتعلّم»؟",
+     "project": false,
+     "minutes": 20,
+     "code": 3,
+     "challenges": 0
+    },
+    {
+     "id": "u19-l3",
+     "title": "التصنيف: علّم الآلة تفرّق بين الحاجات",
+     "project": false,
+     "minutes": 20,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u19-l4",
+     "title": "من الخلية العصبية لنماذج اللغة الكبيرة (LLMs)",
+     "project": false,
+     "minutes": 15,
+     "code": 2,
+     "challenges": 0
+    },
+    {
+     "id": "u19-p1",
+     "title": "مشروع 33: مصنّف رسائل السبام",
+     "project": true,
+     "minutes": 15,
+     "code": 1,
+     "challenges": 0
+    },
+    {
+     "id": "u19-l5",
+     "title": "تحليل البيانات: NumPy و pandas و Matplotlib",
+     "project": false,
+     "minutes": 20,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u19-l6",
+     "title": "تطوير الويب: إزاي موقع بيشتغل ببايثون",
+     "project": false,
+     "minutes": 15,
+     "code": 5,
+     "challenges": 0
+    },
+    {
+     "id": "u19-l7",
+     "title": "الأتمتة: خلّي بايثون تشتغل بدالك",
+     "project": false,
+     "minutes": 15,
+     "code": 3,
+     "challenges": 0
+    },
+    {
+     "id": "u19-l8",
+     "title": "مجالات تانية: الأمن السيبراني، الألعاب، سطح المكتب، وإنترنت الأشياء",
+     "project": false,
+     "minutes": 15,
+     "code": 4,
+     "challenges": 0
+    },
+    {
+     "id": "u19-ch",
+     "title": "تحدّيات بتصحيح آلي: تعلّم الآلة من الصفر",
+     "project": false,
+     "minutes": 25,
+     "code": 2,
+     "challenges": 2
+    },
+    {
+     "id": "u19-ex",
+     "title": "تمارين الوحدة التاسعة عشرة",
+     "project": false,
+     "minutes": 25,
+     "code": 3,
+     "challenges": 0
+    }
+   ]
+  }
+ ]
+}

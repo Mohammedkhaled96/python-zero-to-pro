@@ -1,0 +1,900 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة صفر · الأساس النظري</div>
+    <h2>قبل ما تكتب أول سطر كود: إزاي الكمبيوتر بيفكر أصلًا؟</h2>
+    <p>
+      أغلب الناس بتبدأ تتعلم برمجة من <code class="inl">print("hello")</code> على طول، وبعد شهرين
+      بتلاقي نفسها بتحفظ أوامر من غير ما تفهم بيحصل إيه تحت. الوحدة دي هي الفرق بين
+      «واحد بيكتب كود» و«واحد بيفهم البرمجة». مفيش كود هنا تقريبًا — فيها فهم.
+      اقراها بهدوء مرّة، وارجعلها تاني بعد ما تخلّص الوحدة 6، هتفهمها بشكل أعمق.
+    </p>
+  </div>
+
+  <!-- ---------------------------------------------- 0.1 -->
+  <article class="lesson" id="u0-l1">
+    <h3>ما هي البرمجة؟ وإزاي الكمبيوتر بيشتغل <span class="tag">درس نظري</span></h3>
+    <p class="goal">الهدف: تفهم إن الكمبيوتر جهاز غبي جدًا وسريع جدًا، وإن البرمجة هي فن إنك تشرحله خطوة بخطوة.</p>
+
+    <h4>1. الكمبيوتر مش ذكي — هو سريع بس</h4>
+    <p>
+      الكمبيوتر ما بيعرفش يعمل أي حاجة من نفسه. هو يعرف يعمل حاجات بدائية جدًا فقط:
+      يجمع رقمين، يقارن رقمين، ينقل رقم من مكان لمكان، ويقرر «لو الشرط ده صح روح للخطوة الفلانية».
+      خلاص. كل حاجة تانية — Photoshop، YouTube، ChatGPT — مبنية من ملايين ملايين
+      من العمليات البدائية دي.
+    </p>
+    <p>
+      الفرق الوحيد إنه بيعمل العمليات دي بسرعة رهيبة: معالج عادي بيقدر ينفّذ حوالي
+      <strong>3 مليار عملية في الثانية</strong>. فلو الغباء ده اتضرب في السرعة دي، بيطلع منه سحر.
+    </p>
+    <div class="box brain">
+      <div class="bt">🧠 المبدأ اللي هيمشي معاك طول الكورس</div>
+      <p>
+        <strong>البرمجة = إنك تفكّك المشكلة الكبيرة لخطوات صغيرة جدًا، مرتّبة، ما تحتملش أي غموض.</strong>
+        لو قلت لصاحبك «اعملي كوباية شاي»، هو هيفهم. لو قلتها للكمبيوتر هيقف. لازم تقوله:
+        هات كوباية، حط فيها 200 مل مياه، سخّنها لحد 100 درجة، حط كيس شاي، استنى 3 دقايق…
+        وأي خطوة نسيتها = البرنامج هيقع.
+      </p>
+    </div>
+
+    <h4>2. مكوّنات الجهاز اللي يهمّوك كمبرمج</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المكوّن</th><th>وظيفته</th><th>سرعته</th><th>ليه يهمّك؟</th></tr>
+        <tr>
+          <td><strong>CPU</strong><br>المعالج</td>
+          <td>«العقل». بينفّذ التعليمات واحدة ورا التانية.</td>
+          <td>سريع جدًا جدًا</td>
+          <td>هو اللي بينفّذ كل سطر كود بتكتبه.</td>
+        </tr>
+        <tr>
+          <td><strong>RAM</strong><br>الذاكرة العشوائية</td>
+          <td>مكان مؤقّت للشغل الجاري. كل المتغيّرات بتاعتك بتعيش هنا.</td>
+          <td>سريعة</td>
+          <td>لما تكتب <code class="inl">name = "farid"</code> الكلمة دي بتتحط في الـ RAM.</td>
+        </tr>
+        <tr>
+          <td><strong>Storage</strong><br>الهارد / SSD</td>
+          <td>تخزين دائم. ملفاتك وبرامجك.</td>
+          <td>بطيء نسبيًا</td>
+          <td>لما نوصل لدرس «التعامل مع الملفات» هنكون بنكتب هنا.</td>
+        </tr>
+        <tr>
+          <td><strong>I/O</strong><br>الإدخال والإخراج</td>
+          <td>كيبورد، شاشة، ماوس، نت.</td>
+          <td>—</td>
+          <td><code class="inl">input()</code> بتقرا من الكيبورد و<code class="inl">print()</code> بتكتب على الشاشة.</td>
+        </tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ فرق مهم جدًا: RAM مؤقتة</div>
+      <p>
+        الـ RAM بتتمسح بالكامل لما البرنامج يقفل أو الجهاز يتفصل. يعني لو عملت برنامج
+        يجمع أسماء أصحابك في قائمة، وقفلت البرنامج — الأسماء راحت. عشان تفضل، لازم
+        تكتبها في <strong>ملف</strong> على الـ Storage. دي بالظبط الحاجة اللي بنعملها في الوحدة 12.
+      </p>
+    </div>
+
+    <h4>3. لغة الكمبيوتر الحقيقية: الأصفار والواحدات</h4>
+    <p>
+      الكمبيوتر مبني من ترانزستورات، والترانزستور زي مفتاح النور: إمّا فاتح أو قافل.
+      مفيش «نص فاتح». عشان كده الكمبيوتر بيفهم حالتين بس: <strong>0</strong> و<strong>1</strong>.
+      والحالة الواحدة دي اسمها <strong>bit</strong>. وكل 8 بِتّات = <strong>byte</strong>.
+    </p>
+    <p>وبما إن كل حاجة لازم تتحوّل لأصفار وواحدات، فالرقم 5 مثلًا بيتخزّن كده:</p>
+    <div class="diagram">
+<pre>الرقم 5 في النظام العشري (اللي إحنا بنستخدمه):
+   5  =  5 × 10⁰
+
+الرقم 5 في النظام الثنائي (اللي الكمبيوتر بيفهمه):
+   101  =  (1 × 2²) + (0 × 2¹) + (1 × 2⁰)
+        =    4      +     0     +    1      =  5
+
+   بت:  1   0   1
+   وزن: 4   2   1</pre>
+      <div class="cap">تحويل الرقم 5 من عشري إلى ثنائي</div>
+    </div>
+    <p>
+      طيب والحروف؟ الحروف كمان أرقام! فيه جدول عالمي اسمه <strong>Unicode</strong> بيدّي
+      لكل حرف في كل لغات الدنيا رقم مميّز. الحرف <code class="inl">a</code> رقمه 97،
+      والحرف <code class="inl">ا</code> العربي رقمه 1575. وهنستخدم دي فعليًا في درس
+      <code class="inl">ord()</code> و<code class="inl">chr()</code> ونبني بيها برنامج تشفير حقيقي.
+    </p>
+    <div class="box tip">
+      <div class="bt">💡 استنتاج</div>
+      <p>
+        الصورة اللي على شاشتك = أرقام. الأغنية اللي بتسمعها = أرقام.
+        النص ده اللي بتقراه = أرقام. <strong>كل حاجة عند الكمبيوتر رقم.</strong>
+        الاختلاف الوحيد هو «إزاي بنفسّر الرقم ده» — وده اللي هنسمّيه بعد شوية <em>data type</em>.
+      </p>
+    </div>
+    <!-- SUM:u0-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الكمبيوتر بينفّذ تعليمات بسرعة — مش بيفكّر.</li><li>المعالج بينفّذ، والرامات ذاكرة مؤقّتة سريعة، والتخزين دائم وأبطأ.</li><li>كل حاجة جوّه الكمبيوتر في الآخر أصفار وواحدات.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ---------------------------------------------- 0.2 -->
+  <article class="lesson" id="u0-l2">
+    <h3>لغات البرمجة: Low Level و High Level <span class="tag">درس نظري</span></h3>
+    <p class="goal">الهدف: تعرف إنت واقف فين بالظبط لما تكتب بايثون، وليه بايثون سهلة والـ C صعبة.</p>
+
+    <h4>1. المشكلة: إحنا بنتكلم عربي والكمبيوتر بيفهم 0 و 1</h4>
+    <p>
+      لو عايز تقول للكمبيوتر «اجمع 2 و 3»، هو مش فاهم الجملة دي. هو فاهم تعليمة زي
+      <code class="inl">10110000 00000010</code>. عشان كده اخترعوا <strong>لغات البرمجة</strong>:
+      لغة وسط، إنت تكتبها وتفهمها، وفيه برنامج بيترجمها للكمبيوتر.
+    </p>
+
+    <h4>2. سُلّم مستويات اللغات</h4>
+    <div class="diagram">
+<pre>  ↑ أقرب للإنسان (High Level)     أسهل في الكتابة، أبطأ في التنفيذ
+  |
+  |   Python, JavaScript, Ruby      ← إحنا هنا
+  |   Java, C#
+  |   C++, Go, Rust
+  |   C
+  |   Assembly                       ← MOV AX, 5
+  |   Machine Code                   ← 10110000 00000010
+  ↓ أقرب للعتاد (Low Level)        أصعب في الكتابة، أسرع في التنفيذ</pre>
+      <div class="cap">كل ما تنزل لتحت، بتتحكّم أكتر لكن بتتعب أكتر</div>
+    </div>
+
+    <h4>3. المقارنة بشكل عملي</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الوجه</th><th>Low Level (زي C / Assembly)</th><th>High Level (زي Python)</th></tr>
+        <tr><td>قربها من العتاد</td><td>قريبة جدًا — بتتعامل مع عناوين الذاكرة مباشرة</td><td>بعيدة — اللغة بتخبّي عنك التفاصيل دي</td></tr>
+        <tr><td>إدارة الذاكرة</td><td>إنت المسؤول: تحجز وتفضّي بإيدك</td><td>اللغة بتعمله أوتوماتيك (Garbage Collector)</td></tr>
+        <tr><td>عدد سطور الكود</td><td>كتير جدًا لمهمّة بسيطة</td><td>قليل جدًا</td></tr>
+        <tr><td>السرعة</td><td>سريعة جدًا</td><td>أبطأ (لكن كفاية لـ 95% من الشغل)</td></tr>
+        <tr><td>احتمال الأخطاء الخطيرة</td><td>عالي جدًا (تسريب ذاكرة، segmentation fault)</td><td>منخفض</td></tr>
+        <tr><td>بتُستخدم في</td><td>أنظمة تشغيل، درايفرات، أجهزة مدمجة، ألعاب ثقيلة</td><td>ويب، ذكاء اصطناعي، أتمتة، تحليل بيانات</td></tr>
+      </table>
+    </div>
+
+    <h4>4. مثال يوضّح الفرق فورًا</h4>
+    <p>«اطبع مجموع أول 5 أرقام» — في بايثون:</p>
+    <div class="code"><pre>
+print(sum([1, 2, 3, 4, 5]))
+</pre></div>
+    <p>
+      سطر واحد. في لغة Low Level هتحتاج: تحجز مساحة في الذاكرة، تعمل loop بإيدك،
+      تدير عدّاد، تحوّل الرقم لنص، تستدعي دالة نظام عشان تطبع، وتفضّي الذاكرة.
+      حوالي 15–20 سطر.
+    </p>
+    <div class="box info">
+      <div class="bt">ℹ️ فبايثون «ضعيفة»؟</div>
+      <p>
+        لأ. بايثون بتشتري لك <strong>وقتك</strong>. لو هتكتب برنامج في يوم بدل أسبوعين،
+        وهيشتغل في 2 ثانية بدل 0.2 ثانية — دي صفقة رابحة في أغلب الحالات.
+        ولما تحتاج سرعة فعلًا، بايثون بتنادي مكتبات مكتوبة أصلًا بلغة C
+        (زي NumPy و pandas)، فبتاخد سهولة بايثون وسرعة C مع بعض.
+      </p>
+    </div>
+    <!-- APPEND:u0-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>رتّب السلّم</div>
+      <p>رتّب من الأقرب للجهاز للأقرب للإنسان: <strong>Python</strong>، <strong>لغة الآلة (0 و 1)</strong>، <strong>C</strong>، <strong>Assembly</strong>. وقول ميزة وعيب لأعلى وأقل واحدة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <p>لغة الآلة ← Assembly ← C ← Python.</p>
+      <ul>
+        <li><strong>لغة الآلة</strong>: ميزتها أقصى سرعة وتحكّم كامل، وعيبها إن الإنسان تقريبًا مستحيل يكتبها أو يقراها.</li>
+        <li><strong>Python</strong>: ميزتها سهولة القراءة والكتابة السريعة، وعيبها إنها أبطأ وتحكّمها في الذاكرة أقل.</li>
+      </ul>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. أنهي لغة عالية المستوى؟</p>
+        <label><input type="radio"> لغة الآلة</label>
+        <label><input type="radio"> Assembly</label>
+        <label><input type="radio"> الأصفار والواحدات</label>
+        <label><input type="radio"> Python</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ميزة اللغات منخفضة المستوى…</p>
+        <label><input type="radio"> تحكّم أكبر في الجهاز وسرعة أعلى</label>
+        <label><input type="radio"> أسهل في التعلّم</label>
+        <label><input type="radio"> أقصر في الكتابة</label>
+        <label><input type="radio"> بتشتغل من غير ترجمة على أي جهاز</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. ليه بايثون مناسبة للمبتدئين؟</p>
+        <label><input type="radio"> لأنها أسرع لغة</label>
+        <label><input type="radio"> لأنها مالهاش قواعد</label>
+        <label><input type="radio"> لأن كودها قريب من لغة البشر وقصير</label>
+        <label><input type="radio"> لأنها بتتحكّم في الذاكرة يدويًا</label>
+      </div>
+    </div>
+    <!-- /APPEND:u0-l2 -->
+                <!-- SUM:u0-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>اللغات منخفضة المستوى قريبة من الجهاز وصعبة القراءة.</li><li>اللغات عالية المستوى زي بايثون قريبة من لغة البشر.</li><li>كل ما اللغة أعلى، كل ما كتبت أقل واتحكّمت في تفاصيل أقل.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ---------------------------------------------- 0.3 -->
+  <article class="lesson" id="u0-l3">
+    <h3>الـ Compiler والـ Interpreter: مين بيترجم كودك؟ <span class="tag">درس نظري</span></h3>
+    <p class="goal">الهدف: تفهم الفرق الحقيقي بين المترجم والمفسّر، وليه بايثون بتقولك على الخطأ وهي شغّالة مش قبل ما تشتغل.</p>
+
+    <h4>1. Compiler — المترجم</h4>
+    <p>تخيّل كتاب إنجليزي عايز تترجمه لعربي. المترجم بياخد الكتاب كله، يترجمه من الأول للآخر، ويسلّمك نسخة عربية كاملة. بعد كده أي حد يقرأ النسخة دي من غير ما يحتاج المترجم تاني.</p>
+    <ul>
+      <li>بيترجم <strong>كامل الشيفرة المصدرية مرّة واحدة</strong> قبل التشغيل.</li>
+      <li>بيحلّل ويفهم الكود كله الأول، وبعدين يبدأ الترجمة.</li>
+      <li>بينتج ملف تنفيذي (<code class="inl">.exe</code>) أو ملف ثنائي بيشتغل مباشرة على النظام.</li>
+      <li>الأداء أحسن، لأنه بيعمل تحسينات (optimizations) وهو بيترجم.</li>
+      <li>لو فيه خطأ في أي سطر، الترجمة بتفشل كلها ومش هيطلع لك ملف تنفيذي أصلًا.</li>
+      <li><strong>مثال:</strong> لغة C — بتترجم لملف ثنائي يشتغل مباشرة.</li>
+    </ul>
+
+    <h4>2. Interpreter — المفسّر</h4>
+    <p>دلوقتي تخيّل مترجم فوري قاعد جنبك في اجتماع. بيسمع الجملة، يترجمها، تسمعها، وبعدين الجملة اللي بعدها. مفيش نسخة مترجمة محفوظة.</p>
+    <ul>
+      <li>بينفّذ الشيفرة <strong>سطرًا بسطر</strong>.</li>
+      <li>ما بيحتاجش مرحلة ترجمة مسبقة — بيترجم وينفّذ وقت التشغيل.</li>
+      <li>بيدّيك ردّ فعل أسرع أثناء التطوير: تكتب سطر وتشوف نتيجته على طول.</li>
+      <li>أكثر مرونة مع المزايا الديناميكية والتفاعل المباشر.</li>
+      <li>لو فيه خطأ في السطر رقم 50، السطور من 1 لـ 49 <em>هتكون اشتغلت فعلًا</em> قبل ما يقف.</li>
+      <li><strong>مثال:</strong> لغة Python.</li>
+    </ul>
+
+    <h4>3. المقارنة في جدول</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th></th><th>Compiler</th><th>Interpreter</th></tr>
+        <tr><td>وقت الترجمة</td><td>قبل التشغيل، مرّة واحدة</td><td>أثناء التشغيل، سطر بسطر</td></tr>
+        <tr><td>الناتج</td><td>ملف تنفيذي مستقل</td><td>مفيش ملف — التنفيذ مباشر</td></tr>
+        <tr><td>سرعة التنفيذ</td><td>أسرع</td><td>أبطأ</td></tr>
+        <tr><td>اكتشاف الأخطاء</td><td>كل الأخطاء تظهر قبل التشغيل</td><td>الخطأ يظهر لما التنفيذ يوصل له</td></tr>
+        <tr><td>يحتاج البرنامج المترجم عند المستخدم؟</td><td>لأ</td><td>أيوة، لازم Python متثبّتة</td></tr>
+        <tr><td>مناسب لـ</td><td>برامج الأداء العالي</td><td>التطوير السريع والتجريب</td></tr>
+      </table>
+    </div>
+
+    <h4>4. تصنيف اللغات</h4>
+    <h5>لغات بتستخدم Compiler فقط</h5>
+    <p>C، C++، Rust، Fortran، Swift — بتحوّل الشيفرة لملف ثنائي يشتغل مباشرة على النظام.</p>
+    <h5>لغات بتستخدم Interpreter فقط</h5>
+    <p>Python، Ruby، JavaScript، PHP — بتنفّذ الشيفرة مباشرة من غير ترجمة مسبقة لملف تنفيذي.</p>
+    <h5>لغات بتستخدم الاتنين مع بعض (الطريق الوسط)</h5>
+    <ul>
+      <li>
+        <strong>Java</strong>: الكود بيتترجم لشكل وسيط اسمه <strong>Bytecode</strong>، وده
+        <em>مش</em> قابل للتنفيذ المباشر. بعدين بيتنفّذ بمفسّر خاص هو
+        <strong>Java Virtual Machine (JVM)</strong>، أو بترجمة <strong>JIT</strong>
+        (Just-In-Time) اللي بتترجم الأجزاء المتكررة للغة الآلة وقت التشغيل عشان تسرّعها.
+      </li>
+      <li>
+        <strong>C#</strong>: نفس النموذج — الكود بيتترجم للغة وسيطة اسمها
+        <strong>CIL</strong> (Common Intermediate Language) وبعدين بيتنفّذ عن طريق
+        <strong>CLR</strong> (Common Language Runtime).
+      </li>
+    </ul>
+    <div class="box brain">
+      <div class="bt">🧠 حقيقة مهمة عن بايثون نفسها</div>
+      <p>
+        بايثون في الحقيقة <strong>هجينة</strong> برضه، بس بشكل مخفي عنك: هي بتترجم كودك
+        لـ Bytecode الأول (الملفات اللي بتشوفها في فولدر <code class="inl">__pycache__</code>
+        بامتداد <code class="inl">.pyc</code>)، وبعدين المفسّر بينفّذ الـ Bytecode ده.
+        بس لأن كل ده بيحصل تلقائيًا في لحظة التشغيل، إحنا بنصنّفها كلغة مفسّرة عمليًا.
+      </p>
+    </div>
+    <!-- APPEND:u0-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>مترجم ولّا مفسّر؟</div>
+      <p>لكل موقف قول الأنسب Compiler ولّا Interpreter: (أ) برنامج هيتوزّع على آلاف الأجهزة ومحتاج أقصى سرعة. (ب) بتجرّب سطر كود وعايز تشوف نتيجته فورًا. (ج) عايز تكتشف كل أخطاء التركيب قبل ما أي حاجة تشتغل.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <p>(أ) <strong>Compiler</strong>: الترجمة بتحصل مرّة واحدة والناتج بيشتغل بسرعة. (ب) <strong>Interpreter</strong>: بينفّذ سطر بسطر فورًا (زي Console بايثون). (ج) <strong>Compiler</strong>: بيراجع البرنامج كله قبل التشغيل — وبايثون كمان بتكتشف أخطاء التركيب قبل التنفيذ لأنها بتترجم لـ bytecode الأول.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. الـ Compiler بيترجم…</p>
+        <label><input type="radio"> سطر بسطر أثناء التشغيل</label>
+        <label><input type="radio"> البرنامج كله قبل التشغيل</label>
+        <label><input type="radio"> أول سطر بس</label>
+        <label><input type="radio"> مش بيترجم</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. بايثون بتتصنّف…</p>
+        <label><input type="radio"> مترجمة بالكامل زي C</label>
+        <label><input type="radio"> لغة آلة</label>
+        <label><input type="radio"> Assembly</label>
+        <label><input type="radio"> مفسّرة (بتترجم لـ bytecode والـ PVM بينفّذه)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ميزة المفسّر…</p>
+        <label><input type="radio"> تجربة وتنفيذ فوري من غير خطوة ترجمة منفصلة</label>
+        <label><input type="radio"> أسرع تشغيل ممكن</label>
+        <label><input type="radio"> مش محتاج بايثون متسطّبة</label>
+        <label><input type="radio"> بيمنع كل الأخطاء</label>
+      </div>
+    </div>
+    <!-- /APPEND:u0-l3 -->
+                <!-- SUM:u0-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الـ Compiler بيترجم البرنامج كله مرّة واحدة قبل التشغيل.</li><li>الـ Interpreter بيترجم وينفّذ أثناء التشغيل.</li><li>بايثون بتترجم لـ bytecode والـ PVM بينفّذه — وبتتصنّف مفسّرة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ---------------------------------------------- 0.4 -->
+  <article class="lesson" id="u0-l4">
+    <h3>رحلة كودك: من ملف .py لحد ما يشتغل <span class="tag">درس نظري</span></h3>
+    <p class="goal">الهدف: تعرف بالظبط بيحصل إيه لما تدوس Run.</p>
+
+    <h4>1. الخطوات الأربعة</h4>
+    <div class="diagram">
+<pre>  [1]  app.py            ← الملف اللي إنت كتبته (نص عادي)
+        │
+        │  Lexer + Parser
+        ▼
+  [2]  Syntax Tree       ← بايثون بتفهم تركيب الجُمل
+        │                   لو فيه غلطة إملائية → SyntaxError هنا
+        │  Compiler
+        ▼
+  [3]  Bytecode (.pyc)   ← تعليمات وسيطة مش مفهومة للـ CPU
+        │
+        │  PVM (Python Virtual Machine)
+        ▼
+  [4]  تنفيذ فعلي        ← الـ CPU بينفّذ، والنتيجة بتظهر على الشاشة</pre>
+      <div class="cap">دورة حياة تشغيل برنامج بايثون</div>
+    </div>
+
+    <h4>2. النتيجة العملية: نوعان من الأخطاء</h4>
+    <p>الفهم ده بيفسّر حاجة هتقابلك يوميًا:</p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>النوع</th><th>بيحصل إمتى</th><th>مثال</th><th>هل اشتغل أي سطر؟</th></tr>
+        <tr>
+          <td><strong>SyntaxError</strong><br>خطأ تركيبي</td>
+          <td>في المرحلة [2]، قبل ما ينفّذ أي حاجة</td>
+          <td><code class="inl">print("hi"</code> — نسيت قوس</td>
+          <td>لأ، ولا سطر واحد</td>
+        </tr>
+        <tr>
+          <td><strong>Runtime Error</strong><br>خطأ وقت التنفيذ</td>
+          <td>في المرحلة [4]، لما ينفّذ يوصل للسطر الغلط</td>
+          <td><code class="inl">10 / 0</code></td>
+          <td>أيوة، كل اللي قبله اشتغل</td>
+        </tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ الخطأ التالت: Logical Error</div>
+      <p>
+        فيه نوع تالت أخطر من الاتنين: البرنامج بيشتغل تمام من غير أي رسالة خطأ، بس
+        <strong>بيدّي نتيجة غلط</strong>. زي إنك تكتب <code class="inl">average = a + b / 2</code>
+        وإنت قصدك <code class="inl">(a + b) / 2</code>. بايثون مش هتشتكي — النتيجة بس هتكون غلط.
+        النوع ده ما بيتكشفش غير بالاختبار والتفكير، ودي أهم مهارة هتبنيها في الكورس ده.
+      </p>
+    </div>
+    <!-- APPEND:u0-l4 -->
+    <h4>3. شوف الـ bytecode بعينك</h4>
+    <p>بايثون فيها مكتبة اسمها <code class="inl">dis</code> بتوريك «اللغة الوسيطة» اللي كودك اتحوّل لها قبل ما الـ PVM ينفّذه. مش مطلوب تفهم كل سطر — المهم تشوف إن الخطوة دي حقيقية.</p>
+    <div class="code"><pre>
+import dis
+def add_tax(price):
+    return price * 1.14
+dis.dis(add_tax)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>  2           0 RESUME                   0
+
+  3           2 LOAD_FAST                0 (price)
+              4 LOAD_CONST               1 (1.14)
+              6 BINARY_OP                5 (*)
+             10 RETURN_VALUE</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ إزاي تقراه؟</div>
+      <p>
+        <code class="inl">LOAD_FAST</code> = «حط قيمة المتغيّر price على المكدّس»، و <code class="inl">LOAD_CONST</code> = «حط الثابت 1.14»، و <code class="inl">BINARY_OP (*)</code> = «اضرب الاتنين»،
+        و <code class="inl">RETURN_VALUE</code> = «رجّع النتيجة». يعني الـ PVM آلة بسيطة بتشتغل بمكدّس — نفس فكرة الـ Stack من الدرس الجاي والوحدة 17.
+        الناتج ده من Python 3.12، والتعليمات بتتغيّر شوية بين الإصدارات.
+      </p>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>اعمل «ترجمة» بإيدك</div>
+      <p>استخدم <code class="inl">compile</code> عشان تحوّل نص كود لكائن كود (نفس اللي بايثون بتعمله مع ملفك)، وبعدين شغّله، وجرّب كود فيه خطأ تركيب.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+source = "x = 2 + 3\nprint(x * 10)"
+code = compile(source, "demo.py", "exec")
+print(type(code).__name__, code.co_filename)
+print(5 in code.co_consts)
+exec(code)
+try:
+    compile("x = ", "bad.py", "exec")
+except SyntaxError as e:
+    print(type(e).__name__, "في", e.filename)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>code demo.py
+True
+50
+SyntaxError في bad.py</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. ملفات <code class="inl">.pyc</code> في <code class="inl">__pycache__</code> فيها…</p>
+        <label><input type="radio"> كود الآلة للمعالج</label>
+        <label><input type="radio"> bytecode محفوظ عشان التشغيل الجاي يبقى أسرع</label>
+        <label><input type="radio"> نسخة احتياطية من الكود</label>
+        <label><input type="radio"> رسايل الأخطاء</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. الـ bytecode بيشغّله…</p>
+        <label><input type="radio"> المعالج مباشرةً</label>
+        <label><input type="radio"> نظام التشغيل</label>
+        <label><input type="radio"> المتصفح</label>
+        <label><input type="radio"> الآلة الافتراضية لبايثون (PVM)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ليه خطأ التركيب في آخر سطر بيمنع أول سطر من التنفيذ؟</p>
+        <label><input type="radio"> لأن الملف كله بيتترجم الأول قبل ما أي سطر يشتغل</label>
+        <label><input type="radio"> لأن بايثون بتقرا من تحت لفوق</label>
+        <label><input type="radio"> مش صحيح — أول سطر بيشتغل</label>
+        <label><input type="radio"> بسبب ملفات pyc</label>
+      </div>
+    </div>
+    <!-- /APPEND:u0-l4 -->
+                <!-- SUM:u0-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>رحلة الكود: ملف ← تحليل ← bytecode ← تنفيذ.</li><li>أخطاء التركيب بتظهر قبل ما أي سطر يشتغل.</li><li>أخطاء التنفيذ بتظهر لما السطر نفسه يتنفّذ.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ---------------------------------------------- 0.5 -->
+  <article class="lesson" id="u0-l5">
+    <h3>الذاكرة من جوه: Stack و Heap والمراجع <span class="tag">درس نظري مهم</span></h3>
+    <p class="goal">الهدف: تفهم إن المتغيّر مش «صندوق فيه قيمة»، ده «ورقة فيها عنوان». الفهم ده هيمنع عنك أخطاء غامضة كتير جاية في الوحدة 5.</p>
+
+    <h4>1. الذاكرة مقسّمة لمنطقتين</h4>
+    <p>
+      لما البرنامج بتاعك بيشتغل، نظام التشغيل بيدّيله قطعة من الـ RAM. القطعة دي
+      مقسّمة أهم جزئين فيها:
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th></th><th>Stack (المكدّس)</th><th>Heap (الكومة)</th></tr>
+        <tr><td>بيتخزّن فيه إيه</td><td>أسماء المتغيّرات، واستدعاءات الدوال</td><td>الكائنات (Objects) الفعلية: القوائم، النصوص، القواميس…</td></tr>
+        <tr><td>الحجم</td><td>صغير ومحدود</td><td>كبير ومرن</td></tr>
+        <tr><td>التنظيم</td><td>مرتّب جدًا: آخر واحد يدخل أول واحد يخرج (LIFO)</td><td>غير مرتّب — بيتحجز في أي مكان فاضي</td></tr>
+        <tr><td>السرعة</td><td>سريع جدًا</td><td>أبطأ</td></tr>
+        <tr><td>مين بينضّفه</td><td>تلقائيًا لما الدالة تخلص</td><td>الـ Garbage Collector</td></tr>
+      </table>
+    </div>
+
+    <h4>2. إزاي بايثون بتخزّن متغيّر؟</h4>
+    <p>لما تكتب:</p>
+    <div class="code"><pre>
+name = "farid"
+</pre></div>
+    <p>بايثون بتعمل حاجتين مختلفتين:</p>
+    <ol>
+      <li>بتنشئ <strong>كائن نصّي</strong> فيه القيمة <code class="inl">"farid"</code> في الـ <strong>Heap</strong>، وبتديله عنوان.</li>
+      <li>بتحطّ في الـ <strong>Stack</strong> اسم <code class="inl">name</code> وجنبه <strong>العنوان</strong> بتاع الكائن ده — مش القيمة نفسها.</li>
+    </ol>
+    <div class="diagram">
+<pre>        STACK                          HEAP
+   ┌──────────────┐            ┌─────────────────────┐
+   │ name  ───────┼───────────►│  0x7f2a: "farid"    │
+   └──────────────┘            └─────────────────────┘
+
+   الاسم بيمسك "عنوان"          القيمة الحقيقية بتعيش هنا</pre>
+      <div class="cap">المتغيّر = لافتة (label) مربوطة بكائن، مش صندوق</div>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 الجملة اللي لازم تحفظها</div>
+      <p>
+        في بايثون، <strong>المتغيّر مش بيحتوي القيمة — المتغيّر بيشاور على القيمة.</strong>
+        الاصطلاح الرسمي: بايثون لغة بتستخدم <em>references</em> (مراجع).
+      </p>
+    </div>
+
+    <h4>3. الفرق العملي: نسخ رقم مقابل نسخ قائمة</h4>
+    <p>الحالة الأولى — أرقام (نوع غير قابل للتعديل / immutable):</p>
+    <div class="code"><pre>
+a = 10
+b = a        # b بقت تشاور على نفس الكائن 10
+b = 20       # لكن 10 ما اتغيرتش! اتعمل كائن جديد 20 و b اتحوّلت ليه
+print(a)     # 10  ← a لسه زي ما هي
+print(b)     # 20
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>10
+20</pre></div>
+
+    <p>الحالة التانية — قوائم (نوع قابل للتعديل / mutable). هنا المفاجأة:</p>
+    <div class="code"><pre>
+list1 = [1, 2, 3]
+list2 = list1        # مفيش نسخة جديدة! الاتنين بيشاوروا على نفس القائمة
+list2.append(4)      # عدّلنا الكائن نفسه في الـ Heap
+print(list1)         # [1, 2, 3, 4]  ← اتغيّرت كمان!
+print(list2)         # [1, 2, 3, 4]
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 3, 4]
+[1, 2, 3, 4]</pre></div>
+    <div class="diagram">
+<pre>   STACK                     HEAP
+ ┌──────────┐          ┌──────────────────┐
+ │ list1 ───┼─────────►│                  │
+ │ list2 ───┼─────────►│  [1, 2, 3, 4]    │
+ └──────────┘          └──────────────────┘
+       الاتنين شايلين نفس العنوان!</pre>
+      <div class="cap">ليه تعديل list2 غيّر list1</div>
+    </div>
+    <p>الحل لو عايز نسخة مستقلة فعلًا:</p>
+    <div class="code"><pre>
+list1 = [1, 2, 3]
+list2 = list1.copy()   # أو list(list1) أو list1[:]
+list2.append(4)
+print(list1)           # [1, 2, 3]   ← محميّة
+print(list2)           # [1, 2, 3, 4]
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 3]
+[1, 2, 3, 4]</pre></div>
+
+    <h4>4. Mutable و Immutable — التصنيف الكامل</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>غير قابل للتعديل (Immutable)</th><th>قابل للتعديل (Mutable)</th></tr>
+        <tr>
+          <td><code class="inl">int</code>, <code class="inl">float</code>, <code class="inl">str</code>,
+              <code class="inl">bool</code>, <code class="inl">tuple</code></td>
+          <td><code class="inl">list</code>, <code class="inl">dict</code>, <code class="inl">set</code></td>
+        </tr>
+        <tr>
+          <td>أي «تعديل» بيعمل كائن جديد</td>
+          <td>التعديل بيحصل على نفس الكائن</td>
+        </tr>
+      </table>
+    </div>
+
+    <h4>5. الـ Stack والدوال (Call Stack)</h4>
+    <p>
+      لما تنادي دالة، بايثون بتحط «إطار» (frame) فوق الـ Stack فيه متغيّرات الدالة دي.
+      لما الدالة تخلّص، الإطار بيتشال. عشان كده متغيّر جوّه دالة ما تقدرش توصله من بره —
+      وده اللي هنسمّيه <strong>Scope</strong> في الوحدة 11.
+    </p>
+    <div class="diagram">
+<pre>  def greet():
+      msg = "hi"          ┌──────────────────┐  ← فوق
+      print(msg)          │ greet()  msg="hi"│
+                          ├──────────────────┤
+  greet()                 │ main()           │  ← تحت
+                          └──────────────────┘
+                            الـ Call Stack
+
+  لما greet() تخلّص → إطارها بيتشال، و msg بتختفي.</pre>
+      <div class="cap">الـ Call Stack أثناء استدعاء دالة</div>
+    </div>
+    <div class="box err">
+      <div class="bt">💥 RecursionError — لما الـ Stack يمتلي</div>
+      <p>
+        لو عملت دالة بتنادي نفسها للأبد، هتفضل تكوّم إطارات فوق بعض لحد ما مساحة
+        الـ Stack تخلص، فتظهر لك رسالة
+        <code class="inl">RecursionError: maximum recursion depth exceeded</code>.
+        دلوقتي إنت فاهم ليه الرسالة دي بتحصل أصلًا.
+      </p>
+    </div>
+    <!-- APPEND:u0-l5 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>توقّع الناتج قبل ما تشغّل</div>
+      <p>توقّع اللي هيطبع، وبعدين شغّل وقارن. فكّر في الأسهم والصناديق.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+a = [1, 2]
+b = a
+b.append(3)
+print(a, a is b)
+c = a.copy()
+c.append(4)
+print(a, c, a is c)
+x = 10
+y = x
+y = y + 1
+print(x, y)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 3] True
+[1, 2, 3] [1, 2, 3, 4] False
+10 11</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. الكائنات نفسها (القوائم والنصوص) بتتخزّن في…</p>
+        <label><input type="radio"> الـ Stack</label>
+        <label><input type="radio"> الكاش بتاع المعالج</label>
+        <label><input type="radio"> الـ Heap</label>
+        <label><input type="radio"> الهارد ديسك</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">b = a</code> لما a قائمة معناها…</p>
+        <label><input type="radio"> b بقت سهم لنفس القائمة</label>
+        <label><input type="radio"> نسخة جديدة من القائمة</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> b بقت فاضية</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. أنهي نوع غير قابل للتعديل (immutable)؟</p>
+        <label><input type="radio"> list</label>
+        <label><input type="radio"> dict</label>
+        <label><input type="radio"> set</label>
+        <label><input type="radio"> str</label>
+      </div>
+    </div>
+    <!-- /APPEND:u0-l5 -->
+                <!-- SUM:u0-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الـ Stack للأسماء ونداءات الدوال، والـ Heap للكائنات نفسها.</li><li>المتغيّر اسم بيشاور على كائن — مش صندوق فيه القيمة.</li><li>نسخ اسم قائمة ما بينسخش القائمة، والكائنات قابلة أو غير قابلة للتعديل.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ---------------------------------------------- 0.6 -->
+  <article class="lesson" id="u0-l6">
+    <h3>تجهيز بيئة العمل وتشغيل أول برنامج <span class="tag">عملي</span></h3>
+    <p class="goal">الهدف: يكون عندك مكان تكتب فيه كود وتشغّله، خلال 10 دقايق.</p>
+
+    <h4>1. اختار طريقك</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الطريقة</th><th>مميّزاتها</th><th>مناسبة لـ</th></tr>
+        <tr>
+          <td><strong>Google Colab</strong><br>(أونلاين)</td>
+          <td>مفيش أي تثبيت، بتفتحه من المتصفّح على طول</td>
+          <td>أول أسبوع — عشان تركّز في التعلّم مش في الإعدادات</td>
+        </tr>
+        <tr>
+          <td><strong>Python + VS Code</strong><br>(على جهازك)</td>
+          <td>البيئة الحقيقية اللي هتشتغل بيها فعلًا</td>
+          <td>من الوحدة 3 وطالع، وضروري جدًا في وحدة الملفات</td>
+        </tr>
+      </table>
+    </div>
+
+    <h4>2. روابط التحميل الرسمية</h4>
+    <ul>
+      <li><strong>Python:</strong> <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads</a></li>
+      <li><strong>VS Code:</strong> <a href="https://code.visualstudio.com/download" target="_blank" rel="noopener">code.visualstudio.com/download</a></li>
+      <li><strong>Visual Studio Community:</strong> <a href="https://visualstudio.microsoft.com/vs/community/" target="_blank" rel="noopener">visualstudio.microsoft.com</a></li>
+      <li><strong>GitHub Desktop:</strong> <a href="https://desktop.github.com/" target="_blank" rel="noopener">desktop.github.com</a></li>
+    </ul>
+    <div class="box warn">
+      <div class="bt">⚠️ أهم خطوة في تثبيت بايثون على ويندوز</div>
+      <p>
+        في أول شاشة في التثبيت، فيه مربّع اختيار تحت مكتوب عليه
+        <strong>“Add python.exe to PATH”</strong> — <strong>علّم عليه</strong> قبل ما تدوس Install.
+        لو نسيته، لما تكتب <code class="inl">python</code> في الـ Terminal هيقولك
+        «الأمر غير معروف»، وهتضطر تعيد التثبيت.
+      </p>
+    </div>
+
+    <h4>3. خطوات سريعة (ويندوز)</h4>
+    <ol>
+      <li>نزّل Python من الرابط فوق، وعلّم على <strong>Add to PATH</strong>، ودوس Install Now.</li>
+      <li>افتح <strong>PowerShell</strong> واكتب <code class="inl">python --version</code>. لو ظهر لك رقم إصدار → تمام.</li>
+      <li>نزّل VS Code وثبّته.</li>
+      <li>افتح VS Code ← تبويب Extensions (الأيقونة بتاعة المربّعات) ← دوّر على <strong>Python</strong> من Microsoft ← Install.</li>
+      <li>اعمل فولدر جديد للكورس، افتحه من VS Code عن طريق <em>File → Open Folder</em>.</li>
+      <li>اعمل ملف جديد باسم <code class="inl">main.py</code>.</li>
+    </ol>
+
+    <h4>4. أول برنامج</h4>
+    <div class="code" data-file="main.py"><pre>
+print("Hello, World!")
+print("أول برنامج ليا في بايثون")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Hello, World!
+أول برنامج ليا في بايثون</pre></div>
+    <p>عشان تشغّله: دوس زرار ▷ فوق على اليمين في VS Code، أو اكتب في الـ Terminal:</p>
+    <div class="code" data-file="terminal"><pre>
+python main.py
+</pre></div>
+
+    <div class="box info">
+      <div class="bt">ℹ️ الكورس اتجرّب على أنهي نسخ؟</div>
+      <p>
+        كل الأمثلة اتشغّلت فعلًا واتقارن ناتجها على: <strong>Python 3.12</strong> — و numpy 1.26 و pandas 2.3 و scikit-learn 1.7 و matplotlib 3.10 و openpyxl 3.1.
+        أغلب الكورس شغّال على <strong>Python 3.10 أو أحدث</strong> (<code class="inl">match</code> و <code class="inl">int | None</code> محتاجين 3.10).
+      </p>
+      <p>
+        زرار <strong>«▶ شغّل»</strong> جوّه الصفحة بيستخدم <strong>Pyodide 0.26.4</strong> (Python 3.12.1 في المتصفّح) بنسخ مكتبات قريبة (scikit-learn 1.4 و pandas 2.2)،
+        فممكن آخر خانة عشرية في أمثلة الذكاء الاصطناعي تختلف شوية. وأول تشغيل محتاج إنترنت.
+      </p>
+    </div>
+
+    <h4>5. الفرق بين الملف والـ Console التفاعلي</h4>
+    <p>
+      لو كتبت <code class="inl">python</code> لوحدها في الـ Terminal، هتدخل الوضع التفاعلي
+      (بتشوف <code class="inl">&gt;&gt;&gt;</code>). هنا كل سطر بتكتبه بينفّذ فورًا وبيطبع نتيجته
+      حتى من غير <code class="inl">print</code>. ده ممتاز للتجريب السريع، لكن الكود بيضيع لما تقفله.
+      البرامج الحقيقية بتتكتب في ملفات <code class="inl">.py</code>.
+      للخروج من الوضع التفاعلي اكتب <code class="inl">exit()</code>.
+    </p>
+
+    <div class="box tip">
+      <div class="bt">💡 نصيحة هتفرق معاك جدًا</div>
+      <p>
+        <strong>ما تقراش الكورس ده قراية.</strong> افتح VS Code جنب الصفحة دي، واكتب كل مثال
+        بإيدك — مش نسخ ولصق. المخ بيتعلّم البرمجة عن طريق أصابعك وأخطاءك، مش عن طريق عينك.
+        وكل ما تشوف صندوق «جرّب بنفسك»، وقّف واعمله قبل ما تكمّل.
+      </p>
+    </div>
+    <!-- APPEND:u0-l6 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>أول ملف ليك</div>
+      <p>اعمل ملف اسمه <code class="inl">hello.py</code> بيطبع اسمك وهوايتك وهدفك من الكورس في 3 سطور، وشغّله من الـ Terminal.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code" data-file="hello.py"><pre>
+print("أنا سارة")
+print("هوايتي القراية")
+print("هدفي: أبني تطبيقات بالذكاء الاصطناعي")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>أنا سارة
+هوايتي القراية
+هدفي: أبني تطبيقات بالذكاء الاصطناعي</pre></div>
+      <div class="code" data-file="terminal"><pre>
+python hello.py
+</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. امتداد ملفات بايثون…</p>
+        <label><input type="radio"> .pt</label>
+        <label><input type="radio"> .py</label>
+        <label><input type="radio"> .pyn</label>
+        <label><input type="radio"> .txt</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. الفرق بين الـ Console التفاعلي والملف…</p>
+        <label><input type="radio"> مفيش فرق</label>
+        <label><input type="radio"> الملف بيشتغل أسرع دايمًا</label>
+        <label><input type="radio"> الـ Console للتجارب السريعة، والملف للبرامج اللي بتتحفظ وتتكرّر</label>
+        <label><input type="radio"> الـ Console مش بيطبع حاجة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. وإنت بتسطّب بايثون على ويندوز، أهم اختيار…</p>
+        <label><input type="radio"> Add python.exe to PATH</label>
+        <label><input type="radio"> تغيير لغة النظام</label>
+        <label><input type="radio"> تعطيل الإنترنت</label>
+        <label><input type="radio"> تسطيب Java</label>
+      </div>
+    </div>
+    <!-- /APPEND:u0-l6 -->
+                <!-- SUM:u0-l6 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>سطّب بايثون من الموقع الرسمي وعلّم على Add to PATH.</li><li>VS Code بإضافة Python بيئة مريحة للمبتدئ.</li><li>الملف <code class="inl">.py</code> للبرامج، والـ Console للتجارب السريعة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 0.EX -->
+  <article class="lesson" id="u0-ex">
+    <h3>تمارين ومراجعة الوحدة صفر <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">الوحدة دي نظرية، فتمارينها أسئلة فهم مش كود. لو جاوبت عليها صح، إنت جاهز تبدأ.</p>
+
+    <h4>أسئلة تفكير</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>سؤال 1</div>
+      <p>ليه بايثون بتقولك على الخطأ وهي بتنفّذ، بينما لغة C بتقولك عليه قبل ما تشتغل خالص؟</p>
+      <details class="sol"><summary>شوف الإجابة</summary>
+        <p>
+          لأن C لغة <strong>مترجمة (Compiled)</strong>: المترجم بيحلّل الكود كله قبل التشغيل
+          وينتج ملف تنفيذي، فأي خطأ تركيبي بيمنع الترجمة من الأساس.
+          بينما بايثون لغة <strong>مفسّرة (Interpreted)</strong>: بتنفّذ سطرًا بسطر،
+          فما بتكتشفش خطأ السطر 50 غير لما التنفيذ يوصل له فعلًا — والسطور من 1 لـ 49
+          بتكون اشتغلت خلاص.
+        </p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>سؤال 2</div>
+      <p>ليه <code class="inl">list2 = list1</code> مش نسخة حقيقية، بينما <code class="inl">b = a</code> مع الأرقام مالهاش نفس المشكلة؟</p>
+      <details class="sol"><summary>شوف الإجابة</summary>
+        <p>
+          في الحالتين علامة <code class="inl">=</code> بتنسخ <strong>العنوان</strong> مش القيمة —
+          الاسمين بيشاوروا على نفس الكائن في الـ Heap.
+        </p>
+        <p>
+          الفرق إن الأرقام نوع <strong>immutable</strong>: لما تكتب <code class="inl">b = 20</code>
+          بايثون بتنشئ كائن جديد و<code class="inl">b</code> بتتحوّل ليه، والكائن القديم
+          اللي <code class="inl">a</code> شايفاه ما اتغيّرش.
+        </p>
+        <p>
+          أما القائمة <strong>mutable</strong>: <code class="inl">list2.append(4)</code>
+          بتعدّل <em>الكائن نفسه</em> في الـ Heap، فالاسمين بيشوفوا التغيير.
+        </p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>سؤال 3</div>
+      <p>برنامج طلع نتيجة غلط من غير أي رسالة خطأ. إيه نوع الخطأ ده، وليه هو الأخطر؟</p>
+      <details class="sol"><summary>شوف الإجابة</summary>
+        <p>
+          ده <strong>خطأ منطقي (Logical Error)</strong>. وهو الأخطر لأن الكمبيوتر مش هيساعدك:
+          مفيش رسالة، مفيش رقم سطر، البرنامج «شغّال» تمامًا من وجهة نظره.
+          الاكتشاف الوحيد بيبقى بالاختبار وبمراجعة النتائج بعقلك.
+          وعشان كده <code class="inl">try/except</code> ما بتنفعش معاه خالص.
+        </p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>سؤال 4</div>
+      <p>
+        دالة بتنادي نفسها للأبد بتطلّع <code class="inl">RecursionError</code> مش
+        <code class="inl">MemoryError</code>. ليه؟ وأنهي جزء من الذاكرة اللي بيمتلي؟
+      </p>
+      <details class="sol"><summary>شوف الإجابة</summary>
+        <p>
+          كل استدعاء دالة بيحط <strong>إطار (frame)</strong> جديد على الـ <strong>Stack</strong>
+          فيه متغيّرات الدالة ومكان الرجوع. الـ Stack مساحته <em>صغيرة ومحدودة</em>
+          (بعكس الـ Heap الكبير المرن).
+        </p>
+        <p>
+          فالاستدعاءات اللانهائية بتكوّم إطارات لحد ما مساحة الـ Stack تخلص —
+          وده اسمه <em>stack overflow</em>. بايثون بتمسكه بدري وبترمي
+          <code class="inl">RecursionError</code> بدل ما البرنامج ينهار.
+          الـ Heap ما اتلمسش أصلًا، عشان كده مش <code class="inl">MemoryError</code>.
+        </p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. أي لغة بتستخدم Compiler و Interpreter مع بعض عن طريق Bytecode؟</p>
+        <label><input type="radio"> C</label>
+        <label><input type="radio"> Java</label>
+        <label><input type="radio"> Ruby</label>
+        <label><input type="radio"> PHP</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. المتغيّرات بأسمائها بتتخزّن فين، والكائنات نفسها فين؟</p>
+        <label><input type="radio"> الاتنين في الـ Heap</label>
+        <label><input type="radio"> الاتنين في الـ Stack</label>
+        <label><input type="radio"> الأسماء في الـ Stack والكائنات في الـ Heap</label>
+        <label><input type="radio"> الأسماء في الـ Heap والكائنات في الـ Stack</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. أنهي نوع من دول <strong>قابل للتعديل</strong> (mutable)؟</p>
+        <label><input type="radio"> str</label>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> tuple</label>
+        <label><input type="radio"> list</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">4. <code class="inl">print("hi"</code> — نسينا القوس. إمتى بايثون هتكتشف الخطأ؟</p>
+        <label><input type="radio"> قبل تنفيذ أي سطر (SyntaxError)</label>
+        <label><input type="radio"> لما التنفيذ يوصل للسطر ده</label>
+        <label><input type="radio"> ما هتكتشفوش، هتطبع غلط</label>
+        <label><input type="radio"> بعد ما البرنامج يخلص</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">5. كل حاجة في الكمبيوتر بتتخزّن في النهاية كـ…</p>
+        <label><input type="radio"> نصوص</label>
+        <label><input type="radio"> ملفات</label>
+        <label><input type="radio"> أصفار وواحدات</label>
+        <label><input type="radio"> صور</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:0 -->
+  <div class="checkpoint" data-unit="0">
+    <h4>✅ نقطة تفتيش: الوحدة صفر</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أقدر أشرح الفرق بين الـ Compiler والـ Interpreter وليه بايثون بتتصنّف مفسّرة.</li><li>أقدر أوضّح الفرق بين Stack و Heap، وإن المتغيّر اسم بيشاور على كائن.</li><li>أعرف الفرق بين الأنواع القابلة للتعديل وغير القابلة.</li><li>سطّبت بايثون وشغّلت أول برنامج من ملف ومن الـ Console.</li></ul>
+  </div>
+  <!-- /CP -->

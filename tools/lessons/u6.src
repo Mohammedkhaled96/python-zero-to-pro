@@ -1,0 +1,229 @@
+@@lesson u6-l8 before="<!-- 6.P1 -->"
+  <!-- 6.8 -->
+  <article class="lesson" id="u6-l8">
+    <h3>for...else والـ Comprehension بعمق <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تستخدم ميزة «else على الحلقة» اللي بايثون بتنفرد بيها، وتكتب comprehensions فيها تحويل وتصفية مع بعض، وتستخدم التعبيرات المولِّدة مع sum و any و all و max.</p>
+
+    <h4>1. for...else: «لو الحلقة خلصت من غير break»</h4>
+    <p>
+      بايثون بتسمح تحط <code class="inl">else</code> بعد <code class="inl">for</code>. الـ else دي <strong>بتتنفّذ بس لو الحلقة كمّلت كل دوراتها من غير ما تقابل break</strong>.
+      أشهر استخدام: البحث — «دوّرت على كل حاجة وما لقيتش».
+    </p>
+    @code run
+numbers = [7, 11, 13, 15, 17] ¦¦ قائمة هندوّر فيها.
+for n in numbers: ¦¦ المرور على الأرقام.
+    if n % 5 == 0: ¦¦ الشرط اللي بندوّر عليه: مضاعف لـ 5.
+        print(f"أول مضاعف لـ 5: {n}") ¦¦ لقيناه.
+        break ¦¦ نوقف فورًا — و**break دي بتلغي الـ else**.
+else: ¦¦ `else` على نفس مستوى `for` (مش `if`!). بتتنفّذ لو الحلقة خلصت طبيعي من غير break.
+    print("مفيش ولا رقم بيقبل القسمة على 5") ¦¦ هنا 15 موجودة فمش هنوصل للسطر ده. جرّب تشيل 15 من القائمة.
+    @end
+    @out rtl
+أول مضاعف لـ 5: 15
+    @end
+    @code run
+n = 29 ¦¦ الرقم اللي عايزين نعرف هل هو أولي.
+for d in range(2, n): ¦¦ نجرّب كل قاسم ممكن من 2 لحد n−1.
+    if n % d == 0: ¦¦ لو لقينا قاسم…
+        print(f"{n} مش أولي — بيقبل القسمة على {d}") ¦¦ …يبقى مش أولي.
+        break ¦¦ ومفيش داعي نكمّل.
+else: ¦¦ خلّصنا كل القواسم وما حصلش break…
+    print(f"{n} عدد أولي") ¦¦ …يبقى أولي. **من غير أي متغيّر إضافي**.
+    @end
+    @out rtl
+29 عدد أولي
+    @end
+    <p>نفس المنطق من غير <code class="inl">else</code> محتاج «راية» (flag):</p>
+    @code run
+n = 91 ¦¦ رقم تاني (91 = 7 × 13).
+is_prime = True ¦¦ **الراية**: نفترض إنه أولي لحد ما يثبت العكس.
+for d in range(2, n): ¦¦ نفس الحلقة.
+    if n % d == 0: ¦¦ لقينا قاسم.
+        is_prime = False ¦¦ ننزّل الراية.
+        break ¦¦ نوقف.
+if is_prime: ¦¦ بعد الحلقة نفحص الراية.
+    print(f"{n} عدد أولي") ¦¦ لو فضلت True.
+else: ¦¦ `else` هنا تبع `if` عادي.
+    print(f"{n} مش أولي") ¦¦ لو اتغيّرت.
+    @end
+    @out rtl
+91 مش أولي
+    @end
+    <div class="box brain">
+      <div class="bt">🧠 إزاي تفتكرها؟</div>
+      <p>
+        الاسم <code class="inl">else</code> هنا مُربك، حتى مصمّم بايثون قال إنه كان يتمنّى يسمّيها <code class="inl">nobreak</code>.
+        اقراها في دماغك: <strong>«لو ما حصلش break»</strong>. ونفس الميزة موجودة مع <code class="inl">while</code> — هتشوفها في الوحدة 8.
+        استخدمها لما تبسّط الكود فعلًا؛ لو فريقك مش متعوّد عليها، الراية أوضح.
+      </p>
+    </div>
+
+    <h4>2. التحويل مقابل التصفية في الـ Comprehension</h4>
+    <div class="diagram">
+<pre>  تصفية (فلتر):   [ n        for n in nums   if n > 0 ]
+                                              └─ الـ if في الآخر: «خُد العنصر ولّا سيبه؟»
+
+  تحويل (اختيار):  [ n if n > 0 else 0   for n in nums ]
+                     └─ if/else في الأول: «أحط إيه مكان كل عنصر؟» (العدد ثابت)
+
+  الاتنين مع بعض:  [ n * 2   for n in nums   if n > 0 ]</pre>
+      <div class="cap">مكان الـ if بيغيّر المعنى تمامًا</div>
+    </div>
+    @code run
+nums = [4, -2, 0, 7, -9] ¦¦ أرقام مختلطة.
+evens = [n for n in nums if n % 2 == 0] ¦¦ **تصفية**: `if` في الآخر وبدون else. عدد العناصر ممكن يقلّ.
+abs_vals = [n if n >= 0 else -n for n in nums] ¦¦ **تحويل** بالتعبير الشرطي (الوحدة 4): `if/else` قبل `for`. نفس عدد العناصر دايمًا.
+labels = ["زوجي" if n % 2 == 0 else "فردي" for n in nums] ¦¦ تحويل كل رقم لنص. لاحظ `-9 % 2` = 1 في بايثون، فهو فردي صح.
+positive_doubled = [n * 2 for n in nums if n > 0] ¦¦ **الاتنين**: صفّي الموجب وبعدين حوّله.
+print(evens) ¦¦ الصفر زوجي.
+print(abs_vals) ¦¦ القيم المطلقة.
+print(labels) ¦¦ التسميات.
+print(positive_doubled) ¦¦ 4 و 7 بس اتضاعفوا.
+    @end
+    @out
+[4, -2, 0]
+[4, 2, 0, 7, 9]
+['زوجي', 'زوجي', 'زوجي', 'فردي', 'فردي']
+[8, 14]
+    @end
+    <div class="box err">
+      <div class="bt">❌ خطأ شائع</div>
+      <p>
+        <code class="inl">[n for n in nums if n &gt; 0 else 0]</code> ← <code class="inl">SyntaxError</code>.
+        الـ <code class="inl">if</code> اللي في الآخر (الفلتر) <strong>ما ينفعش يبقى ليها else</strong>. لو محتاج else انقل الشرط كله قبل <code class="inl">for</code>.
+      </p>
+    </div>
+
+    <h4>3. الـ Comprehension مع enumerate و zip ودوال النصوص</h4>
+    @code run
+names = ["  sara ", "AHMED", "mona  "] ¦¦ بيانات «وسخة» من مستخدمين.
+clean = [name.strip().title() for name in names] ¦¦ تنظيف وتوحيد الشكل في سطر: `strip` ثم `title`.
+print(clean) ¦¦ القائمة النظيفة.
+scores = [88, 45, 92] ¦¦ درجات بنفس الترتيب.
+passed = [name for name, s in zip(clean, scores) if s >= 50] ¦¦ `zip` بيدّي أزواج، وبنفكّهم في `name, s` جوّه الـ comprehension، وبنصفّي الناجحين.
+print(passed) ¦¦ أحمد سقط.
+numbered = [f"{i}. {name}" for i, name in enumerate(clean, 1)] ¦¦ ترقيم يبدأ من 1 بـ `enumerate`.
+print(numbered) ¦¦ قائمة نصوص مرقّمة.
+    @end
+    @out
+['Sara', 'Ahmed', 'Mona']
+['Sara', 'Mona']
+['1. Sara', '2. Ahmed', '3. Mona']
+    @end
+
+    <h4>4. التعبيرات المولِّدة: comprehension من غير أقواس مربعة</h4>
+    <p>
+      لو هتدخّل النتيجة على طول في دالة زي <code class="inl">sum</code> أو <code class="inl">any</code> أو <code class="inl">max</code>،
+      <strong>شيل الأقواس المربعة</strong>. كده بايثون ما بتبنيش قائمة كاملة في الذاكرة — بتولّد القيم واحدة واحدة وتسلّمها للدالة.
+      اسمها <em>Generator Expression</em>، وهنفهم من جوّه إزاي بتشتغل في وحدة الدوال.
+    </p>
+    @code run
+nums = [4, -2, 0, 7, -9] ¦¦ نفس الأرقام.
+print(sum(n * n for n in nums)) ¦¦ مجموع المربعات: 16+4+0+49+81. من غير قائمة وسيطة.
+print(any(n < 0 for n in nums)) ¦¦ `any`: هل **فيه واحد على الأقل** سالب؟ وبتقف أول ما تلاقي True (مش بتكمّل).
+print(all(n != 0 for n in nums)) ¦¦ `all`: هل **كلهم** مش صفر؟ بتقف أول ما تلاقي False — والصفر موجود.
+print(max(nums, key=abs)) ¦¦ `key=abs`: قارن بالقيمة المطلقة، لكن **رجّع العنصر الأصلي** ← -9. لاحظ إننا كتبنا `abs` من غير أقواس: بنسلّم الدالة نفسها.
+words = ["python", "is", "awesome"] ¦¦ قائمة كلمات.
+print(max(words, key=len)) ¦¦ أطول كلمة — `len` بتتنادى على كل كلمة للمقارنة.
+print(sum(1 for w in words if len(w) > 2)) ¦¦ **نمط العدّ**: اجمع 1 لكل عنصر بيحقّق الشرط.
+    @end
+    @out
+150
+True
+False
+-9
+awesome
+2
+    @end
+
+    <h4>5. إمتى ما تستخدمش الـ Comprehension؟</h4>
+    @code
+# ❌ comprehension عشان تطبع — بتبني قائمة None على الفاضي ¦¦ تعليق.
+[print(n) for n in nums] ¦¦ `print` بترجّع None، فالسطر ده بيبني `[None, None, …]` ويرميها. **الـ comprehension لبناء قيم، مش لتنفيذ أفعال**.
+ ¦¦
+# ✅ الحلقة العادية للأفعال ¦¦ تعليق.
+for n in nums: ¦¦ الحلقة العادية هي الأداة الصح هنا.
+    print(n) ¦¦ الفعل.
+    @end
+    <div class="box tip">
+      <div class="bt">💡 قاعدة عملية</div>
+      <p>
+        لو الـ comprehension <strong>مش بيتقري بصوت عالي في نَفَس واحد</strong>، أو فيه أكتر من شرطين، أو محتاج try/except جوّاه —
+        اكتبه حلقة عادية. الكود بيتقري أكتر ما بيتكتب.
+      </p>
+    </div>
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>FizzBuzz في comprehension</div>
+      <p>ابني قائمة من 1 لـ 15: مضاعف 15 ← "FizzBuzz"، مضاعف 3 ← "Fizz"، مضاعف 5 ← "Buzz"، غير كده الرقم كنص. اطبعها مفصولة بمسافات.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+result = [ ¦¦ فتح القوس المربع — بايثون بتسمح نكسر السطر جوّه الأقواس.
+    "FizzBuzz" if i % 15 == 0 else ¦¦ الشرط الأخصّ **الأول** (15 قبل 3 و 5)، وإلا أول شرط هيسبق.
+    "Fizz" if i % 3 == 0 else ¦¦ تعبير شرطي متسلسل: الـ else بتاعة اللي فوق فيها if جديدة.
+    "Buzz" if i % 5 == 0 else ¦¦ وتاني.
+    str(i) ¦¦ الحالة الأخيرة: الرقم كنص (عشان join تشتغل).
+    for i in range(1, 16) ¦¦ جزء الحلقة.
+] ¦¦ قفل.
+print(" ".join(result)) ¦¦ دمج بمسافات.
+      @end
+      @out
+1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz
+      @end
+      <p>ده <strong>أقصى</strong> تعقيد مقبول لـ comprehension — ولو زاد شرط كمان، الحلقة العادية أوضح.</p>
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>هل كلمة السر فيها رقم؟ بطريقتين</div>
+      <p>مرّة بـ <code class="inl">for...else</code> ومرّة بـ <code class="inl">any</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+password = "secretPass" ¦¦ كلمة سر بدون أرقام.
+for ch in password: ¦¦ الطريقة الأولى: حلقة.
+    if ch.isdigit(): ¦¦ لقينا رقم؟
+        print("تمام: فيها رقم") ¦¦ رسالة.
+        break ¦¦ نوقف ونلغي الـ else.
+else: ¦¦ الحلقة خلصت من غير ما تلاقي رقم.
+    print("ضعيفة: مفيهاش ولا رقم") ¦¦ الرسالة البديلة.
+print(any(ch.isdigit() for ch in password)) ¦¦ الطريقة التانية: سطر واحد بيرجّع True/False — أنسب لو محتاج القيمة في شرط.
+      @end
+      @out rtl
+ضعيفة: مفيهاش ولا رقم
+False
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. الـ else بتاعة for بتتنفّذ إمتى؟</p>
+        <label><input type="radio"> لو الحلقة ما اشتغلتش خالص بس</label>
+        <label><input type="radio"> لو حصل break</label>
+        <label><input type="radio"> لو الحلقة خلصت من غير break</label>
+        <label><input type="radio"> دايمًا بعد كل دورة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. أنهي سطر صحيح؟</p>
+        <label><input type="radio"> [x if x &gt; 0 else 0 for x in a]</label>
+        <label><input type="radio"> [x for x in a if x &gt; 0 else 0]</label>
+        <label><input type="radio"> [for x in a: x]</label>
+        <label><input type="radio"> [x for x in a else 0]</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">max(["aa", "b", "ccc"], key=len)</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> "b"</label>
+        <label><input type="radio"> "aa"</label>
+        <label><input type="radio"> "ccc"</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">4. ميزة <code class="inl">sum(x for x in data)</code> على <code class="inl">sum([x for x in data])</code>؟</p>
+        <label><input type="radio"> ناتج مختلف</label>
+        <label><input type="radio"> ما بتبنيش قائمة وسيطة في الذاكرة</label>
+        <label><input type="radio"> بتشتغل مع النصوص بس</label>
+        <label><input type="radio"> مفيش أي فرق خالص</label>
+      </div>
+    </div>
+  </article>

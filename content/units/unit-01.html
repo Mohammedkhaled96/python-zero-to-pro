@@ -1,0 +1,1288 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة الأولى · أول خطوة</div>
+    <h2>أول خطوة في الكود: الطباعة، المتغيّرات، والأنواع</h2>
+    <p>
+      هنا بنكتب كود حقيقي لأول مرّة. الوحدة دي هي حجر الأساس: كل حاجة جاية في الكورس
+      مبنية على الأربع مفاهيم اللي هنا — <strong>الطباعة، النصوص، المتغيّرات، الأنواع</strong>.
+      خد وقتك فيها.
+    </p>
+  </div>
+
+  <!-- 1.1 -->
+  <article class="lesson" id="u1-l1">
+    <h3>دالة print: أول حوار مع الكمبيوتر <span class="tag">درس 1</span></h3>
+    <p class="goal">الهدف: تعرف تخلّي البرنامج يعرض أي حاجة على الشاشة، وتفهم الفرق بين النص والحساب.</p>
+
+    <h4>1. أبسط برنامج ممكن</h4>
+    <div class="code"><pre>
+print(1)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1</pre></div>
+    <p>تشريح السطر ده حرف بحرف:</p>
+    <ul>
+      <li><code class="inl">print</code> — اسم <strong>دالة</strong> (function) جاهزة في بايثون، وظيفتها تعرض حاجة على الشاشة.</li>
+      <li><code class="inl">(</code> و <code class="inl">)</code> — القوسين معناهم «نفّذ الدالة دي». من غيرهم بايثون هتفتكر إنك بتتكلم عن الدالة نفسها مش بتستدعيها.</li>
+      <li><code class="inl">1</code> — ده الـ <strong>argument</strong>، يعني الحاجة اللي إحنا مدّينها للدالة عشان تشتغل عليها.</li>
+    </ul>
+    <div class="box tip">
+      <div class="bt">💡 تشبيه</div>
+      <p>
+        <code class="inl">print</code> زي زرار في آلة. القوسين = إنك ضغطت الزرار.
+        اللي جوّه القوسين = الحاجة اللي حطّيتها في الآلة عشان تشتغل عليها.
+      </p>
+    </div>
+
+    <h4>2. بايثون بتحسب قبل ما تطبع</h4>
+    <div class="code"><pre>
+print(1 + 2)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>3</pre></div>
+    <p>
+      لاحظ إن الناتج <strong>3</strong> مش <code class="inl">1 + 2</code>. السبب إن بايثون
+      بتحسب اللي جوّه القوسين <em>الأول</em>، وبعدين بتدّي الناتج لـ <code class="inl">print</code>.
+      القاعدة دي هتتكرر معاك آلاف المرات: <strong>بايثون بتقيّم (evaluate) التعبير الأول، وبعدين بتنفّذ.</strong>
+    </p>
+
+    <div class="code"><pre>
+print(1 + 2 + 3 + 4)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>10</pre></div>
+
+    <h4>3. طباعة النصوص</h4>
+    <div class="code"><pre>
+print("hello world")
+print("farid mohammed")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>hello world
+farid mohammed</pre></div>
+    <p>
+      أي حاجة بين علامتَي تنصيص اسمها <strong>سلسلة نصّية</strong> (String)، ونوعها في بايثون
+      <code class="inl">str</code>. بايثون ما بتحاولش تفهم اللي جوّه النص — بتطبعه زي ما هو بالظبط.
+    </p>
+
+    <h4>4. الفرق الجوهري: نص ولّا عملية حسابية؟</h4>
+    <p>قارن السطرين دول كويس، ده أهم فرق في الدرس:</p>
+    <div class="code"><pre>
+print("1+2+3+4")    # فيه علامات تنصيص → نص
+print(1+2+3+4)      # مفيش علامات تنصيص → أرقام
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1+2+3+4
+10</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 القاعدة</div>
+      <p>
+        <strong>علامات التنصيص بتقول لبايثون: «متحاوليش تفهمي اللي جوّه، اطبعيه حرفيًا».</strong>
+        من غيرها بايثون بتتعامل مع الرموز كعمليات حسابية حقيقية.
+      </p>
+    </div>
+
+    <h4>5. طباعة أكتر من حاجة في نفس السطر</h4>
+    <p>ممكن تدّي لـ <code class="inl">print</code> أكتر من قيمة مفصولة بفواصل:</p>
+    <div class="code"><pre>
+print("العمر:", 32, "سنة")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>العمر: 32 سنة</pre></div>
+    <p>بايثون بتحط <strong>مسافة تلقائية</strong> بين كل قيمة. لو عايز تغيّر الفاصل ده استخدم <code class="inl">sep</code>:</p>
+    <div class="code"><pre>
+print("2024", "10", "05", sep="-")
+print("بدون سطر جديد", end=" | ")
+print("كمّلنا على نفس السطر")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>2024-10-05
+بدون سطر جديد | كمّلنا على نفس السطر</pre></div>
+    <p>
+      و<code class="inl">end</code> بتحدّد بايثون تحط إيه في آخر الطباعة. القيمة الافتراضية
+      بتاعتها هي سطر جديد <code class="inl">"\n"</code>، وعشان كده كل
+      <code class="inl">print</code> بتنزل سطر لوحدها.
+    </p>
+
+    <div class="ex">
+      <div class="bt">✍️ جرّب بنفسك</div>
+      <p>اكتب برنامج يطبع اسمك، وتحته حاصل ضرب 12 × 15، وتحته الجملة <code class="inl">12*15</code> كنص.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+print("Mohammed")
+print(12 * 15)
+print("12*15")
+</pre></div>
+      </details>
+    </div>
+    <!-- APPEND:u1-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>آلة حاسبة بالطباعة</div>
+      <p>اطبع جدول صغير: ناتج 7 × 8، و 100 − 37، وسطر بيجمع نص مع ناتج في نفس الـ print.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+print(7 * 8)
+print(100 - 37)
+print("7 × 8 =", 7 * 8)
+print("7 * 8")
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>56
+63
+7 × 8 = 56
+7 * 8</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">print("5 + 3")</code> بتطبع…</p>
+        <label><input type="radio"> 8</label>
+        <label><input type="radio"> 5 + 3</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> "5 + 3"</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">print("a", "b")</code> بتطبع…</p>
+        <label><input type="radio"> a b</label>
+        <label><input type="radio"> ab</label>
+        <label><input type="radio"> a,b</label>
+        <label><input type="radio"> "a" "b"</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">print(10 - 2 * 3)</code>؟</p>
+        <label><input type="radio"> 24</label>
+        <label><input type="radio"> 10 - 2 * 3</label>
+        <label><input type="radio"> 6</label>
+        <label><input type="radio"> 4</label>
+      </div>
+    </div>
+    <!-- /APPEND:u1-l1 -->
+                <!-- SUM:u1-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">print</code> بتعرض أي قيمة، وبتحسب العمليات الحسابية قبل ما تطبع.</li><li>النص لازم بين علامات تنصيص — من غيرها بايثون بتعتبره كود.</li><li>الفاصلة بين القيم بتطبعهم في سطر واحد بمسافة بينهم.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 1.2 -->
+  <article class="lesson" id="u1-l2">
+    <h3>النصوص: علامات التنصيص وأحرف الهروب <span class="tag">درس 2</span></h3>
+    <p class="goal">الهدف: تتحكّم في شكل النص المطبوع بالظبط — أسطر، مسافات، وعلامات تنصيص جوّه النص.</p>
+
+    <h4>1. تلات طرق لكتابة نص</h4>
+    <div class="code"><pre>
+print('نص بعلامة تنصيص فردية')
+print("نص بعلامة تنصيص مزدوجة")
+print("""نص بتلات علامات""")
+</pre></div>
+    <p>
+      الفردية والمزدوجة نفس الحاجة تمامًا في بايثون. الفايدة إن وجود النوعين بيسهّل عليك
+      لما تحتاج تكتب علامة تنصيص جوّه النص:
+    </p>
+    <div class="code"><pre>
+print("اسمه 'فريد' وبيحب بايثون")
+print('قال: "أنا بتعلّم برمجة"')
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>اسمه 'فريد' وبيحب بايثون
+قال: "أنا بتعلّم برمجة"</pre></div>
+
+    <h4>2. النص متعدّد الأسطر: تلات علامات تنصيص</h4>
+    <div class="code"><pre>
+print("""My name is Farid mohammed
+My age is 32 years old""")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>My name is Farid mohammed
+My age is 32 years old</pre></div>
+    <p>
+      باستخدام تلات علامات تنصيص مزدوجة (<code class="inl">"""</code>) تقدر تكتب نص على عدة أسطر،
+      وبايثون بتطبعه زي ما هو بالظبط بكل الأسطر والمسافات اللي فيه.
+      دي مفيدة جدًا في القوائم والرسايل الطويلة.
+    </p>
+    <div class="box warn">
+      <div class="bt">⚠️ انتبه للمسافات البادئة</div>
+      <p>
+        النص التلاثي بيحفظ <strong>كل مسافة</strong> بتكتبها. فلو عملت مسافات بادئة عشان الكود
+        يبقى شكله مرتّب، المسافات دي هتظهر في الناتج! ده مش خطأ، ده السلوك المقصود.
+      </p>
+    </div>
+
+    <h4>3. أحرف الهروب (Escape Sequences)</h4>
+    <p>
+      أحيانًا محتاج تحط حرف مش تقدر تكتبه مباشرة (زي سطر جديد). الحل هو
+      <strong>حرف الهروب</strong>: شرطة مائلة عكسية <code class="inl">\</code> وبعدها رمز.
+    </p>
+    <div class="code"><pre>
+print("welcome python\nnew course")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>welcome python
+new course</pre></div>
+    <p>
+      <code class="inl">\n</code> معناها <strong>انزل سطر جديد</strong>. لاحظ إنها حرفين في الكود
+      لكنها بتتحوّل لحرف واحد (سطر جديد) وقت الطباعة.
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الرمز</th><th>معناه</th><th>مثال</th></tr>
+        <tr><td><code class="inl">\n</code></td><td>سطر جديد (New line)</td><td><code class="inl">"أ\nب"</code></td></tr>
+        <tr><td><code class="inl">\t</code></td><td>مسافة جدولة (Tab)</td><td><code class="inl">"الاسم:\tفريد"</code></td></tr>
+        <tr><td><code class="inl">\"</code></td><td>علامة تنصيص مزدوجة جوّه نص مزدوج</td><td><code class="inl">"قال \"أهلا\""</code></td></tr>
+        <tr><td><code class="inl">\'</code></td><td>علامة تنصيص فردية جوّه نص فردي</td><td><code class="inl">'it\'s ok'</code></td></tr>
+        <tr><td><code class="inl">\\</code></td><td>شرطة مائلة عكسية واحدة</td><td><code class="inl">"C:\\Users"</code></td></tr>
+    </table>
+    </div>
+    <div class="code"><pre>
+print("الاسم:\tفريد\nالسن:\t32")
+print("المسار: C:\\Users\\farid")
+print("قال \"أنا جاهز\"")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الاسم:	فريد
+السن:	32
+المسار: C:\Users\farid
+قال "أنا جاهز"</pre></div>
+
+    <div class="box err">
+      <div class="bt">💥 خطأ شائع</div>
+      <p>
+        لو كتبت مسار ويندوز كده <code class="inl">"C:\new\table"</code> هتتفاجئ إن
+        <code class="inl">\n</code> و<code class="inl">\t</code> اتحوّلوا لسطر جديد وتاب!
+        الحل: إمّا تضاعف الشرطة <code class="inl">"C:\\new"</code>، أو تحط
+        <code class="inl">r</code> قبل النص عشان تلغي كل أحرف الهروب:
+        <code class="inl">r"C:\new\table"</code> — ودي بنسمّيها <strong>raw string</strong>.
+      </p>
+    </div>
+    <!-- APPEND:u1-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>اقتباس في سطرين</div>
+      <p>اطبع بـ <code class="inl">print</code> واحدة: سطر فيه كلام بين علامات تنصيص مزدوجة، وسطر تاني فيه مسافة جدولة في أوله.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+print('قال المدرّس: "بايثون سهلة"\n\tوأنا صدّقته')
+print("It's", 'a "test"')
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>قال المدرّس: "بايثون سهلة"
+	وأنا صدّقته
+It's a "test"</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">\n</code> جوّه نص معناها…</p>
+        <label><input type="radio"> حرف n</label>
+        <label><input type="radio"> مسافة</label>
+        <label><input type="radio"> سطر جديد</label>
+        <label><input type="radio"> نهاية البرنامج</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. نص متعدّد الأسطر بيتكتب بـ…</p>
+        <label><input type="radio"> علامة واحدة</label>
+        <label><input type="radio"> تلات علامات تنصيص</label>
+        <label><input type="radio"> أقواس مربعة</label>
+        <label><input type="radio"> #</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. أنهي سطر صحيح؟</p>
+        <label><input type="radio"> print('It\'s ok')</label>
+        <label><input type="radio"> print('It's ok')</label>
+        <label><input type="radio"> print("It"s ok")</label>
+        <label><input type="radio"> print(It's ok)</label>
+      </div>
+    </div>
+    <!-- /APPEND:u1-l2 -->
+                <!-- SUM:u1-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>النص يتكتب بـ <code class="inl">' '</code> أو <code class="inl">" "</code>، وبتلات علامات للنص متعدّد الأسطر.</li><li>أحرف الهروب: <code class="inl">\n</code> سطر جديد، <code class="inl">\t</code> مسافة جدولة، <code class="inl">\\</code> شرطة مائلة.</li><li>لو النص فيه علامة تنصيص، استخدم النوع التاني حواليه.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 1.3 -->
+  <article class="lesson" id="u1-l3">
+    <h3>التعليقات: الكود اللي بايثون بتتجاهله <span class="tag">درس 3</span></h3>
+    <p class="goal">الهدف: تعرف تكتب ملاحظات في الكود، وتعرف تعطّل سطر مؤقتًا.</p>
+
+    <h4>1. التعليق سطر واحد</h4>
+    <div class="code"><pre>
+# printing hello world
+print("hello world")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>hello world</pre></div>
+    <p>
+      أي سطر بيبدأ بعلامة <code class="inl">#</code> هو <strong>تعليق</strong> — بايثون بتتجاهله
+      تمامًا وما بتنفّذوش. التعليقات مكتوبة للبشر: ليك إنت بعد شهرين، ولزمايلك.
+    </p>
+    <p>وممكن التعليق يبقى في آخر سطر كود:</p>
+    <div class="code"><pre>
+price = 250    # السعر بالجنيه المصري
+</pre></div>
+
+    <h4>2. تعطيل الكود مؤقتًا (أهم استخدام عملي)</h4>
+    <p>
+      لما تبقى بتدوّر على خطأ، أسهل طريقة إنك «تطفّي» سطر من غير ما تمسحه:
+    </p>
+    <div class="code"><pre>
+print("السطر ده هيشتغل")
+# print("السطر ده اتعطّل مؤقتًا")
+print("والسطر ده هيشتغل")
+</pre></div>
+    <p>في VS Code علّم على السطر واضغط <strong>Ctrl + /</strong> عشان يتعلّق أو يترجع.</p>
+
+    <h4>3. تعليق متعدّد الأسطر</h4>
+    <p>بايثون مافيهاش رمز مخصّص لكده، فبنستخدم واحدة من الطريقتين:</p>
+    <div class="code"><pre>
+# الطريقة الأولى: # في أول كل سطر
+# ده برنامج بسيط
+# كتبه محمد
+# بتاريخ 2025
+"""
+الطريقة التانية: نص تلاثي مش متخزّن في أي متغيّر
+بايثون بتنشئه وترميه على طول، فعمليًا بيشتغل كتعليق
+"""
+print("تمام")
+</pre></div>
+
+    <div class="box tip">
+      <div class="bt">💡 التعليق الكويس بيقول «ليه» مش «إيه»</div>
+      <p>
+        تعليق سيّئ: <code class="inl"># بنضيف 1 على العدّاد</code> — ده واضح من الكود نفسه.<br>
+        تعليق كويس: <code class="inl"># بنبدأ الترقيم من 1 مش 0 عشان المستخدم يقراه طبيعي</code>.
+      </p>
+    </div>
+    <!-- APPEND:u1-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>عطّل سطر مؤقّتًا</div>
+      <p>عندك 3 سطور طباعة. عطّل التاني من غير ما تمسحه، وضيف تعليق في آخر السطر الأول بيشرحه.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+print("بداية البرنامج")  # رسالة ترحيب
+# print("سطر بتجرّبه ومش عايزه دلوقتي")
+print("نهاية البرنامج")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>بداية البرنامج
+نهاية البرنامج</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. التعليق في بايثون بيبدأ بـ…</p>
+        <label><input type="radio"> //</label>
+        <label><input type="radio"> --</label>
+        <label><input type="radio"> /*</label>
+        <label><input type="radio"> #</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. أحسن تعليق بيشرح…</p>
+        <label><input type="radio"> ليه الكود مكتوب كده</label>
+        <label><input type="radio"> كل سطر حرفيًا</label>
+        <label><input type="radio"> اسم المبرمج بس</label>
+        <label><input type="radio"> ولا حاجة</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">print("# مرحبا")</code> بتطبع…</p>
+        <label><input type="radio"> ولا حاجة (تعليق)</label>
+        <label><input type="radio"> # مرحبا</label>
+        <label><input type="radio"> مرحبا</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+    </div>
+    <!-- /APPEND:u1-l3 -->
+                <!-- SUM:u1-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">#</code> بتبدأ تعليق بايثون بتتجاهله للآخر السطر.</li><li>أهم استخدام عملي: تعطيل سطر مؤقّتًا وإنت بتدوّر على غلطة.</li><li>التعليق الكويس بيشرح «ليه» مش «إيه».</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 1.4 -->
+  <article class="lesson" id="u1-l4">
+    <h3>المتغيّرات: تخزين القيم واستدعاؤها <span class="tag">درس 4</span></h3>
+    <p class="goal">الهدف: تخزّن قيمة في الذاكرة باسم تختاره، وتفهم بالظبط بيحصل إيه لما تغيّر القيمة.</p>
+
+    <h4>1. أول متغيّر</h4>
+    <div class="code"><pre>
+name = "Farid Mohammed"
+print(name)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Farid Mohammed</pre></div>
+    <p>تشريح السطر:</p>
+    <ul>
+      <li><code class="inl">name</code> — الاسم اللي إنت اخترته للمتغيّر.</li>
+      <li><code class="inl">=</code> — عامل <strong>الإسناد</strong> (assignment). مش «يساوي» الرياضية!
+          معناه: «خد اللي على اليمين وخلّي الاسم اللي على الشمال يشاور عليه».</li>
+      <li><code class="inl">"Farid Mohammed"</code> — القيمة اللي بتتخزّن في الـ Heap.</li>
+    </ul>
+    <p>ولاحظ في <code class="inl">print(name)</code> إن <code class="inl">name</code> مكتوبة <strong>من غير</strong> علامات تنصيص، عشان كده بايثون فتحت المتغيّر وطبعت اللي جوّاه.</p>
+    <div class="box err">
+      <div class="bt">💥 الفرق ده بيوقّع المبتدئين</div>
+      <div class="code"><pre>
+name = "Farid"
+print(name)     # Farid   ← طبع محتوى المتغيّر
+print("name")   # name    ← طبع كلمة name كنص
+</pre></div>
+    </div>
+
+    <h4>2. إعادة الإسناد: القيمة القديمة بتضيع</h4>
+    <div class="code"><pre>
+name = "Mohammed"
+name = "Mahmoud"
+print(name)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Mahmoud</pre></div>
+    <p>
+      المتغيّر بيمسك قيمة واحدة بس في اللحظة الواحدة. أول ما تسند له قيمة جديدة، بيسيب
+      القديمة ويشاور على الجديدة. والقيمة القديمة لو محدّش شايفها، الـ Garbage Collector
+      بيمسحها من الذاكرة.
+    </p>
+
+    <h4>3. المتغيّر ممكن يخزّن ناتج عملية</h4>
+    <div class="code"><pre>
+name = 2 + 5
+print(name)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>7</pre></div>
+    <p>
+      بايثون حسبت <code class="inl">2 + 5</code> الأول (بقت 7)، وبعدين خزّنت 7.
+      المتغيّر ما بيخزّنش «العملية» — بيخزّن <strong>نتيجتها</strong>.
+    </p>
+
+    <h4>4. عامل الإضافة والإسناد <code>+=</code></h4>
+    <div class="code"><pre>
+name = "mohammed"
+name += "mahmoud"
+name += "farid"
+print(name)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>mohammedmahmoudfarid</pre></div>
+    <p>
+      <code class="inl">name += "mahmoud"</code> اختصار لـ
+      <code class="inl">name = name + "mahmoud"</code>: خد القيمة الحالية، ضيف عليها، وارجّع
+      الناتج لنفس المتغيّر. وفيه إخوات ليها:
+      <code class="inl">-=</code>، <code class="inl">*=</code>، <code class="inl">/=</code>.
+    </p>
+    <div class="code"><pre>
+count = 10
+count += 5     # 15
+count -= 3     # 12
+count *= 2     # 24
+print(count)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>24</pre></div>
+
+    <h4>5. قواعد تسمية المتغيّرات</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>القاعدة</th><th>✅ صح</th><th>❌ غلط</th></tr>
+        <tr><td>يبدأ بحرف أو <code class="inl">_</code></td><td><code class="inl">name</code>, <code class="inl">_temp</code></td><td><code class="inl">2name</code></td></tr>
+        <tr><td>مفيش مسافات</td><td><code class="inl">user_name</code></td><td><code class="inl">user name</code></td></tr>
+        <tr><td>حروف وأرقام و <code class="inl">_</code> بس</td><td><code class="inl">phone2</code></td><td><code class="inl">phone-2</code>, <code class="inl">user@</code></td></tr>
+        <tr><td>مش كلمة محجوزة</td><td><code class="inl">my_list</code></td><td><code class="inl">list</code>, <code class="inl">print</code>, <code class="inl">for</code></td></tr>
+        <tr><td>حسّاس لحالة الحرف</td><td colspan="2"><code class="inl">name</code> و <code class="inl">Name</code> متغيّرين <strong>مختلفين</strong></td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 اصطلاح بايثون: snake_case</div>
+      <p>
+        المعتاد في بايثون إن أسماء المتغيّرات تتكتب حروف صغيرة والكلمات مفصولة بـ
+        <code class="inl">_</code>: <code class="inl">user_name</code>،
+        <code class="inl">phone_number</code>، <code class="inl">total_price</code>.
+        وأهم من الشكل: <strong>خلّي الاسم يوصف المحتوى</strong>. <code class="inl">x</code> اسم سيّئ،
+        <code class="inl">student_score</code> اسم ممتاز.
+      </p>
+    </div>
+    <div class="box err">
+      <div class="bt">💥 ما تسمّيش متغيّرك باسم دالة جاهزة</div>
+      <div class="code"><pre>
+list = [1, 2, 3]      # ❌ دلوقتي دالة list() اتكسرت
+print(list("abc"))    # TypeError: 'list' object is not callable
+</pre></div>
+    </div>
+    <!-- APPEND:u1-l4 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تتبّع المتغيّرات</div>
+      <p>توقّع الناتج: متغيّر مدينة اتغيّر، وعدّاد زيارات زاد مرّتين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+city = "طنطا"
+city = "القاهرة"
+visits = 3
+visits += 2
+total_price = visits * 50
+print(city, visits, total_price)
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>القاهرة 5 250</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. أنهي اسم متغيّر صحيح؟</p>
+        <label><input type="radio"> 2name</label>
+        <label><input type="radio"> my-name</label>
+        <label><input type="radio"> my_name</label>
+        <label><input type="radio"> my name</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">x = 5</code> ثم <code class="inl">x += 3</code> — قيمة x؟</p>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> 8</label>
+        <label><input type="radio"> 53</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">a = 1</code> ثم <code class="inl">a = "one"</code>؟</p>
+        <label><input type="radio"> مسموح — المتغيّر بقى يشاور على نص</label>
+        <label><input type="radio"> خطأ في النوع</label>
+        <label><input type="radio"> a بقت 1one</label>
+        <label><input type="radio"> a فضلت 1</label>
+      </div>
+    </div>
+    <!-- /APPEND:u1-l4 -->
+                <!-- SUM:u1-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>المتغيّر اسم بيشاور على قيمة، والإسناد الجديد بيغيّر القيمة.</li><li><code class="inl">x += 1</code> اختصار لـ <code class="inl">x = x + 1</code>.</li><li>الأسماء: حروف وأرقام وشرطة سفلية، من غير رقم في الأول، ويُفضّل snake_case.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 1.5 -->
+  <article class="lesson" id="u1-l5">
+    <h3>أنواع البيانات ودالة type <span class="tag">درس 5</span></h3>
+    <p class="goal">الهدف: تعرف الأربع أنواع الأساسية، وتقدر تسأل بايثون عن نوع أي قيمة.</p>
+
+    <h4>1. ليه فيه أنواع أصلًا؟</h4>
+    <p>
+      افتكر من الوحدة صفر: كل حاجة عند الكمبيوتر أرقام. النوع هو اللي بيقول لبايثون
+      <strong>إزاي تفسّر الأرقام دي</strong> و<strong>إيه العمليات المسموحة عليها</strong>.
+      عشان كده <code class="inl">2 + 3</code> بتدّي 5 لكن <code class="inl">"2" + "3"</code>
+      بتدّي <code class="inl">"23"</code> — علامة <code class="inl">+</code> معناها
+      يتغيّر حسب النوع.
+    </p>
+
+    <h4>2. الأنواع الأساسية الأربعة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>النوع</th><th>الاسم الكامل</th><th>بيمثّل</th><th>أمثلة</th></tr>
+        <tr><td><code class="inl">str</code></td><td>String</td><td>نص</td><td><code class="inl">"hello"</code>, <code class="inl">"32"</code>, <code class="inl">""</code></td></tr>
+        <tr><td><code class="inl">int</code></td><td>Integer</td><td>عدد صحيح</td><td><code class="inl">7</code>, <code class="inl">-40</code>, <code class="inl">0</code></td></tr>
+        <tr><td><code class="inl">float</code></td><td>Floating point</td><td>عدد عشري</td><td><code class="inl">1.2</code>, <code class="inl">-0.5</code>, <code class="inl">3.0</code></td></tr>
+        <tr><td><code class="inl">bool</code></td><td>Boolean</td><td>صح أو غلط</td><td><code class="inl">True</code>, <code class="inl">False</code></td></tr>
+      </table>
+    </div>
+
+    <h4>3. دالة type — اسأل بايثون</h4>
+    <div class="code"><pre>
+print(type("hello world"))
+print(type(1 + 2))
+print(type(1.2))
+print(type(True))
+print(type(1 + 2.5))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>&lt;class 'str'&gt;
+&lt;class 'int'&gt;
+&lt;class 'float'&gt;
+&lt;class 'bool'&gt;
+&lt;class 'float'&gt;</pre></div>
+    <p>الملاحظات المهمّة على الناتج ده:</p>
+    <ul>
+      <li><code class="inl">type(1 + 2)</code> — بايثون حسبت الأول فبقت 3، ونوعها <code class="inl">int</code>.</li>
+      <li>
+        <code class="inl">type(1 + 2.5)</code> — النتيجة <code class="inl">float</code> مش
+        <code class="inl">int</code>! لما تجمع صحيح مع عشري، بايثون <strong>بترقّي</strong> الناتج
+        للنوع الأوسع عشان ما تخسرش دقّة. ده اسمه <em>type promotion</em>.
+      </li>
+      <li>كلمة <code class="inl">class</code> في الناتج معناها إن كل نوع في بايثون هو في الحقيقة «فئة» — هنفهمها بعمق لو دخلت تراك الـ OOP بعدين.</li>
+    </ul>
+
+    <h4>4. فخّ الرقم داخل علامات تنصيص</h4>
+    <div class="code"><pre>
+a = 32
+b = "32"
+print(type(a))    # int
+print(type(b))    # str
+print(a + 10)     # 42
+print(b + "10")   # 3210   ← دمج نصوص مش جمع!
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>&lt;class 'int'&gt;
+&lt;class 'str'&gt;
+42
+3210</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ الخطأ اللي هيقابلك في الدرس الجاي</div>
+      <p>
+        <code class="inl">b + 10</code> (نص + رقم) هترمي
+        <code class="inl">TypeError: can only concatenate str (not "int") to str</code>.
+        بايثون بترفض تخمّن إنت قصدك إيه. الحل هو <strong>التحويل بين الأنواع</strong>
+        اللي هنتعلّمه في الوحدة 2.
+      </p>
+    </div>
+
+    <h4>5. النوع bool والقيمتين True و False</h4>
+    <div class="code"><pre>
+print(type(True))
+print(10 &gt; 5)      # True
+print(10 == 5)     # False
+print(True + True) # 2  ← بايثون بتعامل True كـ 1 و False كـ 0
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>&lt;class 'bool'&gt;
+True
+False
+2</pre></div>
+    <p>
+      لاحظ إن <code class="inl">True</code> و<code class="inl">False</code> بيبدأوا بحرف
+      <strong>كابيتال</strong> ومن غير علامات تنصيص. النوع ده هو أساس كل القرارات في
+      الوحدة 4.
+    </p>
+    <!-- APPEND:u1-l5 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>اسأل بايثون عن الأنواع</div>
+      <p>اطبع نوع 4 قيم: عدد صحيح، عشري، رقم بين علامات تنصيص، و True.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+print(type(10))
+print(type(2.5))
+print(type("10"))
+print(type(True))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>&lt;class 'int'&gt;
+&lt;class 'float'&gt;
+&lt;class 'str'&gt;
+&lt;class 'bool'&gt;</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. نوع <code class="inl">"3.5"</code>؟</p>
+        <label><input type="radio"> float</label>
+        <label><input type="radio"> str</label>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> bool</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. أنهي قيمة من نوع bool؟</p>
+        <label><input type="radio"> "True"</label>
+        <label><input type="radio"> true</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> False</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. نوع <code class="inl">7.0</code>؟</p>
+        <label><input type="radio"> float</label>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> str</label>
+        <label><input type="radio"> number</label>
+      </div>
+    </div>
+    <!-- /APPEND:u1-l5 -->
+                <!-- SUM:u1-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الأنواع الأساسية: <code class="inl">int</code> و <code class="inl">float</code> و <code class="inl">str</code> و <code class="inl">bool</code>.</li><li><code class="inl">type(x)</code> بتقولك نوع أي قيمة.</li><li><code class="inl">"5"</code> نص مش رقم — ده مصدر أخطاء كتير.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 1.6 -->
+  <article class="lesson" id="u1-l6">
+    <h3>دمج النصوص وتكرارها <span class="tag">درس 6</span></h3>
+    <p class="goal">الهدف: تجمّع نصوص مع بعض بطريقة نضيفة، وتعرف حدود الطريقة دي.</p>
+
+    <h4>1. الدمج بعلامة +  (Concatenation)</h4>
+    <div class="code"><pre>
+name1 = "mohammed "
+name2 = "mahmoud "
+name3 = "Marwa "
+name4 = "abdallah "
+print(name1 + name2 + name3 + name4)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>mohammed mahmoud Marwa abdallah</pre></div>
+    <p>
+      لاحظ إن المسافات جوّه النصوص نفسها. لو النصوص من غير مسافات هيطلعوا ملزّقين:
+      <code class="inl">mohammedmahmoudMarwa</code>.
+    </p>
+
+    <h4>2. إضافة المسافات يدويًا</h4>
+    <div class="code"><pre>
+name1 = "mohammed"
+name2 = "mahmoud"
+name3 = "Marwa"
+name4 = "abdallah"
+print(name1 + " " + name2 + " " + name3 + " " + name4)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>mohammed mahmoud Marwa abdallah</pre></div>
+    <p>هنا بندمج نص المسافة <code class="inl">" "</code> بين كل اسمين.</p>
+
+    <h4>3. الفصل بأسطر جديدة</h4>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">name1</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+print(name1 + "\n" + name2 + "\n" + name3 + "\n" + name4)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>mohammed
+mahmoud
+Marwa
+abdallah</pre></div>
+
+    <h4>4. تكرار النص بعلامة *</h4>
+    <div class="code"><pre>
+name = "farid mohammed"
+print(name * 3)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>farid mohammedfarid mohammedfarid mohammed</pre></div>
+    <p>
+      <code class="inl">*</code> بين نص ورقم معناها «كرّر». مفيدة في رسم الفواصل:
+    </p>
+    <div class="code"><pre>
+print("-" * 40)
+print("تقرير المبيعات")
+print("=" * 40)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>----------------------------------------
+تقرير المبيعات
+========================================</pre></div>
+
+    <h4>5. حدود الطريقة دي</h4>
+    <div class="box err">
+      <div class="bt">💥 الدمج بيشتغل بين نص ونص بس</div>
+      <div class="code"><pre>
+age = 32
+print("عمري " + age)     # ❌ TypeError
+print("عمري " + str(age)) # ✅ لازم نحوّل الرقم لنص
+</pre></div>
+      <p>
+        وهنا بتظهر المشكلة: الكود بيبقى وحش ومليان <code class="inl">+</code> و
+        <code class="inl">str()</code>. الحل الأنضف والأحدث هو <strong>f-strings</strong>
+        في الدرس الجاي مباشرةً.
+      </p>
+    </div>
+    <!-- APPEND:u1-l6 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>لافتة ترحيب</div>
+      <p>اطبع لافتة: سطر من 14 علامة =، وتحته «أهلًا يا» + الاسم + «!»، وتحته نفس السطر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+name = "سارة"
+line = "=" * 14
+print(line)
+print("أهلًا يا " + name + "!")
+print(line)
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>==============
+أهلًا يا سارة!
+==============</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">"ha" * 3</code>؟</p>
+        <label><input type="radio"> ha3</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> hahaha</label>
+        <label><input type="radio"> ha ha ha</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">"5" + "5"</code>؟</p>
+        <label><input type="radio"> "55"</label>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> "10"</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">"العمر: " + 25</code>؟</p>
+        <label><input type="radio"> العمر: 25</label>
+        <label><input type="radio"> العمر: </label>
+        <label><input type="radio"> 25</label>
+        <label><input type="radio"> TypeError</label>
+      </div>
+    </div>
+    <!-- /APPEND:u1-l6 -->
+                <!-- SUM:u1-l6 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">+</code> بين نصوص = دمج، و <code class="inl">*</code> مع رقم = تكرار.</li><li>الدمج ما بيضيفش مسافات لوحده.</li><li>ما ينفعش تدمج نص مع رقم مباشرةً.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 1.7 -->
+  <article class="lesson" id="u1-l7">
+    <h3>الـ f-strings: أنضف طريقة لتنسيق النصوص <span class="tag">درس 7 · مهم جدًا</span></h3>
+    <p class="goal">الهدف: تدمج متغيّرات جوّه النص مباشرةً — دي الطريقة اللي هتستخدمها في كل الكورس.</p>
+
+    <h4>1. الفكرة</h4>
+    <p>
+      حط حرف <code class="inl">f</code> قبل علامة التنصيص، وبعد كده تقدر تحط أي متغيّر
+      جوّه أقواس معقوفة <code class="inl">{}</code> وسط النص:
+    </p>
+    <div class="code"><pre>
+name = "farid"
+age = 32
+print(f"اسمي {name} وعمري {age} سنة")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>اسمي farid وعمري 32 سنة</pre></div>
+    <p>قارنها بالطريقة القديمة وشوف الفرق:</p>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">name</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+print("اسمي " + name + " وعمري " + str(age) + " سنة")   # الطريقة القديمة
+print(f"اسمي {name} وعمري {age} سنة")                   # f-string
+</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 ميزة كبيرة</div>
+      <p>
+        الـ f-string <strong>بتحوّل الأنواع تلقائيًا</strong>. مش محتاج
+        <code class="inl">str()</code> حوالين الأرقام. ده بيلغي أكتر خطأ بيقابل المبتدئين.
+      </p>
+    </div>
+
+    <h4>2. عمليات حسابية جوّه الأقواس</h4>
+    <p>الأقواس المعقوفة بتقبل أي <strong>تعبير</strong> مش بس اسم متغيّر:</p>
+    <div class="code"><pre>
+first_number = 10
+second_number = 5
+print(f"""your first number is {first_number}
+your second number is {second_number}
+in case of operation +: {first_number + second_number}
+in case of operation -: {first_number - second_number}
+in case of operation *: {first_number * second_number}
+in case of operation /: {first_number / second_number}""")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>your first number is 10
+your second number is 5
+in case of operation +: 15
+in case of operation -: 5
+in case of operation *: 50
+in case of operation /: 2.0</pre></div>
+    <p>
+      لاحظ ناتج القسمة <code class="inl">2.0</code> مش <code class="inl">2</code> —
+      علامة <code class="inl">/</code> في بايثون بترجّع <code class="inl">float</code> دايمًا.
+      وهنشرح ده بالتفصيل في درس العمليات الحسابية.
+    </p>
+
+    <h4>3. f-string متعدّد الأسطر</h4>
+    <div class="code"><pre>
+name1 = "mohammed"
+name2 = "mahmoud"
+name3 = "Marwa"
+name4 = "abdallah"
+print(f"""the first name is: {name1}
+    the second name is: {name2}
+    the third name is: {name3}
+    the fourth name is: {name4}""")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>the first name is: mohammed
+    the second name is: mahmoud
+    the third name is: Marwa
+    the fourth name is: abdallah</pre></div>
+    <p>المسافات البادئة قبل <code class="inl">the second</code> ظهرت في الناتج زي ما قلنا في درس النصوص التلاثية.</p>
+
+    <h4>4. علامة تنصيص جوّه f-string</h4>
+    <div class="code"><pre>
+short_description = "i'm farid, graduated from al alsun college"
+print(f"about me: \"{short_description}\"")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>about me: "i'm farid, graduated from al alsun college"</pre></div>
+
+    <h4>5. التنسيق المتقدّم (هيفيدك بعدين)</h4>
+    <div class="code"><pre>
+price = 1234.56789
+print(f"{price:.2f}")        # تقريب لخانتين عشريتين
+print(f"{price:,.2f}")       # فاصلة للآلاف
+print(f"{'اسم':&gt;10}|")       # محاذاة لليمين في 10 خانات
+print(f"{42:05d}")           # أصفار على الشمال
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1234.57
+1,234.57
+       اسم|
+00042</pre></div>
+
+    <h4>6. مقارنة طرق التنسيق التلاتة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الطريقة</th><th>الشكل</th><th>الحكم</th></tr>
+        <tr><td>الدمج بـ +</td><td><code class="inl">"عمري " + str(age)</code></td><td>وحش وطويل — تجنّبه</td></tr>
+        <tr><td><code class="inl">.format()</code></td><td><code class="inl">"عمري {}".format(age)</code></td><td>قديم لكن هتشوفه في كود قديم</td></tr>
+        <tr><td><strong>f-string</strong></td><td><code class="inl">f"عمري {age}"</code></td><td>✅ الأفضل والأحدث — استخدمه</td></tr>
+      </table>
+    </div>
+    <!-- APPEND:u1-l7 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>سطر فاتورة</div>
+      <p>اطبع بـ f-string: اسم المنتج والكمية والإجمالي بخانتين عشريتين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+product = "كشكول"
+price = 12.5
+qty = 3
+print(f"{product} × {qty} = {price * qty:.2f} جنيه")
+print(f"{'الإجمالي':&gt;10}: {price * qty}")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>كشكول × 3 = 37.50 جنيه
+  الإجمالي: 37.5</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">print(f"{2 + 3}")</code>؟</p>
+        <label><input type="radio"> 2 + 3</label>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> {2 + 3}</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">print("{name}")</code> من غير f…</p>
+        <label><input type="radio"> بتطبع قيمة name</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> بتطبع سطر فاضي</label>
+        <label><input type="radio"> بتطبع {name} حرفيًا</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">f"{3.14159:.1f}"</code>؟</p>
+        <label><input type="radio"> 3.14159</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 3.1</label>
+        <label><input type="radio"> 3.14</label>
+      </div>
+    </div>
+    <!-- /APPEND:u1-l7 -->
+                <!-- SUM:u1-l7 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الـ f-string (<code class="inl">f"...{x}..."</code>) أنضف طريقة لتركيب النصوص.</li><li>جوّه الأقواس تقدر تكتب أي تعبير: حسابات ونداءات دوال.</li><li>التنسيق بعد <code class="inl">:</code> زي <code class="inl">{x:.2f}</code> و <code class="inl">{x:&gt;8}</code>.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 1.P1 -->
+  <article class="lesson project" id="u1-p1">
+    <h3>مشروع 1: بطاقة تعريف شخصية <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: تدمج كل حاجة اتعلّمتها في الوحدة دي في برنامج واحد كامل.</p>
+
+    <h4>المطلوب</h4>
+    <p>برنامج بيخزّن بياناتك في متغيّرات، وبيطبعها في شكل بطاقة مرتّبة.</p>
+
+    <h4>الحل خطوة بخطوة</h4>
+    <div class="code" data-file="id_card.py"><pre>
+name = "farid mohammed"
+email = "farid5006@gmail.com"
+phone_number = 1020621983
+age = 32
+short_description = "i'm farid, graduated from al alsun college, ain shams university, spanish department"
+print(f"""my name is {name},
+i'm {age} years old,
+my phone number is 0{phone_number}
+my email is {email}
+about me: \"{short_description}\"""")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>my name is farid mohammed,
+i'm 32 years old,
+my phone number is 01020621983
+my email is farid5006@gmail.com
+about me: "i'm farid, graduated from al alsun college, ain shams university, spanish department"</pre></div>
+
+    <h4>شرح النقاط المهمّة</h4>
+    <ul>
+      <li>
+        <strong>ليه الصفر مكتوب بره الأقواس؟</strong> لأن <code class="inl">phone_number</code>
+        نوعه <code class="inl">int</code>، والأرقام الصحيحة ما بتحفظش الأصفار البادئة —
+        لو كتبت <code class="inl">01020621983</code> بايثون هترمي خطأ. فحطّينا الصفر كنص
+        قبل الأقواس المعقوفة.
+      </li>
+      <li>
+        <strong>الدرس المستفاد:</strong> رقم التليفون <em>مش رقم حسابي</em> — إحنا مش
+        هنجمعه أو نطرحه. الأصح إنه يتخزّن كنص:
+        <code class="inl">phone_number = "01020621983"</code>. القاعدة:
+        <strong>لو مش هتعمل عليه عمليات حسابية، خزّنه كنص.</strong>
+      </li>
+      <li>
+        <code class="inl">\"</code> استخدمناها عشان نحط علامات تنصيص حوالين الوصف
+        جوّه نص أصلًا محاوط بعلامات تنصيص.
+      </li>
+    </ul>
+
+    <h4>نسخة محسّنة</h4>
+    <div class="code" data-file="id_card_v2.py"><pre>
+name = "farid mohammed"
+email = "farid5006@gmail.com"
+phone_number = "01020621983"       # نص، فالصفر محفوظ
+age = 32
+job = "Python Developer"
+line = "=" * 46
+print(line)
+print(f"{'PERSONAL CARD':^46}")     # ^ معناها توسيط
+print(line)
+print(f"Name   : {name.title()}")   # title() بتخلي أول حرف كابيتال
+print(f"Age    : {age}")
+print(f"Phone  : {phone_number}")
+print(f"Email  : {email}")
+print(f"Job    : {job}")
+print(line)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>==============================================
+                PERSONAL CARD
+==============================================
+Name   : Farid Mohammed
+Age    : 32
+Phone  : 01020621983
+Email  : farid5006@gmail.com
+Job    : Python Developer
+==============================================</pre></div>
+
+    <div class="ex">
+      <div class="bt">✍️ التحدّي</div>
+      <p>
+        عدّل البرنامج عشان يطبع كمان: سنة ميلادك (احسبها بـ <code class="inl">2026 - age</code>
+        جوّه الـ f-string)، وعدد الحروف في اسمك باستخدام <code class="inl">len(name)</code>.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">age</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+      <div class="code"><pre>
+print(f"Born   : {2026 - age}")
+print(f"Letters: {len(name)}")
+</pre></div>
+      </details>
+    </div>
+  </article>
+  <!-- ADD:u1-ch -->
+  <!-- 1.CH -->
+  <article class="lesson" id="u1-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة الأولى <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">اكتب الكود بإيدك في المحرّر، واضغط «اختبر حلّي» — اختبارات حقيقية هتقولك نجحت ولّا لأ، وليه بالظبط.</p>
+    <div class="box info">
+      <div class="bt">ℹ️ إزاي التحدّيات بتشتغل؟</div>
+      <ul>
+        <li>الكود بيتشغّل <strong>جوّه المتصفّح نفسه</strong> ببايثون حقيقي (Pyodide). أول مرّة بس محتاج إنترنت وحوالي 10–20 ثانية للتحميل.</li>
+        <li><strong>«▶ شغّل بس»</strong> بيوريك الناتج، و<strong>«✅ اختبر حلّي»</strong> بيشغّل الاختبارات ويقولك كل اختبار نجح ولّا فشل وسبب الفشل.</li>
+        <li>كودك <strong>بيتحفظ تلقائيًا</strong> على جهازك — تقدر تقفل وترجع تكمّل.</li>
+        <li>الحل النموذجي <strong>مقفول لحد أول محاولة</strong>. الغلط جزء من التعلّم، مش عيب.</li>
+        <li>التحدّيات اللي عليها 🐞 فيها كود <strong>غلطان</strong>: مهمّتك تلاقي الغلطة وتصلّحها — دي مهارة بتستخدمها كل يوم في الشغل.</li>
+      </ul>
+    </div>
+
+    <div class="challenge" data-ch="u1-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — بطاقة منتج <span class="lvl">⭐</span></div>
+      <p>عندك منتج وسعره وكميته. اعمل متغيّر اسمه <code class="inl">total</code> = السعر × الكمية، واطبع السطر ده بالظبط (من المتغيّرات مش بإيدك):</p>
+      <div class="out rtl"><div class="out-head">▸ المطلوب</div><pre>قلم × 3 = 15 جنيه</pre></div>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+product = "قلم"
+price = 5
+qty = 3
+
+# 1) اعمل متغيّر اسمه total = السعر × الكمية
+# 2) اطبع السطر بالشكل المطلوب باستخدام f-string
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_total_exists():
+    "فيه متغيّر اسمه total قيمته 15"
+    assert "total" in globals(), "مفيش متغيّر اسمه total"
+    assert total == 15, f"total = {total!r} والمفروض 15"
+
+def test_uses_variables():
+    "الحساب من المتغيّرات مش رقم مكتوب بإيدك"
+    code = USER_CODE.replace(" ", "")
+    assert "price*qty" in code or "qty*price" in code, "احسب total من price و qty"
+
+def test_line():
+    "الطباعة بالشكل المطلوب بالظبط"
+    assert "قلم × 3 = 15 جنيه" in OUTPUT, f"اللي اتطبع: {OUTPUT.strip()!r}"
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+product = "قلم"
+price = 5
+qty = 3
+total = price * qty
+print(f"{product} × {qty} = {total} جنيه")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u1-ch2">
+      <div class="ch-head">🐞 التحدّي 2 — صلّح الكود <span class="lvl">⭐</span></div>
+      <p>الكود ده بيقع. صلّحه عشان يطبع بالظبط: <code class="inl">بعد 5 سنين عمرك: 25</code> (مسموح تغيّر أي سطر).</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+age = "20"
+print("بعد 5 سنين عمرك: " + age + 5)
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_output():
+    "بيطبع: بعد 5 سنين عمرك: 25"
+    assert OUTPUT.strip() == "بعد 5 سنين عمرك: 25", f"اللي اتطبع: {OUTPUT.strip()!r}"
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+age = 20
+print(f"بعد 5 سنين عمرك: {age + 5}")
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u1-ch -->
+
+  <!-- 1.EX -->
+  <article class="lesson" id="u1-ex">
+    <h3>تمارين الوحدة الأولى <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">اكتب كل تمرين بإيدك في المحرّر قبل ما تفتح الحل. الغلط هنا مفيد.</p>
+
+    <h4>المستوى الأول: تمارين مباشرة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — بطاقة منتج</div>
+      <p>اعمل متغيّرات لاسم منتج وسعره وكميته، واطبع جملة واحدة فيها الاسم والسعر والإجمالي (السعر × الكمية) باستخدام f-string.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+product = "لابتوب"
+price = 15000
+quantity = 3
+print(f"المنتج: {product} — السعر: {price} — الإجمالي: {price * quantity}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — الأنواع</div>
+      <p>اطبع نوع كل من: <code class="inl">"32"</code>، <code class="inl">32</code>، <code class="inl">32.0</code>، <code class="inl">32 &gt; 10</code>، <code class="inl">32 + 0.5</code>. وتوقّع الناتج قبل ما تشغّل.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+print(type("32"))       # &lt;class 'str'&gt;
+print(type(32))         # &lt;class 'int'&gt;
+print(type(32.0))       # &lt;class 'float'&gt;
+print(type(32 &gt; 10))    # &lt;class 'bool'&gt;
+print(type(32 + 0.5))   # &lt;class 'float'&gt;  ← الترقية للنوع الأوسع
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 3 — الفاتورة</div>
+      <p>اطبع فاتورة بالشكل ده بالظبط، مستخدمًا تكرار النصوص وأحرف الهروب:</p>
+      <div class="out"><div class="out-head">▸ المطلوب</div><pre>--------------------
+     فاتورة
+--------------------
+شاي	x2	20
+قهوة	x1	15
+--------------------</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+line = "-" * 20
+print(line)
+print("     فاتورة")
+print(line)
+print("شاي\tx2\t20")
+print("قهوة\tx1\t15")
+print(line)
+</pre></div>
+      </details>
+    </div>
+
+    <h4>المستوى الثاني: تحتاج تفكير</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — العدّاد</div>
+      <p>متغيّر <code class="inl">score = 10</code>. زوّده 5، اضربه في 3، اطرح منه 7 — كل ده باستخدام العوامل المختصرة (<code class="inl">+=</code> وإخواتها)، واطبع النتيجة بعد كل خطوة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+score = 10
+score += 5
+print(score)      # 15
+score *= 3
+print(score)      # 45
+score -= 7
+print(score)      # 38
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 5 — المسار</div>
+      <p>اطبع المسار ده كما هو بالظبط: <code class="inl">C:\new\table\file.txt</code>. جرّب الأول من غير معالجة وشوف بيحصل إيه، وبعدين صلّحه بطريقتين مختلفتين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+# ❌ الغلط: \n و \t بيتفسّروا كسطر جديد وتاب
+print("C:\new\table\file.txt")
+# ✅ الحل 1: مضاعفة الشرطة
+print("C:\\new\\table\\file.txt")
+# ✅ الحل 2: raw string
+print(r"C:\new\table\file.txt")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 6 — التبديل</div>
+      <p>عندك <code class="inl">a = "أول"</code> و <code class="inl">b = "تاني"</code>. بدّل قيمهم من غير ما تستخدم متغيّر تالت.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+a = "أول"
+b = "تاني"
+a, b = b, a          # بايثون بتسمح بده مباشرةً!
+print(a, b)          # تاني أول
+</pre></div>
+      <p>ده اسمه <strong>tuple unpacking</strong> — بايثون بتبني tuple من الطرف الأيمن وتفكّه على الأيسر. في لغات تانية كنت هتحتاج متغيّر مؤقّت.</p>
+      </details>
+    </div>
+
+    <h4>المستوى الثالث: تحدّي</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 7 — منسّق التقارير</div>
+      <p>
+        اعمل متغيّرات لـ 3 موظفين (اسم + راتب)، واطبع جدول محاذي الأعمدة زي ده،
+        باستخدام تنسيق f-string المتقدّم (<code class="inl">{x:&lt;12}</code> للمحاذاة و<code class="inl">{x:,}</code> لفواصل الآلاف):
+      </p>
+      <div class="out"><div class="out-head">▸ المطلوب</div><pre>Ahmed        12,000
+Sara         15,500
+Ali           9,750</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+n1, s1 = "Ahmed", 12000
+n2, s2 = "Sara", 15500
+n3, s3 = "Ali", 9750
+print(f"{n1:&lt;12}{s1:&gt;6,}")
+print(f"{n2:&lt;12}{s2:&gt;6,}")
+print(f"{n3:&lt;12}{s3:&gt;6,}")
+</pre></div>
+      <p><code class="inl">&lt;</code> محاذاة يسار، <code class="inl">&gt;</code> محاذاة يمين، <code class="inl">,</code> فاصلة آلاف، والرقم هو عرض الخانة.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. ناتج <code class="inl">print("2" + "3")</code> هو…</p>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> 23</label>
+        <label><input type="radio"> "23"</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. ناتج <code class="inl">print(type(7 + 1.0))</code> هو…</p>
+        <label><input type="radio"> &lt;class 'int'&gt;</label>
+        <label><input type="radio"> &lt;class 'str'&gt;</label>
+        <label><input type="radio"> &lt;class 'float'&gt;</label>
+        <label><input type="radio"> &lt;class 'bool'&gt;</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. أنهي اسم متغيّر <strong>غلط</strong>؟</p>
+        <label><input type="radio"> user_name</label>
+        <label><input type="radio"> _temp</label>
+        <label><input type="radio"> phone2</label>
+        <label><input type="radio"> 2phone</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">4. <code class="inl">name = "Ali"</code> ثم <code class="inl">print("name")</code> — الناتج؟</p>
+        <label><input type="radio"> name</label>
+        <label><input type="radio"> Ali</label>
+        <label><input type="radio"> "Ali"</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">5. أي واحدة بتضيف سطر جديد جوّه النص؟</p>
+        <label><input type="radio"> \t</label>
+        <label><input type="radio"> \\</label>
+        <label><input type="radio"> \n</label>
+        <label><input type="radio"> \"</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">6. <code class="inl">x = "ab"</code> ثم <code class="inl">x += "cd"</code> — قيمة x؟</p>
+        <label><input type="radio"> ab</label>
+        <label><input type="radio"> abcd</label>
+        <label><input type="radio"> cd</label>
+        <label><input type="radio"> ab cd</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:1 -->
+  <div class="checkpoint" data-unit="1">
+    <h4>✅ نقطة تفتيش: الوحدة الأولى</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أقدر أطبع نصوص وأرقام وأعمل حسابات جوّه print.</li><li>أعرف أعمل متغيّرات بأسماء صحيحة وأغيّر قيمها.</li><li>أعرف الأنواع الأربعة وأستخدم type.</li><li>أكتب f-string بتنسيق أرقام.</li></ul>
+  </div>
+  <!-- /CP -->

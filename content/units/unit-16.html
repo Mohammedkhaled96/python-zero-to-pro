@@ -1,0 +1,2539 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة السادسة عشرة · الاختبارات</div>
+    <h2>الاختبارات: إزاي تتأكّد إن كودك شغّال فعلًا</h2>
+    <p>
+      لحد دلوقتي إحنا بنتأكّد من الكود بـ «شغّله وشوف». الطريقة دي بتنفع لـ 20 سطر،
+      وبتفشل تمامًا في 500. الوحدة دي هي <strong>الخط الفاصل بين الهاوي والمحترف</strong>:
+      هتكتب كود بيختبر كودك، فأي تعديل بعد كده تعرف في ثانية إنه كسر حاجة ولا لأ.
+    </p>
+  </div>
+
+  <!-- 16.1 -->
+  <article class="lesson" id="u16-l1">
+    <h3>ليه الاختبارات؟ والمشكلة اللي بتحلّها <span class="tag">درس 85</span></h3>
+    <p class="goal">الهدف: تفهم إن الاختبار مش «رفاهية للشركات الكبيرة» — هو أسرع طريقة تشتغل.</p>
+
+    <h4>1. الطريقة اللي بنستخدمها لحد دلوقتي</h4>
+    <div class="code"><pre>
+def calculate_discount(price, percent):
+    return price - (price * percent / 100)
+# الاختبار اليدوي: شغّل وبصّ بعينك
+print(calculate_discount(100, 10))     # المفروض 90
+print(calculate_discount(200, 25))     # المفروض 150
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>90.0
+150.0</pre></div>
+    <p>شغّال. طيب إيه المشكلة؟</p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المشكلة</th><th>الشرح</th></tr>
+        <tr>
+          <td><strong>بتتعب وبتنسى</strong></td>
+          <td>مع 20 دالة، كل تعديل يستلزم تشغيل 20 مثال والمقارنة بعينك. مش هتعملها.</td>
+        </tr>
+        <tr>
+          <td><strong>ما بتفحصش الحالات الحدّية</strong></td>
+          <td>جرّبت خصم 0%؟ 100%؟ سعر صفر؟ نسبة سالبة؟ غالبًا لأ.</td>
+        </tr>
+        <tr>
+          <td><strong>الانحدار (Regression)</strong></td>
+          <td>
+            بتعدّل دالة فتكسر دالة تانية بتستخدمها، وما تعرفش غير لما مستخدم يشتكي.
+            <strong>دي أخطر مشكلة في البرمجة.</strong>
+          </td>
+        </tr>
+        <tr>
+          <td><strong>الكود اللي بتمسحه</strong></td>
+          <td>بتكتب <code class="inl">print</code> للتأكيد وبعدين تمسحه — فالمعرفة بتضيع.</td>
+        </tr>
+      </table>
+    </div>
+
+    <h4>2. نفس الفحص، بس مكتوب</h4>
+    <div class="code"><pre>
+def calculate_discount(price, percent):
+    return price - (price * percent / 100)
+assert calculate_discount(100, 10) == 90
+assert calculate_discount(200, 25) == 150
+assert calculate_discount(50, 0) == 50
+assert calculate_discount(50, 100) == 0
+print("✅ كل الاختبارات نجحت")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>✅ كل الاختبارات نجحت</pre></div>
+    <p>
+      دلوقتي عندك <strong>4 اختبارات محفوظة</strong> تشتغل في ثانية واحدة، وتقول لك
+      فورًا لو أي تعديل كسر حاجة. ومكتوبة مرّة واحدة للأبد.
+    </p>
+
+    <h4>3. شوف الاختبار وهو بيمسك خطأ</h4>
+    <div class="code" data-file="test.py"><pre>
+def calculate_discount(price, percent):
+    return price - (percent / 100)        # ❌ نسينا نضرب في السعر
+assert calculate_discount(100, 10) == 90
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Traceback (most recent call last):
+  File "test.py", line 3, in &lt;module&gt;
+    assert calculate_discount(100, 10) == 90
+AssertionError</pre></div>
+    <p>
+      الخطأ ظهر <strong>في اللحظة اللي كتبت فيها الباگ</strong>، مش بعد أسبوع في الإنتاج.
+    </p>
+
+    <h4>4. الفوايد الحقيقية</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الفايدة</th><th>الشرح</th></tr>
+        <tr><td><strong>شبكة أمان</strong></td><td>تعدّل وتحسّن الكود وإنت مطمّن — الاختبارات هي اللي هتصرخ لو كسرت حاجة</td></tr>
+        <tr><td><strong>توثيق حيّ</strong></td><td>الاختبار بيوضّح إزاي الدالة المفروض تستخدم — وبعكس التعليقات، ما بيقدرش يكون قديم أو غلط</td></tr>
+        <tr><td><strong>تصميم أفضل</strong></td><td>الكود الصعب اختباره غالبًا كود سيّئ التصميم. الاختبار بيكشف ده بدري</td></tr>
+        <tr><td><strong>ثقة في التعديل</strong></td><td>بدون اختبارات، أي تعديل في مشروع كبير بيبقى مخاطرة فبتتجنّبه — والكود بيتعفّن</td></tr>
+      </table>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 الفكرة الأساسية</div>
+      <p>
+        الاختبار مش بيثبت إن كودك <em>صح</em> — بيثبت إنه <strong>لسه بيتصرّف زي ما توقّعت</strong>.
+        وده كفاية عشان يمنع 90% من الكوارث.
+      </p>
+    </div>
+    <!-- APPEND:u16-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>اختبر قبل ما تثق</div>
+      <p>الدالة دي «شكلها صح». اكتب 3 فحوصات بسيطة تكشف مشكلتها.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def is_adult(age):
+    return age &gt; 18
+cases = [(20, True), (10, False), (18, True)]
+for age, expected in cases:
+    got = is_adult(age)
+    status = "✓" if got == expected else "✗"
+    print(status, age, "متوقّع", expected, "طلع", got)
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>✓ 20 متوقّع True طلع True
+✓ 10 متوقّع False طلع False
+✗ 18 متوقّع True طلع False</pre></div>
+      <p>الحالة الحدّية (18) هي اللي كشفت الخطأ — الحدود أكتر مكان بتستخبّى فيه الأخطاء.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. أهم فايدة للاختبارات الآلية…</p>
+        <label><input type="radio"> البرنامج يبقى أسرع</label>
+        <label><input type="radio"> تغيّر الكود وأنت واثق إنك ما كسرتش حاجة</label>
+        <label><input type="radio"> بتلغي الحاجة للتوثيق</label>
+        <label><input type="radio"> بتصلّح الأخطاء لوحدها</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. اختبار الوحدة (unit test) بيختبر…</p>
+        <label><input type="radio"> البرنامج كله مع قاعدة البيانات</label>
+        <label><input type="radio"> الواجهة بس</label>
+        <label><input type="radio"> سرعة الإنترنت</label>
+        <label><input type="radio"> جزء صغير معزول (دالة مثلًا)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. حالات لازم تجرّبها دايمًا…</p>
+        <label><input type="radio"> العادية، والحدود، والمدخلات الغلط</label>
+        <label><input type="radio"> العادية بس</label>
+        <label><input type="radio"> العشوائية بس</label>
+        <label><input type="radio"> أول وآخر سطر</label>
+      </div>
+    </div>
+    <!-- /APPEND:u16-l1 -->
+              <!-- SUM:u16-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الاختبار = كود بيتأكّد إن كودك بيعمل المطلوب.</li><li>بيمسك الأخطاء بدري ويديك ثقة تعدّل.</li><li>الاختبار اليدوي مش بيتكرّر — الآلي بيتكرّر ببلاش.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 16.2 -->
+  <article class="lesson" id="u16-l2">
+    <h3>assert: أبسط أداة اختبار <span class="tag">درس 86</span></h3>
+    <p class="goal">الهدف: تتقن <code>assert</code> — وتعرف إمتى <em>ما</em> تستخدمها.</p>
+
+    <h4>1. الصيغة</h4>
+    <div class="diagram">
+<pre>  assert  الشرط  ,  "الرسالة لو فشل"
+    │        │           │
+    │        │           └── اختيارية بس مفيدة جدًا
+    │        └────────────── لازم يطلّع True
+    └─────────────────────── الكلمة المفتاحية
+
+  معناها: "أنا متأكّد إن ده صح — ولو مش صح، اقف فورًا"</pre>
+      <div class="cap">تشريح assert</div>
+    </div>
+    <div class="code"><pre>
+x = 10
+assert x &gt; 0                                  # نجح، مفيش أي ناتج
+assert x &gt; 0, "x لازم يكون موجب"              # نجح كمان
+assert x &gt; 100, f"x = {x} وده أقل من 100"     # فشل!
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Traceback (most recent call last):
+  File "main.py", line 4, in &lt;module&gt;
+    assert x &gt; 100, f"x = {x} وده أقل من 100"     # فشل!
+           ^^^^^^^
+AssertionError: x = 10 وده أقل من 100</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 دايمًا اكتب رسالة</div>
+      <p>
+        <code class="inl">AssertionError</code> لوحدها ما بتقولش حاجة. الرسالة بتفرق بين
+        «فيه حاجة غلط» و«القيمة كانت 10 والمفروض تكون فوق 100».
+      </p>
+    </div>
+
+    <h4>2. أنماط الاختبار الشائعة</h4>
+    <div class="code"><pre>
+def clean_name(name):
+    return name.strip().title()
+# القيمة الراجعة
+assert clean_name("  ahmed ali ") == "Ahmed Ali"
+# النوع
+assert isinstance(clean_name("x"), str)
+# القيم الحدّية
+assert clean_name("") == ""
+assert clean_name("   ") == ""
+# الاحتواء
+assert "Ali" in clean_name("ahmed ali")
+# قائمة كاملة
+assert sorted([3, 1, 2]) == [1, 2, 3]
+# التقريب للأعداد العشرية — مهم جدًا!
+assert abs(0.1 + 0.2 - 0.3) &lt; 1e-9
+print("✅ الكل نجح")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>✅ الكل نجح</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ ما تقارنش أعداد عشرية بـ ==</div>
+      <p>
+        <code class="inl">assert 0.1 + 0.2 == 0.3</code> <strong>هتفشل</strong> — من درس
+        دقّة الأعداد العشرية في الوحدة 2. الحل: قارن الفرق بعدد صغير جدًا
+        (<code class="inl">1e-9</code>)، أو استخدم
+        <code class="inl">round(x, 9) == round(y, 9)</code>.
+      </p>
+    </div>
+
+    <h4>3. اختبار إن الخطأ بيحصل فعلًا</h4>
+    <div class="code"><pre>
+def divide(a, b):
+    if b == 0:
+        raise ValueError("القسمة على صفر ممنوعة")
+    return a / b
+# الحالة الطبيعية
+assert divide(10, 2) == 5
+# الحالة اللي المفروض ترمي خطأ
+try:
+    divide(10, 0)
+    assert False, "المفروض ترمي ValueError بس ما رمتش!"
+except ValueError as e:
+    assert "صفر" in str(e)
+print("✅ الاختبارات نجحت")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>✅ الاختبارات نجحت</pre></div>
+    <p>
+      <code class="inl">assert False</code> بعد الاستدعاء حيلة ذكية: لو الدالة <em>ما رمتش</em>
+      خطأ، التنفيذ هيوصل للسطر ده ويفشل الاختبار. ولو رمت، بنقفز للـ
+      <code class="inl">except</code> ونفحص الرسالة. (في <code class="inl">pytest</code> فيه
+      طريقة أنضف بكتير هنشوفها بعد شوية.)
+    </p>
+
+    <h4>4. إمتى <em>لا</em> تستخدم assert</h4>
+    <div class="box err">
+      <div class="bt">💥 <code>assert</code> بتختفي في وضع الإنتاج!</div>
+      <div class="code" data-file="terminal"><pre>
+python script.py        # الـ assert بتشتغل
+python -O script.py     # الـ assert بتتجاهل تمامًا (O = Optimize)
+</pre></div>
+      <p>
+        فـ <code class="inl">assert</code> <strong>مش أداة تحقّق من مدخلات المستخدم</strong>.
+        استخدمها للاختبارات وللافتراضات الداخلية بس.
+      </p>
+      <div class="code"><pre>
+# ❌ غلط: التحقّق من مدخل مستخدم
+def withdraw(amount):
+    assert amount &gt; 0, "مبلغ غير صالح"     # هتختفي في -O!
+# ✅ صح: رفع استثناء حقيقي
+def withdraw(amount):
+    if amount &lt;= 0:
+        raise ValueError("مبلغ غير صالح")
+</pre></div>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>استخدم <code class="inl">assert</code> لما</th><th>استخدم <code class="inl">raise</code> لما</th></tr>
+        <tr><td>بتكتب اختبارات</td><td>بتتحقّق من مدخلات المستخدم</td></tr>
+        <tr><td>بتتحقّق من «ده مستحيل يحصل» داخليًا</td><td>الخطأ متوقّع وممكن يحصل</td></tr>
+        <tr><td>الخطأ = باگ في كودك</td><td>الخطأ = استخدام غلط من بره</td></tr>
+      </table>
+    </div>
+    <!-- APPEND:u16-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>assert برسالة</div>
+      <p>اكتب assert لدالة تكبير أول حرف، وخلّي الفاشلة تطبع رسالة مفيدة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def cap(word):
+    return word[:1].upper() + word[1:]
+assert cap("python") == "Python"
+assert cap("") == ""
+try:
+    assert cap("ali") == "ALI", f"متوقّع ALI لكن طلع {cap('ali')}"
+except AssertionError as e:
+    print("فشل:", e)
+print("خلصنا")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>فشل: متوقّع ALI لكن طلع Ali
+خلصنا</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">assert 1 + 1 == 2</code> بتطبع…</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> OK</label>
+        <label><input type="radio"> ولا حاجة</label>
+        <label><input type="radio"> 2</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ليه ما نستخدمش assert للتحقّق من مدخلات المستخدم في البرنامج الحقيقي؟</p>
+        <label><input type="radio"> لأنها بتتلغي لو بايثون اشتغلت بـ <code class="inl">-O</code></label>
+        <label><input type="radio"> أبطأ</label>
+        <label><input type="radio"> مش بتشتغل مع النصوص</label>
+        <label><input type="radio"> مفيش سبب</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">assert (x > 0, "رسالة")</code> — المشكلة؟</p>
+        <label><input type="radio"> مفيش</label>
+        <label><input type="radio"> SyntaxError</label>
+        <label><input type="radio"> بتفشل دايمًا</label>
+        <label><input type="radio"> tuple غير فاضي = True دايمًا، فعمرها ما تفشل</label>
+      </div>
+    </div>
+    <!-- /APPEND:u16-l2 -->
+              <!-- SUM:u16-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">assert شرط, رسالة</code> بترمي AssertionError لو الشرط False.</li><li>اختبر الحالة العادية والحدّية والغلط.</li><li>ما تستخدمش assert للتحقّق من مدخلات المستخدم في الإنتاج.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 16.3 -->
+  <article class="lesson" id="u16-l3">
+    <h3>pytest: المكتبة القياسية للاختبارات <span class="tag">درس 87 · مهم</span></h3>
+    <p class="goal">الهدف: تكتب اختبارات احترافية بأشهر مكتبة اختبار في عالم بايثون.</p>
+
+    <h4>1. التثبيت والتشغيل</h4>
+    <div class="code" data-file="terminal"><pre>
+pip install pytest
+pytest                      # بيلاقي كل الاختبارات ويشغّلها
+pytest -v                   # تفاصيل: اسم كل اختبار ونتيجته
+pytest -q                   # مختصر
+pytest test_math.py         # ملف واحد
+pytest -k "discount"        # الاختبارات اللي اسمها فيه discount
+pytest -x                   # اوقف عند أول فشل
+pytest --tb=short           # تتبّع خطأ مختصر
+</pre></div>
+
+    <h4>2. قواعد الاكتشاف التلقائي</h4>
+    <div class="box info">
+      <div class="bt">ℹ️ pytest بتلاقي اختباراتك لوحدها بشرط</div>
+      <ul>
+        <li>الملف اسمه <code class="inl">test_*.py</code> أو <code class="inl">*_test.py</code></li>
+        <li>الدالة اسمها يبدأ بـ <code class="inl">test_</code></li>
+        <li>الكلاس اسمه يبدأ بـ <code class="inl">Test</code> (لو بتستخدم كلاسات)</li>
+      </ul>
+      <p>وبتستخدم <code class="inl">assert</code> العادية — مفيش صيغة جديدة تتعلّمها!</p>
+    </div>
+
+    <h4>3. أول ملف اختبار</h4>
+    <div class="code" data-file="calculator.py"><pre>
+def add(a, b):
+    return a + b
+def divide(a, b):
+    if b == 0:
+        raise ValueError("القسمة على صفر ممنوعة")
+    return a / b
+def apply_discount(price, percent):
+    if not 0 &lt;= percent &lt;= 100:
+        raise ValueError("النسبة لازم بين 0 و 100")
+    return round(price * (1 - percent / 100), 2)
+</pre></div>
+    <div class="code" data-file="test_calculator.py"><pre>
+import pytest
+from calculator import add, divide, apply_discount
+def test_add_positive():
+    assert add(2, 3) == 5
+def test_add_negative():
+    assert add(-1, -1) == -2
+def test_add_zero():
+    assert add(0, 5) == 5
+def test_divide_normal():
+    assert divide(10, 2) == 5
+def test_divide_by_zero_raises():
+    with pytest.raises(ValueError):
+        divide(10, 0)
+def test_divide_by_zero_message():
+    with pytest.raises(ValueError, match="صفر"):
+        divide(10, 0)
+def test_discount_normal():
+    assert apply_discount(100, 25) == 75
+def test_discount_edges():
+    assert apply_discount(100, 0) == 100
+    assert apply_discount(100, 100) == 0
+def test_discount_invalid():
+    with pytest.raises(ValueError):
+        apply_discount(100, 150)
+</pre></div>
+    <div class="out"><div class="out-head">▸ ناتج pytest -v</div><pre>test_calculator.py::test_add_positive PASSED          [ 10%]
+test_calculator.py::test_add_negative PASSED         [ 20%]
+test_calculator.py::test_add_zero PASSED             [ 30%]
+test_calculator.py::test_divide_normal PASSED        [ 40%]
+test_calculator.py::test_divide_by_zero_raises PASSED[ 50%]
+test_calculator.py::test_divide_by_zero_message PASSED[ 60%]
+test_calculator.py::test_discount_normal PASSED      [ 70%]
+test_calculator.py::test_discount_edges PASSED       [ 80%]
+test_calculator.py::test_discount_invalid PASSED     [ 90%]
+
+========================= 10 passed in 0.04s =========================</pre></div>
+
+    <h4>4. <code>pytest.raises</code>: الطريقة النضيفة لاختبار الأخطاء</h4>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">divide</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+# الطريقة اليدوية (من الدرس السابق) — 5 سطور
+try:
+    divide(10, 0)
+    assert False, "المفروض ترمي خطأ"
+except ValueError:
+    pass
+# مع pytest — سطرين وأوضح
+with pytest.raises(ValueError):
+    divide(10, 0)
+# وبفحص الرسالة كمان
+with pytest.raises(ValueError, match="صفر"):
+    divide(10, 0)
+# وبالوصول لكائن الخطأ
+with pytest.raises(ValueError) as info:
+    divide(10, 0)
+assert "ممنوعة" in str(info.value)
+</pre></div>
+    <p>
+      <code class="inl">with</code> هنا نفس <code class="inl">with</code> بتاعة الملفات —
+      مدير سياق. معناها «الكود اللي جوّايا <strong>لازم</strong> يرمي الخطأ ده، وإلا الاختبار يفشل».
+    </p>
+
+    <h4>5. رسائل الفشل في pytest — أوضح حاجة فيها</h4>
+    <div class="code" data-file="test_fail_demo.py"><pre>
+def test_will_fail():
+    result = apply_discount(100, 25)
+    assert result == 80
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>    def test_will_fail():
+        result = apply_discount(100, 25)
+&gt;       assert result == 80
+E       assert 75.0 == 80
+E        +  where 75.0 = apply_discount(100, 25)
+
+test_fail_demo.py:3: AssertionError
+=========================== 1 failed in 0.03s ============================</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 لاحظ السحر</div>
+      <p>
+        <code class="inl">assert</code> العادية بترمي <code class="inl">AssertionError</code> فاضية.
+        لكن <strong>pytest بتعيد كتابة الـ assert</strong> وبتوريك القيم الفعلية:
+        <code class="inl">75.0 == 80</code> ومنين جات. دي أكبر سبب لاستخدام pytest.
+      </p>
+    </div>
+    <!-- APPEND:u16-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>ملف اختبار كامل</div>
+      <p>اكتب <code class="inl">test_discount.py</code> بتلات اختبارات منهم واحد بـ <code class="inl">pytest.raises</code>. (التشغيل الحقيقي: <code class="inl">pytest -v</code>؛ هنا بنناديهم يدويًا عشان تشوف النتيجة في الصفحة.)</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code" data-file="test_discount.py"><pre>
+import pytest
+def discount(price, percent):
+    if not 0 &lt;= percent &lt;= 100:
+        raise ValueError("النسبة لازم بين 0 و 100")
+    return price * (100 - percent) / 100
+def test_normal():
+    assert discount(200, 25) == 150
+def test_zero():
+    assert discount(99, 0) == 99
+def test_invalid():
+    with pytest.raises(ValueError):
+        discount(100, 150)
+for t in [test_normal, test_zero, test_invalid]:
+    t()
+    print("PASSED", t.__name__)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>PASSED test_normal
+PASSED test_zero
+PASSED test_invalid</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. pytest بيلاقي الاختبارات إزاي؟</p>
+        <label><input type="radio"> لازم تسجّلها في قائمة</label>
+        <label><input type="radio"> ملفات <code class="inl">test_*.py</code> ودوال بتبدأ بـ <code class="inl">test_</code></label>
+        <label><input type="radio"> أي دالة في المشروع</label>
+        <label><input type="radio"> الدوال اللي فيها assert</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">pytest.raises(ValueError)</code> والكود ما رماش خطأ…</p>
+        <label><input type="radio"> الاختبار بيفشل</label>
+        <label><input type="radio"> الاختبار بينجح</label>
+        <label><input type="radio"> بيتخطّى</label>
+        <label><input type="radio"> pytest بيقف</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">pytest -k discount</code>…</p>
+        <label><input type="radio"> بتمسح الاختبارات</label>
+        <label><input type="radio"> بتشغّل كل حاجة</label>
+        <label><input type="radio"> بتشغّل الاختبارات اللي اسمها فيه discount بس</label>
+        <label><input type="radio"> بتعمل تقرير تغطية</label>
+      </div>
+    </div>
+    <!-- /APPEND:u16-l3 -->
+              <!-- SUM:u16-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>pytest بيلاقي ملفات <code class="inl">test_*.py</code> ودوال <code class="inl">test_*</code> لوحده.</li><li><code class="inl">assert</code> عادية ورسايل فشل مفصّلة.</li><li><code class="inl">pytest.raises(ValueError)</code> لاختبار الأخطاء.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 16.4 -->
+  <article class="lesson" id="u16-l4">
+    <h3>تنظيم الاختبارات: fixtures و parametrize <span class="tag">درس 88</span></h3>
+    <p class="goal">الهدف: تتخلّص من التكرار في الاختبارات — نفس مبدأ DRY.</p>
+
+    <h4>1. المشكلة: تكرار</h4>
+    <div class="code"><pre>
+def test_add_task():
+    manager = TaskList("test.json")      # تكرار
+    manager.add(Task("أ"))
+    assert len(manager) == 1
+def test_remove_task():
+    manager = TaskList("test.json")      # تكرار
+    manager.add(Task("أ"))
+    manager.remove(0)
+    assert len(manager) == 0
+def test_progress():
+    manager = TaskList("test.json")      # تكرار للمرّة التالتة
+    manager.add(Task("أ"))
+    assert manager.progress == 0
+</pre></div>
+
+    <h4>2. الحل: <code>@pytest.fixture</code></h4>
+    <div class="code" data-file="test_tasks.py"><pre>
+import pytest
+from tasks import Task, TaskList
+@pytest.fixture
+def empty_list(tmp_path):
+    """بتجهّز قائمة مهام فاضية على ملف مؤقّت"""
+    return TaskList(tmp_path / "tasks.json")
+@pytest.fixture
+def list_with_two(empty_list):
+    """fixture بتستخدم fixture تانية!"""
+    empty_list.add(Task("مذاكرة", priority="عالية"))
+    empty_list.add(Task("رياضة"))
+    return empty_list
+def test_starts_empty(empty_list):
+    assert len(empty_list) == 0
+    assert empty_list.progress == 0
+def test_add_increases_length(empty_list):
+    empty_list.add(Task("أ"))
+    assert len(empty_list) == 1
+def test_two_tasks(list_with_two):
+    assert len(list_with_two) == 2
+    assert len(list_with_two.pending) == 2
+    assert len(list_with_two.done) == 0
+def test_complete_updates_progress(list_with_two):
+    list_with_two[0].complete()
+    assert list_with_two.progress == 50
+    assert len(list_with_two.done) == 1
+</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 إزاي بتشتغل؟</div>
+      <p>
+        اسم الـ fixture بيتكتب كـ <strong>وسيط</strong> في دالة الاختبار، وpytest بتشغّل
+        الـ fixture وتحطّ الناتج مكانه. وأهم حاجة: <strong>بتتنفّذ من جديد لكل اختبار</strong>،
+        فكل اختبار بيبدأ من صفحة نضيفة ومفيش تسريب بينهم.
+      </p>
+      <p>
+        و<code class="inl">tmp_path</code> fixture <strong>جاهزة</strong> من pytest بترجّع
+        فولدر مؤقّت يتمسح تلقائيًا — فالاختبارات ما بتلوّثش مشروعك بملفات.
+      </p>
+    </div>
+
+    <h4>3. <code>@pytest.mark.parametrize</code>: اختبار واحد بعشرين حالة</h4>
+    <div class="code"><pre>
+# من غيرها — تكرار ممل
+def test_discount_10():
+    assert apply_discount(100, 10) == 90
+def test_discount_25():
+    assert apply_discount(100, 25) == 75
+def test_discount_50():
+    assert apply_discount(100, 50) == 50
+</pre></div>
+    <div class="code" data-file="test_discount.py"><pre>
+import pytest
+from calculator import apply_discount
+@pytest.mark.parametrize("price, percent, expected", [
+    (100, 0, 100),
+    (100, 10, 90),
+    (100, 25, 75),
+    (100, 50, 50),
+    (100, 100, 0),
+    (250, 20, 200),
+    (99.99, 50, 50.0),
+])
+def test_discount(price, percent, expected):
+    assert apply_discount(price, percent) == expected
+@pytest.mark.parametrize("bad_percent", [-1, 101, 200, -50])
+def test_invalid_percent_raises(bad_percent):
+    with pytest.raises(ValueError):
+        apply_discount(100, bad_percent)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>test_discount.py::test_discount[100-0-100] PASSED
+test_discount.py::test_discount[100-10-90] PASSED
+test_discount.py::test_discount[100-25-75] PASSED
+test_discount.py::test_discount[100-50-50] PASSED
+test_discount.py::test_discount[100-100-0] PASSED
+test_discount.py::test_discount[250-20-200] PASSED
+test_discount.py::test_discount[99.99-50-50.0] PASSED
+test_discount.py::test_invalid_percent_raises[-1] PASSED
+test_discount.py::test_invalid_percent_raises[101] PASSED
+test_discount.py::test_invalid_percent_raises[200] PASSED
+test_discount.py::test_invalid_percent_raises[-50] PASSED
+
+========================= 11 passed in 0.05s =========================</pre></div>
+    <p>
+      <strong>دالتين اختبار بس، و11 حالة فعلية.</strong> وكل حالة بتظهر منفصلة في التقرير،
+      فلو واحدة فشلت تعرف أنهي حالة بالظبط.
+    </p>
+
+    <h4>4. علامات (marks) مفيدة</h4>
+    <div class="code"><pre>
+import pytest
+import sys
+@pytest.mark.skip(reason="الميزة لسه مش متعمولة")
+def test_future_feature():
+    assert False
+@pytest.mark.skipif(sys.platform == "win32", reason="مش بيشتغل على ويندوز")
+def test_unix_only():
+    assert True
+@pytest.mark.xfail(reason="باگ معروف رقم 42")
+def test_known_bug():
+    assert 1 / 3 == 0.333
+@pytest.mark.slow
+def test_heavy_computation():
+    assert sum(range(10_000_000)) &gt; 0
+</pre></div>
+    <div class="code" data-file="terminal"><pre>
+pytest -m "not slow"        # شغّل كل حاجة ما عدا البطيء
+pytest -m slow              # شغّل البطيء بس
+</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>العلامة</th><th>معناها</th></tr>
+        <tr><td><code class="inl">skip</code></td><td>تجاهل الاختبار دايمًا</td></tr>
+        <tr><td><code class="inl">skipif</code></td><td>تجاهله بشرط (نظام، إصدار، مكتبة ناقصة)</td></tr>
+        <tr><td><code class="inl">xfail</code></td><td>متوقّع يفشل — بيتسجّل كـ xfail مش كفشل</td></tr>
+        <tr><td>علامة مخصّصة</td><td>تصنيف عشان تشغّل مجموعات منفصلة</td></tr>
+      </table>
+    </div>
+    <!-- APPEND:u16-l4 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>parametrize و fixture</div>
+      <p>حوّل 4 اختبارات متشابهة لاختبار واحد بجدول، واستخدم fixture لتجهيز بيانات. (الكود للتشغيل بـ <code class="inl">pytest</code> في الطرفية.)</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code" data-file="test_grades.py" data-norun><pre>
+import pytest
+def grade(score):
+    return "A" if score &gt;= 90 else "B" if score &gt;= 75 else "F"
+@pytest.mark.parametrize("score, expected", [
+    (95, "A"),
+    (90, "A"),
+    (89, "B"),
+    (10, "F"),
+])
+def test_grade(score, expected):
+    assert grade(score) == expected
+@pytest.fixture
+def class_scores():
+    return {"علي": 95, "منى": 70}
+def test_top_student(class_scores):
+    best = max(class_scores, key=class_scores.get)
+    assert grade(class_scores[best]) == "A"
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>$ pytest test_grades.py -v
+test_grades.py::test_grade[95-A] PASSED
+test_grades.py::test_grade[90-A] PASSED
+test_grades.py::test_grade[89-B] PASSED
+test_grades.py::test_grade[10-F] PASSED
+test_grades.py::test_top_student PASSED</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. parametrize بجدول 4 صفوف بيطلع كام اختبار؟</p>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 8</label>
+        <label><input type="radio"> 4</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. الاختبار بياخد الـ fixture إزاي؟</p>
+        <label><input type="radio"> بـ import</label>
+        <label><input type="radio"> بكتابة اسمها كوسيط في دالة الاختبار</label>
+        <label><input type="radio"> بنداها يدويًا</label>
+        <label><input type="radio"> بـ global</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ليه كل اختبار ياخد بيانات جديدة من الـ fixture؟</p>
+        <label><input type="radio"> عشان اختبار ما يأثّرش على التاني</label>
+        <label><input type="radio"> أسرع</label>
+        <label><input type="radio"> إجباري في بايثون</label>
+        <label><input type="radio"> عشان التقرير يبقى أطول</label>
+      </div>
+    </div>
+    <!-- /APPEND:u16-l4 -->
+              <!-- SUM:u16-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">@pytest.fixture</code> بتجهّز بيانات مشتركة.</li><li><code class="inl">@pytest.mark.parametrize</code> بتشغّل اختبار واحد على حالات كتير.</li><li><code class="inl">tmp_path</code> لملفات مؤقّتة، والـ marks لتصنيف الاختبارات.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 16.5 -->
+  <article class="lesson" id="u16-l5">
+    <h3>unittest: المكتبة المدمجة <span class="tag">درس 89</span></h3>
+    <p class="goal">الهدف: تعرف البديل المدمج في بايثون — هتقابله في مشاريع كتير.</p>
+
+    <h4>1. ليه نتعلّمها ونحن عندنا pytest؟</h4>
+    <ul>
+      <li><strong>مدمجة</strong> في بايثون — مفيش تثبيت.</li>
+      <li>مشاريع قديمة وكتير من كود Django مكتوب بيها.</li>
+      <li>بتوضّح مفاهيم الاختبار بشكل صريح (setUp / tearDown).</li>
+      <li>pytest بتشغّل اختبارات unittest عادي — فالانتقال سهل.</li>
+    </ul>
+
+    <h4>2. الشكل الأساسي</h4>
+    <div class="code" data-file="test_calculator_unittest.py"><pre>
+import unittest
+from calculator import add, divide, apply_discount
+class TestCalculator(unittest.TestCase):
+    def setUp(self):
+        """بتتنفّذ قبل كل اختبار"""
+        self.values = [1, 2, 3]
+    def tearDown(self):
+        """بتتنفّذ بعد كل اختبار — للتنظيف"""
+        self.values = None
+    def test_add(self):
+        self.assertEqual(add(2, 3), 5)
+    def test_divide(self):
+        self.assertEqual(divide(10, 2), 5)
+    def test_divide_by_zero(self):
+        with self.assertRaises(ValueError):
+            divide(10, 0)
+    def test_discount(self):
+        self.assertEqual(apply_discount(100, 25), 75)
+        self.assertNotEqual(apply_discount(100, 25), 80)
+    def test_types_and_truth(self):
+        self.assertTrue(add(1, 1) == 2)
+        self.assertFalse(add(1, 1) == 3)
+        self.assertIsInstance(add(1, 1), int)
+        self.assertIn(2, self.values)
+        self.assertAlmostEqual(0.1 + 0.2, 0.3)
+if __name__ == "__main__":
+    unittest.main()
+</pre></div>
+    <div class="code" data-file="terminal"><pre>
+python test_calculator_unittest.py -v
+python -m unittest discover
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>test_add (__main__.TestCalculator) ... ok
+test_discount (__main__.TestCalculator) ... ok
+test_divide (__main__.TestCalculator) ... ok
+test_divide_by_zero (__main__.TestCalculator) ... ok
+test_types_and_truth (__main__.TestCalculator) ... ok
+
+----------------------------------------------------------------------
+Ran 5 tests in 0.001s
+
+OK</pre></div>
+
+    <h4>3. دوال التحقّق في unittest</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>unittest</th><th>المكافئ في pytest</th></tr>
+        <tr><td><code class="inl">assertEqual(a, b)</code></td><td><code class="inl">assert a == b</code></td></tr>
+        <tr><td><code class="inl">assertNotEqual(a, b)</code></td><td><code class="inl">assert a != b</code></td></tr>
+        <tr><td><code class="inl">assertTrue(x)</code></td><td><code class="inl">assert x</code></td></tr>
+        <tr><td><code class="inl">assertFalse(x)</code></td><td><code class="inl">assert not x</code></td></tr>
+        <tr><td><code class="inl">assertIn(a, b)</code></td><td><code class="inl">assert a in b</code></td></tr>
+        <tr><td><code class="inl">assertIsNone(x)</code></td><td><code class="inl">assert x is None</code></td></tr>
+        <tr><td><code class="inl">assertIsInstance(a, T)</code></td><td><code class="inl">assert isinstance(a, T)</code></td></tr>
+        <tr><td><code class="inl">assertAlmostEqual(a, b)</code></td><td><code class="inl">assert abs(a-b) &lt; 1e-7</code></td></tr>
+        <tr><td><code class="inl">assertRaises(E)</code></td><td><code class="inl">pytest.raises(E)</code></td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 المقارنة النهائية</div>
+      <div class="tbl-wrap">
+        <table>
+          <tr><th></th><th>unittest</th><th>pytest</th></tr>
+          <tr><td>التثبيت</td><td>مدمجة</td><td><code class="inl">pip install pytest</code></td></tr>
+          <tr><td>الصيغة</td><td>كلاسات ودوال assert خاصة</td><td>دوال عادية و<code class="inl">assert</code> عادية</td></tr>
+          <tr><td>رسائل الفشل</td><td>مقبولة</td><td><strong>ممتازة</strong></td></tr>
+          <tr><td>التجهيز</td><td><code class="inl">setUp</code>/<code class="inl">tearDown</code></td><td>fixtures أقوى وأمرن</td></tr>
+          <tr><td>الحالات المتعدّدة</td><td><code class="inl">subTest</code></td><td><code class="inl">parametrize</code> أنضف</td></tr>
+          <tr><td>التوصية</td><td>لو المشروع مستخدمها</td><td><strong>للمشاريع الجديدة</strong></td></tr>
+        </table>
+      </div>
+    </div>
+    <!-- APPEND:u16-l5 -->
+    <h4>4. subTest والتخطّي: حالات كتير في اختبار واحد</h4>
+    <div class="code"><pre>
+import io
+import unittest
+def is_even(n):
+    return n % 2 == 0
+class TestEven(unittest.TestCase):
+    def test_many(self):
+        cases = [(2, True), (7, False), (0, True), (-4, True), (9, True)]
+        for number, expected in cases:
+            with self.subTest(number=number):
+                self.assertEqual(is_even(number), expected)
+    @unittest.skip("مثال على التخطّي")
+    def test_later(self):
+        pass
+suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestEven)
+result = unittest.TextTestRunner(stream=io.StringIO()).run(suite)
+print("عدد الاختبارات:", suite.countTestCases())
+print("فشل:", len(result.failures))
+print("اتخطّى:", len(result.skipped))
+print(result.failures[0][1].splitlines()[-1])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>عدد الاختبارات: 2
+فشل: 1
+اتخطّى: 1
+AssertionError: False != True</pre></div>
+
+    <h4>5. المحاكاة (mock) مع unittest</h4>
+    <div class="code"><pre>
+import io
+import random
+import unittest
+from unittest.mock import patch
+def roll_dice():
+    return random.randint(1, 6)
+class TestDice(unittest.TestCase):
+    @patch("random.randint", return_value=6)
+    def test_six(self, fake):
+        self.assertEqual(roll_dice(), 6)
+        fake.assert_called_once_with(1, 6)
+loader = unittest.defaultTestLoader
+result = unittest.TextTestRunner(stream=io.StringIO()).run(loader.loadTestsFromTestCase(TestDice))
+print(result.wasSuccessful())
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True</pre></div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>TestCase كامل</div>
+      <p>اكتب كلاس اختبار لكلاس <code class="inl">Wallet</code> فيه <code class="inl">setUp</code> وتلات اختبارات، وشغّله برمجيًا واطبع ملخّص النتيجة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import io
+import unittest
+class Wallet:
+    def __init__(self):
+        self.balance = 0
+    def deposit(self, amount):
+        if amount &lt;= 0:
+            raise ValueError("المبلغ لازم يكون موجب")
+        self.balance += amount
+class TestWallet(unittest.TestCase):
+    def setUp(self):
+        self.w = Wallet()
+    def test_starts_empty(self):
+        self.assertEqual(self.w.balance, 0)
+    def test_deposit(self):
+        self.w.deposit(50)
+        self.assertEqual(self.w.balance, 50)
+    def test_negative(self):
+        with self.assertRaises(ValueError):
+            self.w.deposit(-5)
+suite = unittest.TestLoader().loadTestsFromTestCase(TestWallet)
+result = unittest.TextTestRunner(stream=io.StringIO()).run(suite)
+print(result.testsRun, len(result.failures), len(result.errors))
+print(result.wasSuccessful())
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>3 0 0
+True</pre></div>
+      <p>في مشروع حقيقي بتحط الكلاس في <code class="inl">test_wallet.py</code> وتشغّل <code class="inl">python -m unittest -v</code>.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">setUp</code> بتتنادى…</p>
+        <label><input type="radio"> مرّة واحدة للكلاس</label>
+        <label><input type="radio"> بعد كل اختبار</label>
+        <label><input type="radio"> يدويًا</label>
+        <label><input type="radio"> قبل كل اختبار</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. المكافئ لـ <code class="inl">assert x in items</code>…</p>
+        <label><input type="radio"> assertEqual</label>
+        <label><input type="radio"> assertIn</label>
+        <label><input type="radio"> assertTrue(items)</label>
+        <label><input type="radio"> assertIs</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. pytest تقدر تشغّل اختبارات unittest؟</p>
+        <label><input type="radio"> أيوه، من غير أي تعديل</label>
+        <label><input type="radio"> لأ</label>
+        <label><input type="radio"> بعد تحويلها يدويًا</label>
+        <label><input type="radio"> بس على لينكس</label>
+      </div>
+    </div>
+    <!-- /APPEND:u16-l5 -->
+                <!-- SUM:u16-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>unittest مدمجة: كلاس يورث <code class="inl">TestCase</code> ودوال <code class="inl">test_</code>.</li><li><code class="inl">assertEqual</code> و <code class="inl">assertRaises</code> وإخواتها.</li><li>pytest بيشغّل اختبارات unittest كمان.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 16.6 -->
+  <article class="lesson" id="u16-l6">
+    <h3>doctest: اختبارات جوّه التوثيق <span class="tag">درس 90</span></h3>
+    <p class="goal">الهدف: تخلّي أمثلة الـ docstring اختبارات حقيقية.</p>
+
+    <h4>1. الفكرة</h4>
+    <div class="code" data-file="mathutils.py"><pre>
+def factorial(n):
+    """بتحسب مضروب الرقم.
+    &gt;&gt;&gt; factorial(0)
+    1
+    &gt;&gt;&gt; factorial(5)
+    120
+    &gt;&gt;&gt; factorial(1)
+    1
+    """
+    if n &lt; 0:
+        raise ValueError("المضروب للأعداد غير السالبة بس")
+    result = 1
+    for i in range(2, n + 1):
+        result *= i
+    return result
+def reverse_words(text):
+    """بتعكس ترتيب الكلمات.
+    &gt;&gt;&gt; reverse_words("ahmed ali sara")
+    'sara ali ahmed'
+    &gt;&gt;&gt; reverse_words("one")
+    'one'
+    &gt;&gt;&gt; reverse_words("")
+    ''
+    """
+    return " ".join(text.split()[::-1])
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod(verbose=True)
+</pre></div>
+    <div class="code" data-file="terminal"><pre>
+python mathutils.py
+python -m doctest mathutils.py -v
+pytest --doctest-modules mathutils.py
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Trying:
+    factorial(0)
+Expecting:
+    1
+ok
+Trying:
+    factorial(5)
+Expecting:
+    120
+ok
+...
+6 passed and 0 failed.
+Test passed.</pre></div>
+
+    <h4>2. ليه doctest مفيدة؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الميزة</th><th>الشرح</th></tr>
+        <tr><td><strong>التوثيق ما بيقدرش يكذب</strong></td><td>لو غيّرت الدالة والمثال بقى غلط، الاختبار يفشل فورًا</td></tr>
+        <tr><td><strong>مثال جاهز للقارئ</strong></td><td>أي حد يفتح الدالة يشوف إزاي تستخدم — من غير ما يفتح ملف اختبارات</td></tr>
+        <tr><td><strong>صفر إعدادات</strong></td><td>مدمجة في بايثون</td></tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ حدودها</div>
+      <p>
+        doctest حسّاسة للمخرجات <strong>حرفيًا</strong>: مسافة زايدة، ترتيب القاموس،
+        عنوان كائن في الذاكرة — كلها بتفشّل الاختبار. فهي ممتازة للدوال البسيطة اللي
+        مخرجاتها ثابتة، <strong>ومش بديل عن pytest</strong> للمنطق المعقّد.
+      </p>
+      <div class="code" data-norun><pre>
+&gt;&gt;&gt; {"b": 2, "a": 1}          # الترتيب ممكن يفرق
+{'b': 2, 'a': 1}
+&gt;&gt;&gt; [1.0/3]                   # الدقة العشرية
+[0.3333333333333333]
+&gt;&gt;&gt; object()                  # عنوان مختلف كل تشغيل — هتفشل دايمًا
+&lt;object object at 0x7f...&gt;
+</pre></div>
+    </div>
+    <!-- APPEND:u16-l6 -->
+    <h4>3. شكل الفشل وإزاي تقراه</h4>
+    <div class="code"><pre>
+import doctest
+def average(numbers):
+    """متوسّط قائمة أرقام.
+    &gt;&gt;&gt; average([2, 4, 6])
+    4
+    &gt;&gt;&gt; average([1, 2])
+    1.5
+    """
+    return sum(numbers) / len(numbers)
+doctest.run_docstring_examples(average, {"average": average}, name="average")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>**********************************************************************
+File "main.py", line 4, in average
+Failed example:
+    average([2, 4, 6])
+Expected:
+    4
+Got:
+    4.0</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>جزء التقرير</th><th>معناه</th></tr>
+        <tr><td><code class="inl">File … line 4</code></td><td>مكان المثال اللي وقع في الملف</td></tr>
+        <tr><td><code class="inl">Failed example</code></td><td>الكود اللي اتنفّذ</td></tr>
+        <tr><td><code class="inl">Expected</code></td><td>اللي إنت كتبته في التوثيق</td></tr>
+        <tr><td><code class="inl">Got</code></td><td>اللي حصل فعلًا — المقارنة <strong>نصّية حرفيًا</strong>، فـ <code class="inl">4</code> ≠ <code class="inl">4.0</code></td></tr>
+      </table>
+    </div>
+    <p>التصليح: إمّا تكتب الناتج الحقيقي <code class="inl">4.0</code> في التوثيق، أو تغيّر الدالة لو <code class="inl">4</code> هو المطلوب فعلًا. في الحالتين الاختبار عمل شغله: كشف إن التوثيق والكود مش متّفقين.</p>
+    <div class="code" data-file="terminal"><pre>
+python -m doctest mathutils.py
+pytest --doctest-modules
+</pre></div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>توثيق بيختبر نفسه</div>
+      <p>اكتب دالة <code class="inl">initials</code> بأمثلة doctest (منها حالة حدّية)، وشغّل الأمثلة برمجيًا واطبع النتيجة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import doctest
+def initials(name):
+    """ترجّع الحروف الأولى بحروف كبيرة.
+    &gt;&gt;&gt; initials("ada lovelace")
+    'AL'
+    &gt;&gt;&gt; initials("  guido   van rossum ")
+    'GVR'
+    &gt;&gt;&gt; initials("")
+    ''
+    """
+    return "".join(part[0].upper() for part in name.split())
+runner = doctest.DocTestRunner()
+for test in doctest.DocTestFinder().find(initials, "initials", module=False, globs={"initials": initials}):
+    runner.run(test)
+print(runner.summarize(verbose=False))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>TestResults(failed=0, attempted=3)</pre></div>
+      <p>في ملف حقيقي أسهل: <code class="inl">python -m doctest my_module.py -v</code>.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. الدالة رجّعت <code class="inl">"AL"</code> والمتوقّع مكتوب <code class="inl">AL</code> من غير علامات تنصيص…</p>
+        <label><input type="radio"> ينجح</label>
+        <label><input type="radio"> يتخطّى</label>
+        <label><input type="radio"> يفشل — doctest بيقارن النص حرفيًا بصيغة repr</label>
+        <label><input type="radio"> خطأ تركيب</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. doctest أنسب لـ…</p>
+        <label><input type="radio"> أمثلة صغيرة بتوثّق الاستخدام وبتتأكّد إنها لسه صح</label>
+        <label><input type="radio"> اختبارات قاعدة بيانات معقّدة</label>
+        <label><input type="radio"> اختبار السرعة</label>
+        <label><input type="radio"> بديل كامل لـ pytest</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. ناتج فيه قاموس أو مجموعة في doctest…</p>
+        <label><input type="radio"> دايمًا آمن</label>
+        <label><input type="radio"> ممكن ترتيبه يفرق — الأفضل تقارنه بـ <code class="inl">== {...}</code> وتتوقّع True</label>
+        <label><input type="radio"> ممنوع</label>
+        <label><input type="radio"> بيتحوّل لقائمة</label>
+      </div>
+    </div>
+    <!-- /APPEND:u16-l6 -->
+                <!-- SUM:u16-l6 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>doctest بيشغّل الأمثلة المكتوبة جوّه الـ docstring.</li><li>بيضمن إن التوثيق صحيح.</li><li>مناسب للدوال الصغيرة، مش بديل لـ pytest.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 16.7 -->
+  <article class="lesson" id="u16-l7">
+    <h3>التغطية والمحاكاة: coverage و mock <span class="tag">درس 91</span></h3>
+    <p class="goal">الهدف: تعرف كام % من كودك مختبر، وتختبر كود بيتكلّم مع الإنترنت.</p>
+
+    <h4>1. <code>pytest-cov</code>: كام سطر مختبر؟</h4>
+    <div class="code" data-file="terminal"><pre>
+pip install pytest-cov
+pytest --cov=calculator
+pytest --cov=calculator --cov-report=term-missing
+pytest --cov=. --cov-report=html          # تقرير HTML تفاعلي
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>---------- coverage: platform win32, python 3.12 ----------
+Name             Stmts   Miss  Cover   Missing
+----------------------------------------------
+calculator.py       12      2    83%   18-19
+tasks.py            45      9    80%   22, 51-58
+----------------------------------------------
+TOTAL               57     11    81%</pre></div>
+    <p>
+      عمود <code class="inl">Missing</code> بيقول لك <strong>أرقام السطور</strong> اللي محدّش
+      اختبرها. فبدل ما تخمّن، بتفتح السطر 18 وتكتب اختبار له.
+    </p>
+    <div class="box warn">
+      <div class="bt">⚠️ 100% تغطية ≠ صفر باگات</div>
+      <p>
+        التغطية بتقيس «كام سطر <em>اتنفّذ</em>»، مش «كام حالة <em>اتفحصت</em>».
+      </p>
+      <div class="code"><pre>
+def divide(a, b):
+    return a / b
+def test_divide():
+    assert divide(10, 2) == 5      # تغطية 100% للدالة!
+                                   # بس ما اختبرناش b=0 خالص
+</pre></div>
+      <p>
+        <strong>استخدم التغطية كمؤشّر على اللي نسيته، مش كهدف في نفسه.</strong>
+        70–85% رقم صحّي لأغلب المشاريع.
+      </p>
+    </div>
+
+    <h4>2. المحاكاة (Mocking): اختبار كود بيتكلّم مع العالم</h4>
+    <p>الكود اللي في الوحدة 14 بيجيب بيانات من الإنترنت. إزاي نختبره؟</p>
+    <div class="box err">
+      <div class="bt">💥 المشكلة</div>
+      <ul>
+        <li>الاختبار هيبقى <strong>بطيء</strong> (شبكة).</li>
+        <li>هيفشل لو النت مفصول — والفشل ده <strong>كذب</strong>، كودك سليم.</li>
+        <li>النتيجة بتتغيّر كل مرّة (سعر الصرف بيتحرّك).</li>
+        <li>ممكن تستهلك حد الطلبات المسموح في الـ API.</li>
+      </ul>
+    </div>
+    <div class="code" data-file="weather.py"><pre>
+import requests
+def fetch_temperature(city_lat, city_lon):
+    url = "https://api.open-meteo.com/v1/forecast"
+    params = {"latitude": city_lat, "longitude": city_lon, "current_weather": "true"}
+    response = requests.get(url, params=params, timeout=10)
+    response.raise_for_status()
+    return response.json()["current_weather"]["temperature"]
+def describe_weather(temp):
+    if temp &lt; 10:
+        return "برد"
+    elif temp &lt; 25:
+        return "معتدل"
+    return "حار"
+</pre></div>
+    <div class="code" data-file="test_weather.py"><pre>
+import pytest
+from unittest.mock import patch, Mock
+from weather import fetch_temperature, describe_weather
+# --- 1) المنطق الخالص: اختباره سهل ومفيش شبكة ---
+@pytest.mark.parametrize("temp, expected", [
+    (-5, "برد"), (9.9, "برد"),
+    (10, "معتدل"), (24.9, "معتدل"),
+    (25, "حار"), (40, "حار"),
+])
+def test_describe_weather(temp, expected):
+    assert describe_weather(temp) == expected
+# --- 2) الكود اللي بيتكلّم مع الشبكة: نحاكيها ---
+@patch("weather.requests.get")
+def test_fetch_temperature(mock_get):
+    fake = Mock()
+    fake.json.return_value = {"current_weather": {"temperature": 28.4}}
+    fake.raise_for_status.return_value = None
+    mock_get.return_value = fake
+    result = fetch_temperature(30.04, 31.23)
+    assert result == 28.4
+    mock_get.assert_called_once()
+@patch("weather.requests.get")
+def test_fetch_handles_http_error(mock_get):
+    fake = Mock()
+    fake.raise_for_status.side_effect = Exception("500 Server Error")
+    mock_get.return_value = fake
+    with pytest.raises(Exception, match="500"):
+        fetch_temperature(30.04, 31.23)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>========================= 8 passed in 0.06s =========================</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 الدرس المعماري الأهم في الوحدة</div>
+      <p>
+        لاحظ إننا قسّمنا الكود لحاجتين: <code class="inl">fetch_temperature</code> بتتكلّم مع
+        العالم، و<code class="inl">describe_weather</code> <strong>منطق خالص</strong>.
+        المنطق الخالص اختباره سهل جدًا (6 حالات في 3 سطور).
+      </p>
+      <p>
+        <strong>القاعدة الذهبية: افصل المنطق عن العالم الخارجي.</strong>
+        لو دالة واحدة بتجيب من النت <em>و</em> بتحسب <em>و</em> بتطبع، اختبارها جحيم.
+        الاختبار مش بس بيكشف الباگات — بيجبرك تكتب تصميم أحسن.
+      </p>
+    </div>
+
+    <h4>3. أدوات المحاكاة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الأداة</th><th>بتعمل إيه</th></tr>
+        <tr><td><code class="inl">Mock()</code></td><td>كائن وهمي بيقبل أي استدعاء وبيسجّله</td></tr>
+        <tr><td><code class="inl">mock.return_value</code></td><td>تحدّد الدالة الوهمية ترجّع إيه</td></tr>
+        <tr><td><code class="inl">mock.side_effect</code></td><td>تخلّيها ترمي خطأ أو ترجّع قيم مختلفة كل مرّة</td></tr>
+        <tr><td><code class="inl">@patch("module.thing")</code></td><td>تستبدل حاجة حقيقية بوهمية داخل الاختبار بس</td></tr>
+        <tr><td><code class="inl">assert_called_once()</code></td><td>تتأكّد إنها اتنادت مرّة واحدة بالظبط</td></tr>
+        <tr><td><code class="inl">assert_called_with(...)</code></td><td>تتأكّد إنها اتنادت بوسائط معيّنة</td></tr>
+        <tr><td><code class="inl">monkeypatch</code> (fixture)</td><td>بديل pytest للتعديل المؤقّت على متغيّرات ودوال</td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 نقطة مهمّة في <code>@patch</code></div>
+      <p>
+        بنكتب <code class="inl">@patch("weather.requests.get")</code> مش
+        <code class="inl">@patch("requests.get")</code>. السبب: لازم تستبدل الاسم
+        <strong>في المكان اللي بيتستخدم فيه</strong>، مش في مكان تعريفه الأصلي.
+        القاعدة دي بتوقّع ناس كتير.
+      </p>
+    </div>
+    <!-- APPEND:u16-l7 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>اختبر من غير إنترنت</div>
+      <p>دالة بتجيب سعر الدولار من API. اختبرها بـ <code class="inl">mock</code> عشان الاختبار ما يعتمدش على النت ولا يتغيّر ناتجه.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+from unittest.mock import patch, Mock
+def fetch_rate():
+    from urllib.request import urlopen
+    with urlopen("https://api.example.com/usd", timeout=10) as r:
+        return float(r.read())
+def price_in_egp(usd):
+    return round(usd * fetch_rate(), 2)
+with patch.dict(globals(), {"fetch_rate": lambda: 50.0}):
+    print(price_in_egp(3))
+fake = Mock(return_value=48.5)
+with patch.dict(globals(), {"fetch_rate": fake}):
+    price_in_egp(2)
+    price_in_egp(4)
+print(fake.call_count)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>150.0
+2</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. ليه نعمل mock للـ API في الاختبارات؟</p>
+        <label><input type="radio"> عشان نختبر النت نفسه</label>
+        <label><input type="radio"> إجباري</label>
+        <label><input type="radio"> سرعة وثبات: الاختبار ما يعتمدش على شبكة أو بيانات بتتغيّر</label>
+        <label><input type="radio"> عشان الكود يبقى أقصر</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. تقرير coverage بيقول 100%. ده معناه…</p>
+        <label><input type="radio"> كل سطر اتنفّذ في الاختبارات — مش ضمان إن مفيش أخطاء</label>
+        <label><input type="radio"> مفيش أي خطأ في الكود</label>
+        <label><input type="radio"> كل الاختبارات نجحت</label>
+        <label><input type="radio"> الكود سريع</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. أمر تشغيل التغطية…</p>
+        <label><input type="radio"> python coverage.py</label>
+        <label><input type="radio"> pytest --mock</label>
+        <label><input type="radio"> pip coverage</label>
+        <label><input type="radio"> coverage run -m pytest ثم coverage report</label>
+      </div>
+    </div>
+    <!-- /APPEND:u16-l7 -->
+              <!-- SUM:u16-l7 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">pytest --cov</code> بيقيس الأسطر المختبرة.</li><li>المحاكاة (mock) بتستبدل الأجزاء الخارجية زي الشبكة.</li><li><code class="inl">patch</code> و <code class="inl">Mock</code> و <code class="inl">side_effect</code> أهم الأدوات.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 16.8 -->
+  <article class="lesson" id="u16-l8">
+    <h3>المنقّح (Debugger): بديل print <span class="tag">درس 92</span></h3>
+    <p class="goal">الهدف: توقّف البرنامج في أي سطر وتتفرّج على كل حاجة — بدل مئات الـ print.</p>
+
+    <h4>1. حدود التشخيص بـ print</h4>
+    <div class="code"><pre>
+def process(items):
+    total = 0
+    for i, item in enumerate(items):
+        print(f"DEBUG i={i} item={item}")          # بنضيف
+        value = item * 2
+        print(f"DEBUG value={value}")              # وبنضيف
+        total += value
+        print(f"DEBUG total={total}")              # وبنضيف
+    return total
+</pre></div>
+    <p>
+      شغّال، بس: بتلوّث الكود، بتنسى تمسحها، ولو عايز تشوف متغيّر جديد لازم تعدّل وتشغّل
+      من الأول. والأسوأ: مع بيانات كبيرة المخرجات بتغرقك.
+    </p>
+
+    <h4>2. <code>breakpoint()</code>: مدمجة في بايثون</h4>
+    <div class="code"><pre>
+def process(items):
+    total = 0
+    for i, item in enumerate(items):
+        value = item * 2
+        breakpoint()                    # البرنامج بيقف هنا
+        total += value
+    return total
+process([1, 2, 3])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج — بتدخل جلسة تفاعلية</div><pre>&gt; process.py(6)process()
+-&gt; total += value
+(Pdb) p item
+1
+(Pdb) p value
+2
+(Pdb) p total
+0
+(Pdb) p items
+[1, 2, 3]
+(Pdb) n
+&gt; process.py(3)process()
+-&gt; for i, item in enumerate(items):
+(Pdb) c</pre></div>
+
+    <h4>3. أوامر pdb الأساسية</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الأمر</th><th>المعنى</th></tr>
+        <tr><td><code class="inl">p x</code> / <code class="inl">pp x</code></td><td>اطبع قيمة (pp بتنسيق أجمل)</td></tr>
+        <tr><td><code class="inl">n</code> (next)</td><td>السطر اللي بعده — من غير الدخول في الدوال</td></tr>
+        <tr><td><code class="inl">s</code> (step)</td><td>ادخل <strong>جوّه</strong> الدالة</td></tr>
+        <tr><td><code class="inl">c</code> (continue)</td><td>كمّل لحد نقطة التوقّف الجاية</td></tr>
+        <tr><td><code class="inl">l</code> (list)</td><td>اعرض الكود حوالين السطر الحالي</td></tr>
+        <tr><td><code class="inl">w</code> (where)</td><td>اعرض الـ Call Stack — إحنا وصلنا هنا إزاي</td></tr>
+        <tr><td><code class="inl">a</code> (args)</td><td>وسائط الدالة الحالية</td></tr>
+        <tr><td><code class="inl">q</code> (quit)</td><td>اخرج</td></tr>
+        <tr><td>أي كود بايثون</td><td>تقدر تكتب <code class="inl">len(items)</code> أو تعدّل متغيّر!</td></tr>
+      </table>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 <code>w</code> بتوريك الـ Call Stack اللي شرحناه في الوحدة صفر</div>
+      <p>
+        الرسم اللي رسمناه للـ Call Stack في درس Stack و Heap — المنقّح بيوريك
+        <strong>الحقيقي</strong> منه وقت التشغيل. دي أفضل طريقة تربط النظرية بالواقع.
+      </p>
+    </div>
+
+    <h4>4. المنقّح في VS Code (الأسهل)</h4>
+    <ol>
+      <li>دوس على المسافة على يسار رقم السطر → تظهر نقطة حمرا 🔴</li>
+      <li>اضغط <strong>F5</strong> أو Run → Start Debugging</li>
+      <li>البرنامج بيقف عند النقطة، وعلى الشمال هتشوف <strong>كل المتغيّرات وقيمها</strong> تلقائيًا</li>
+    </ol>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المفتاح</th><th>الوظيفة</th></tr>
+        <tr><td><strong>F5</strong></td><td>تشغيل / متابعة</td></tr>
+        <tr><td><strong>F10</strong></td><td>الخطوة الجاية (Step Over)</td></tr>
+        <tr><td><strong>F11</strong></td><td>ادخل جوّه الدالة (Step Into)</td></tr>
+        <tr><td><strong>Shift+F11</strong></td><td>اطلع من الدالة (Step Out)</td></tr>
+        <tr><td><strong>Shift+F5</strong></td><td>إيقاف</td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 نقطة التوقّف الشرطية — أقوى ميزة</div>
+      <p>
+        كليك يمين على النقطة الحمرا → <em>Edit Breakpoint</em> → اكتب شرط زي
+        <code class="inl">i == 500</code>. البرنامج هيقف بس لما الشرط يتحقّق.
+      </p>
+      <p>
+        <strong>تخيّل البديل:</strong> حلقة بتلف 1000 مرّة والباگ في الدورة 500.
+        بـ <code class="inl">print</code> هتطبع 1000 سطر وتدوّر بعينك. بنقطة شرطية،
+        البرنامج بيقف عندها بالظبط.
+      </p>
+    </div>
+
+    <h4>5. إمتى تستخدم إيه؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الأداة</th><th>مناسبة لما</th></tr>
+        <tr><td><code class="inl">print</code></td><td>فحص سريع لمتغيّر واحد، أو تتبّع تسلسل الأحداث</td></tr>
+        <tr><td><strong>المنقّح</strong></td><td>مش فاهم الكود بيمشي إزاي، أو محتاج تشوف 10 متغيّرات في لحظة واحدة</td></tr>
+        <tr><td><strong>الاختبارات</strong></td><td>عايز تتأكّد إن الباگ ما يرجعش تاني</td></tr>
+        <tr><td><code class="inl">logging</code></td><td>برنامج بيشتغل طويل، ومحتاج سجل دائم (الدرس الجاي)</td></tr>
+      </table>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 المنهج الاحترافي في إصلاح أي باگ</div>
+      <ol>
+        <li><strong>اكتب اختبار بيفشل</strong> ويعيد إنتاج الباگ</li>
+        <li>استخدم <strong>المنقّح</strong> لفهم السبب الحقيقي</li>
+        <li>صلّح الكود</li>
+        <li>الاختبار بينجح → <strong>وبيفضل موجود للأبد</strong> فالباگ ما يرجعش</li>
+      </ol>
+      <p>الأسلوب ده اسمه <em>regression test</em>، وهو الفرق بين «صلّحت الباگ» و«الباگ ده انتهى».</p>
+    </div>
+    <!-- APPEND:u16-l8 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>جلسة تنقيح</div>
+      <p>الدالة بترجّع متوسّط غلط. حط <code class="inl">breakpoint()</code> جوّه الحلقة وتابع المتغيّرات بأوامر pdb لحد ما تلاقي المشكلة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code" data-file="avg.py" data-norun><pre>
+def average(nums):
+    total = 0
+    for i in range(1, len(nums)):
+        breakpoint()
+        total += nums[i]
+    return total / len(nums)
+print(average([10, 20, 30]))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>&gt; avg.py(5)average()
+-&gt; total += nums[i]
+(Pdb) p i, total
+(1, 0)
+(Pdb) p nums[i]
+20
+(Pdb) c
+...</pre></div>
+      <p>أول وقفة بتوريك <code class="inl">i = 1</code> والعنصر <code class="inl">20</code> — يعني الـ 10 اتنسى. الحل: <code class="inl">for i in range(len(nums))</code> أو أبسط: <code class="inl">sum(nums) / len(nums)</code>. متنساش تشيل <code class="inl">breakpoint()</code> بعد ما تخلص.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. أمر pdb لتنفيذ السطر الجاي من غير الدخول في الدوال…</p>
+        <label><input type="radio"> s</label>
+        <label><input type="radio"> n</label>
+        <label><input type="radio"> c</label>
+        <label><input type="radio"> q</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">s</code> (step) بتعمل…</p>
+        <label><input type="radio"> بتدخل جوّه الدالة اللي في السطر</label>
+        <label><input type="radio"> بتكمّل لحد الوقفة الجاية</label>
+        <label><input type="radio"> بتخرج</label>
+        <label><input type="radio"> بتطبع المتغيّرات</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">c</code> في pdb…</p>
+        <label><input type="radio"> بتمسح الشاشة</label>
+        <label><input type="radio"> بتطبع الكود</label>
+        <label><input type="radio"> بتكمّل التشغيل لحد الوقفة الجاية أو النهاية</label>
+        <label><input type="radio"> بتلغي البرنامج</label>
+      </div>
+    </div>
+    <!-- /APPEND:u16-l8 -->
+              <!-- SUM:u16-l8 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">breakpoint()</code> بتوقف البرنامج وتفتح pdb.</li><li>أوامر: <code class="inl">n</code> و <code class="inl">s</code> و <code class="inl">c</code> و <code class="inl">p</code> و <code class="inl">l</code>.</li><li>المنقّح في VS Code أسهل: نقطة توقّف وتنفيذ خطوة خطوة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 16.9 -->
+  <article class="lesson" id="u16-l9">
+    <h3>وحدة logging: سجلّ محترم بدل print <span class="tag">درس 93</span></h3>
+    <p class="goal">الهدف: تسجّل أحداث برنامجك بمستويات ووقت وملف — بدل <code>print</code>.</p>
+
+    <h4>1. المشكلة مع print</h4>
+    <div class="code"><pre>
+print("بدأ البرنامج")
+print("خطأ في الاتصال!")
+print("تم الحفظ")
+</pre></div>
+    <ul>
+      <li>مفيش <strong>مستويات</strong> — رسالة خطأ ورسالة عادية بنفس الشكل.</li>
+      <li>مفيش <strong>وقت</strong> — مش عارف الخطأ حصل إمتى.</li>
+      <li>مفيش <strong>مصدر</strong> — مش عارف أنهي دالة أو ملف.</li>
+      <li>ما ينفعش <strong>تطفّيها</strong> — لازم تمسحها من الكود.</li>
+      <li>بتروح للشاشة بس — ما بتتحفظش في ملف.</li>
+    </ul>
+    <p>في الوحدة 12 عملنا دالة <code class="inl">log()</code> بإيدينا. المكتبة الرسمية بتعمل ده وأكتر.</p>
+
+    <h4>2. الاستخدام الأساسي</h4>
+    <div class="code" data-file="app.py"><pre>
+import logging
+logging.basicConfig(
+    level=logging.DEBUG,
+    format="%(asctime)s | %(levelname)-8s | %(name)s:%(lineno)d | %(message)s",
+    datefmt="%H:%M:%S",
+)
+logger = logging.getLogger(__name__)
+logger.debug("تفاصيل للمبرمج: قيمة x = 42")
+logger.info("البرنامج بدأ بنجاح")
+logger.warning("الملف مش موجود، هنستخدم الافتراضي")
+logger.error("فشل الاتصال بقاعدة البيانات")
+logger.critical("مساحة القرص خلصت — إيقاف")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>14:32:10 | DEBUG    | __main__:8 | تفاصيل للمبرمج: قيمة x = 42
+14:32:10 | INFO     | __main__:9 | البرنامج بدأ بنجاح
+14:32:10 | WARNING  | __main__:10 | الملف مش موجود، هنستخدم الافتراضي
+14:32:10 | ERROR    | __main__:11 | فشل الاتصال بقاعدة البيانات
+14:32:10 | CRITICAL | __main__:12 | مساحة القرص خلصت — إيقاف</pre></div>
+
+    <h4>3. المستويات الخمسة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المستوى</th><th>الرقم</th><th>تستخدمه لـ</th></tr>
+        <tr><td><code class="inl">DEBUG</code></td><td>10</td><td>تفاصيل للمبرمج وقت التطوير</td></tr>
+        <tr><td><code class="inl">INFO</code></td><td>20</td><td>أحداث عادية: بدأ، خلص، اتحفظ</td></tr>
+        <tr><td><code class="inl">WARNING</code></td><td>30</td><td>حاجة غريبة بس البرنامج كمّل</td></tr>
+        <tr><td><code class="inl">ERROR</code></td><td>40</td><td>عملية فشلت</td></tr>
+        <tr><td><code class="inl">CRITICAL</code></td><td>50</td><td>البرنامج مش قادر يكمّل</td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 السحر: بتتحكّم في كل حاجة بسطر واحد</div>
+      <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">logging</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+      <div class="code"><pre>
+logging.basicConfig(level=logging.DEBUG)     # وقت التطوير: كل حاجة
+logging.basicConfig(level=logging.WARNING)   # في الإنتاج: المشاكل بس
+</pre></div>
+      <p>
+        الرسايل الأقل من المستوى بتتجاهل تلقائيًا — <strong>من غير ما تمسح سطر واحد
+        من كودك</strong>. دي أكبر ميزة على <code class="inl">print</code>.
+      </p>
+    </div>
+
+    <h4>4. الكتابة في ملف والشاشة مع بعض</h4>
+    <div class="code" data-file="logging_setup.py"><pre>
+import logging
+logger = logging.getLogger("myapp")
+logger.setLevel(logging.DEBUG)
+# معالج 1: ملف — كل التفاصيل
+file_handler = logging.FileHandler("app.log", encoding="utf-8")
+file_handler.setLevel(logging.DEBUG)
+file_handler.setFormatter(logging.Formatter(
+    "%(asctime)s | %(levelname)-8s | %(funcName)s:%(lineno)d | %(message)s"
+))
+# معالج 2: الشاشة — التحذيرات فأعلى بس
+console = logging.StreamHandler()
+console.setLevel(logging.WARNING)
+console.setFormatter(logging.Formatter("%(levelname)s: %(message)s"))
+logger.addHandler(file_handler)
+logger.addHandler(console)
+def divide(a, b):
+    logger.debug(f"divide({a}, {b})")
+    if b == 0:
+        logger.error("محاولة قسمة على صفر")
+        return None
+    result = a / b
+    logger.info(f"الناتج {result}")
+    return result
+divide(10, 2)
+divide(10, 0)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ على الشاشة (WARNING فأعلى بس)</div><pre>ERROR: محاولة قسمة على صفر</pre></div>
+    <div class="out rtl"><div class="out-head">▸ في ملف app.log (كل حاجة)</div><pre>14:40:02 | DEBUG    | divide:17 | divide(10, 2)
+14:40:02 | INFO     | divide:22 | الناتج 5.0
+14:40:02 | DEBUG    | divide:17 | divide(10, 0)
+14:40:02 | ERROR    | divide:19 | محاولة قسمة على صفر</pre></div>
+
+    <h4>5. تسجيل الاستثناءات بالتتبّع الكامل</h4>
+    <div class="code" data-file="app.py"><pre>
+import logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    logger.exception("فشل الحساب")        # بتسجّل الرسالة + Traceback كامل
+    # أو: logger.error("فشل الحساب", exc_info=True)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>ERROR:__main__:فشل الحساب
+Traceback (most recent call last):
+  File "app.py", line 5, in &lt;module&gt;
+    result = 10 / 0
+             ~~~^~~
+ZeroDivisionError: division by zero</pre></div>
+    <p>
+      <code class="inl">logger.exception()</code> بتستخدم <strong>جوّه <code class="inl">except</code></strong>
+      بس، وبتسجّل التتبّع الكامل تلقائيًا. دي الطريقة الصح لتسجيل الأخطاء — بدلها كنت
+      هتخسر معلومة «الخطأ جا منين».
+    </p>
+    <!-- APPEND:u16-l9 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>مستويات السجل</div>
+      <p>اضبط logging يطبع من WARNING وفوق بس، وشوف مين بيظهر. وبعدين غيّر المستوى لـ DEBUG.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import logging
+import sys
+logging.basicConfig(level=logging.WARNING, format="%(levelname)s: %(message)s", stream=sys.stdout, force=True)
+log = logging.getLogger("shop")
+log.debug("تفاصيل داخلية")
+log.info("طلب جديد")
+log.warning("المخزون قرب يخلص")
+log.error("فشل الدفع")
+log.setLevel(logging.DEBUG)
+log.debug("دلوقتي التفاصيل ظاهرة")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>WARNING: المخزون قرب يخلص
+ERROR: فشل الدفع
+DEBUG: دلوقتي التفاصيل ظاهرة</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. ترتيب المستويات من الأقل للأعلى…</p>
+        <label><input type="radio"> ERROR, WARNING, INFO, DEBUG</label>
+        <label><input type="radio"> INFO, DEBUG, ERROR, WARNING</label>
+        <label><input type="radio"> DEBUG, WARNING, INFO, CRITICAL</label>
+        <label><input type="radio"> DEBUG, INFO, WARNING, ERROR, CRITICAL</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ميزة logging على print…</p>
+        <label><input type="radio"> مستويات تتحكّم فيها من مكان واحد، ووقت، وملفات</label>
+        <label><input type="radio"> أسرع دايمًا</label>
+        <label><input type="radio"> بتصلّح الأخطاء</label>
+        <label><input type="radio"> مفيش</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. جوّه except، تسجّل الخطأ ومعاه الـ traceback بـ…</p>
+        <label><input type="radio"> log.info</label>
+        <label><input type="radio"> log.exception</label>
+        <label><input type="radio"> log.debug</label>
+        <label><input type="radio"> print</label>
+      </div>
+    </div>
+    <!-- /APPEND:u16-l9 -->
+              <!-- SUM:u16-l9 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>logging بدل print: مستويات وملفات ووقت.</li><li>المستويات: DEBUG و INFO و WARNING و ERROR و CRITICAL.</li><li><code class="inl">logger.exception</code> بيسجّل الخطأ بالتتبّع الكامل.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 16.P1 -->
+  <article class="lesson project" id="u16-p1">
+    <h3>مشروع 29: مكتبة تحقّق مختبرة بالكامل <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: نرجع لمكتبة التحقّق من الوحدة 11 ونكتب لها اختبارات كاملة.</p>
+
+    <h4>الكود المختبر</h4>
+    <div class="code" data-file="validators.py"><pre>
+import re
+EMAIL_RE = re.compile(r"^[\w.+-]+@[\w-]+\.[\w.]+$")
+def is_valid_email(email):
+    """بترجّع True لو الإيميل صالح شكليًا.
+    &gt;&gt;&gt; is_valid_email("a@b.com")
+    True
+    &gt;&gt;&gt; is_valid_email("no-at-sign")
+    False
+    """
+    if not isinstance(email, str):
+        raise TypeError("الإيميل لازم يكون نص")
+    return bool(EMAIL_RE.match(email.strip()))
+def is_valid_egyptian_phone(phone):
+    """رقم مصري: 11 خانة، يبدأ بـ 010 أو 011 أو 012 أو 015."""
+    if not isinstance(phone, str):
+        raise TypeError("الرقم لازم يكون نص")
+    phone = phone.strip()
+    valid_prefixes = ("010", "011", "012", "015")
+    return (phone.isdigit()
+            and len(phone) == 11
+            and phone.startswith(valid_prefixes))
+def password_strength(password):
+    """بترجّع درجة من 0 لـ 4."""
+    if not isinstance(password, str):
+        raise TypeError("كلمة السر لازم تكون نص")
+    score = 0
+    if len(password) &gt;= 8:
+        score += 1
+    if any(c.isdigit() for c in password):
+        score += 1
+    if any(c.isupper() for c in password):
+        score += 1
+    if any(not c.isalnum() for c in password):
+        score += 1
+    return score
+</pre></div>
+
+    <h4>ملف الاختبارات</h4>
+    <div class="code" data-file="test_validators.py"><pre>
+import pytest
+from validators import is_valid_email, is_valid_egyptian_phone, password_strength
+class TestEmail:
+    @pytest.mark.parametrize("email", [
+        "a@b.com",
+        "farid.mohammed@gmail.com",
+        "user+tag@sub.domain.co.uk",
+        "x_y-z@example.org",
+        "  spaced@mail.com  ",
+    ])
+    def test_valid_emails(self, email):
+        assert is_valid_email(email) is True
+    @pytest.mark.parametrize("email", [
+        "",
+        "no-at-sign",
+        "@nouser.com",
+        "user@",
+        "user@nodot",
+        "two@@at.com",
+        "with space@mail.com",
+    ])
+    def test_invalid_emails(self, email):
+        assert is_valid_email(email) is False
+    @pytest.mark.parametrize("bad", [None, 123, [], {"a": 1}])
+    def test_non_string_raises(self, bad):
+        with pytest.raises(TypeError, match="نص"):
+            is_valid_email(bad)
+class TestPhone:
+    @pytest.mark.parametrize("phone", [
+        "01012345678", "01112345678", "01212345678", "01512345678",
+        "  01012345678  ",
+    ])
+    def test_valid_phones(self, phone):
+        assert is_valid_egyptian_phone(phone) is True
+    @pytest.mark.parametrize("phone, reason", [
+        ("0101234567", "10 خانات بس"),
+        ("010123456789", "12 خانة"),
+        ("01312345678", "بادئة غلط"),
+        ("0101234567a", "فيه حرف"),
+        ("", "فاضي"),
+        ("+201012345678", "فيه رمز"),
+    ])
+    def test_invalid_phones(self, phone, reason):
+        assert is_valid_egyptian_phone(phone) is False, f"فشل: {reason}"
+class TestPasswordStrength:
+    @pytest.mark.parametrize("password, expected", [
+        ("", 0),
+        ("abc", 0),
+        ("abcdefgh", 1),
+        ("abcdefg1", 2),
+        ("Abcdefg1", 3),
+        ("Abcdefg1!", 4),
+        ("A1!", 3),
+    ])
+    def test_scores(self, password, expected):
+        assert password_strength(password) == expected
+    def test_score_range(self):
+        for pwd in ["", "a", "Aa1!", "VeryLongPassword123!@#"]:
+            assert 0 &lt;= password_strength(pwd) &lt;= 4
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>test_validators.py::TestEmail::test_valid_emails[a@b.com] PASSED
+... (5 اختبارات إيميل صالح)
+test_validators.py::TestEmail::test_invalid_emails[] PASSED
+... (7 اختبارات إيميل غير صالح)
+test_validators.py::TestEmail::test_non_string_raises[None] PASSED
+... (4 اختبارات نوع غلط)
+test_validators.py::TestPhone::... PASSED (11 اختبار)
+test_validators.py::TestPasswordStrength::... PASSED (8 اختبارات)
+
+======================== 35 passed in 0.09s =========================</pre></div>
+
+    <h4>الدروس المعمارية</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الأسلوب</th><th>ليه</th></tr>
+        <tr>
+          <td><strong>كلاسات للتجميع</strong></td>
+          <td>
+            <code class="inl">TestEmail</code>، <code class="inl">TestPhone</code> —
+            تنظيم بصري، و<code class="inl">pytest -k TestPhone</code> بتشغّل مجموعة واحدة
+          </td>
+        </tr>
+        <tr>
+          <td><strong>حالات صالحة وغير صالحة منفصلة</strong></td>
+          <td>كل دالة بتختبر فكرة واحدة، فلو فشلت تعرف فورًا الفئة اللي فيها مشكلة</td>
+        </tr>
+        <tr>
+          <td><strong>الحالات الحدّية</strong></td>
+          <td>نص فاضي، 10 خانات، 12 خانة، مسافات — <strong>هنا بتعيش الباگات</strong></td>
+        </tr>
+        <tr>
+          <td><strong>اختبار الأخطاء</strong></td>
+          <td><code class="inl">None</code> و<code class="inl">123</code> والقوائم — الدالة المفروض ترمي <code class="inl">TypeError</code></td>
+        </tr>
+        <tr>
+          <td><strong><code class="inl">is True</code> مش <code class="inl">== True</code></strong></td>
+          <td>بتضمن إن الدالة رجّعت <code class="inl">bool</code> فعلًا مش قيمة Truthy زي <code class="inl">1</code></td>
+        </tr>
+        <tr>
+          <td><strong>رسالة في الـ assert</strong></td>
+          <td><code class="inl">f"فشل: {reason}"</code> — التقرير بيقول <em>ليه</em> الحالة دي مهمّة</td>
+        </tr>
+      </table>
+    </div>
+  </article>
+
+  <!-- 16.P2 -->
+  <article class="lesson project" id="u16-p2">
+    <h3>مشروع 30: TDD — اكتب الاختبار قبل الكود <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: تجرب أسلوب التطوير المدفوع بالاختبار على مشروع حقيقي.</p>
+
+    <h4>إيه هو TDD؟</h4>
+    <div class="diagram">
+<pre>   ┌──────────────┐
+   │ 1. أحمر 🔴   │  اكتب اختبار للميزة — وهو بيفشل (لسه مفيش كود)
+   └──────┬───────┘
+          ▼
+   ┌──────────────┐
+   │ 2. أخضر 🟢   │  اكتب أبسط كود يخلّي الاختبار ينجح
+   └──────┬───────┘
+          ▼
+   ┌──────────────┐
+   │ 3. نظّف ♻️   │  حسّن الكود — والاختبار حاميك
+   └──────┬───────┘
+          └──────────► ارجع للخطوة 1 للميزة الجاية</pre>
+      <div class="cap">دورة Red → Green → Refactor</div>
+    </div>
+
+    <h4>الخطوة 1 🔴 — الاختبار الأول (بيفشل)</h4>
+    <div class="code" data-file="test_cart.py"><pre>
+import pytest
+from cart import Cart
+def test_new_cart_is_empty():
+    cart = Cart()
+    assert len(cart) == 0
+    assert cart.total == 0
+</pre></div>
+    <div class="out"><div class="out-head">▸ ناتج <code class="inl">pytest</code> في الـ Terminal بعد الخطوة دي</div><pre>ImportError: cannot import name 'Cart' from 'cart'
+========================= 1 error in 0.02s ==========================</pre></div>
+
+    <h4>الخطوة 2 🟢 — أبسط كود ينجّحه</h4>
+    <div class="code" data-file="cart.py"><pre>
+class Cart:
+    def __init__(self):
+        self.items = {}
+    @property
+    def total(self):
+        return 0
+    def __len__(self):
+        return len(self.items)
+</pre></div>
+    <div class="out"><div class="out-head">▸ ناتج <code class="inl">pytest</code> في الـ Terminal بعد الخطوة دي</div><pre>========================= 1 passed in 0.01s =========================</pre></div>
+    <p>
+      لاحظ إن <code class="inl">total</code> بترجّع صفر <strong>ثابت</strong> — وده مقصود.
+      في TDD بنكتب <em>أقل</em> كود ينجّح الاختبار، والاختبار الجاي هو اللي هيجبرنا نحسّنه.
+    </p>
+
+    <h4>الخطوة 3 🔴 — اختبار الإضافة</h4>
+    <div class="code"><pre>
+def test_add_item():
+    cart = Cart()
+    cart.add("تفاح", price=10, qty=3)
+    assert len(cart) == 1
+    assert cart.total == 30
+def test_add_same_item_twice_accumulates():
+    cart = Cart()
+    cart.add("تفاح", price=10, qty=2)
+    cart.add("تفاح", price=10, qty=3)
+    assert len(cart) == 1
+    assert cart.total == 50
+</pre></div>
+
+    <h4>الخطوة 4 🟢 — الكود اللي ينجّحهم</h4>
+    <div class="code" data-file="cart.py"><pre>
+class Cart:
+    def __init__(self):
+        self.items = {}
+    def add(self, name, price, qty=1):
+        if price &lt; 0:
+            raise ValueError("السعر ما ينفعش يكون سالب")
+        if qty &lt;= 0:
+            raise ValueError("الكمية لازم تكون موجبة")
+        if name in self.items:
+            self.items[name]["qty"] += qty
+        else:
+            self.items[name] = {"price": price, "qty": qty}
+    def remove(self, name):
+        if name not in self.items:
+            raise KeyError(f"'{name}' مش في العربة")
+        del self.items[name]
+    @property
+    def total(self):
+        return sum(i["price"] * i["qty"] for i in self.items.values())
+    def apply_coupon(self, percent):
+        if not 0 &lt;= percent &lt;= 100:
+            raise ValueError("الخصم لازم بين 0 و 100")
+        return round(self.total * (1 - percent / 100), 2)
+    def __len__(self):
+        return len(self.items)
+    def __contains__(self, name):
+        return name in self.items
+</pre></div>
+
+    <h4>الخطوة 5 — مجموعة الاختبارات الكاملة</h4>
+    <div class="code" data-file="test_cart.py"><pre>
+import pytest
+from cart import Cart
+@pytest.fixture
+def cart():
+    return Cart()
+@pytest.fixture
+def full_cart(cart):
+    cart.add("تفاح", price=10, qty=3)
+    cart.add("لبن", price=25, qty=2)
+    return cart
+def test_new_cart_is_empty(cart):
+    assert len(cart) == 0
+    assert cart.total == 0
+def test_add_item(cart):
+    cart.add("تفاح", price=10, qty=3)
+    assert len(cart) == 1
+    assert cart.total == 30
+def test_add_same_item_accumulates(cart):
+    cart.add("تفاح", price=10, qty=2)
+    cart.add("تفاح", price=10, qty=3)
+    assert len(cart) == 1
+    assert cart.total == 50
+def test_contains(full_cart):
+    assert "تفاح" in full_cart
+    assert "موز" not in full_cart
+def test_remove(full_cart):
+    full_cart.remove("تفاح")
+    assert len(full_cart) == 1
+    assert full_cart.total == 50
+def test_remove_missing_raises(cart):
+    with pytest.raises(KeyError, match="مش في العربة"):
+        cart.remove("حاجة مش موجودة")
+@pytest.mark.parametrize("percent, expected", [
+    (0, 80), (10, 72), (50, 40), (100, 0),
+])
+def test_coupon(full_cart, percent, expected):
+    assert full_cart.apply_coupon(percent) == expected
+@pytest.mark.parametrize("bad", [-1, 101, 150])
+def test_invalid_coupon_raises(full_cart, bad):
+    with pytest.raises(ValueError):
+        full_cart.apply_coupon(bad)
+@pytest.mark.parametrize("price, qty", [(-5, 1), (10, 0), (10, -3)])
+def test_invalid_add_raises(cart, price, qty):
+    with pytest.raises(ValueError):
+        cart.add("حاجة", price=price, qty=qty)
+def test_empty_cart_coupon(cart):
+    assert cart.apply_coupon(50) == 0
+</pre></div>
+    <div class="out"><div class="out-head">▸ ناتج <code class="inl">pytest</code> في الـ Terminal بعد الخطوة دي</div><pre>========================= 17 passed in 0.07s =========================
+
+---------- coverage ----------
+Name      Stmts   Miss  Cover
+------------------------------
+cart.py      24      0   100%</pre></div>
+
+    <h4>ليه TDD مفيد؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الفايدة</th><th>الشرح</th></tr>
+        <tr><td><strong>بتفكّر في الواجهة الأول</strong></td><td>الاختبار بيجبرك تقرّر «إزاي هستخدم الكود ده» قبل ما تكتبه — فالتصميم بيطلع أنضف</td></tr>
+        <tr><td><strong>مفيش كود زايد</strong></td><td>بتكتب اللي الاختبار طلبه بس، فمفيش مزايا محدّش محتاجها</td></tr>
+        <tr><td><strong>تغطية مجانية</strong></td><td>100% تغطية طبيعيًا — لأن كل سطر اتكتب عشان اختبار</td></tr>
+        <tr><td><strong>ثقة في التنظيف</strong></td><td>تعيد كتابة الدالة كلها وإنت مطمّن — الاختبارات هي الحكم</td></tr>
+      </table>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 مش لازم TDD في كل حاجة</div>
+      <p>
+        TDD ممتاز للمنطق الواضح (حسابات، تحقّق، تحويلات). لكنه بيبقى عبء لما
+        تكون <em>مش عارف</em> شكل الحل بعد — في الحالة دي جرّب الأول (نسمّيها spike)،
+        وبعدين لما الشكل يوضح ارجع اكتب الاختبارات.
+      </p>
+    </div>
+  </article>
+
+  <!-- 16.P3 -->
+  <article class="lesson project" id="u16-p3">
+    <h3>مشروع 31: هيكلة مشروع مختبر كامل <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: تشوف شكل مشروع بايثون حقيقي بملفاته وإعداداته.</p>
+
+    <h4>1. هيكل الملفات المعياري</h4>
+    <div class="diagram">
+<pre>  expense_tracker/
+  ├── expense_tracker/          ← الحزمة (الكود الفعلي)
+  │   ├── __init__.py
+  │   ├── models.py             ← كلاسات Expense و Budget
+  │   ├── storage.py            ← القراءة والكتابة في JSON
+  │   └── reports.py            ← الحسابات والتقارير
+  │
+  ├── tests/                    ← الاختبارات
+  │   ├── __init__.py
+  │   ├── conftest.py           ← fixtures مشتركة
+  │   ├── test_models.py
+  │   ├── test_storage.py
+  │   └── test_reports.py
+  │
+  ├── main.py                   ← نقطة التشغيل
+  ├── requirements.txt          ← المكتبات المطلوبة
+  ├── pytest.ini                ← إعدادات pytest
+  ├── .gitignore
+  └── README.md</pre>
+      <div class="cap">فصل الكود عن الاختبارات — معيار في كل مشروع بايثون</div>
+    </div>
+
+    <h4>2. <code>conftest.py</code>: fixtures مشتركة</h4>
+    <div class="code" data-file="tests/conftest.py"><pre>
+import pytest
+from expense_tracker.models import Expense
+@pytest.fixture
+def sample_expenses():
+    """بيانات تجريبية بتتاح لكل ملفات الاختبار تلقائيًا"""
+    return [
+        Expense("قهوة", 35, "طعام", "2026-09-01"),
+        Expense("مواصلات", 20, "نقل", "2026-09-01"),
+        Expense("غداء", 120, "طعام", "2026-09-02"),
+        Expense("كتاب", 250, "تعليم", "2026-09-05"),
+    ]
+@pytest.fixture
+def temp_storage(tmp_path):
+    """ملف مؤقّت يتمسح تلقائيًا بعد الاختبار"""
+    return tmp_path / "expenses.json"
+</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 <code>conftest.py</code> سحر pytest</div>
+      <p>
+        أي fixture تكتبها في الملف ده <strong>متاحة تلقائيًا</strong> لكل الاختبارات في
+        الفولدر وتحته — من غير أي <code class="inl">import</code>. ده بيلغي التكرار
+        بين ملفات الاختبار.
+      </p>
+    </div>
+
+    <h4>3. الاختبارات موزّعة على الملفات</h4>
+    <div class="code" data-file="tests/test_reports.py"><pre>
+import pytest
+from expense_tracker.reports import total, by_category, top_expense, daily_average
+def test_total(sample_expenses):
+    assert total(sample_expenses) == 425
+def test_total_empty():
+    assert total([]) == 0
+def test_by_category(sample_expenses):
+    result = by_category(sample_expenses)
+    assert result == {"طعام": 155, "نقل": 20, "تعليم": 250}
+def test_by_category_sorted(sample_expenses):
+    result = by_category(sample_expenses)
+    biggest = max(result, key=result.get)
+    assert biggest == "تعليم"
+def test_top_expense(sample_expenses):
+    assert top_expense(sample_expenses).name == "كتاب"
+def test_top_expense_empty_returns_none():
+    assert top_expense([]) is None
+@pytest.mark.parametrize("days, expected", [
+    (1, 425.0), (5, 85.0), (10, 42.5),
+])
+def test_daily_average(sample_expenses, days, expected):
+    assert daily_average(sample_expenses, days) == expected
+def test_daily_average_zero_days_raises(sample_expenses):
+    with pytest.raises(ValueError, match="أكبر من صفر"):
+        daily_average(sample_expenses, 0)
+</pre></div>
+
+    <h4>4. اختبار التخزين بملف مؤقّت</h4>
+    <div class="code" data-file="tests/test_storage.py"><pre>
+import json
+from expense_tracker.storage import save, load
+def test_save_then_load_roundtrip(sample_expenses, temp_storage):
+    save(sample_expenses, temp_storage)
+    loaded = load(temp_storage)
+    assert len(loaded) == len(sample_expenses)
+    assert loaded[0].name == "قهوة"
+    assert loaded[0].amount == 35
+def test_load_missing_file_returns_empty(tmp_path):
+    assert load(tmp_path / "nope.json") == []
+def test_load_corrupt_file_returns_empty(tmp_path):
+    bad = tmp_path / "bad.json"
+    bad.write_text("{ هذا ليس JSON صالح", encoding="utf-8")
+    assert load(bad) == []
+def test_saved_file_is_readable_json(sample_expenses, temp_storage):
+    save(sample_expenses, temp_storage)
+    raw = json.loads(temp_storage.read_text(encoding="utf-8"))
+    assert isinstance(raw, list)
+    assert raw[0]["name"] == "قهوة"
+    assert "قهوة" in temp_storage.read_text(encoding="utf-8")
+</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 اختبار الرحلة الكاملة (Round-trip)</div>
+      <p>
+        <code class="inl">test_save_then_load_roundtrip</code> نمط قوي جدًا: احفظ ثم اقرا
+        ثم قارن. لو أي طرف من الترجمة (<code class="inl">to_dict</code> /
+        <code class="inl">from_dict</code>) فيه باگ، الاختبار ده بيمسكه.
+      </p>
+      <p>
+        ولاحظ <code class="inl">test_load_corrupt_file_returns_empty</code> — إحنا
+        <strong>بنختبر الحالة السيّئة عن قصد</strong>: بنكتب ملف تالف ونتأكّد إن البرنامج
+        ما بيقعش. دي أهم نوعية اختبارات.
+      </p>
+    </div>
+
+    <h4>5. ملفات الإعداد</h4>
+    <div class="code" data-file="pytest.ini"><pre>
+[pytest]
+testpaths = tests
+python_files = test_*.py
+addopts = -v --tb=short --strict-markers
+markers =
+    slow: اختبارات بطيئة (شغّلها بـ -m slow)
+    integration: اختبارات تكامل محتاجة موارد خارجية
+</pre></div>
+    <div class="code" data-file="requirements.txt"><pre>
+pytest==8.3.3
+pytest-cov==5.0.0
+</pre></div>
+    <div class="code" data-file=".gitignore"><pre>
+__pycache__/
+*.pyc
+.pytest_cache/
+.coverage
+htmlcov/
+venv/
+*.log
+</pre></div>
+    <div class="code" data-file="terminal"><pre>
+pytest                                  # كل الاختبارات
+pytest tests/test_reports.py            # ملف واحد
+pytest -k "total"                        # اللي فيه total
+pytest -m "not slow"                     # ما عدا البطيء
+pytest --cov=expense_tracker --cov-report=term-missing
+</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 الخطوة الجاية: الاختبار الآلي مع كل رفع (CI)</div>
+      <p>
+        في مشروع حقيقي على GitHub، بتضيف ملف
+        <code class="inl">.github/workflows/tests.yml</code> فـ GitHub بيشغّل
+        <code class="inl">pytest</code> تلقائيًا مع كل رفع، ويرفض الدمج لو أي اختبار فشل.
+        ده اسمه <strong>Continuous Integration</strong>، وهو المعيار في كل فريق محترم.
+      </p>
+    </div>
+  </article>
+
+  <!-- ADD:u16-ch -->
+  <!-- 16.CH -->
+  <article class="lesson" id="u16-ch">
+    <h3>تحدّيات بتصحيح آلي: اكتب اختباراتك <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">المرّة دي الأدوار بتتقلب: <strong>إنت</strong> اللي بتكتب الاختبارات، وإحنا بنختبرها بنسخ «بايظة» من الدالة — لو اختباراتك كويسة، لازم تكتشفها.</p>
+    <div class="box brain">
+      <div class="bt">🧠 اختبار الطفرات (Mutation Testing)</div>
+      <p>
+        إزاي تعرف إن اختباراتك قوية؟ <strong>بوّظ الكود عمدًا</strong> وشوف الاختبارات هتمسك البوظان ولّا لأ.
+        لو شِلت شرط من الدالة والاختبارات لسه ناجحة — يبقى الشرط ده مش متختبر. أدوات زي <code class="inl">mutmut</code> بتعمل ده أوتوماتيك على مشاريع كاملة.
+      </p>
+    </div>
+
+    <div class="challenge" data-ch="u16-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — اختبارات تمسك الطفرات <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        الدالة <code class="inl">is_strong</code> صحيحة: 8 حروف أو أكتر + رقم + حرف كبير. اكتب <strong>3 دوال اختبار على الأقل</strong> (<code class="inl">test_…</code> بـ <code class="inl">assert</code>)
+        بحيث تنجح على الدالة دي، <strong>وتفشل</strong> لو حد شال أي شرط منها — أو غيّر <code class="inl">&gt;=</code> لـ <code class="inl">&gt;</code>.
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+def is_strong(password):
+    return len(password) &gt;= 8 and any(c.isdigit() for c in password) and any(c.isupper() for c in password)
+
+
+def test_example():
+    assert is_strong("Secret123")
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def _user_tests():
+    return [f for n, f in list(globals().items())
+            if n.startswith("test_") and callable(f)
+            and getattr(getattr(f, "__code__", None), "co_filename", "") == "main.py"]
+
+def _passes_with(impl):
+    for t in _user_tests():
+        g = t.__globals__
+        old = g.get("is_strong")
+        g["is_strong"] = impl
+        try:
+            t()
+        except Exception:
+            return False
+        finally:
+            g["is_strong"] = old
+    return True
+
+def _real(p):
+    return len(p) >= 8 and any(c.isdigit() for c in p) and any(c.isupper() for c in p)
+
+def test_enough_tests():
+    "كتبت 3 اختبارات أو أكتر"
+    n = len(_user_tests())
+    assert n >= 3, f"لقينا {n} اختبار بس"
+
+def test_green_on_real():
+    "اختباراتك بتنجح على الدالة الصحيحة"
+    assert _passes_with(_real), "فيه اختبار عندك بيفشل على الدالة الصحيحة — راجع توقّعاته"
+
+def test_catches_no_length():
+    "بتكتشف دالة ناسية شرط الطول"
+    assert not _passes_with(lambda p: any(c.isdigit() for c in p) and any(c.isupper() for c in p)), "جرّب كلمة قصيرة فيها رقم وحرف كبير"
+
+def test_catches_no_digit():
+    "بتكتشف دالة ناسية شرط الرقم"
+    assert not _passes_with(lambda p: len(p) >= 8 and any(c.isupper() for c in p)), "جرّب كلمة طويلة من غير أرقام"
+
+def test_catches_no_upper():
+    "بتكتشف دالة ناسية شرط الحرف الكبير"
+    assert not _passes_with(lambda p: len(p) >= 8 and any(c.isdigit() for c in p)), "جرّب كلمة طويلة بحروف صغيرة بس"
+
+def test_catches_boundary():
+    "بتكتشف لو >= بقت > (الحدّ: 8 حروف بالظبط)"
+    assert not _passes_with(lambda p: len(p) > 8 and any(c.isdigit() for c in p) and any(c.isupper() for c in p)), "اختبر كلمة سليمة طولها 8 بالظبط"
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+def is_strong(password):
+    return len(password) &gt;= 8 and any(c.isdigit() for c in password) and any(c.isupper() for c in password)
+def test_valid():
+    assert is_strong("Secret123")
+def test_too_short():
+    assert not is_strong("Sec12")
+def test_no_digit():
+    assert not is_strong("SecretWord")
+def test_no_upper():
+    assert not is_strong("secret123")
+def test_exactly_eight():
+    assert is_strong("Secret12")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u16-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — TDD: محلّل المُدد <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        الاختبارات مكتوبة قبل الكود (زي مشروع TDD). اكتب <code class="inl">parse_duration(text)</code> اللي بتحوّل <code class="inl">"1h30m"</code> لـ <code class="inl">90</code> دقيقة.
+        بتقبل ساعات بس، دقايق بس، أو الاتنين، وحروف كبيرة ومسافات. أي حاجة تانية (نص فاضي، رقم من غير وحدة، كلام) ← <code class="inl">ValueError</code>.
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+def parse_duration(text):
+    """'1h30m' ← 90"""
+    pass
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_both():
+    "1h30m ← 90"
+    assert parse_duration("1h30m") == 90
+
+def test_minutes_only():
+    "45m ← 45"
+    assert parse_duration("45m") == 45
+
+def test_hours_only():
+    "2h ← 120"
+    assert parse_duration("2h") == 120
+
+def test_messy():
+    "' 1H 5M ' ← 65"
+    assert parse_duration(" 1H 5M ") == 65
+
+def test_rejects():
+    "'' و 'abc' و '90' ← ValueError"
+    for bad in ["", "abc", "90", "m"]:
+        try:
+            parse_duration(bad)
+        except ValueError:
+            continue
+        raise AssertionError(f"parse_duration({bad!r}) ما رمتش ValueError")
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+import re
+def parse_duration(text):
+    """'1h30m' ← 90"""
+    clean = text.replace(" ", "").lower()
+    match = re.fullmatch(r"(?:(\d+)h)?(?:(\d+)m)?", clean)
+    if not clean or not match:
+        raise ValueError(f"صيغة غير مفهومة: {text!r}")
+    hours, minutes = match.groups()
+    return int(hours or 0) * 60 + int(minutes or 0)
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u16-ch -->
+
+  <!-- 16.EX -->
+  <article class="lesson" id="u16-ex">
+    <h3>تمارين الوحدة السادسة عشرة <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">اكتب الاختبارات وشغّلها فعلًا — <code>pip install pytest</code> وابدأ.</p>
+
+    <h4>المستوى الأول</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — اختبر دالة</div>
+      <p>
+        عندك <code class="inl">def celsius_to_f(c): return c * 9 / 5 + 32</code>.
+        اكتب 4 اختبارات pytest: صفر، 100، سالب، وكسر عشري.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code" data-file="test_temp.py"><pre>
+import pytest
+from temp import celsius_to_f
+def test_freezing():
+    assert celsius_to_f(0) == 32
+def test_boiling():
+    assert celsius_to_f(100) == 212
+def test_negative():
+    assert celsius_to_f(-40) == -40        # النقطة اللي المقياسين بيتساووا فيها!
+def test_fraction():
+    assert celsius_to_f(37.5) == pytest.approx(99.5)
+</pre></div>
+      <p><code class="inl">pytest.approx</code> هي الطريقة الرسمية لمقارنة الأعداد العشرية — أنضف من <code class="inl">abs(a-b) &lt; 1e-9</code>.</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — parametrize</div>
+      <p>حوّل الأربع اختبارات اللي فوق لاختبار واحد بـ <code class="inl">parametrize</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import pytest
+from temp import celsius_to_f
+@pytest.mark.parametrize("celsius, fahrenheit", [
+    (0, 32),
+    (100, 212),
+    (-40, -40),
+    (37.5, 99.5),
+    (25, 77),
+])
+def test_conversion(celsius, fahrenheit):
+    assert celsius_to_f(celsius) == pytest.approx(fahrenheit)
+</pre></div>
+      </details>
+    </div>
+
+    <h4>المستوى الثاني</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 3 — اختبر الأخطاء</div>
+      <p>
+        دالة <code class="inl">get_age(birth_year)</code> بترمي <code class="inl">ValueError</code>
+        لو السنة في المستقبل أو قبل 1900. اكتب اختبارات للحالات الصحيحة والخاطئة.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import pytest
+from age import get_age
+@pytest.mark.parametrize("year, expected", [
+    (2000, 26), (1990, 36), (1900, 126),
+])
+def test_valid_years(year, expected):
+    assert get_age(year) == expected
+@pytest.mark.parametrize("bad_year", [2050, 3000, 1899, 1800, 0, -5])
+def test_invalid_years_raise(bad_year):
+    with pytest.raises(ValueError):
+        get_age(bad_year)
+def test_error_message_is_helpful():
+    with pytest.raises(ValueError, match="1900"):
+        get_age(1800)
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — fixture</div>
+      <p>
+        اكتب fixture بترجّع كلاس <code class="inl">Playlist</code> فيه 3 أغاني، واستخدمها
+        في 3 اختبارات مختلفة.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import pytest
+from playlist import Playlist
+@pytest.fixture
+def playlist():
+    p = Playlist("تجربة")
+    p.add("أغنية 1")
+    p.add("أغنية 2")
+    p.add("أغنية 3")
+    return p
+def test_length(playlist):
+    assert len(playlist) == 3
+def test_contains(playlist):
+    assert "أغنية 2" in playlist
+    assert "أغنية 9" not in playlist
+def test_indexing(playlist):
+    assert playlist[0] == "أغنية 1"
+    assert playlist[-1] == "أغنية 3"
+def test_iteration(playlist):
+    songs = [s for s in playlist]
+    assert len(songs) == 3
+def test_fixture_is_fresh(playlist):
+    playlist.add("أغنية 4")
+    assert len(playlist) == 4        # الاختبار اللي بعده هياخد نسخة نضيفة
+</pre></div>
+      <p>آخر اختبار بيوضّح نقطة مهمّة: الـ fixture <b>بتتنفّذ من جديد لكل اختبار</b>، فالتعديل هنا مش هيأثّر على الاختبارات التانية.</p>
+      </details>
+    </div>
+
+    <h4>المستوى الثالث</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 5 — TDD من الصفر</div>
+      <p>
+        بأسلوب TDD، اعمل دالة <code class="inl">slugify(text)</code> بتحوّل
+        <code class="inl">"Hello World! 123"</code> لـ <code class="inl">"hello-world-123"</code>:
+        حروف صغيرة، المسافات شرطات، شيل الرموز، من غير شرطات متكرّرة أو في الأطراف.
+        <strong>اكتب الاختبارات الأول.</strong>
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code" data-file="test_slugify.py"><pre>
+import pytest
+from slugify import slugify
+@pytest.mark.parametrize("text, expected", [
+    ("Hello World", "hello-world"),
+    ("Hello World! 123", "hello-world-123"),
+    ("  spaced  out  ", "spaced-out"),
+    ("MiXeD CaSe", "mixed-case"),
+    ("multiple---dashes", "multiple-dashes"),
+    ("!!!", ""),
+    ("", ""),
+    ("a", "a"),
+    ("Python 3.12 Rocks!", "python-3-12-rocks"),
+])
+def test_slugify(text, expected):
+    assert slugify(text) == expected
+def test_non_string_raises():
+    with pytest.raises(TypeError):
+        slugify(123)
+</pre></div>
+      <div class="code" data-file="slugify.py"><pre>
+import re
+def slugify(text):
+    if not isinstance(text, str):
+        raise TypeError("المدخل لازم يكون نص")
+    text = text.lower()
+    text = re.sub(r"[^a-z0-9]+", "-", text)     # أي حاجة مش حرف/رقم → شرطة
+    return text.strip("-")                       # شيل الشرطات من الأطراف
+</pre></div>
+      <p>3 سطور منطق، و10 اختبارات. لاحظ إن الاختبارات هي اللي اكتشفت الحالات الحدّية (<code class="inl">"!!!"</code> والنص الفاضي).</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 6 — محاكاة</div>
+      <p>
+        عندك <code class="inl">def get_exchange_rate(): ...</code> بتجيب سعر الدولار من API.
+        اكتب اختبار بيحاكي الـ API ويتأكّد إن الدالة بترجّع الرقم الصح، واختبار تاني للفشل.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import pytest
+from unittest.mock import patch, Mock
+from currency import get_exchange_rate
+@patch("currency.requests.get")
+def test_returns_rate(mock_get):
+    fake = Mock()
+    fake.json.return_value = {"rates": {"EGP": 48.25}}
+    fake.raise_for_status.return_value = None
+    mock_get.return_value = fake
+    assert get_exchange_rate() == 48.25
+    mock_get.assert_called_once()
+@patch("currency.requests.get")
+def test_network_error_raises(mock_get):
+    mock_get.side_effect = ConnectionError("مفيش نت")
+    with pytest.raises(ConnectionError):
+        get_exchange_rate()
+@patch("currency.requests.get")
+def test_missing_key_raises(mock_get):
+    fake = Mock()
+    fake.json.return_value = {"rates": {}}        # الرد ناقص
+    fake.raise_for_status.return_value = None
+    mock_get.return_value = fake
+    with pytest.raises(KeyError):
+        get_exchange_rate()
+</pre></div>
+      <p>
+        <code class="inl">side_effect</code> بتخلّي الدالة الوهمية <b>ترمي</b> خطأ بدل ما ترجّع
+        قيمة — فبنقدر نختبر سلوك برنامجنا لما النت يفصل، من غير ما نفصل النت فعلًا.
+      </p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. pytest بتلاقي الاختبارات في الملفات اللي اسمها…</p>
+        <label><input type="radio"> أي اسم</label>
+        <label><input type="radio"> tests.py بس</label>
+        <label><input type="radio"> test_*.py أو *_test.py</label>
+        <label><input type="radio"> main.py</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. ليه <code class="inl">assert</code> مش مناسبة للتحقّق من مدخلات المستخدم؟</p>
+        <label><input type="radio"> لأنها بطيئة</label>
+        <label><input type="radio"> لأنها بتتجاهل تمامًا مع <code class="inl">python -O</code></label>
+        <label><input type="radio"> لأنها ما بترميش خطأ</label>
+        <label><input type="radio"> مفيش سبب، هي مناسبة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">@pytest.fixture</code> بتتنفّذ…</p>
+        <label><input type="radio"> من جديد قبل كل اختبار بيستخدمها</label>
+        <label><input type="radio"> مرّة واحدة في أول الملف</label>
+        <label><input type="radio"> بعد كل الاختبارات</label>
+        <label><input type="radio"> بس لو ناديتها بإيدك</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. الطريقة الصح لاختبار إن دالة بترمي <code class="inl">ValueError</code>؟</p>
+        <label><input type="radio"> <code class="inl">assert func() == ValueError</code></label>
+        <label><input type="radio"> <code class="inl">assert type(func()) is ValueError</code></label>
+        <label><input type="radio"> نشغّلها ونشوف الشاشة</label>
+        <label><input type="radio"> <code class="inl">with pytest.raises(ValueError):</code></label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">5. تغطية 100% معناها…</p>
+        <label><input type="radio"> الكود مفيهوش أي باگ</label>
+        <label><input type="radio"> كل الحالات الممكنة اتفحصت</label>
+        <label><input type="radio"> كل سطر اتنفّذ مرّة على الأقل — ومش معناه إن كل الحالات اتفحصت</label>
+        <label><input type="radio"> الاختبارات كلها نجحت</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">6. ليه نستخدم mock مع كود بيتكلّم مع API؟</p>
+        <label><input type="radio"> عشان الاختبار يبقى أصعب</label>
+        <label><input type="radio"> عشان يبقى سريع وثابت وما يفشلش لو النت مفصول</label>
+        <label><input type="radio"> عشان نوفّر فلوس الـ API بس</label>
+        <label><input type="radio"> mock مش بتستخدم مع APIs</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">7. دورة TDD الصحيحة هي…</p>
+        <label><input type="radio"> اختبار يفشل 🔴 → كود ينجّحه 🟢 → نظّف ♻️</label>
+        <label><input type="radio"> كود → اختبار → نظّف</label>
+        <label><input type="radio"> نظّف → كود → اختبار</label>
+        <label><input type="radio"> كود → نظّف → اختبار</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">8. <code class="inl">logging</code> أفضل من <code class="inl">print</code> أساسًا لأن…</p>
+        <label><input type="radio"> بتكتب أسرع</label>
+        <label><input type="radio"> بتلوّن المخرجات</label>
+        <label><input type="radio"> بتشتغل في بايثون 2 كمان</label>
+        <label><input type="radio"> فيها مستويات ووقت ومصدر، وتقدر تطفّيها من غير ما تمسح كود</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">9. <code class="inl">@patch("weather.requests.get")</code> — ليه <code class="inl">weather.</code> في الأول؟</p>
+        <label><input type="radio"> عشان الترتيب الأبجدي</label>
+        <label><input type="radio"> لأننا بنستبدل الاسم في المكان اللي بيتستخدم فيه مش مكان تعريفه</label>
+        <label><input type="radio"> مفيش سبب، الاتنين زي بعض</label>
+        <label><input type="radio"> لأن requests مكتبة خارجية</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">10. <code class="inl">tmp_path</code> في pytest هي…</p>
+        <label><input type="radio"> متغيّر بيئة</label>
+        <label><input type="radio"> دالة لازم تعرّفها بنفسك</label>
+        <label><input type="radio"> fixture جاهزة بترجّع فولدر مؤقّت يتمسح تلقائيًا</label>
+        <label><input type="radio"> اسم ملف الاختبار</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:16 -->
+  <div class="checkpoint" data-unit="16">
+    <h4>✅ نقطة تفتيش: الوحدة السادسة عشرة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أكتب اختبارات pytest بـ assert و raises.</li><li>أستخدم fixtures و parametrize.</li><li>أقيس التغطية وأستخدم mock للأجزاء الخارجية.</li><li>أستخدم المنقّح و logging بدل print.</li></ul>
+  </div>
+  <!-- /CP -->

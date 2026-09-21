@@ -1,0 +1,5 @@
+print("123".isdecimal(), "١٢٣".isdecimal(), "²".isdecimal(), "½".isdecimal())
+print("123".isdigit(), "١٢٣".isdigit(), "²".isdigit(), "½".isdigit())
+print("123".isnumeric(), "١٢٣".isnumeric(), "²".isnumeric(), "½".isnumeric())
+print(int("١٢٣") + 1)
+print("-5".isdecimal())

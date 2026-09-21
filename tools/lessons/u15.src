@@ -1,0 +1,220 @@
+@@lesson u15-l8 before="<!-- 15.P1 -->"
+  <!-- 15.8 -->
+  <article class="lesson" id="u15-l8">
+    <h3>الاستثناءات المخصّصة: أخطاء بلغة مشروعك <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تفهم إن الاستثناءات كلاسات بينها وراثة، تصمّم عيلة أخطاء خاصة بمشروعك تحمل بيانات مفيدة، وتربط الأخطاء ببعض بـ <code class="inl">raise ... from</code>.</p>
+
+    <h4>1. الاستثناءات كلاسات… وبينها وراثة</h4>
+    <div class="diagram">
+<pre>  BaseException
+   ├── KeyboardInterrupt        ← Ctrl+C (ما تمسكهاش!)
+   ├── SystemExit               ← sys.exit()
+   └── Exception                ← أبو كل الأخطاء «العادية»
+        ├── ArithmeticError
+        │    └── ZeroDivisionError
+        ├── LookupError
+        │    ├── IndexError
+        │    └── KeyError
+        ├── OSError
+        │    ├── FileNotFoundError
+        │    └── PermissionError
+        ├── ValueError
+        └── TypeError</pre>
+      <div class="cap">except بتمسك النوع وكل أبنائه — زي isinstance</div>
+    </div>
+    @code run
+print(ZeroDivisionError.__mro__) ¦¦ `__mro__` (من درس الوراثة) = سلسلة الآباء بالترتيب لحد `object`.
+print(issubclass(FileNotFoundError, OSError)) ¦¦ «هل الملف مش موجود نوع من أخطاء نظام التشغيل؟» ← أيوة.
+try: ¦¦ نجرّب.
+    1 / 0 ¦¦ ZeroDivisionError.
+except ArithmeticError as e: ¦¦ بنمسك **الأب** — والابن اتمسك.
+    print("اتمسك بالأب:", type(e).__name__) ¦¦ النوع الحقيقي لسه ZeroDivisionError.
+    @end
+    @out
+(&lt;class 'ZeroDivisionError'&gt;, &lt;class 'ArithmeticError'&gt;, &lt;class 'Exception'&gt;, &lt;class 'BaseException'&gt;, &lt;class 'object'&gt;)
+True
+اتمسك بالأب: ZeroDivisionError
+    @end
+    <div class="box warn">
+      <div class="bt">⚠️ ليه except Exception أحسن من except لوحدها؟</div>
+      <p>
+        <code class="inl">except:</code> من غير نوع (أو <code class="inl">except BaseException</code>) بتمسك <code class="inl">KeyboardInterrupt</code> كمان —
+        فالمستخدم يدوس Ctrl+C والبرنامج ما يقفش! <code class="inl">Exception</code> مصمّمة عشان تستثني الحالات دي.
+      </p>
+    </div>
+
+    <h4>2. عيلة أخطاء لمشروعك</h4>
+    <p>
+      <code class="inl">raise ValueError("رصيد مش كفاية")</code> شغّالة، لكن اللي بيستخدم الكود مش هيقدر يفرّق بينها وبين أي ValueError تانية،
+      ومش هيعرف الرصيد كام. الحل: <strong>كلاسات أخطاء بأسماء من عالم مشروعك</strong>.
+    </p>
+    @code run bank.py
+class BankError(Exception): ¦¦ **الأب** لكل أخطاء المكتبة — بيورث من `Exception`.
+    """الأب لكل أخطاء البنك""" ¦¦ docstring كفاية كجسم للكلاس (مش محتاج `pass`).
+ ¦¦
+class InsufficientFundsError(BankError): ¦¦ خطأ محدّد. الاسم **بينتهي بـ Error** (اصطلاح).
+    def __init__(self, balance, amount): ¦¦ بياخد البيانات اللي تساعد في التعامل معاه.
+        self.balance = balance ¦¦ نخزّنها كخصائص.
+        self.amount = amount ¦¦ المبلغ المطلوب.
+        super().__init__(f"الرصيد {balance} مش كفاية لسحب {amount}") ¦¦ نبعت الرسالة للأب — هي اللي بتظهر في `str(e)` والـ Traceback.
+ ¦¦
+class AccountLockedError(BankError): ¦¦ خطأ تاني من نفس العيلة.
+    pass ¦¦ مش محتاج بيانات إضافية.
+ ¦¦
+class Account: ¦¦ الكلاس اللي بيرمي الأخطاء.
+    def __init__(self, owner, balance=0): ¦¦ المهيّئ.
+        self.owner = owner ¦¦ صاحب الحساب.
+        self.balance = balance ¦¦ الرصيد.
+        self.locked = False ¦¦ حالة القفل.
+ ¦¦
+    def withdraw(self, amount): ¦¦ السحب.
+        if self.locked: ¦¦ LBYL لقاعدة عمل.
+            raise AccountLockedError(f"حساب {self.owner} مقفول") ¦¦ رمي بخطأ واضح المعنى.
+        if amount > self.balance: ¦¦ الرصيد مش كفاية.
+            raise InsufficientFundsError(self.balance, amount) ¦¦ رمي **ومعاه البيانات**.
+        self.balance -= amount ¦¦ السحب الفعلي بيحصل بس لو كل الفحوص عدّت.
+        return self.balance ¦¦ الرصيد الجديد.
+ ¦¦
+acc = Account("سارة", 500) ¦¦ حساب.
+try: ¦¦ نجرّب سحب كبير.
+    acc.withdraw(800) ¦¦ أكبر من الرصيد.
+except InsufficientFundsError as e: ¦¦ نمسك **النوع المحدّد**.
+    print(e) ¦¦ الرسالة.
+    print("ناقص:", e.amount - e.balance) ¦¦ **الفايدة الحقيقية**: البيانات متاحة — ممكن نقترح على المستخدم مبلغ تاني.
+ ¦¦
+acc.locked = True ¦¦ نقفل الحساب.
+try: ¦¦ نجرّب تاني.
+    acc.withdraw(10) ¦¦ أي مبلغ.
+except BankError as e: ¦¦ **مسك العيلة كلها** بالأب — مفيد في الطبقة العليا اللي عايزة تعرض «مشكلة في البنك» أيًّا كانت.
+    print(type(e).__name__, "→", e) ¦¦ النوع والرسالة.
+    @end
+    @out rtl
+الرصيد 500 مش كفاية لسحب 800
+ناقص: 300
+AccountLockedError → حساب سارة مقفول
+    @end
+
+    <h4>3. ربط الأخطاء: raise ... from</h4>
+    <p>لما تمسك خطأ «تقني» وترمي بداله خطأ «بلغة مشروعك»، ما تضيّعش الأصلي — اربطهم عشان اللي بيصلّح يشوف الحكاية كاملة.</p>
+    @code run
+import json ¦¦ مكتبة JSON.
+ ¦¦
+class ConfigError(Exception): ¦¦ خطأ خاص بالإعدادات.
+    pass ¦¦ جسم فاضي.
+ ¦¦
+def load_config(text): ¦¦ تحميل إعدادات من نص JSON.
+    try: ¦¦ محاولة.
+        return json.loads(text) ¦¦ التحليل.
+    except json.JSONDecodeError as e: ¦¦ خطأ تقني من مكتبة JSON.
+        raise ConfigError("ملف الإعدادات بايظ") from e ¦¦ **`from e`**: الخطأ الجديد بيحتفظ بالأصلي في `__cause__`.
+ ¦¦
+try: ¦¦ الاستخدام.
+    load_config("{port: 80}") ¦¦ JSON غلط: المفاتيح لازم بين علامات تنصيص مزدوجة.
+except ConfigError as e: ¦¦ الطبقة العليا بتتعامل مع خطأ مفهوم.
+    print(e) ¦¦ الرسالة الودودة.
+    print("السبب الأصلي:", type(e.__cause__).__name__) ¦¦ والتفاصيل التقنية لسه موجودة للتسجيل (logging).
+    @end
+    @out rtl
+ملف الإعدادات بايظ
+السبب الأصلي: JSONDecodeError
+    @end
+    <p>ولو ما اتمسكش خالص، الـ Traceback بيحكي الحكايتين بالترتيب:</p>
+    @out
+Traceback (most recent call last):
+  ...
+json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  ...
+__main__.ConfigError: ملف الإعدادات بايظ
+    @end
+
+    <h4>4. سجّل وارمي تاني: raise لوحدها</h4>
+    @code run
+def parse_age(text): ¦¦ دالة في طبقة منخفضة.
+    try: ¦¦ محاولة.
+        return int(text) ¦¦ تحويل.
+    except ValueError: ¦¦ عايزين نسجّل المشكلة هنا…
+        print(f"[log] مدخل غلط: {text!r}") ¦¦ …(في برنامج حقيقي: `logging` من وحدة الاختبارات).
+        raise ¦¦ **`raise` من غير حاجة** = ارمي نفس الخطأ تاني بنفس الـ Traceback — عشان الطبقة الأعلى تقرّر.
+ ¦¦
+try: ¦¦ الطبقة الأعلى.
+    parse_age("abc") ¦¦ مدخل غلط.
+except ValueError as e: ¦¦ استلمت نفس الخطأ.
+    print("الطبقة الأعلى:", e) ¦¦ الرسالة الأصلية.
+    @end
+    @out rtl
+[log] مدخل غلط: 'abc'
+الطبقة الأعلى: invalid literal for int() with base 10: 'abc'
+    @end
+    <div class="box tip">
+      <div class="bt">💡 إرشادات تصميم الأخطاء</div>
+      <ul>
+        <li>ورّث من <code class="inl">Exception</code> (أو من خطأ جاهز قريب في المعنى زي <code class="inl">ValueError</code>)، <strong>مش</strong> <code class="inl">BaseException</code>.</li>
+        <li>اعمل <strong>أب واحد لمكتبتك</strong> عشان المستخدم يقدر يمسك كل أخطاءك مرّة واحدة — زي <code class="inl">requests.RequestException</code>.</li>
+        <li>الاسم ينتهي بـ <code class="inl">Error</code> ويوصف <em>إيه اللي حصل</em>.</li>
+        <li>حمّل البيانات اللي تساعد في الحل كخصائص، مش جوّه الرسالة بس.</li>
+        <li>ما تعملش خطأ جديد لكل حاجة — لو <code class="inl">ValueError</code> كفاية، استخدمها.</li>
+        <li>في وحدة الاختبارات: <code class="inl">pytest.raises(InsufficientFundsError)</code> بتتأكّد إن الكود بيرمي الخطأ الصح.</li>
+      </ul>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>خطأ تحقّق بحقل</div>
+      <p>اعمل <code class="inl">ValidationError</code> بتحمل اسم الحقل، ودالة <code class="inl">validate_user(data)</code> بترميها. اجمع كل الأخطاء بدل ما تقف عند أول واحد.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+class ValidationError(ValueError): ¦¦ بتورث من ValueError لأنها «قيمة غير صالحة» في المعنى.
+    def __init__(self, field, message): ¦¦ الحقل والرسالة.
+        self.field = field ¦¦ اسم الحقل كخاصية.
+        super().__init__(f"{field}: {message}") ¦¦ الرسالة الكاملة.
+ ¦¦
+def validate_user(data): ¦¦ التحقّق.
+    if len(data.get("name", "")) < 2: ¦¦ الاسم حرفين على الأقل.
+        raise ValidationError("name", "قصير جدًا") ¦¦ رمي.
+    if not 18 <= data.get("age", 0) <= 100: ¦¦ العمر في نطاق.
+        raise ValidationError("age", "خارج النطاق") ¦¦ رمي.
+ ¦¦
+users = [{"name": "سارة", "age": 30}, {"name": "م", "age": 30}, {"name": "علي", "age": 12}] ¦¦ بيانات.
+errors = [] ¦¦ تجميع الأخطاء.
+for u in users: ¦¦ على كل مستخدم.
+    try: ¦¦ محاولة.
+        validate_user(u) ¦¦ التحقّق.
+    except ValidationError as e: ¦¦ نمسك النوع بتاعنا بس.
+        errors.append(e.field) ¦¦ نسجّل الحقل (مثلًا عشان نلوّن الخانة في الفورم).
+print(errors) ¦¦ الحقول اللي فيها مشاكل.
+      @end
+      @out
+['name', 'age']
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">except LookupError</code> هتمسك…</p>
+        <label><input type="radio"> KeyError بس</label>
+        <label><input type="radio"> KeyError و IndexError</label>
+        <label><input type="radio"> كل الأخطاء</label>
+        <label><input type="radio"> ولا حاجة — لازم النوع بالظبط</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. الكلاس الأنسب لتوريث خطأ مخصّص؟</p>
+        <label><input type="radio"> BaseException</label>
+        <label><input type="radio"> object</label>
+        <label><input type="radio"> KeyboardInterrupt</label>
+        <label><input type="radio"> Exception</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">raise NewError() from e</code> بتعمل إيه زيادة؟</p>
+        <label><input type="radio"> بتحفظ الخطأ الأصلي كسبب في __cause__</label>
+        <label><input type="radio"> بتمسح الخطأ الأصلي</label>
+        <label><input type="radio"> بترمي الخطأين مع بعض</label>
+        <label><input type="radio"> مفيش فرق عن raise العادية</label>
+      </div>
+    </div>
+  </article>

@@ -1,0 +1,5 @@
+print(int("1010", 2))
+print(int("ff", 16))
+print(int("0xff", 16))
+print(int("777", 8))
+print(int("z", 36))

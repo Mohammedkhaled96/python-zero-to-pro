@@ -1,0 +1,1084 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة الرابعة · القرارات</div>
+    <h2>القرارات: if و elif و else</h2>
+    <p>
+      لحد دلوقتي كل برامجنا بتمشي في خط مستقيم من فوق لتحت. الوحدة دي بتدّي البرنامج
+      <strong>القدرة على الاختيار</strong> — يقرأ الموقف ويقرّر يعمل إيه.
+      من هنا بيبدأ البرنامج يبقى «ذكي».
+    </p>
+  </div>
+
+  <!-- 4.1 -->
+  <article class="lesson" id="u4-l1">
+    <h3>عوامل المقارنة والقيم المنطقية <span class="tag">درس 18</span></h3>
+    <p class="goal">الهدف: تكوّن سؤال بايثون تقدر تجاوب عليه بـ True أو False.</p>
+
+    <h4>1. عوامل المقارنة الستة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>العامل</th><th>معناه</th><th>مثال</th><th>النتيجة</th></tr>
+        <tr><td><code class="inl">==</code></td><td>يساوي</td><td><code class="inl">5 == 5</code></td><td><code class="inl">True</code></td></tr>
+        <tr><td><code class="inl">!=</code></td><td>لا يساوي</td><td><code class="inl">5 != 3</code></td><td><code class="inl">True</code></td></tr>
+        <tr><td><code class="inl">&gt;</code></td><td>أكبر من</td><td><code class="inl">5 &gt; 3</code></td><td><code class="inl">True</code></td></tr>
+        <tr><td><code class="inl">&lt;</code></td><td>أصغر من</td><td><code class="inl">5 &lt; 3</code></td><td><code class="inl">False</code></td></tr>
+        <tr><td><code class="inl">&gt;=</code></td><td>أكبر من أو يساوي</td><td><code class="inl">5 &gt;= 5</code></td><td><code class="inl">True</code></td></tr>
+        <tr><td><code class="inl">&lt;=</code></td><td>أصغر من أو يساوي</td><td><code class="inl">3 &lt;= 5</code></td><td><code class="inl">True</code></td></tr>
+      </table>
+    </div>
+
+    <div class="box err">
+      <div class="bt">💥 <code>=</code> ولّا <code>==</code>؟ — أشهر خطأ على الإطلاق</div>
+      <div class="code"><pre>
+age = 18       # إسناد: حط 18 في المتغيّر age
+age == 18      # مقارنة: هل age يساوي 18؟ → True/False
+</pre></div>
+      <p>
+        علامة واحدة = <strong>بتحط قيمة</strong>. علامتين = <strong>بتسأل سؤال</strong>.
+        لو كتبت <code class="inl">if age = 18:</code> بايثون هترمي
+        <code class="inl">SyntaxError</code>. الجميل إنها بتمسكه بدري، بعكس لغات تانية
+        بتقبله وتديك نتيجة غلط.
+      </p>
+    </div>
+
+    <h4>2. المقارنة بتشتغل على النصوص كمان</h4>
+    <div class="code"><pre>
+print("python" == "python")    # True
+print("Python" == "python")    # False  ← حسّاس لحالة الحرف!
+print("Python".lower() == "python")   # True  ← الحل
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+False
+True</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 عادة احترافية</div>
+      <p>
+        دايمًا حوّل مدخلات المستخدم لحروف صغيرة قبل ما تقارنها:
+        <code class="inl">input("...").lower()</code>. كده «YES» و«Yes» و«yes» كلهم هيشتغلوا.
+      </p>
+    </div>
+
+    <h4>3. العوامل المنطقية: and و or و not</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>العامل</th><th>بيرجّع True لما</th><th>مثال</th></tr>
+        <tr><td><code class="inl">and</code></td><td><strong>كل</strong> الشروط صح</td><td><code class="inl">age &gt; 18 and has_id</code></td></tr>
+        <tr><td><code class="inl">or</code></td><td><strong>واحد على الأقل</strong> صح</td><td><code class="inl">day == "sat" or day == "fri"</code></td></tr>
+        <tr><td><code class="inl">not</code></td><td>بتعكس النتيجة</td><td><code class="inl">not is_closed</code></td></tr>
+      </table>
+    </div>
+    <div class="code"><pre>
+age = 25
+has_license = True
+print(age &gt;= 18 and has_license)     # True   ← الاتنين صح
+print(age &gt;= 18 and not has_license) # False
+print(age &lt; 18 or has_license)       # True   ← واحد كفاية
+print(not (age &lt; 18))                # True
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+False
+True
+True</pre></div>
+
+    <h4>4. جداول الحقيقة</h4>
+    <div class="diagram">
+<pre>        and                      or                    not
+  ┌───────┬───────┬─────┐  ┌───────┬───────┬─────┐  ┌───────┬───────┐
+  │   A   │   B   │ A∧B │  │   A   │   B   │ A∨B │  │   A   │ ¬A    │
+  ├───────┼───────┼─────┤  ├───────┼───────┼─────┤  ├───────┼───────┤
+  │ True  │ True  │ True│  │ True  │ True  │ True│  │ True  │ False │
+  │ True  │ False │False│  │ True  │ False │ True│  │ False │ True  │
+  │ False │ True  │False│  │ False │ True  │ True│  └───────┴───────┘
+  │ False │ False │False│  │ False │ False │False│
+  └───────┴───────┴─────┘  └───────┴───────┴─────┘</pre>
+      <div class="cap">and بيتشدّد، or بيتساهل</div>
+    </div>
+
+    <h4>5. سلسلة المقارنات — ميزة أنيقة في بايثون</h4>
+    <div class="code"><pre>
+age = 25
+print(18 &lt;= age &lt;= 60)                 # True  ← بايثون بتسمح بده!
+print(age &gt;= 18 and age &lt;= 60)         # نفس المعنى بالضبط
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+True</pre></div>
+    <p>لغات كتير ما بتسمحش بالصيغة الأولى، بايثون بتسمح بيها وبتخلّي الكود أقرب للرياضيات.</p>
+
+    <h4>6. عاملَي in و not in</h4>
+    <div class="code"><pre>
+email = "farid@gmail.com"
+print("@" in email)              # True
+print(" " not in email)          # True
+colors = ["red", "green", "blue"]
+print("red" in colors)           # True
+print("yellow" in colors)        # False
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+True
+True
+False</pre></div>
+    <p>
+      <code class="inl">in</code> بتشتغل على النصوص والقوائم والقواميس، وهي أنضف بكتير
+      من كتابة <code class="inl">or</code> عشر مرّات.
+    </p>
+
+    <h4>7. Truthy و Falsy — القيم اللي بتُعامَل كأنها True أو False</h4>
+    <p>بايثون بتقدر تحوّل أي قيمة لمنطقية. القيم دي بس اللي بتُعتبر <strong>False</strong>:</p>
+    <div class="code"><pre>
+print(bool(0))         # False
+print(bool(0.0))       # False
+print(bool(""))        # False   ← النص الفاضي
+print(bool([]))        # False   ← القائمة الفاضية
+print(bool({}))        # False
+print(bool(None))      # False
+print(bool(1))         # True
+print(bool(-5))        # True    ← أي رقم غير صفر
+print(bool("0"))       # True    ← نص فيه حرف = True حتى لو الحرف صفر!
+print(bool(" "))       # True    ← مسافة مش نص فاضي
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>False
+False
+False
+False
+False
+False
+True
+True
+True
+True</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 الاستخدام العملي</div>
+      <div class="code"><pre>
+name = input("اسمك: ")
+if name:                       # بدل if name != ""
+    print(f"أهلا {name}")
+else:
+    print("ما كتبتش اسم")
+</pre></div>
+    </div>
+    <!-- APPEND:u4-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>توقّع True ولّا False</div>
+      <p>توقّع كل سطر قبل التشغيل.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+age = 17
+has_permission = True
+print(age &gt;= 18)
+print(age &gt;= 18 or has_permission)
+print(13 &lt;= age &lt;= 19)
+print("a" in "banana", "z" not in "banana")
+print(bool(""), bool("0"), bool(0))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>False
+True
+True
+True True
+False True False</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="0">
+        <p class="qt">1. <code class="inl">not True and False</code>؟</p>
+        <label><input type="radio"> False</label>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> None</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. <code class="inl">5 == "5"</code>؟</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> False — نوعين مختلفين</label>
+        <label><input type="radio"> "5"</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. أنهي قيمة Truthy؟</p>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> " " (مسافة)</label>
+        <label><input type="radio"> ""</label>
+        <label><input type="radio"> None</label>
+      </div>
+    </div>
+    <!-- /APPEND:u4-l1 -->
+                <!-- SUM:u4-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>عوامل المقارنة بترجّع True أو False.</li><li><code class="inl">and</code> و <code class="inl">or</code> و <code class="inl">not</code> لدمج الشروط، والمقارنة المتسلسلة <code class="inl">0 &lt; x &lt; 10</code>.</li><li>القيم الفاضية والصفر Falsy، وأي حاجة تانية Truthy.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 4.2 -->
+  <article class="lesson" id="u4-l2">
+    <h3>جملة if و else والمسافات البادئة <span class="tag">درس 19 · جوهري</span></h3>
+    <p class="goal">الهدف: تخلّي البرنامج ينفّذ كود معيّن بشرط، وتفهم قاعدة المسافات في بايثون.</p>
+
+    <h4>1. الشكل الأساسي</h4>
+    <div class="code"><pre>
+language = "python"
+if language == "python":
+    print("i love python")
+else:
+    print("i don't love this language")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>i love python</pre></div>
+    <p>تشريح الشكل:</p>
+    <div class="diagram">
+<pre>  if  language == "python" :
+  │        │              │
+  │        │              └── النقطتين إلزامية!
+  │        └───────────────── الشرط (لازم يطلّع True أو False)
+  └────────────────────────── الكلمة المفتاحية
+
+      print("i love python")
+      └── مسافة بادئة (4 مسافات) = "ده جوّه الـ if"</pre>
+      <div class="cap">تشريح جملة if</div>
+    </div>
+
+    <h4>2. المسافات البادئة (Indentation) — مش شكل، ده قانون</h4>
+    <div class="box brain">
+      <div class="bt">🧠 الفرق الأكبر بين بايثون وباقي اللغات</div>
+      <p>
+        في لغات زي C و Java و JavaScript، بيستخدموا أقواس <code class="inl">{ }</code>
+        عشان يحدّدوا الكتلة (block). بايثون <strong>بتستخدم المسافة البادئة نفسها</strong>.
+        يعني المسافات مش تجميل — دي جزء من قواعد اللغة، ولو غلطت فيها البرنامج ما يشتغلش.
+      </p>
+    </div>
+    <div class="code"><pre>
+if 5 &gt; 3:
+    print("الأول جوّه")      # ← جوّه الـ if
+    print("التاني جوّه")     # ← جوّه الـ if برضه
+print("ده بره خالص")         # ← بره، بيشتغل دايمًا
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الأول جوّه
+التاني جوّه
+ده بره خالص</pre></div>
+    <div class="box err">
+      <div class="bt">💥 أخطاء المسافات</div>
+      <div class="code"><pre>
+if 5 &gt; 3:
+print("hi")            # ❌ IndentationError: expected an indented block
+if 5 &gt; 3:
+    print("a")
+      print("b")       # ❌ IndentationError: unexpected indent
+</pre></div>
+      <p>
+        <strong>القاعدة:</strong> 4 مسافات لكل مستوى، وثابتة في الملف كله.
+        ما تخلطش بين Tab والمسافات — VS Code بيحوّل الـ Tab لـ 4 مسافات تلقائيًا وده اللي عايزينه.
+      </p>
+    </div>
+
+    <h4>3. if لوحدها من غير else</h4>
+    <div class="code"><pre>
+age = 20
+if age &gt;= 18:
+    print("مسموح لك بالدخول")
+print("شكرا لزيارتك")     # بيتنفّذ في كل الحالات
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>مسموح لك بالدخول
+شكرا لزيارتك</pre></div>
+
+    <h4>4. أكتر من احتمال: elif</h4>
+    <div class="code"><pre>
+score = 75
+if score &gt;= 90:
+    print("ممتاز")
+elif score &gt;= 80:
+    print("جيد جدًا")
+elif score &gt;= 70:
+    print("جيد")
+elif score &gt;= 60:
+    print("مقبول")
+else:
+    print("راسب")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>جيد</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ الترتيب مهم جدًا في elif</div>
+      <p>
+        بايثون بتفحص الشروط <strong>بالترتيب من فوق لتحت، وبتقف عند أول شرط صح</strong>.
+        الدرجة 75 بتحقّق <code class="inl">&gt;= 70</code> و<code class="inl">&gt;= 60</code>،
+        لكن بايثون وقفت عند الأولى ونفّذتها بس.
+      </p>
+      <p>
+        لو عكست الترتيب وبدأت بـ <code class="inl">score &gt;= 60</code>، كل الدرجات فوق 60
+        هتطلع «مقبول»! <strong>ابدأ دايمًا بالشرط الأضيق.</strong>
+      </p>
+    </div>
+
+    <h4>5. if / elif / else مقابل if / if / if</h4>
+    <div class="code"><pre>
+# نسخة 1: elif — بتقف عند أول شرط صح
+x = 5
+if x &gt; 0:
+    print("موجب")
+elif x &gt; 3:
+    print("أكبر من 3")     # ما اتنفّذتش
+# نسخة 2: if منفصلة — كلها بتتفحص
+if x &gt; 0:
+    print("موجب")
+if x &gt; 3:
+    print("أكبر من 3")     # اتنفّذت!
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>موجب
+موجب
+أكبر من 3</pre></div>
+    <p>
+      <strong>الخلاصة:</strong> استخدم <code class="inl">elif</code> لما الاحتمالات
+      <em>متنافية</em> (لازم واحد بس). واستخدم <code class="inl">if</code> منفصلة لما
+      عايز تفحص حاجات <em>مستقلة</em>.
+    </p>
+
+    <h4>6. الشرط المختصر (Ternary)</h4>
+    <div class="code"><pre>
+age = 20
+status = "بالغ" if age &gt;= 18 else "قاصر"
+print(status)
+# بدل:
+if age &gt;= 18:
+    status = "بالغ"
+else:
+    status = "قاصر"
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>بالغ</pre></div>
+    <p>استخدمها للحالات البسيطة جدًا بس — لو الشرط معقّد خلّيها if عادية عشان الوضوح.</p>
+    <!-- APPEND:u4-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>مستشار الجو</div>
+      <p>حسب درجة الحرارة اطبع نصيحة من 3، وبعدين حدّد هل الرقم زوجي بالشرط المختصر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+temp = 24
+if temp &gt;= 30:
+    print("حر — اشرب مية كتير")
+elif temp &gt;= 20:
+    print("جو لطيف")
+else:
+    print("برد — البس جاكيت")
+label = "زوجي" if temp % 2 == 0 else "فردي"
+print(label)
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>جو لطيف
+زوجي</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. في <code class="inl">if/elif/else</code>، كام فرع ممكن يتنفّذ؟</p>
+        <label><input type="radio"> كل الفروع الصح</label>
+        <label><input type="radio"> اتنين</label>
+        <label><input type="radio"> ولا واحد دايمًا</label>
+        <label><input type="radio"> فرع واحد بس (أول واحد صح)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. نسيت المسافة البادئة تحت if. النتيجة؟</p>
+        <label><input type="radio"> IndentationError</label>
+        <label><input type="radio"> الكود بيشتغل عادي</label>
+        <label><input type="radio"> السطر بيتنفّذ مرّتين</label>
+        <label><input type="radio"> تحذير بس</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. الشرط المختصر الصحيح…</p>
+        <label><input type="radio"> if x > 0 "موجب" else "سالب"</label>
+        <label><input type="radio"> x > 0 ? "موجب" : "سالب"</label>
+        <label><input type="radio"> "موجب" if x > 0 else "سالب"</label>
+        <label><input type="radio"> "موجب" else "سالب" if x > 0</label>
+      </div>
+    </div>
+    <!-- /APPEND:u4-l2 -->
+                <!-- SUM:u4-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">if</code> / <code class="inl">elif</code> / <code class="inl">else</code> — أول شرط يتحقّق بس اللي بيتنفّذ.</li><li>المسافة البادئة (4 مسافات) جزء من قواعد اللغة.</li><li>الشرط المختصر: <code class="inl">a if cond else b</code>.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 4.3 -->
+  <article class="lesson" id="u4-l3">
+    <h3>الشروط المتداخلة (Nested if) <span class="tag">درس 20</span></h3>
+    <p class="goal">الهدف: تبني قرارات بتعتمد على قرارات قبلها.</p>
+
+    <h4>1. الفكرة</h4>
+    <p>
+      أحيانًا السؤال التاني ما ينفعش يتسأل غير بعد جواب السؤال الأول. مثال: «هل عندك رخصة؟»
+      ما ينفعش تتسأل قبل «هل سنك فوق 18؟».
+    </p>
+    <div class="code" data-file="nested_if.py"><pre>
+gender = input("Please enter your gender: male/female").lower()
+if gender == "male":
+    age = int(input("Please enter your age\n"))
+    if age &gt;= 18:
+        print("You are an old man")
+    else:
+        print("You are a small man")
+else:
+    age = int(input("Please enter your age"))
+    if age &gt;= 18:
+        print("You are a pretty woman")
+    else:
+        print("You are a pretty rose")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Please enter your gender: male/female
+female
+Please enter your age
+20
+You are a pretty woman</pre></div>
+
+    <h4>2. قراءة الكود كشجرة قرار</h4>
+    <div class="diagram">
+<pre>                    gender?
+                   /        \
+              male            غير كده
+              /                    \
+           age?                    age?
+          /    \                  /     \
+      &gt;= 18   &lt; 18            &gt;= 18    &lt; 18
+        │       │               │        │
+    old man  small man   pretty woman  pretty rose</pre>
+      <div class="cap">كل مستوى مسافة بادئة = مستوى في الشجرة</div>
+    </div>
+    <p>
+      لاحظ مستويات المسافات: <code class="inl">if gender</code> على مستوى 0،
+      و<code class="inl">age = input()</code> على مستوى 1 (4 مسافات)،
+      و<code class="inl">print</code> اللي جوّه <code class="inl">if age</code> على مستوى 2 (8 مسافات).
+    </p>
+
+    <h4>3. ملاحظات نقدية على الكود ده</h4>
+    <div class="box warn">
+      <div class="bt">⚠️ فيه تكرار</div>
+      <p>
+        سطر <code class="inl">age = int(input(...))</code> مكرّر مرّتين، وده اتكتب مرّة
+        بـ <code class="inl">\n</code> ومرّة من غيرها. <strong>القاعدة الذهبية DRY</strong>
+        (Don't Repeat Yourself) بتقول: لو نفس السطر متكرّر، اطلعه بره.
+      </p>
+    </div>
+    <div class="code" data-file="nested_if_v2.py"><pre>
+gender = input("Please enter your gender (male/female): ").strip().lower()
+age = int(input("Please enter your age: "))     # مرّة واحدة بره
+if gender == "male":
+    print("You are an old man" if age &gt;= 18 else "You are a small man")
+elif gender == "female":
+    print("You are a pretty woman" if age &gt;= 18 else "You are a pretty rose")
+else:
+    print("Invalid gender, please write male or female")
+</pre></div>
+    <p>
+      كمان النسخة الجديدة ضافت <code class="inl">else</code> نهائي للتعامل مع المدخل الغلط —
+      في النسخة الأصلية أي حاجة مش <code class="inl">male</code> كانت بتتحسب
+      <code class="inl">female</code> تلقائيًا، وده منطق ناقص.
+    </p>
+
+    <h4>4. متى تتجنّب التداخل؟</h4>
+    <p>
+      التداخل العميق (3 مستويات فأكتر) بيخلّي الكود صعب القراية. لو لقيت نفسك بتعشّش
+      كتير، فكّر في:
+    </p>
+    <ul>
+      <li>دمج الشروط بـ <code class="inl">and</code>:
+        <code class="inl">if gender == "male" and age &gt;= 18:</code></li>
+      <li>استخدام <code class="inl">elif</code> بدل <code class="inl">else</code> + <code class="inl">if</code>.</li>
+      <li>تقسيم الكود لدوال (الوحدة 11).</li>
+    </ul>
+    <!-- APPEND:u4-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>دخول بمستويين</div>
+      <p>اكتب فحص دخول بشرطين متداخلين (مستخدم ثم كلمة سر)، وبعدين اكتبه بشرط واحد لو الرسايل مش مهم تفرق.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+username = "admin"
+password = "1234"
+if username == "admin":
+    if password == "1234":
+        print("أهلًا يا مدير")
+    else:
+        print("كلمة السر غلط")
+else:
+    print("مستخدم مش معروف")
+if username == "admin" and password == "1234":
+    print("نفس النتيجة بشرط واحد")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>أهلًا يا مدير
+نفس النتيجة بشرط واحد</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. الـ if الداخلية بتتفحص إمتى؟</p>
+        <label><input type="radio"> دايمًا</label>
+        <label><input type="radio"> بس لو شرط الـ if الخارجية صح</label>
+        <label><input type="radio"> قبل الخارجية</label>
+        <label><input type="radio"> لو الخارجية غلط</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. إمتى الأفضل تستبدل التداخل بـ <code class="inl">and</code>؟</p>
+        <label><input type="radio"> مستحيل</label>
+        <label><input type="radio"> لما الشروط كتير أوي بس</label>
+        <label><input type="radio"> لما كل فرع محتاج رسالة مختلفة</label>
+        <label><input type="radio"> لما النتيجة واحدة ومش محتاج تفرّق بين أسباب الفشل</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. التداخل العميق (4 مستويات) غالبًا…</p>
+        <label><input type="radio"> صعب القراءة ومحتاج تبسيط</label>
+        <label><input type="radio"> أسرع في التنفيذ</label>
+        <label><input type="radio"> ممنوع في بايثون</label>
+        <label><input type="radio"> مطلوب دايمًا</label>
+      </div>
+    </div>
+    <!-- /APPEND:u4-l3 -->
+                <!-- SUM:u4-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>ممكن تحط if جوّه if للقرارات المركّبة.</li><li>التداخل العميق صعب القراءة — دمج الشروط أو الخروج بدري غالبًا أوضح.</li><li>ارسم شجرة القرار قبل ما تكتب.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 4.P1 -->
+  <article class="lesson project" id="u4-p1">
+    <h3>مشروع 5: الآلة الحاسبة الشرطية <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: التطوير التاني للحاسبة — المستخدم يختار العملية اللي عايزها بس.</p>
+
+    <h4>الكود الكامل</h4>
+    <div class="code" data-file="calculator_v2.py"><pre>
+print("welcome for you in this calculator\n")
+first_number = int(input("Please enter your first number here\n"))
+operator = input("Please enter your operator do you want\n")
+second_number = int(input("Please enter your second number\n"))
+if operator == "+":
+    print(f"Your process is:\n{first_number + second_number}")
+elif operator == "-":
+    print(f"your process is:\n{first_number - second_number}")
+elif operator == "*":
+    print(f"Your process is:\n{first_number * second_number}")
+elif operator == "/":
+    if second_number == 0:
+        print("you do not be able to divide by 0")
+    else:
+        print(f"Your process is:\n{first_number / second_number}")
+else:
+    print("Invalid choice")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج — حالة عادية</div><pre>welcome for you in this calculator
+
+Please enter your first number here
+2
+Please enter your operator do you want
++
+Please enter your second number
+4
+Your process is:
+6</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج — القسمة على صفر</div><pre>Please enter your operator do you want
+/
+Please enter your second number
+0
+you do not be able to divide by 0</pre></div>
+
+    <h4>الشرح</h4>
+    <ul>
+      <li>
+        <strong>سلسلة elif:</strong> بايثون بتفحص العملية واحدة واحدة وبتوقف عند أول تطابق.
+        لو كتب <code class="inl">+</code> ما هتفحصش باقي الشروط أصلًا.
+      </li>
+      <li>
+        <strong>الـ if المتداخلة في حالة القسمة:</strong> دي أهم نقطة في المشروع.
+        القسمة على صفر <em>ممنوعة رياضيًا</em>، وبايثون بترمي
+        <code class="inl">ZeroDivisionError</code> وبيقع البرنامج. فبنفحص الأول قبل ما نقسم.
+      </li>
+      <li>
+        <strong>الـ else النهائي:</strong> شبكة أمان — لو المستخدم كتب <code class="inl">%</code>
+        أو أي حاجة مش معروفة، البرنامج بيقول له بدل ما يسكت.
+      </li>
+    </ul>
+
+    <div class="box info">
+      <div class="bt">ℹ️ ملاحظة على الكود الأصلي</div>
+      <p>
+        في النسخة الأصلية الشرط كان مكتوب
+        <code class="inl">if second_number == 0 and operator == "/":</code>.
+        الجزء التاني <strong>زايد</strong> — إحنا أصلًا جوّه فرع
+        <code class="inl">elif operator == "/"</code>، فمن المستحيل نوصل هنا والعملية مش قسمة.
+        شيلناه في النسخة اللي فوق. <strong>الدرس:</strong> شرط زايد مش بيكسر البرنامج، بس
+        بيوحّش قراءته ويوهم القارئ إن فيه احتمال تاني.
+      </p>
+    </div>
+
+    <h4>اللي لسه ناقص</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المشكلة</th><th>الحل وهيجي فين</th></tr>
+        <tr><td>حروف بدل الأرقام → ValueError</td><td>الوحدة 9 · try/except</td></tr>
+        <tr><td>بيشتغل عملية واحدة وبيقفل</td><td>الوحدة 8 · while</td></tr>
+        <tr><td>الأعداد العشرية مش مدعومة (<code class="inl">int</code> بس)</td><td>غيّرها لـ <code class="inl">float</code> دلوقتي</td></tr>
+      </table>
+    </div>
+
+    <div class="ex">
+      <div class="bt">✍️ التحدّي</div>
+      <p>ضيف للحاسبة عمليتين: الأس <code class="inl">**</code> وباقي القسمة <code class="inl">%</code>، وخلّيها تشتغل بالأعداد العشرية.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+first_number = float(input("Please enter your first number here\n"))
+operator = input("Please enter your operator\n").strip()
+second_number = float(input("Please enter your second number\n"))
+if operator == "+":
+    print(first_number + second_number)
+elif operator == "-":
+    print(first_number - second_number)
+elif operator == "*":
+    print(first_number * second_number)
+elif operator == "**":
+    print(first_number ** second_number)
+elif operator in ["/", "%"]:
+    if second_number == 0:
+        print("you do not be able to divide by 0")
+    elif operator == "/":
+        print(first_number / second_number)
+    else:
+        print(first_number % second_number)
+else:
+    print("Invalid choice")
+</pre></div>
+      </details>
+    </div>
+  </article>
+
+  <!-- 4.P2 -->
+  <article class="lesson project" id="u4-p2">
+    <h3>مشروع 6: مستشار الملابس حسب الطقس <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: أكبر تطبيق على الشروط المتداخلة — شجرة قرار من مستويين.</p>
+
+    <h4>الفكرة</h4>
+    <p>
+      البرنامج بيسأل عن حالة الجو، وبناءً على الإجابة بيسأل سؤال تاني أدق، وبعدين
+      بيدّي نصيحة مناسبة للحالة بالظبط.
+    </p>
+
+    <div class="code" data-file="weather_advisor.py"><pre>
+print("مرحبا بك, نرجو لك الاستفادة الكاملة من برنامجنا")
+weather = input("ما هي حالة الجو لديك: مشمس, ممطر, أم ثلجي: ")
+print(f"أها!, إذن حالة الطقس لديك:\n{weather}, نرجو لك صحةً جيدة")
+if weather == "مشمس":
+    sunny_question = input("هل الجو حار أم دافئ أم معتدل؟:\n")
+    if sunny_question == "حار":
+        print("إذن عليك بارتداء الملابس الخفيفة")
+    elif sunny_question == "دافئ":
+        print("إذن عليك بارتداء الملابس غير الرسمية المريحة")
+    elif sunny_question == "معتدل":
+        print("إذن عليك بارتداء ملابس زيا ذا طبقات متعددة")
+elif weather == "ممطر":
+    rainy_question = input("إذن هل المطر خفيف أم غزير\n")
+    if rainy_question == "خفيف":
+        print("إذن عليك بارتداء سترة مقاومة للماء")
+    elif rainy_question == "غزير":
+        print("إذن عليك بارتداء ملابس ثقيلة تقاوم المطر الشديد")
+elif weather == "ثلجي":
+    snowy_question = input("إذن هل العواصف الثلجية خفيفة أم شديدة\n")
+    if snowy_question == "خفيفة":
+        print("إذن عليك بارتداء معطف وحذاء")
+    elif snowy_question == "شديدة":
+        print("إذن عليك بارتداء ملابس وأحذية ثقيلة شتوية, وانتبه, نرجو لك السلامة")
+else:
+    print("أوه لا!, حالة الطقس التي أدخلتها غير صحيحة, من فضلك أعد المحاولة")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ مثال تشغيل</div><pre>مرحبا بك, نرجو لك الاستفادة الكاملة من برنامجنا
+ما هي حالة الجو لديك: مشمس, ممطر, أم ثلجي: ممطر
+أها!, إذن حالة الطقس لديك:
+ممطر, نرجو لك صحةً جيدة
+إذن هل المطر خفيف أم غزير
+خفيف
+إذن عليك بارتداء سترة مقاومة للماء</pre></div>
+
+    <h4>خريطة القرار</h4>
+    <div class="diagram">
+<pre>              حالة الجو؟
+       ┌──────────┼──────────┬─────────┐
+     مشمس       ممطر       ثلجي      غير كده
+       │          │          │          │
+   حار/دافئ/   خفيف/غزير  خفيفة/شديدة  رسالة خطأ
+    معتدل         │          │
+       │          │          │
+    3 نصائح    2 نصائح    2 نصائح</pre>
+      <div class="cap">شجرة القرار الكاملة</div>
+    </div>
+
+    <h4>الثغرة الخفيّة في الكود ده</h4>
+    <div class="box err">
+      <div class="bt">💥 لو المستخدم كتب إجابة تانية في السؤال الداخلي</div>
+      <p>
+        لو اختار «مشمس» وبعدين كتب «برد» في السؤال التاني، البرنامج <strong>هيسكت خالص</strong>
+        وما يطبعش أي حاجة. السبب إن الـ <code class="inl">if</code> الداخلية مالهاش
+        <code class="inl">else</code>.
+      </p>
+      <p>
+        <strong>القاعدة:</strong> كل سلسلة <code class="inl">if/elif</code> بتتعامل مع مدخلات
+        مستخدم لازم يكون ليها <code class="inl">else</code>. البرنامج اللي بيسكت أسوأ من
+        البرنامج اللي بيقع، لأنه بيخلّي المستخدم تايه.
+      </p>
+    </div>
+
+    <h4>النسخة المحسّنة</h4>
+    <div class="code" data-file="weather_advisor_v2.py"><pre>
+print("مرحبا بك في مستشار الملابس")
+weather = input("ما هي حالة الجو: مشمس / ممطر / ثلجي؟ ").strip()
+if weather == "مشمس":
+    level = input("هل الجو حار أم دافئ أم معتدل؟ ").strip()
+    if level == "حار":
+        print("الملابس الخفيفة القطنية")
+    elif level == "دافئ":
+        print("ملابس غير رسمية مريحة")
+    elif level == "معتدل":
+        print("ملابس بطبقات متعددة")
+    else:
+        print("إجابة غير معروفة, اختر: حار / دافئ / معتدل")
+elif weather == "ممطر":
+    level = input("هل المطر خفيف أم غزير؟ ").strip()
+    if level == "خفيف":
+        print("سترة مقاومة للماء")
+    elif level == "غزير":
+        print("ملابس ثقيلة مقاومة للمطر ومظلة")
+    else:
+        print("إجابة غير معروفة, اختر: خفيف / غزير")
+elif weather == "ثلجي":
+    level = input("هل العاصفة خفيفة أم شديدة؟ ").strip()
+    if level == "خفيفة":
+        print("معطف وحذاء شتوي")
+    elif level == "شديدة":
+        print("ملابس وأحذية شتوية ثقيلة, وانتبه لسلامتك")
+    else:
+        print("إجابة غير معروفة, اختر: خفيفة / شديدة")
+else:
+    print("حالة الطقس غير صحيحة. الخيارات: مشمس / ممطر / ثلجي")
+</pre></div>
+    <p>التحسينات: <code class="inl">.strip()</code> على كل مدخل، و<code class="inl">else</code> في كل مستوى، واسم متغيّر موحّد <code class="inl">level</code>.</p>
+
+    <div class="box brain">
+      <div class="bt">🧠 لسه ناقصنا حاجة كبيرة</div>
+      <p>
+        لو المستخدم غلط، البرنامج بيقفل ولازم يشغّله من الأول. الحل الطبيعي إننا
+        <strong>نكرّر السؤال لحد ما يدخل إجابة صح</strong> — وده محتاج
+        <code class="inl">while</code> في الوحدة 8. هنرجع للمشروع ده هناك.
+      </p>
+    </div>
+  </article>
+  <!-- ADD:u4-ch -->
+  <!-- 4.CH -->
+  <article class="lesson" id="u4-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة الرابعة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">القرارات: الاختبارات بتجرّب الحالات الحدّية (90 بالظبط؟ 100؟ -1؟) — المكان اللي أغلب الأخطاء بتستخبّى فيه.</p>
+
+    <div class="challenge" data-ch="u4-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — التقدير <span class="lvl">⭐⭐</span></div>
+      <p>اطلب درجة (رقم صحيح). اطبع: <code class="inl">A</code> من 90، <code class="inl">B</code> من 80، <code class="inl">C</code> من 70، <code class="inl">D</code> من 60، غير كده <code class="inl">F</code>. ولو الدرجة أقل من 0 أو أكبر من 100 اطبع <code class="inl">درجة غير صالحة</code>.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+score = int(input("الدرجة: "))
+# اكتب شروطك هنا
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def grade_of(n):
+    out = run_program(f"{n}\n")
+    return out.strip().splitlines()[-1].strip(), out
+
+CASES = [(95, "A"), (90, "A"), (89, "B"), (80, "B"), (75, "C"), (60, "D"), (59, "F"), (0, "F"), (100, "A")]
+
+def test_grades():
+    "كل الحدود صح: 95، 90، 89، 80، 75، 60، 59، 0، 100"
+    for n, expected in CASES:
+        got, out = grade_of(n)
+        assert got == expected, f"الدرجة {n}: المتوقّع {expected} لكن اتطبع {got!r}"
+
+def test_invalid_high():
+    "101 ← درجة غير صالحة"
+    got, out = grade_of(101)
+    assert got == "درجة غير صالحة", out
+
+def test_invalid_low():
+    "-1 ← درجة غير صالحة"
+    got, out = grade_of(-1)
+    assert got == "درجة غير صالحة", out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+score = int(input("الدرجة: "))
+if score &lt; 0 or score &gt; 100:
+    print("درجة غير صالحة")
+elif score &gt;= 90:
+    print("A")
+elif score &gt;= 80:
+    print("B")
+elif score &gt;= 70:
+    print("C")
+elif score &gt;= 60:
+    print("D")
+else:
+    print("F")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u4-ch2">
+      <div class="ch-head">🐞 التحدّي 2 — السنة الكبيسة <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        السنة كبيسة لو بتقبل القسمة على 4 <strong>ومش</strong> على 100 — <strong>إلا</strong> لو بتقبل القسمة على 400.
+        (2024 كبيسة، 1900 مش كبيسة، 2000 كبيسة). الكود ده بيغلط في حالة. لاقيها وصلّحها.
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+year = int(input("السنة: "))
+if year % 4 == 0 or year % 100 != 0 and year % 400 == 0:
+    print("كبيسة")
+else:
+    print("مش كبيسة")
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def verdict(y):
+    out = run_program(f"{y}\n")
+    return out.strip().splitlines()[-1].strip()
+
+def test_2024():
+    "2024 ← كبيسة"
+    assert verdict(2024) == "كبيسة"
+
+def test_1900():
+    "1900 ← مش كبيسة (بتقبل القسمة على 100)"
+    got = verdict(1900)
+    assert got == "مش كبيسة", f"اتطبع {got!r}"
+
+def test_2000():
+    "2000 ← كبيسة (بتقبل القسمة على 400)"
+    assert verdict(2000) == "كبيسة"
+
+def test_others():
+    "2023 و 2100 ← مش كبيسة"
+    assert verdict(2023) == "مش كبيسة"
+    assert verdict(2100) == "مش كبيسة"
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+year = int(input("السنة: "))
+if (year % 4 == 0 and year % 100 != 0) or year % 400 == 0:
+    print("كبيسة")
+else:
+    print("مش كبيسة")
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u4-ch -->
+
+  <!-- 4.EX -->
+  <article class="lesson" id="u4-ex">
+    <h3>تمارين الوحدة الرابعة <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">الشروط هي عقل البرنامج. اتمرّن لحد ما تبقى بديهية.</p>
+
+    <h4>المستوى الأول</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — زوجي ولا فردي</div>
+      <p>اطلب رقم واطبع «زوجي» أو «فردي».</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+n = int(input("رقم: "))
+if n % 2 == 0:
+    print("زوجي")
+else:
+    print("فردي")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — الأكبر في تلاتة</div>
+      <p>اطلب 3 أرقام واطبع الأكبر — من غير ما تستخدم <code class="inl">max()</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+a = int(input("الأول: "))
+b = int(input("التاني: "))
+c = int(input("التالت: "))
+if a &gt;= b and a &gt;= c:
+    print(f"الأكبر: {a}")
+elif b &gt;= a and b &gt;= c:
+    print(f"الأكبر: {b}")
+else:
+    print(f"الأكبر: {c}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 3 — التقديرات</div>
+      <p>اطلب درجة من 100 واطبع التقدير: 90+ ممتاز، 80+ جيد جدًا، 70+ جيد، 60+ مقبول، أقل راسب. وتعامل مع الدرجات غير المنطقية (أقل من 0 أو أكبر من 100).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+score = int(input("الدرجة: "))
+if score &lt; 0 or score &gt; 100:
+    print("درجة غير صحيحة")
+elif score &gt;= 90:
+    print("ممتاز")
+elif score &gt;= 80:
+    print("جيد جدًا")
+elif score &gt;= 70:
+    print("جيد")
+elif score &gt;= 60:
+    print("مقبول")
+else:
+    print("راسب")
+</pre></div>
+      <p><strong>لاحظ:</strong> فحص الصلاحية جه <em>الأول</em>. لو حطّيته آخر حاجة، الدرجة 150 كانت هتطلع «ممتاز».</p>
+      </details>
+    </div>
+
+    <h4>المستوى الثاني</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — سنة كبيسة</div>
+      <p>اطلب سنة وحدّد هل هي كبيسة. القاعدة: تقبل القسمة على 4، <strong>إلا</strong> لو قبلت على 100 ومقبلتش على 400.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+year = int(input("السنة: "))
+if year % 400 == 0:
+    leap = True
+elif year % 100 == 0:
+    leap = False
+elif year % 4 == 0:
+    leap = True
+else:
+    leap = False
+print(f"{year} {'كبيسة' if leap else 'غير كبيسة'}")
+# أو في سطر واحد:
+leap = (year % 4 == 0 and year % 100 != 0) or year % 400 == 0
+</pre></div>
+      <p>جرّبها على 2000 (كبيسة)، 1900 (لأ)، 2024 (كبيسة)، 2023 (لأ).</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 5 — تسجيل الدخول</div>
+      <p>اطلب اسم مستخدم وكلمة سر. الدخول ينجح لو الاسم «admin» والسر «1234». وميّز في الرسالة بين «الاسم غلط» و«السر غلط».</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+username = input("اسم المستخدم: ").strip().lower()
+password = input("كلمة السر: ").strip()
+if username != "admin":
+    print("❌ اسم المستخدم غير موجود")
+elif password != "1234":
+    print("❌ كلمة السر غلط")
+else:
+    print("✅ أهلًا بك")
+</pre></div>
+      <div class="box warn">
+        <div class="bt">⚠️ ملاحظة أمنية</div>
+        <p>
+          في نظام حقيقي، <strong>ما تقولش للمستخدم أنهي واحد غلط</strong> — قول «بيانات غير صحيحة» بس.
+          لأن التمييز بيساعد المهاجم يعرف الأسماء الموجودة فعلًا. التمرين ده تعليمي بس.
+        </p>
+      </div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 6 — حاسبة الشحن</div>
+      <p>
+        اطلب وزن الشحنة والمدينة. السعر: القاهرة 30 جنيه، الإسكندرية 45، أي مدينة تانية 60.
+        وزيادة 10 جنيه لكل كيلو فوق 5 كيلو.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+weight = float(input("الوزن بالكيلو: "))
+city = input("المدينة: ").strip()
+if city == "القاهرة":
+    base = 30
+elif city == "الإسكندرية":
+    base = 45
+else:
+    base = 60
+extra = 0
+if weight &gt; 5:
+    extra = (weight - 5) * 10
+print(f"سعر الشحن: {base + extra:.2f} جنيه")
+</pre></div>
+      </details>
+    </div>
+
+    <h4>المستوى الثالث</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 7 — مثلث صحيح؟</div>
+      <p>
+        اطلب 3 أطوال أضلاع. حدّد: (أ) هل يكوّنوا مثلث أصلًا؟ (مجموع أي ضلعين أكبر من التالت)
+        (ب) لو أيوة، نوعه: متساوي الأضلاع / متساوي الساقين / مختلف الأضلاع.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+a = float(input("الضلع الأول: "))
+b = float(input("الضلع الثاني: "))
+c = float(input("الضلع الثالث: "))
+if a &lt;= 0 or b &lt;= 0 or c &lt;= 0:
+    print("الأطوال لازم تكون موجبة")
+elif a + b &lt;= c or a + c &lt;= b or b + c &lt;= a:
+    print("مش مثلث صحيح")
+elif a == b == c:
+    print("مثلث متساوي الأضلاع")
+elif a == b or b == c or a == c:
+    print("مثلث متساوي الساقين")
+else:
+    print("مثلث مختلف الأضلاع")
+</pre></div>
+      <p>لاحظ <code class="inl">a == b == c</code> — سلسلة المقارنات اللي بايثون بتسمح بيها.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. الفرق بين <code class="inl">=</code> و <code class="inl">==</code>؟</p>
+        <label><input type="radio"> مفيش فرق</label>
+        <label><input type="radio"> الأولى للمقارنة والتانية للإسناد</label>
+        <label><input type="radio"> الأولى للإسناد والتانية للمقارنة</label>
+        <label><input type="radio"> الأولى للأرقام والتانية للنصوص</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">"Python" == "python"</code> بترجّع…</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> False</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> None</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. أنهي قيمة من دول <strong>مش</strong> Falsy؟</p>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> ""</label>
+        <label><input type="radio"> []</label>
+        <label><input type="radio"> "0"</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">4. <code class="inl">True and False or True</code> بترجّع…</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> False</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">5. لو الدرجة 85 والشروط بالترتيب: <code class="inl">&gt;=60</code> ثم <code class="inl">&gt;=80</code> ثم <code class="inl">&gt;=90</code> — إيه اللي هيتنفّذ؟</p>
+        <label><input type="radio"> اللي فيه &gt;=80</label>
+        <label><input type="radio"> اللي فيه &gt;=60</label>
+        <label><input type="radio"> اللي فيه &gt;=90</label>
+        <label><input type="radio"> كلهم</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">6. المسافات البادئة في بايثون…</p>
+        <label><input type="radio"> للتجميل بس</label>
+        <label><input type="radio"> اختيارية</label>
+        <label><input type="radio"> جزء من قواعد اللغة وبتحدّد الكتل</label>
+        <label><input type="radio"> لازم تكون Tab بالظبط</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:4 -->
+  <div class="checkpoint" data-unit="4">
+    <h4>✅ نقطة تفتيش: الوحدة الرابعة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أكتب شروط بـ if و elif و else بمسافات بادئة صحيحة.</li><li>أدمج شروط بـ and و or و not وأفهم الأولويّة.</li><li>أعرف القيم Truthy و Falsy.</li><li>أختبر الحالات الحدّية (زي 90 بالظبط) في شروطي.</li></ul>
+  </div>
+  <!-- /CP -->

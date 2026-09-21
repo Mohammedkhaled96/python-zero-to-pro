@@ -1,0 +1,135 @@
+@@lesson u18-pilot before="<!-- UNIT-END:18 -->"
+  <!-- 18.PILOT -->
+  <article class="lesson" id="u18-pilot">
+    <h3>للمدرّسين: جرّب الكورس مع طلاب حقيقيين وقيس النتايج <span class="tag">📋 دليل المدرّس</span></h3>
+    <p class="goal">أي تقييم نظري لكورس محدود. الدليل ده بيوريك إزاي تعمل تجربة صغيرة (Pilot) مع طلاب حقيقيين، وتجمع بياناتهم من الصفحة نفسها، وتحلّلها بسكريبت بايثون — عشان تعرف الكورس بيوقّع الطلاب فين بالظبط.</p>
+
+    <h4>1. خطّة التجربة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المرحلة</th><th>إيه اللي بيحصل</th><th>المدّة</th></tr>
+        <tr><td>الاختيار</td><td>10–20 طالب مبتدئين فعلًا (مش مبرمجين متنكّرين)، وبخلفيات مختلفة</td><td>أسبوع</td></tr>
+        <tr><td>القياس القبلي</td><td>الجزء الأول والتاني من الاختبار النهائي — عشان تعرف نقطة البداية</td><td>ساعة</td></tr>
+        <tr><td>المذاكرة</td><td>وحدة أو اتنين في الأسبوع، ولقاء قصير أسبوعي للأسئلة</td><td>6–10 أسابيع</td></tr>
+        <tr><td>جمع البيانات</td><td>آخر كل أسبوع، كل طالب يضغط <strong>«📤 تصدير تقدّمي»</strong> من الشريط الجانبي ويبعتلك الملف</td><td>دقيقة</td></tr>
+        <tr><td>القياس البعدي</td><td>الاختبار النهائي كامل + مشروع تخرّج صغير</td><td>أسبوع</td></tr>
+        <tr><td>التحليل والتعديل</td><td>السكريبت اللي تحت + تعديل الدروس اللي فيها مشاكل</td><td>أسبوع</td></tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ الخصوصية</div>
+      <p>
+        ملف التصدير <strong>ما فيهوش أي اسم أو إيميل</strong> — فيه تقدّم الطالب ونتايجه وملاحظاته بس. سمّي الملفات بأرقام (<code class="inl">student-01.json</code>)،
+        واطلب موافقة الطلاب إن ملاحظاتهم هتستخدم لتحسين الكورس.
+      </p>
+    </div>
+
+    <h4>2. الصفحة بتسجّل إيه؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>البيان</th><th>مصدره في الصفحة</th><th>بيجاوب على سؤال</th></tr>
+        <tr><td><code class="inl">done</code></td><td>زرار «علّم كمكتمل»</td><td>الطلاب بيقفوا عند أنهي درس؟ (نسبة الإكمال)</td></tr>
+        <tr><td><code class="inl">timeSeconds</code></td><td>وقت القراءة الفعلي (والصفحة ظاهرة والطالب نشِط)</td><td>الوقت الحقيقي أكبر من التقدير بكتير؟</td></tr>
+        <tr><td><code class="inl">quiz</code></td><td>الاختبارات السريعة بعد التصحيح</td><td>أنهي مفهوم الناس بتغلط فيه؟</td></tr>
+        <tr><td><code class="inl">challenges</code></td><td>التحدّيات المُصحَّحة (اتحل؟ كام محاولة؟)</td><td>أنهي مهارة عملية صعبة؟</td></tr>
+        <tr><td><code class="inl">feedback</code></td><td>«الدرس كان واضح؟» 👍/👎 + ملاحظة</td><td>أنهي شرح محتاج إعادة كتابة؟</td></tr>
+        <tr><td><code class="inl">checkpoints</code></td><td>نقاط التفتيش آخر كل وحدة</td><td>الطالب واثق من إيه ومش واثق من إيه؟</td></tr>
+      </table>
+    </div>
+
+    <h4>3. سكريبت التحليل</h4>
+    <p>حط ملفات الطلاب في فولدر اسمه <code class="inl">pilot</code> وشغّل السكريبت ده — كل اللي فيه اتعلّمته في الكورس.</p>
+    @code run analyze_pilot.py
+import json ¦¦ قراءة ملفات التصدير.
+from pathlib import Path ¦¦ الوحدة 12.
+from collections import Counter, defaultdict ¦¦ الوحدة 10.
+from statistics import mean ¦¦ الوحدة 7.
+ ¦¦
+files = sorted(Path("pilot").glob("*.json")) ¦¦ كل ملفات الطلاب.
+students = [json.loads(f.read_text(encoding="utf-8")) for f in files] ¦¦ قائمة قواميس — طالب لكل عنصر.
+print(f"عدد الطلاب: {len(students)}") ¦¦ للتأكّد إن كل الملفات اتقرت.
+ ¦¦
+thumbs_down = Counter() ¦¦ عدد الـ 👎 لكل درس.
+notes = defaultdict(list) ¦¦ ملاحظات الطلاب لكل درس.
+minutes = defaultdict(list) ¦¦ الدقايق الفعلية لكل درس (من كل الطلاب).
+solved = Counter() ¦¦ عدد اللي حلّوا كل تحدّي.
+tries = defaultdict(list) ¦¦ عدد المحاولات لكل تحدّي.
+ ¦¦
+for s in students: ¦¦ على كل طالب.
+    for lesson, fb in s["feedback"].items(): ¦¦ آراؤه.
+        if fb.get("v") == -1: ¦¦ 👎
+            thumbs_down[lesson] += 1 ¦¦ عدّ.
+            if fb.get("note"): ¦¦ لو كتب سبب…
+                notes[lesson].append(fb["note"]) ¦¦ …نحفظه.
+    for lesson, secs in s["timeSeconds"].items(): ¦¦ الوقت.
+        minutes[lesson].append(secs / 60) ¦¦ بالدقايق.
+    for ch, info in s["challenges"].items(): ¦¦ التحدّيات.
+        tries[ch].append(info["tries"]) ¦¦ المحاولات.
+        if info["solved"]: ¦¦ اتحل؟
+            solved[ch] += 1 ¦¦ عدّ.
+ ¦¦
+print("\nأكتر دروس اتقال عليها «مش واضح»:") ¦¦ **أولويّة إعادة الكتابة**.
+for lesson, n in thumbs_down.most_common(3): ¦¦ أعلى 3.
+    print(f"  {lesson}: {n} طالب — {' / '.join(notes[lesson][:2])}") ¦¦ الدرس وعدد الطلاب وأول ملاحظتين.
+ ¦¦
+print("\nأصعب التحدّيات (نسبة الحل):") ¦¦ **المهارات اللي محتاجة تمارين أكتر**.
+for ch in sorted(tries, key=lambda c: solved[c] / len(tries[c]))[:3]: ¦¦ ترتيب بنسبة الحل تصاعديًا.
+    rate = solved[ch] / len(tries[ch]) ¦¦ اللي حلّوه ÷ اللي حاولوا.
+    print(f"  {ch}: {rate:.0%} حلّوه — متوسّط المحاولات {mean(tries[ch]):.1f}") ¦¦ النسبة ومتوسّط المحاولات.
+ ¦¦
+print("\nأطول دروس في الوقت الفعلي (دقايق):") ¦¦ **الدروس اللي محتاجة تتقسم**.
+for lesson in sorted(minutes, key=lambda l: -mean(minutes[l]))[:3]: ¦¦ ترتيب تنازلي بالمتوسّط.
+    print(f"  {lesson}: {mean(minutes[lesson]):.0f}") ¦¦ المتوسّط مقرّب.
+    @end
+    @pre
+import json, pathlib, shutil
+shutil.rmtree("pilot", ignore_errors=True)
+d = pathlib.Path("pilot"); d.mkdir()
+data = [
+ {"done": {"u1-l1": 1}, "feedback": {"u2-l2": {"v": -1, "note": "مثال التحويل محتاج توضيح"}, "u1-l1": {"v": 1}},
+  "timeSeconds": {"u1-l1": 600, "u2-l2": 1500}, "challenges": {"u2-ch1": {"solved": True, "tries": 2}, "u4-ch2": {"solved": False, "tries": 4}}},
+ {"done": {}, "feedback": {"u2-l2": {"v": -1, "note": "مش فاهم ليه int بتقع"}, "u4-l2": {"v": -1}},
+  "timeSeconds": {"u1-l1": 420, "u2-l2": 1800}, "challenges": {"u2-ch1": {"solved": True, "tries": 1}, "u4-ch2": {"solved": True, "tries": 6}}},
+ {"done": {}, "feedback": {"u4-l2": {"v": -1, "note": "الـ elif ملخبطة"}},
+  "timeSeconds": {"u1-l1": 540, "u4-l2": 2400}, "challenges": {"u2-ch1": {"solved": False, "tries": 3}, "u4-ch2": {"solved": False, "tries": 2}}},
+]
+for i, s in enumerate(data, 1):
+    (d / f"student-{i:02d}.json").write_text(json.dumps(s, ensure_ascii=False), encoding="utf-8")
+    @end
+    @out rtl
+عدد الطلاب: 3
+
+أكتر دروس اتقال عليها «مش واضح»:
+  u2-l2: 2 طالب — مثال التحويل محتاج توضيح / مش فاهم ليه int بتقع
+  u4-l2: 2 طالب — الـ elif ملخبطة
+
+أصعب التحدّيات (نسبة الحل):
+  u4-ch2: 33% حلّوه — متوسّط المحاولات 4.0
+  u2-ch1: 67% حلّوه — متوسّط المحاولات 2.0
+
+أطول دروس في الوقت الفعلي (دقايق):
+  u4-l2: 40
+  u2-l2: 28
+  u1-l1: 9
+    @end
+
+    <h4>4. من الأرقام للقرارات</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الإشارة</th><th>المعنى المحتمل</th><th>التصرّف</th></tr>
+        <tr><td>👎 من 30% أو أكتر في درس</td><td>الشرح ناقص أو القفزة كبيرة</td><td>مثال إضافي أبسط، أو تقسيم الدرس</td></tr>
+        <tr><td>تحدّي نسبة حلّه أقل من 50%</td><td>المهارة ما اتدرّبتش كفاية قبله</td><td>تمرين وسيط قبله أو تلميح في النص</td></tr>
+        <tr><td>متوسّط محاولات فوق 5</td><td>رسايل الاختبارات مش موضّحة</td><td>راجع رسايل الفشل (<code class="inl">assert …, "رسالة"</code>)</td></tr>
+        <tr><td>الوقت الفعلي ضعف التقدير</td><td>الدرس مزدحم</td><td>قسّمه لدرسين</td></tr>
+        <tr><td>نسبة الإكمال بتقع فجأة عند وحدة</td><td>«حائط» صعوبة</td><td>وحدة تمهيدية أو مراجعة قبلها</td></tr>
+        <tr><td>نقطة تفتيش ما اتعلّمش عليها</td><td>الطالب مش واثق رغم إنه كمّل</td><td>اسأل في اللقاء الأسبوعي عن البند ده</td></tr>
+      </table>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 الدورة المستمرّة</div>
+      <p>
+        <strong>جرّب ← قيس ← عدّل ← جرّب تاني.</strong> أهم مقياس في الآخر: هل الطلاب بقوا يقدروا يبنوا مشروع التخرّج لوحدهم؟
+        قارن نتيجة الاختبار النهائي بالقياس القبلي، واقرا مشاريعهم بنفسك — الأرقام بتقولك «فين»، والمشاريع بتقولك «ليه».
+      </p>
+    </div>
+  </article>

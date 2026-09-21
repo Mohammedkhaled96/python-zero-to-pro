@@ -1,0 +1,919 @@
+@@lesson u7-ch before="<!-- 7.EX -->"
+  <!-- 7.CH -->
+  <article class="lesson" id="u7-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة السابعة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">المكتبات: مش مطلوب تحفظ — مطلوب تعرف تدوّر على الدالة المناسبة وتستخدمها صح.</p>
+
+    <div class="challenge" data-ch="u7-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — الفرق بين تاريخين <span class="lvl">⭐⭐</span></div>
+      <p>اطلب تاريخين بصيغة <code class="inl">يوم/شهر/سنة</code> (زي <code class="inl">01/03/2025</code>)، واطبع <code class="inl">الفرق: N يوم</code> — دايمًا رقم موجب مهما كان الترتيب.</p>
+      @starter u7-ch1
+from datetime import datetime
+
+first = input("التاريخ الأول: ")
+second = input("التاريخ التاني: ")
+# حوّل النصوص لتواريخ، واطبع الفرق بالأيام
+      @end
+      @tests u7-ch1
+PROGRAM_MODE = True
+
+def diff(a, b):
+    out = run_program(f"{a}\n{b}\n")
+    return out.strip().splitlines()[-1].strip(), out
+
+def test_jan_mar():
+    "01/01/2025 و 01/03/2025 ← 59 يوم"
+    got, out = diff("01/01/2025", "01/03/2025")
+    assert got == "الفرق: 59 يوم", out
+
+def test_same_day():
+    "نفس اليوم ← 0 يوم"
+    got, out = diff("10/05/2024", "10/05/2024")
+    assert got == "الفرق: 0 يوم", out
+
+def test_reverse_leap():
+    "ترتيب معكوس في سنة كبيسة: 01/03/2024 و 01/02/2024 ← 29 يوم"
+    got, out = diff("01/03/2024", "01/02/2024")
+    assert got == "الفرق: 29 يوم", out
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u7-ch1
+from datetime import datetime ¦¦ الكلاس.
+ ¦¦
+first = input("التاريخ الأول: ") ¦¦ نص.
+second = input("التاريخ التاني: ") ¦¦ نص.
+d1 = datetime.strptime(first, "%d/%m/%Y") ¦¦ `strptime` بقالب مطابق للصيغة (درس datetime).
+d2 = datetime.strptime(second, "%d/%m/%Y") ¦¦ التاني.
+print(f"الفرق: {abs((d2 - d1).days)} يوم") ¦¦ الطرح ← timedelta، و `.days` رقم، و `abs` بتشيل الإشارة لو الترتيب معكوس.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u7-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — عدد الأتوبيسات <span class="lvl">⭐</span></div>
+      <p>اطلب عدد الطلاب وسعة الأتوبيس، واطبع <code class="inl">محتاجين N أتوبيس</code> — من غير ما حد يفضل واقف.</p>
+      @starter u7-ch2
+students = int(input("عدد الطلاب: "))
+capacity = int(input("سعة الأتوبيس: "))
+buses = students // capacity
+print(f"محتاجين {buses} أتوبيس")
+      @end
+      @tests u7-ch2
+PROGRAM_MODE = True
+
+def buses(s, c):
+    out = run_program(f"{s}\n{c}\n")
+    return out.strip().splitlines()[-1].strip(), out
+
+def test_remainder():
+    "47 طالب و 12 مقعد ← 4 أتوبيس"
+    got, out = buses(47, 12)
+    assert got == "محتاجين 4 أتوبيس", out
+
+def test_exact():
+    "48 و 12 ← 4 بالظبط"
+    got, out = buses(48, 12)
+    assert got == "محتاجين 4 أتوبيس", out
+
+def test_small():
+    "طالب واحد ← أتوبيس واحد"
+    got, out = buses(1, 50)
+    assert got == "محتاجين 1 أتوبيس", out
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u7-ch2
+import math ¦¦ مكتبة الرياضيات.
+ ¦¦
+students = int(input("عدد الطلاب: ")) ¦¦ المدخل الأول.
+capacity = int(input("سعة الأتوبيس: ")) ¦¦ التاني.
+buses = math.ceil(students / capacity) ¦¦ **`//` بتقرّب لتحت** فالطلاب الزيادة بيضيعوا. `ceil` بتقرّب لفوق دايمًا.
+print(f"محتاجين {buses} أتوبيس") ¦¦ النتيجة.
+      @end
+      </details>
+    </div>
+  </article>
+
+@@lesson u8-ch before="<!-- 8.EX -->"
+  <!-- 8.CH -->
+  <article class="lesson" id="u8-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة الثامنة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">حلقات while: الاختبار الأهم دايمًا — هل الحلقة بتقف في الوقت الصح؟</p>
+
+    <div class="challenge" data-ch="u8-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — متتالية كولاتز <span class="lvl">⭐⭐</span></div>
+      <p>
+        ابدأ برقم n: لو زوجي اقسمه على 2، لو فردي اضربه في 3 وزوّد 1. كرّر لحد ما توصل 1.
+        اطبع <code class="inl">عدد الخطوات: N</code>. (6 ← 3 ← 10 ← 5 ← 16 ← 8 ← 4 ← 2 ← 1 = 8 خطوات)
+      </p>
+      @starter u8-ch1
+n = int(input("الرقم: "))
+steps = 0
+# كرّر لحد ما n تبقى 1
+print(f"عدد الخطوات: {steps}")
+      @end
+      @tests u8-ch1
+PROGRAM_MODE = True
+
+def steps_for(n):
+    out = run_program(f"{n}\n")
+    return out.strip().splitlines()[-1].strip(), out
+
+def test_6():
+    "6 ← 8 خطوات"
+    got, out = steps_for(6)
+    assert got == "عدد الخطوات: 8", out
+
+def test_1():
+    "1 ← 0 خطوات (وصلنا من الأول)"
+    got, out = steps_for(1)
+    assert got == "عدد الخطوات: 0", out
+
+def test_27():
+    "27 ← 111 خطوة"
+    got, out = steps_for(27)
+    assert got == "عدد الخطوات: 111", out
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u8-ch1
+n = int(input("الرقم: ")) ¦¦ المدخل.
+steps = 0 ¦¦ العدّاد.
+while n != 1: ¦¦ الشرط بيتفحص **قبل** كل دورة — فلو n = 1 من الأول، الحلقة ما بتشتغلش خالص.
+    if n % 2 == 0: ¦¦ زوجي؟
+        n = n // 2 ¦¦ `//` عشان n تفضل int.
+    else: ¦¦ فردي.
+        n = 3 * n + 1 ¦¦ القاعدة التانية.
+    steps += 1 ¦¦ **تحديث المتغيّر المتحكّم** بيحصل في كل دورة — ده اللي بيضمن إن الحلقة بتقرّب من النهاية.
+print(f"عدد الخطوات: {steps}") ¦¦ النتيجة.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u8-ch2">
+      <div class="ch-head">🐞 التحدّي 2 — تخمين بلا نهاية <span class="lvl">⭐⭐</span></div>
+      <p>المفروض اللاعب ياخد <strong>3 محاولات بس</strong> يخمّن فيهم الرقم 7. البرنامج ده ما بيوقفش أبدًا بعد 3 محاولات. صلّحه.</p>
+      @starter u8-ch2
+secret = 7
+attempts = 0
+while attempts < 3:
+    guess = int(input("خمّن: "))
+    if guess == secret:
+        print("صح!")
+        break
+else:
+    print("خلصت المحاولات")
+      @end
+      @tests u8-ch2
+PROGRAM_MODE = True
+
+def ending(stdin):
+    out = run_program(stdin)
+    return out.strip().splitlines()[-1].strip(), out
+
+def test_three_wrong():
+    "3 تخمينات غلط ← خلصت المحاولات"
+    got, out = ending("1\n2\n3\n")
+    assert got == "خلصت المحاولات", out
+
+def test_no_fourth_chance():
+    "التخمين الرابع ما يتقبلش حتى لو صح"
+    got, out = ending("1\n2\n3\n7\n")
+    assert got == "خلصت المحاولات", out
+
+def test_second_try():
+    "صح في التاني ← صح!"
+    got, out = ending("5\n7\n")
+    assert got == "صح!", out
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u8-ch2
+secret = 7 ¦¦ الرقم السرّي.
+attempts = 0 ¦¦ العدّاد.
+while attempts < 3: ¦¦ الشرط.
+    guess = int(input("خمّن: ")) ¦¦ التخمين.
+    attempts += 1 ¦¦ **الغلطة**: العدّاد ما كانش بيزيد، فالشرط `attempts < 3` صح للأبد. أي حلقة while لازم يكون فيها حاجة بتغيّر شرطها.
+    if guess == secret: ¦¦ صح؟
+        print("صح!") ¦¦ رسالة.
+        break ¦¦ خروج — والـ else مش هتتنفّذ.
+else: ¦¦ خلصت المحاولات من غير break.
+    print("خلصت المحاولات") ¦¦ رسالة.
+      @end
+      </details>
+    </div>
+  </article>
+
+@@lesson u9-ch before="<!-- 9.EX -->"
+  <!-- 9.CH -->
+  <article class="lesson" id="u9-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة التاسعة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">الاختبارات هنا بتلعب دور «المستخدم المزعج» — بتكتب حروف مكان أرقام وأصفار في المقام.</p>
+
+    <div class="challenge" data-ch="u9-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — قسمة مش بتقع <span class="lvl">⭐⭐</span></div>
+      <p>
+        اطلب رقمين (عشريين) واطبع <code class="inl">الناتج: X</code> مقرّب لخانتين. لو المدخل مش رقم اطبع <code class="inl">لازم تدخل أرقام</code>،
+        ولو القسمة على صفر اطبع <code class="inl">مينفعش القسمة على صفر</code>. البرنامج <strong>عمره ما يقع</strong>.
+      </p>
+      @starter u9-ch1
+a = float(input("الأول: "))
+b = float(input("التاني: "))
+print(f"الناتج: {round(a / b, 2)}")
+      @end
+      @tests u9-ch1
+PROGRAM_MODE = True
+
+def ending(stdin):
+    out = run_program(stdin)
+    assert "Traceback" not in out, "البرنامج وقع:\n" + out
+    return out.strip().splitlines()[-1].strip()
+
+def test_normal():
+    "10 ÷ 3 ← الناتج: 3.33"
+    assert ending("10\n3\n") == "الناتج: 3.33"
+
+def test_float():
+    "7.5 ÷ 2.5 ← الناتج: 3.0"
+    assert ending("7.5\n2.5\n") == "الناتج: 3.0"
+
+def test_zero():
+    "القسمة على صفر ← رسالة مش crash"
+    assert ending("5\n0\n") == "مينفعش القسمة على صفر"
+
+def test_text():
+    "حروف مكان رقم ← لازم تدخل أرقام"
+    assert ending("abc\n2\n") == "لازم تدخل أرقام"
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u9-ch1
+try: ¦¦ كل اللي ممكن يقع جوّه try.
+    a = float(input("الأول: ")) ¦¦ ممكن ValueError.
+    b = float(input("التاني: ")) ¦¦ ممكن ValueError.
+    print(f"الناتج: {round(a / b, 2)}") ¦¦ ممكن ZeroDivisionError.
+except ValueError: ¦¦ مش رقم.
+    print("لازم تدخل أرقام") ¦¦ رسالة.
+except ZeroDivisionError: ¦¦ القسمة على صفر.
+    print("مينفعش القسمة على صفر") ¦¦ رسالة. **كل خطأ برسالته** — مش `except` واحدة عامة.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u9-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — جمع الصالح بس <span class="lvl">⭐⭐</span></div>
+      <p>اطلب سطر فيه قيم مفصولة بمسافات. اجمع الأرقام الصحيحة الصالحة واطبع <code class="inl">المجموع: N</code>، وفي السطر اللي بعده <code class="inl">المرفوض: x, abc</code> (أو <code class="inl">المرفوض: لا يوجد</code>).</p>
+      @starter u9-ch2
+values = input("القيم: ").split()
+total = 0
+rejected = []
+# لف على القيم: حاول تحوّل كل واحدة، والغلط ضيفه للمرفوض
+      @end
+      @tests u9-ch2
+PROGRAM_MODE = True
+
+def last_two(stdin):
+    out = run_program(stdin)
+    return [l.strip() for l in out.strip().splitlines()][-2:], out
+
+def test_mixed():
+    "10 x 5 -3 abc ← المجموع 12 والمرفوض x, abc"
+    got, out = last_two("10 x 5 -3 abc\n")
+    assert got == ["المجموع: 12", "المرفوض: x, abc"], out
+
+def test_clean():
+    "1 2 3 ← المجموع 6 والمرفوض لا يوجد"
+    got, out = last_two("1 2 3\n")
+    assert got == ["المجموع: 6", "المرفوض: لا يوجد"], out
+
+def test_all_bad():
+    "a b ← المجموع 0"
+    got, out = last_two("a b\n")
+    assert got == ["المجموع: 0", "المرفوض: a, b"], out
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u9-ch2
+values = input("القيم: ").split() ¦¦ قائمة نصوص.
+total = 0 ¦¦ المجموع.
+rejected = [] ¦¦ المرفوض.
+for v in values: ¦¦ الحلقة **برّه** try — عشان غلطة واحدة ما توقفش الباقي (درس EAFP).
+    try: ¦¦ حوالين السطر الخطر بس.
+        total += int(v) ¦¦ `int` نفسها بتفهم الإشارة السالبة.
+    except ValueError: ¦¦ مش رقم صحيح.
+        rejected.append(v) ¦¦ نسجّله.
+print(f"المجموع: {total}") ¦¦ السطر الأول.
+print(f"المرفوض: {', '.join(rejected) if rejected else 'لا يوجد'}") ¦¦ `join` بفاصلة، أو «لا يوجد» لو القائمة فاضية (Falsy).
+      @end
+      </details>
+    </div>
+  </article>
+
+@@lesson u10-ch before="<!-- 10.EX -->"
+  <!-- 10.CH -->
+  <article class="lesson" id="u10-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة العاشرة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">القواميس: عدّ، جمّع، ورتّب — أكتر 3 عمليات هتعملها على البيانات في حياتك.</p>
+
+    <div class="challenge" data-ch="u10-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — الكلمة الأكثر تكرارًا <span class="lvl">⭐⭐</span></div>
+      <p>اطلب جملة، واطبع <code class="inl">الأكثر تكرارًا: X (N)</code> — من غير فرق بين الحروف الكبيرة والصغيرة، ولو فيه تعادل اختار الكلمة اللي ظهرت الأول.</p>
+      @starter u10-ch1
+sentence = input("الجملة: ")
+counts = {}
+# عدّ الكلمات، وبعدين دوّر على الأكثر
+      @end
+      @tests u10-ch1
+PROGRAM_MODE = True
+
+def top(stdin):
+    out = run_program(stdin)
+    return out.strip().splitlines()[-1].strip(), out
+
+def test_basic():
+    "the cat and the hat ← the (2)"
+    got, out = top("the cat and the hat\n")
+    assert got == "الأكثر تكرارًا: the (2)", out
+
+def test_case():
+    "Python python PYTHON is fun ← python (3)"
+    got, out = top("Python python PYTHON is fun\n")
+    assert got == "الأكثر تكرارًا: python (3)", out
+
+def test_tie():
+    "تعادل: b a ← b (1) لأنها الأولى"
+    got, out = top("b a\n")
+    assert got == "الأكثر تكرارًا: b (1)", out
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u10-ch1
+sentence = input("الجملة: ") ¦¦ المدخل.
+counts = {} ¦¦ كلمة ← عدد.
+for word in sentence.lower().split(): ¦¦ توحيد الحالة قبل العدّ.
+    counts[word] = counts.get(word, 0) + 1 ¦¦ `get` بقيمة افتراضية 0 — من غير if.
+best, best_n = "", 0 ¦¦ الأفضل لحد دلوقتي.
+for word, n in counts.items(): ¦¦ القاموس بيحافظ على ترتيب الإضافة (أول ظهور).
+    if n > best_n: ¦¦ **`>` مش `>=`** عشان التعادل يفضل للأولى.
+        best, best_n = word, n ¦¦ تحديث.
+print(f"الأكثر تكرارًا: {best} ({best_n})") ¦¦ النتيجة.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u10-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — تجميع حسب المدينة <span class="lvl">⭐⭐⭐</span></div>
+      <p>المدخل سطر زي <code class="inl">sara:cairo ali:giza mona:cairo</code>. اطبع كل مدينة في سطر (المدن مرتّبة أبجديًا) ومعاها أسماء سكّانها بترتيب ظهورهم:</p>
+      <div class="out"><div class="out-head">▸ المطلوب</div><pre>cairo: sara, mona
+giza: ali</pre></div>
+      @starter u10-ch2
+pairs = input("البيانات: ").split()
+groups = {}
+# كل عنصر شكله name:city
+      @end
+      @tests u10-ch2
+PROGRAM_MODE = True
+
+def lines(stdin, n):
+    out = run_program(stdin)
+    return [l.strip() for l in out.strip().splitlines()][-n:], out
+
+def test_example():
+    "المثال: cairo ثم giza"
+    got, out = lines("sara:cairo ali:giza mona:cairo\n", 2)
+    assert got == ["cairo: sara, mona", "giza: ali"], out
+
+def test_sorting():
+    "المدن مرتّبة: x:b y:a ← a ثم b"
+    got, out = lines("x:b y:a\n", 2)
+    assert got == ["a: y", "b: x"], out
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u10-ch2
+pairs = input("البيانات: ").split() ¦¦ قائمة `name:city`.
+groups = {} ¦¦ مدينة ← قائمة أسماء.
+for pair in pairs: ¦¦ على كل زوج.
+    name, city = pair.split(":") ¦¦ تفكيك.
+    groups.setdefault(city, []).append(name) ¦¦ `setdefault` بتعمل القائمة لو المدينة جديدة وترجّعها — نمط التجميع في سطر.
+for city in sorted(groups): ¦¦ المرور على **المفاتيح مرتّبة**.
+    print(f"{city}: {', '.join(groups[city])}") ¦¦ المدينة وسكّانها.
+      @end
+      </details>
+    </div>
+  </article>
+
+@@lesson u11-ch before="<!-- 11.EX -->"
+  <!-- 11.CH -->
+  <article class="lesson" id="u11-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة الحادية عشرة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">من هنا الاختبارات بتنادي <strong>دوالك</strong> مباشرةً — زي pytest بالظبط. الدالة لازم <strong>ترجّع</strong> القيمة، مش تطبعها.</p>
+
+    <div class="challenge" data-ch="u11-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — الكلمة المتناظرة <span class="lvl">⭐⭐</span></div>
+      <p>اكتب <code class="inl">is_palindrome(text)</code> بترجّع <code class="inl">True</code> لو النص بيتقري زي ما هو من الناحيتين — من غير المسافات ومن غير فرق بين الحروف الكبيرة والصغيرة.</p>
+      @starter u11-ch1
+def is_palindrome(text):
+    """True لو النص متناظر (من غير مسافات وحالة الحروف)"""
+    pass
+      @end
+      @tests u11-ch1
+def test_simple():
+    "level ← True"
+    assert is_palindrome("level") is True
+
+def test_case():
+    "Level ← True (الحروف الكبيرة مش فارقة)"
+    assert is_palindrome("Level") is True
+
+def test_spaces():
+    "Never odd or even ← True (المسافات مش فارقة)"
+    assert is_palindrome("Never odd or even") is True
+
+def test_false():
+    "python ← False"
+    assert is_palindrome("python") is False
+
+def test_returns_bool():
+    "الدالة بترجّع True/False مش None"
+    result = is_palindrome("ab")
+    assert result is False, f"رجّعت {result!r} — استخدم return"
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u11-ch1
+def is_palindrome(text): ¦¦ التعريف.
+    """True لو النص متناظر (من غير مسافات وحالة الحروف)""" ¦¦ docstring.
+    clean = text.replace(" ", "").lower() ¦¦ تنظيف: شيل المسافات ووحّد الحالة.
+    return clean == clean[::-1] ¦¦ المقارنة بالمعكوس بترجّع bool مباشرةً — مش محتاجين if.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u11-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — الخصم بقواعد <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        اكتب <code class="inl">apply_discount(price, percent=10, *, min_price=0)</code>:
+        ترجّع السعر بعد الخصم مقرّب لخانتين، <strong>عمره ما يقلّ عن</strong> <code class="inl">min_price</code>،
+        وترمي <code class="inl">ValueError</code> لو النسبة خارج 0–100. و <code class="inl">min_price</code> لازم يتبعت بالاسم.
+      </p>
+      @starter u11-ch2
+def apply_discount(price, percent=10):
+    return price - price * percent / 100
+      @end
+      @tests u11-ch2
+def test_default():
+    "apply_discount(200) ← 180.0"
+    assert apply_discount(200) == 180.0
+
+def test_percent():
+    "apply_discount(200, 25) ← 150.0"
+    assert apply_discount(200, 25) == 150.0
+
+def test_rounding():
+    "apply_discount(9.99, 15) ← 8.49"
+    assert apply_discount(9.99, 15) == 8.49, apply_discount(9.99, 15)
+
+def test_min_price():
+    "مش أقل من min_price: apply_discount(100, 90, min_price=50) ← 50"
+    assert apply_discount(100, 90, min_price=50) == 50
+
+def test_invalid():
+    "نسبة 120 أو -5 ← ValueError"
+    for bad in (120, -5):
+        try:
+            apply_discount(100, bad)
+        except ValueError:
+            continue
+        raise AssertionError(f"النسبة {bad} ما رمتش ValueError")
+
+def test_keyword_only():
+    "min_price بالاسم بس: apply_discount(100, 10, 50) ← TypeError"
+    try:
+        apply_discount(100, 10, 50)
+    except TypeError:
+        return
+    raise AssertionError("المفروض ترمي TypeError — استخدم * في تعريف الدالة")
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u11-ch2
+def apply_discount(price, percent=10, *, min_price=0): ¦¦ `*` بتجبر `min_price` يتبعت بالاسم.
+    if not 0 <= percent <= 100: ¦¦ التحقّق الأول (مقارنة متسلسلة).
+        raise ValueError(f"نسبة غير صالحة: {percent}") ¦¦ رسالة واضحة.
+    result = round(price * (1 - percent / 100), 2) ¦¦ الخصم والتقريب.
+    return max(result, min_price) ¦¦ `max` بتضمن الحدّ الأدنى من غير if.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u11-ch3">
+      <div class="ch-head">🐞 التحدّي 3 — القائمة اللي بتفتكر <span class="lvl">⭐⭐⭐</span></div>
+      <p>كل نداء لـ <code class="inl">add_item("x")</code> من غير قائمة المفروض يرجّع قائمة جديدة فيها <code class="inl">["x"]</code> بس. لكن الدالة دي «بتفتكر» النداءات القديمة! صلّحها.</p>
+      @starter u11-ch3
+def add_item(item, items=[]):
+    items.append(item)
+    return items
+      @end
+      @tests u11-ch3
+def test_fresh_each_time():
+    "كل نداء من غير قائمة بيبدأ فاضي"
+    first = add_item("a")
+    second = add_item("b")
+    assert second == ["b"], f"النداء التاني رجّع {second!r}"
+    assert first == ["a"], f"النداء الأول بقى {first!r}"
+
+def test_given_list():
+    "لو بعتّ قائمة، العنصر بيتضاف لها هي"
+    box = ["x"]
+    result = add_item("y", box)
+    assert box == ["x", "y"] and result is box
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u11-ch3
+def add_item(item, items=None): ¦¦ **الغلطة**: القيمة الافتراضية `[]` بتتعمل **مرّة واحدة** وقت تعريف الدالة، وكل النداءات بتشارك نفس القائمة. `None` غير قابلة للتعديل فآمنة.
+    if items is None: ¦¦ لو مفيش قائمة اتبعتت…
+        items = [] ¦¦ …اعمل واحدة **جديدة** في كل نداء.
+    items.append(item) ¦¦ الإضافة.
+    return items ¦¦ الإرجاع.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u11-ch4">
+      <div class="ch-head">🧪 التحدّي 4 — مولّد الدفعات <span class="lvl">⭐⭐⭐</span></div>
+      <p>اكتب <strong>مولّد</strong> <code class="inl">chunks(items, size)</code> بيطلّع القائمة دفعات بالحجم ده (آخر دفعة ممكن تكون أصغر)، ويرمي <code class="inl">ValueError</code> لو الحجم أقل من 1.</p>
+      @starter u11-ch4
+def chunks(items, size):
+    pass
+      @end
+      @tests u11-ch4
+import inspect
+
+def test_basic():
+    "[1..5] بحجم 2 ← [1,2] [3,4] [5]"
+    assert list(chunks([1, 2, 3, 4, 5], 2)) == [[1, 2], [3, 4], [5]]
+
+def test_empty():
+    "قائمة فاضية ← ولا دفعة"
+    assert list(chunks([], 3)) == []
+
+def test_big_size():
+    "حجم أكبر من القائمة ← دفعة واحدة"
+    assert list(chunks([1, 2], 10)) == [[1, 2]]
+
+def test_is_generator():
+    "الدالة مولّد (فيها yield)"
+    assert inspect.isgeneratorfunction(chunks), "استخدم yield"
+
+def test_bad_size():
+    "حجم 0 ← ValueError"
+    try:
+        list(chunks([1], 0))
+    except ValueError:
+        return
+    raise AssertionError("المفروض ValueError")
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u11-ch4
+def chunks(items, size): ¦¦ مولّد بسبب `yield` تحت.
+    if size < 1: ¦¦ التحقّق — ملحوظة: في المولّد ده بيتنفّذ أول ما حد يطلب قيمة (مش وقت النداء).
+        raise ValueError("size لازم يكون 1 أو أكتر") ¦¦ رسالة.
+    for start in range(0, len(items), size): ¦¦ بدايات الدفعات.
+        yield items[start:start + size] ¦¦ دفعة — والتقطيع ما بيرميش خطأ لو عدّى الآخر.
+      @end
+      </details>
+    </div>
+  </article>
+
+@@lesson u12-ch before="<!-- 12.EX -->"
+  <!-- 12.CH -->
+  <article class="lesson" id="u12-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة الثانية عشرة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">ملفات وقاعدة بيانات حقيقية — الاختبارات بتعمل ملفات مؤقّتة وقاعدة في الذاكرة وتتأكّد من اللي اتكتب فعلًا.</p>
+
+    <div class="challenge" data-ch="u12-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — حفظ واسترجاع الدرجات <span class="lvl">⭐⭐</span></div>
+      <p>
+        <code class="inl">save_scores(path, scores)</code>: تكتب كل طالب في سطر <code class="inl">name,score</code> مرتّبين من الأعلى، بترميز UTF-8.<br>
+        <code class="inl">load_scores(path)</code>: ترجّع قاموس <code class="inl">{name: score}</code> والدرجات <code class="inl">int</code>.
+      </p>
+      @starter u12-ch1
+def save_scores(path, scores):
+    pass
+
+def load_scores(path):
+    pass
+      @end
+      @tests u12-ch1
+import os, tempfile
+
+def tmp_path():
+    return os.path.join(tempfile.mkdtemp(), "scores.txt")
+
+def test_file_format():
+    "الملف فيه name,score مرتّب من الأعلى"
+    path = tmp_path()
+    save_scores(path, {"ali": 78, "sara": 91})
+    with open(path, encoding="utf-8") as f:
+        lines = [l.strip() for l in f if l.strip()]
+    assert lines == ["sara,91", "ali,78"], lines
+
+def test_load_types():
+    "load_scores بترجّع أرقام int"
+    path = tmp_path()
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("mona,85\nomar,60\n")
+    assert load_scores(path) == {"mona": 85, "omar": 60}
+
+def test_round_trip_arabic():
+    "حفظ واسترجاع بأسماء عربي"
+    path = tmp_path()
+    data = {"سارة": 95, "أحمد": 70}
+    save_scores(path, data)
+    assert load_scores(path) == data
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u12-ch1
+def save_scores(path, scores): ¦¦ الكتابة.
+    ordered = sorted(scores.items(), key=lambda item: item[1], reverse=True) ¦¦ أزواج مرتّبة بالدرجة تنازليًا.
+    with open(path, "w", encoding="utf-8") as f: ¦¦ `encoding` ضروري للعربي.
+        for name, score in ordered: ¦¦ على كل طالب.
+            f.write(f"{name},{score}\n") ¦¦ سطر لكل طالب — ولازم `\n` بنفسك.
+ ¦¦
+def load_scores(path): ¦¦ القراءة.
+    result = {} ¦¦ القاموس.
+    with open(path, encoding="utf-8") as f: ¦¦ فتح.
+        for line in f: ¦¦ سطر سطر (كفء للملفات الكبيرة).
+            line = line.strip() ¦¦ شيل `\n`.
+            if not line: ¦¦ تجاهل الأسطر الفاضية.
+                continue ¦¦ اللي بعده.
+            name, score = line.split(",") ¦¦ تفكيك.
+            result[name] = int(score) ¦¦ التحويل لـ int — الملف كله نصوص.
+    return result ¦¦ الإرجاع.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u12-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — مكتبة كتب بـ SQLite <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        كمّل <code class="inl">add_book(conn, title, year)</code> — تضيف بأمان وترجّع رقم الكتاب الجديد (<code class="inl">cursor.lastrowid</code>)،
+        و <code class="inl">books_after(conn, year)</code> — ترجّع قائمة عناوين الكتب اللي سنتها <strong>أكبر من</strong> year مرتّبة بالسنة.
+      </p>
+      @starter u12-ch2
+import sqlite3
+
+def init_db(conn):
+    conn.execute("CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY, title TEXT NOT NULL, year INTEGER)")
+
+def add_book(conn, title, year):
+    pass
+
+def books_after(conn, year):
+    pass
+      @end
+      @tests u12-ch2
+import sqlite3
+
+def fresh():
+    conn = sqlite3.connect(":memory:")
+    init_db(conn)
+    return conn
+
+def test_ids():
+    "add_book بترجّع 1 ثم 2"
+    conn = fresh()
+    assert add_book(conn, "Python", 2020) == 1
+    assert add_book(conn, "SQL", 2018) == 2
+
+def test_after():
+    "books_after(2015) مرتّبة بالسنة"
+    conn = fresh()
+    add_book(conn, "C", 1978)
+    add_book(conn, "Rust", 2021)
+    add_book(conn, "Go", 2016)
+    assert books_after(conn, 2015) == ["Go", "Rust"]
+
+def test_quote_title():
+    "عنوان فيه علامة تنصيص: O'Reilly Guide"
+    conn = fresh()
+    add_book(conn, "O'Reilly Guide", 2022)
+    assert books_after(conn, 2000) == ["O'Reilly Guide"]
+
+def test_no_fstring_sql():
+    "مفيش f-string جوّه أوامر SQL"
+    code = USER_CODE.replace(" ", "")
+    assert 'f"INSERT' not in code and "f'INSERT" not in code and 'f"SELECT' not in code and "f'SELECT" not in code, "استخدم ? بدل f-string"
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u12-ch2
+import sqlite3 ¦¦ المكتبة.
+ ¦¦
+def init_db(conn): ¦¦ جاهزة من البداية.
+    conn.execute("CREATE TABLE IF NOT EXISTS books (id INTEGER PRIMARY KEY, title TEXT NOT NULL, year INTEGER)") ¦¦ الجدول.
+ ¦¦
+def add_book(conn, title, year): ¦¦ الإضافة.
+    with conn: ¦¦ معاملة: commit تلقائي.
+        cur = conn.execute("INSERT INTO books (title, year) VALUES (?, ?)", (title, year)) ¦¦ `?` — العنوان اللي فيه `'` بيتخزّن عادي ومفيش injection.
+    return cur.lastrowid ¦¦ رقم الصف اللي اتضاف.
+ ¦¦
+def books_after(conn, year): ¦¦ الاستعلام.
+    rows = conn.execute("SELECT title FROM books WHERE year > ? ORDER BY year", (year,)).fetchall() ¦¦ شرط وترتيب في قاعدة البيانات نفسها.
+    return [title for (title,) in rows] ¦¦ كل صف tuple فيها عنصر واحد — بنفكّها.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u12-ch3">
+      <div class="ch-head">🧪 التحدّي 3 — صيّاد أرقام الموبايل <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        <code class="inl">extract_phones(text)</code> بـ <code class="inl">re</code>: ترجّع أرقام الموبايل المصرية (010 أو 011 أو 012 أو 015 وبعدها 8 أرقام) بصيغة موحّدة تبدأ بـ 0،
+        حتى لو مكتوبة بـ <code class="inl">+20</code> أو <code class="inl">0020</code>. من غير تكرار وبترتيب ظهورها، ومن غير ما تاخد جزء من رقم أطول.
+      </p>
+      @starter u12-ch3
+import re
+
+def extract_phones(text):
+    return re.findall(r"01\d{9}", text)
+      @end
+      @tests u12-ch3
+def test_basic():
+    "رقمين بصيغتين ← الاتنين بصيغة 0"
+    assert extract_phones("اتصل 01012345678 أو +201112345678") == ["01012345678", "01112345678"]
+
+def test_0020():
+    "0020 ← بتتحوّل لـ 0"
+    assert extract_phones("رقمي 00201512345678") == ["01512345678"]
+
+def test_invalid_network():
+    "013 مش شبكة ← ولا نتيجة"
+    assert extract_phones("01312345678") == []
+
+def test_not_inside_longer():
+    "ما تاخدش 11 رقم من جوّه رقم أطول"
+    assert extract_phones("كود 9901012345678 و 010123456789") == []
+
+def test_unique_in_order():
+    "التكرار مرّة واحدة والترتيب محفوظ"
+    text = "01212345678, 01012345678, +201212345678"
+    assert extract_phones(text) == ["01212345678", "01012345678"]
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u12-ch3
+import re ¦¦ المكتبة.
+ ¦¦
+PHONE = re.compile(r"(?<!\d)(?:\+20|0020|0)(1[0125]\d{8})(?!\d)") ¦¦ `(?<!\d)` و `(?!\d)` بيمنعوا الأخذ من جوّه رقم أطول. البادئة في مجموعة غير محفوظة، والجزء المهم (10 أرقام) في مجموعة محفوظة.
+ ¦¦
+def extract_phones(text): ¦¦ الدالة.
+    found = [] ¦¦ النتايج بالترتيب.
+    for m in PHONE.finditer(text): ¦¦ كل تطابق ككائن.
+        number = "0" + m.group(1) ¦¦ **التوحيد**: أيًّا كانت البادئة، النتيجة تبدأ بـ 0.
+        if number not in found: ¦¦ شيل التكرار مع الحفاظ على الترتيب.
+            found.append(number) ¦¦ الإضافة.
+    return found ¦¦ الإرجاع.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u12-ch4">
+      <div class="ch-head">🐞 التحدّي 4 — النص العريض الملزوق <span class="lvl">⭐⭐</span></div>
+      <p><code class="inl">bold_texts(html)</code> المفروض ترجّع النص اللي جوّه كل <code class="inl">&lt;b&gt;…&lt;/b&gt;</code> لوحده. بتشتغل مع وسم واحد بس. صلّحها.</p>
+      @starter u12-ch4
+import re
+
+def bold_texts(html):
+    return re.findall(r"<b>(.*)</b>", html)
+      @end
+      @tests u12-ch4
+def test_one():
+    "وسم واحد ← ['مهم']"
+    assert bold_texts("ده <b>مهم</b>") == ["مهم"]
+
+def test_two():
+    "وسمين ← كل واحد لوحده"
+    got = bold_texts("<b>أ</b> و <b>ب</b>")
+    assert got == ["أ", "ب"], f"رجّعت {got!r}"
+
+def test_none():
+    "مفيش وسوم ← []"
+    assert bold_texts("نص عادي") == []
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u12-ch4
+import re ¦¦ المكتبة.
+ ¦¦
+def bold_texts(html): ¦¦ الدالة.
+    return re.findall(r"<b>(.*?)</b>", html) ¦¦ **الغلطة**: `.*` جشِع بياخد من أول `<b>` لآخر `</b>`. علامة `?` بتخلّيه كسول ياخد أقصر نص.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u12-ch5">
+      <div class="ch-head">🧪 التحدّي 5 — توحيد التواريخ <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        <code class="inl">to_iso(text)</code>: حوّل كل تاريخ بصيغة <code class="inl">DD/MM/YYYY</code> جوّه النص لـ <code class="inl">YYYY-MM-DD</code>، والباقي زي ما هو.
+        التاريخ لازم يكون يومه 01–31 وشهره 01–12 وكل جزء برقمين — غير كده سيبه.
+      </p>
+      @starter u12-ch5
+import re
+
+def to_iso(text):
+    pass
+      @end
+      @tests u12-ch5
+def test_single():
+    "15/03/2025 ← 2025-03-15"
+    assert to_iso("15/03/2025") == "2025-03-15"
+
+def test_in_text():
+    "تاريخين جوّه جملة"
+    assert to_iso("من 01/04/2025 لحد 30/04/2025.") == "من 2025-04-01 لحد 2025-04-30."
+
+def test_invalid_left_alone():
+    "45/03/2025 و 15/13/2025 و 5/3/2025 ← زي ما هم"
+    for bad in ["45/03/2025", "15/13/2025", "5/3/2025"]:
+        assert to_iso(bad) == bad, f"{bad} اتغيّر لـ {to_iso(bad)!r}"
+
+def test_not_inside_numbers():
+    "ما تلمسش جزء من رقم أطول"
+    assert to_iso("115/03/20250") == "115/03/20250"
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u12-ch5
+import re ¦¦ المكتبة.
+ ¦¦
+DATE = re.compile(r"(?<!\d)(0[1-9]|[12]\d|3[01])/(0[1-9]|1[0-2])/(\d{4})(?!\d)") ¦¦ اليوم: 01–09 أو 10–29 أو 30–31. الشهر: 01–09 أو 10–12. والسنة 4 أرقام. والحدود بتمنع الأخذ من جوّه رقم أطول.
+ ¦¦
+def to_iso(text): ¦¦ الدالة.
+    return DATE.sub(r"\3-\2-\1", text) ¦¦ إعادة ترتيب المجموعات: السنة ثم الشهر ثم اليوم.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u12-ch6">
+      <div class="ch-head">🧪 التحدّي 6 — مذكّرات بتتحفظ JSON <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        كل مذكّرة قاموس فيه <code class="inl">title</code> (نص) و <code class="inl">day</code> (كائن <code class="inl">date</code>).
+        <code class="inl">save_notes(path, notes)</code> تحفظها JSON بالعربي مقروء، و <code class="inl">load_notes(path)</code> ترجّعها بنفس الشكل (والـ day كائن date).
+        لو الملف مش موجود أو بايظ، <code class="inl">load_notes</code> ترجّع <code class="inl">[]</code> من غير ما تقع.
+      </p>
+      @starter u12-ch6
+import json
+from datetime import date
+
+def save_notes(path, notes):
+    with open(path, "w") as f:
+        json.dump(notes, f)
+
+def load_notes(path):
+    with open(path) as f:
+        return json.load(f)
+      @end
+      @tests u12-ch6
+import json, os, tempfile
+from datetime import date
+
+def tmp(name="notes.json"):
+    return os.path.join(tempfile.mkdtemp(), name)
+
+SAMPLE = [{"title": "مذاكرة JSON", "day": date(2025, 3, 15)}, {"title": "رياضة", "day": date(2025, 3, 16)}]
+
+def test_round_trip():
+    "حفظ واسترجاع بنفس القيم (والتاريخ كائن date)"
+    path = tmp()
+    save_notes(path, SAMPLE)
+    back = load_notes(path)
+    assert back == SAMPLE, back
+
+def test_readable_file():
+    "الملف JSON صحيح، فيه العربي مقروء والتاريخ نص ISO"
+    path = tmp()
+    save_notes(path, SAMPLE)
+    text = open(path, encoding="utf-8").read()
+    assert "مذاكرة" in text, "استخدم ensure_ascii=False مع encoding='utf-8'"
+    assert json.loads(text)[0]["day"] == "2025-03-15"
+
+def test_missing_file():
+    "ملف مش موجود ← []"
+    assert load_notes(tmp("nothing.json")) == []
+
+def test_broken_file():
+    "ملف بايظ ← []"
+    path = tmp()
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("{not json")
+    assert load_notes(path) == []
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u12-ch6
+import json ¦¦ المكتبة.
+from datetime import date ¦¦ التواريخ.
+ ¦¦
+def save_notes(path, notes): ¦¦ الحفظ.
+    data = [{"title": n["title"], "day": n["day"].isoformat()} for n in notes] ¦¦ JSON ما يعرفش date — نحوّله لنص ISO قبل الحفظ.
+    with open(path, "w", encoding="utf-8") as f: ¦¦ ترميز صريح.
+        json.dump(data, f, ensure_ascii=False, indent=2) ¦¦ عربي مقروء ومنسّق.
+ ¦¦
+def load_notes(path): ¦¦ التحميل.
+    try: ¦¦ EAFP.
+        with open(path, encoding="utf-8") as f: ¦¦ الفتح.
+            data = json.load(f) ¦¦ التحليل.
+    except (FileNotFoundError, json.JSONDecodeError): ¦¦ الحالتين المتوقّعتين بس — مش `except Exception`.
+        return [] ¦¦ قائمة فاضية.
+    return [{"title": d["title"], "day": date.fromisoformat(d["day"])} for d in data] ¦¦ نرجّع النص لتاريخ.
+      @end
+      </details>
+    </div>
+  </article>

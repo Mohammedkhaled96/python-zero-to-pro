@@ -1,159 +1,156 @@
 /* ============================================================================
-   Service Worker لكورس بايثون — تشغيل الكورس بدون إنترنت
-   ----------------------------------------------------------------------------
-   إيه اللي بيحصل:
-   1) أول زيارة: بنخزّن الصفحة نفسها (الكورس كله ملف واحد).
-   2) أول مرّة تشغّل كود: بنخزّن ملفات بايثون (Pyodide) من الـ CDN وهي بتتحمّل.
-   3) بعد كده الكورس بيفتح ويشغّل الأكواد من غير إنترنت.
-
-   ملحوظة: لازم الملف ده يبقى جنب index.html على نفس الاستضافة (https أو localhost).
+   Service Worker — تشغيل الكورس بدون إنترنت
+     • ملفات التطبيق (الصفحة، الأنماط، الكود): من الكاش فورًا مع تحديث في الخلفية
+     • محتوى الدروس وملفات بايثون (Pyodide): من الكاش أول ما تتخزّن
+   لازم يبقى جنب index.html على نفس الاستضافة (https أو localhost).
    ============================================================================ */
 
-var VERSION = "v1";
-var SHELL_CACHE = "py-course-shell-" + VERSION;
-var RUNTIME_CACHE = "py-course-runtime-" + VERSION;
-var PYODIDE_PREFIX = "https://cdn.jsdelivr.net/pyodide/";
-var SHELL_FILES = ["./", "./index.html"];
+const VERSION = "2026-09-21.1";
+const APP_CACHE = "py-course-app-" + VERSION;
+const DATA_CACHE = "py-course-data-" + VERSION;
+const PYODIDE_PREFIX = "https://cdn.jsdelivr.net/pyodide/";
 
-/* ---------- التنصيب: نخزّن الصفحة ---------- */
-self.addEventListener("install", function (event) {
+/* ملفات التطبيق الأساسية — لو أي واحد فشل، الباقي بيتخزّن عادي */
+const APP_FILES = [
+  "./",
+  "./index.html",
+  "./assets/favicon.svg",
+  "./assets/css/tokens.css",
+  "./assets/css/layout.css",
+  "./assets/css/content.css",
+  "./assets/css/components.css",
+  "./assets/css/responsive.css",
+  "./assets/css/print.css",
+  "./content/course.json",
+  "./src/main.js",
+  "./src/core/dom.js",
+  "./src/core/bus.js",
+  "./src/core/storage.js",
+  "./src/core/state.js",
+  "./src/core/scroll.js",
+  "./src/ui/toast.js",
+  "./src/ui/modal.js",
+  "./src/ui/highlight.js",
+  "./src/data/course.js",
+  "./src/data/content.js",
+  "./src/data/search.js",
+  "./src/runtime/python.js",
+  "./src/runtime/worker.js",
+  "./src/runtime/runnability.js",
+  "./src/runtime/harness.py",
+  "./src/features/render.js",
+  "./src/features/navigation.js",
+  "./src/features/toc.js",
+  "./src/features/shell.js",
+  "./src/features/code-blocks.js",
+  "./src/features/lines-table.js",
+  "./src/features/run-panel.js",
+  "./src/features/editor.js",
+  "./src/features/quiz.js",
+  "./src/features/challenges.js",
+  "./src/features/lesson-extras.js",
+  "./src/features/dashboard.js",
+  "./src/features/review.js",
+  "./src/features/resume.js",
+  "./src/features/side-tools.js",
+  "./src/features/offline.js"
+];
+
+self.addEventListener("install", event => {
   event.waitUntil(
-    caches.open(SHELL_CACHE).then(function (cache) {
-      return Promise.all(
-        SHELL_FILES.map(function (url) {
-          return cache.add(new Request(url, { cache: "reload" })).catch(function () {});
-        })
-      );
-    })
+    caches.open(APP_CACHE).then(cache =>
+      Promise.all(APP_FILES.map(url =>
+        cache.add(new Request(url, { cache: "reload" })).catch(() => {})
+      ))
+    )
   );
 });
 
-/* ---------- التفعيل: نمسح النسخ القديمة ---------- */
-self.addEventListener("activate", function (event) {
+self.addEventListener("activate", event => {
   event.waitUntil(
-    caches.keys().then(function (names) {
-      return Promise.all(
-        names.map(function (name) {
-          if (name !== SHELL_CACHE && name !== RUNTIME_CACHE && name.indexOf("py-course-") === 0) {
-            return caches.delete(name);
-          }
-        })
-      );
-    }).then(function () {
-      return self.clients.claim();
-    })
+    caches.keys()
+      .then(names => Promise.all(names.map(name => {
+        if (name !== APP_CACHE && name !== DATA_CACHE && name.indexOf("py-course-") === 0) return caches.delete(name);
+      })))
+      .then(() => self.clients.claim())
   );
 });
 
-/* ---------- من الكاش الأول، ونحدّث في الخلفية ---------- */
+/* من الكاش الأول، ونحدّث في الخلفية */
 function staleWhileRevalidate(request, cacheName) {
-  return caches.open(cacheName).then(function (cache) {
-    return cache.match(request).then(function (cached) {
-      var network = fetch(request)
-        .then(function (response) {
-          if (response && response.ok) cache.put(request, response.clone());
-          return response;
-        })
-        .catch(function () {
-          return cached || Response.error();
-        });
+  return caches.open(cacheName).then(cache =>
+    cache.match(request).then(cached => {
+      const network = fetch(request)
+        .then(res => { if (res && res.ok) cache.put(request, res.clone()); return res; })
+        .catch(() => cached || Response.error());
       return cached || network;
-    });
-  });
+    })
+  );
 }
 
-/* ---------- من الكاش بس لو موجود (ملفات بايثون ما بتتغيّرش: إصدار مثبّت) ---------- */
+/* من الكاش بس لو موجود (محتوى الدروس وملفات بايثون — نسخ ثابتة) */
 function cacheFirst(request, cacheName) {
-  return caches.open(cacheName).then(function (cache) {
-    return cache.match(request).then(function (cached) {
+  return caches.open(cacheName).then(cache =>
+    cache.match(request).then(cached => {
       if (cached) return cached;
-      return fetch(request).then(function (response) {
-        /* بنخزّن الردود السليمة بس (ولا الأخطاء ولا الردود الجزئية) */
-        if (response && (response.ok || response.type === "opaque") && response.status !== 206) {
-          cache.put(request, response.clone()).catch(function () {});
+      return fetch(request).then(res => {
+        if (res && (res.ok || res.type === "opaque") && res.status !== 206) {
+          cache.put(request, res.clone()).catch(() => {});
         }
-        return response;
+        return res;
       });
-    });
-  });
+    })
+  );
 }
 
-self.addEventListener("fetch", function (event) {
-  var request = event.request;
+self.addEventListener("fetch", event => {
+  const request = event.request;
   if (request.method !== "GET") return;
 
-  var url;
-  try {
-    url = new URL(request.url);
-  } catch (e) {
-    return;
-  }
+  let url;
+  try { url = new URL(request.url); } catch (e) { return; }
 
-  /* ملفات بايثون من الـ CDN: من الكاش الأول (ده اللي بيخلّي التشغيل يعمل أوفلاين) */
+  /* ملفات بايثون من الـ CDN */
   if (request.url.indexOf(PYODIDE_PREFIX) === 0) {
-    event.respondWith(cacheFirst(request, RUNTIME_CACHE));
+    event.respondWith(cacheFirst(request, DATA_CACHE));
     return;
   }
 
-  /* صفحة الكورس نفسها: من الكاش فورًا، ونجيب التحديث في الخلفية */
   if (url.origin === self.location.origin) {
-    if (request.mode === "navigate" || /\.html?$/.test(url.pathname) || url.pathname.endsWith("/")) {
-      event.respondWith(staleWhileRevalidate(request, SHELL_CACHE));
+    /* محتوى الدروس: من الكاش أول ما يتخزّن */
+    if (/\/content\/(units|notes)\//.test(url.pathname) || /search-index\.json$/.test(url.pathname)) {
+      event.respondWith(cacheFirst(request, DATA_CACHE));
       return;
     }
-    event.respondWith(
-      caches.match(request).then(function (cached) {
-        return cached || fetch(request);
-      })
-    );
+    /* الصفحة وملفات التطبيق */
+    event.respondWith(staleWhileRevalidate(request, APP_CACHE));
     return;
   }
 
-  /* أي حاجة تانية: الشبكة، ولو فشلت نجرّب الكاش */
   event.respondWith(
-    fetch(request).catch(function () {
-      return caches.match(request).then(function (cached) {
-        return cached || Response.error();
-      });
-    })
+    fetch(request).catch(() => caches.match(request).then(c => c || Response.error()))
   );
 });
 
-/* ---------- رسائل من الصفحة ---------- */
-self.addEventListener("message", function (event) {
-  var data = event.data || {};
-  var reply = function (payload) {
-    if (event.ports && event.ports[0]) event.ports[0].postMessage(payload);
-  };
+self.addEventListener("message", event => {
+  const data = event.data || {};
+  const reply = payload => { if (event.ports && event.ports[0]) event.ports[0].postMessage(payload); };
 
-  if (data.type === "SKIP_WAITING") {
-    self.skipWaiting();
-    return;
-  }
+  if (data.type === "SKIP_WAITING") { self.skipWaiting(); return; }
 
   if (data.type === "STATUS") {
     Promise.all([
-      caches.open(SHELL_CACHE).then(function (c) { return c.keys(); }),
-      caches.open(RUNTIME_CACHE).then(function (c) { return c.keys(); })
-    ]).then(function (res) {
-      reply({ version: VERSION, shell: res[0].length, runtime: res[1].length });
-    }).catch(function () {
-      reply({ version: VERSION, shell: 0, runtime: 0 });
-    });
+      caches.open(APP_CACHE).then(c => c.keys()),
+      caches.open(DATA_CACHE).then(c => c.keys())
+    ]).then(res => reply({ version: VERSION, shell: res[0].length, runtime: res[1].length }))
+      .catch(() => reply({ version: VERSION, shell: 0, runtime: 0 }));
     return;
   }
 
   if (data.type === "CLEAR") {
-    caches.keys().then(function (names) {
-      return Promise.all(
-        names.map(function (name) {
-          return name.indexOf("py-course-") === 0 ? caches.delete(name) : null;
-        })
-      );
-    }).then(function () {
-      reply({ cleared: true });
-    }).catch(function () {
-      reply({ cleared: false });
-    });
+    caches.keys()
+      .then(names => Promise.all(names.map(n => (n.indexOf("py-course-") === 0 ? caches.delete(n) : null))))
+      .then(() => reply({ cleared: true }))
+      .catch(() => reply({ cleared: false }));
   }
 });

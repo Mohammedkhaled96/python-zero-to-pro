@@ -1,0 +1,9 @@
+product
+coffee    70
+tea       32
+juice     18
+Name: qty, dtype: int64
+product  coffee  juice  tea
+branch
+Maadi        45      0   12
+Zamalek      25     18   20

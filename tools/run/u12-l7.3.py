@@ -1,0 +1,7 @@
+cur.execute("UPDATE students SET score = score + 5 WHERE city = ?", ("طنطا",))
+print(cur.rowcount)
+cur.execute("DELETE FROM students WHERE score < ?", (70,))
+print(cur.rowcount)
+conn.commit()
+student = cur.execute("SELECT name, score FROM students WHERE name = ?", ("علي",)).fetchone()
+print(student)

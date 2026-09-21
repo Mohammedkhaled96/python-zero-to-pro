@@ -1,0 +1,6 @@
+# مخرجات مؤقتة من أدوات التدقيق (بتتولّد لوحدها)
+tools/run/work/
+# ملفات نظام
+Thumbs.db
+desktop.ini
+.DS_Store

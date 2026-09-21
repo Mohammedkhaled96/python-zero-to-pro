@@ -1,0 +1,741 @@
+@@append u9-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>لاقي الخطأ المنطقي</div>
+      <p>الكود ده <strong>بيشتغل من غير أي رسالة خطأ</strong> لكن بيطلع متوسّط غلط: <code class="inl">avg = a + b / 2</code> مع a=10 و b=20 بيطلع 20.0 بدل 15. ده خطأ منطقي — صلّحه.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+a = 10 ¦¦ الرقم الأول.
+b = 20 ¦¦ الرقم التاني.
+wrong = a + b / 2 ¦¦ القسمة أولوية أعلى من الجمع ← `10 + 10`.
+right = (a + b) / 2 ¦¦ الأقواس بتفرض الجمع الأول.
+print(wrong, right) ¦¦ قارن.
+print(right == 15) ¦¦ اختبار صغير يكشف الخطأ المنطقي — بايثون عمرها ما هتقولك عليه.
+      @end
+      @out
+20.0 15.0
+True
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. نسيت <code class="inl">:</code> بعد if. نوع الخطأ؟</p>
+        <label><input type="radio"> خطأ وقت التشغيل</label>
+        <label><input type="radio"> خطأ تركيب (SyntaxError) — الملف كله مش هيشتغل</label>
+        <label><input type="radio"> خطأ منطقي</label>
+        <label><input type="radio"> مفيش خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. أصعب نوع في الاكتشاف؟</p>
+        <label><input type="radio"> SyntaxError</label>
+        <label><input type="radio"> NameError</label>
+        <label><input type="radio"> ZeroDivisionError</label>
+        <label><input type="radio"> الخطأ المنطقي — مفيش رسالة أصلًا</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. في رسالة الخطأ، أهم سطر تبدأ بيه…</p>
+        <label><input type="radio"> آخر سطر (نوع الخطأ ووصفه)</label>
+        <label><input type="radio"> أول سطر (Traceback)</label>
+        <label><input type="radio"> مش مهم</label>
+        <label><input type="radio"> السطر الأوسط</label>
+      </div>
+    </div>
+
+@@append u9-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تحويل آمن</div>
+      <p>حوّل كل نص في القائمة لرقم، ولو فشل اطبع رسالة بدل ما البرنامج يقع.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+texts = ["42", "3.5", "abc"] ¦¦ مدخلات (بدل input).
+for t in texts: ¦¦ على كل نص.
+    try: ¦¦ جرّب.
+        n = int(t) ¦¦ ممكن ترمي ValueError.
+        print(t, "←", n * 2) ¦¦ بيتنفّذ بس لو التحويل نجح.
+    except ValueError: ¦¦ نوع محدّد — مش `except:` عريانة.
+        print(t, "← مش رقم صحيح") ¦¦ رسالة مفهومة.
+print("البرنامج كمّل للآخر") ¦¦ الدليل إنه ما وقعش.
+      @end
+      @out rtl
+42 ← 84
+3.5 ← مش رقم صحيح
+abc ← مش رقم صحيح
+البرنامج كمّل للآخر
+      @end
+      <p>لاحظ إن <code class="inl">int("3.5")</code> بترمي خطأ — محتاج <code class="inl">float</code> الأول لو عايز تقبل الكسور.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. لو مفيش خطأ جوّه try، الـ except…</p>
+        <label><input type="radio"> بيتنفّذ برضه</label>
+        <label><input type="radio"> بيرمي خطأ</label>
+        <label><input type="radio"> بيتخطّى</label>
+        <label><input type="radio"> بيتنفّذ الأول</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ليه <code class="inl">except:</code> لوحدها وحشة؟</p>
+        <label><input type="radio"> بتبلع كل الأخطاء حتى أخطاء الكتابة ومش هتعرف فيه إيه</label>
+        <label><input type="radio"> أبطأ</label>
+        <label><input type="radio"> ممنوعة</label>
+        <label><input type="radio"> مش بتمسك أي خطأ</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">except ValueError as e</code> — e فيها…</p>
+        <label><input type="radio"> رقم السطر</label>
+        <label><input type="radio"> كائن الخطأ ورسالته</label>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> المدخل</label>
+      </div>
+    </div>
+
+@@append u9-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>اصطاد وسمّي</div>
+      <p>اعمل 4 أخطاء مختلفة عن قصد، امسك كل واحد، واطبع اسم نوعه.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+try: ¦¦ الأول.
+    [1, 2][5] ¦¦ فهرس برّه القائمة.
+except IndexError as e: ¦¦ نمسكه.
+    print(type(e).__name__) ¦¦ `type(e).__name__` = اسم النوع كنص.
+try: ¦¦ التاني.
+    {"a": 1}["b"] ¦¦ مفتاح مش موجود.
+except KeyError as e: ¦¦ نمسكه.
+    print(type(e).__name__, e) ¦¦ الرسالة = المفتاح الناقص.
+try: ¦¦ التالت.
+    "5" + 5 ¦¦ نص + رقم.
+except TypeError as e: ¦¦ نمسكه.
+    print(type(e).__name__) ¦¦ اسم النوع.
+try: ¦¦ الرابع.
+    print(undefined_name) ¦¦ اسم مش معرّف.
+except NameError as e: ¦¦ نمسكه.
+    print(type(e).__name__) ¦¦ اسم النوع.
+      @end
+      @out
+IndexError
+KeyError 'b'
+TypeError
+NameError
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">int("hello")</code>؟</p>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> NameError</label>
+        <label><input type="radio"> KeyError</label>
+        <label><input type="radio"> ValueError</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">len(5)</code>؟</p>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> IndexError</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">open("مش_موجود.txt")</code>؟</p>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> ملف فاضي جديد</label>
+        <label><input type="radio"> FileNotFoundError</label>
+        <label><input type="radio"> None</label>
+      </div>
+    </div>
+
+@@append u9-l4
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>آلة قسمة كاملة</div>
+      <p>لكل زوج: اقسم، ومَيّز بين القسمة على صفر والنص الغلط، واطبع النتيجة في else، وسطر ختام في finally.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+pairs = [("10", "2"), ("7", "0"), ("x", "3")] ¦¦ أزواج نصوص.
+for a, b in pairs: ¦¦ تفكيك كل زوج.
+    try: ¦¦ الجزء الخطر بس.
+        result = int(a) / int(b) ¦¦ خطأين محتملين.
+    except ZeroDivisionError: ¦¦ الأول.
+        print("ما ينفعش تقسم على صفر") ¦¦ رسالته.
+    except ValueError: ¦¦ التاني.
+        print("لازم أرقام") ¦¦ رسالته.
+    else: ¦¦ بتتنفّذ **بس** لو مفيش خطأ.
+        print("الناتج:", result) ¦¦ النتيجة.
+    finally: ¦¦ بتتنفّذ **دايمًا**.
+        print("--") ¦¦ فاصل.
+      @end
+      @out rtl
+الناتج: 5.0
+--
+ما ينفعش تقسم على صفر
+--
+لازم أرقام
+--
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">else</code> بعد try بتتنفّذ إمتى؟</p>
+        <label><input type="radio"> لما يحصل خطأ</label>
+        <label><input type="radio"> لما ما يحصلش خطأ</label>
+        <label><input type="radio"> دايمًا</label>
+        <label><input type="radio"> أبدًا</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. أنسب مكان لقفل ملف أو اتصال…</p>
+        <label><input type="radio"> finally</label>
+        <label><input type="radio"> else</label>
+        <label><input type="radio"> except</label>
+        <label><input type="radio"> قبل try</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. تمسك نوعين بنفس المعالجة…</p>
+        <label><input type="radio"> except ValueError or TypeError:</label>
+        <label><input type="radio"> except ValueError and TypeError:</label>
+        <label><input type="radio"> except [ValueError, TypeError]:</label>
+        <label><input type="radio"> except (ValueError, TypeError):</label>
+      </div>
+    </div>
+
+@@append u9-l5
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>منظّف بيانات</div>
+      <p>عندك قراءات حرارة من جهاز، بعضها بايظ. اجمع السليم، وعدّ البايظ، واطبع المتوسّط.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+readings = ["21.5", "ERR", "23", "", "22.5", "n/a"] ¦¦ بيانات حقيقية نادرًا ما بتبقى نضيفة.
+good = [] ¦¦ القراءات السليمة.
+bad = 0 ¦¦ عدّاد البايظ.
+for r in readings: ¦¦ على كل قراءة.
+    try: ¦¦ جرّب.
+        good.append(float(r)) ¦¦ `float("")` برضه بترمي ValueError.
+    except ValueError: ¦¦ القراءة بايظة.
+        bad += 1 ¦¦ نعدّها ونكمّل — مش نوقف.
+print("سليم:", good) ¦¦ القائمة.
+print("بايظ:", bad) ¦¦ العدد.
+print("المتوسّط:", sum(good) / len(good)) ¦¦ على السليم بس.
+      @end
+      @out rtl
+سليم: [21.5, 23.0, 22.5]
+بايظ: 3
+المتوسّط: 22.333333333333332
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. try <strong>جوّه</strong> الحلقة معناها…</p>
+        <label><input type="radio"> أول خطأ بيوقف الحلقة كلها</label>
+        <label><input type="radio"> الحلقة مش بتشتغل</label>
+        <label><input type="radio"> كل عنصر ليه فرصة مستقلّة، والخطأ بيأثر على عنصره بس</label>
+        <label><input type="radio"> مفيش فرق عن برّه الحلقة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. في نمط «اسأل لحد ما يجاوب صح»، break بتيجي…</p>
+        <label><input type="radio"> بعد السطر اللي ممكن يفشل، جوّه try</label>
+        <label><input type="radio"> جوّه except</label>
+        <label><input type="radio"> قبل try</label>
+        <label><input type="radio"> في finally</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">float("")</code>؟</p>
+        <label><input type="radio"> 0.0</label>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> TypeError</label>
+      </div>
+    </div>
+
+@@append u11-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>أول دالتين</div>
+      <p>عرّف دالة بترسم خط، ودالة بتطبع عنوان بين خطّين وبتستخدم الأولى.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def line(): ¦¦ تعريف — مفيش حاجة بتتنفّذ دلوقتي.
+    print("-" * 12) ¦¦ جسم الدالة.
+ ¦¦
+def title(): ¦¦ دالة بتنادي دالة.
+    line() ¦¦ إعادة استخدام.
+    print("  تقرير اليوم") ¦¦ العنوان.
+    line() ¦¦ تاني.
+ ¦¦
+title() ¦¦ **الاستدعاء** هو اللي بيشغّل.
+print(type(line)) ¦¦ الدالة نفسها كائن من نوع function.
+      @end
+      @out
+------------
+  تقرير اليوم
+------------
+<class 'function'>
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. كتبت <code class="inl">def hello(): print("hi")</code> ومعملتش حاجة تانية. الناتج؟</p>
+        <label><input type="radio"> hi</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> hello</label>
+        <label><input type="radio"> مفيش — الدالة ما اتنادتش</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">hello</code> من غير أقواس…</p>
+        <label><input type="radio"> بتشغّل الدالة</label>
+        <label><input type="radio"> بتشير للدالة نفسها من غير تشغيل</label>
+        <label><input type="radio"> خطأ دايمًا</label>
+        <label><input type="radio"> بترجّع None</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ناديت دالة قبل سطر تعريفها في الملف…</p>
+        <label><input type="radio"> NameError</label>
+        <label><input type="radio"> بتشتغل عادي</label>
+        <label><input type="radio"> SyntaxError</label>
+        <label><input type="radio"> تحذير بس</label>
+      </div>
+    </div>
+
+@@append u11-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>صانع الوسوم</div>
+      <p>دالة بتلفّ نص في وسم HTML، الوسم الافتراضي <code class="inl">p</code>. جرّبها بالموضع وبالاسم.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def make_tag(text, tag="p"): ¦¦ `text` إجباري، `tag` ليه قيمة افتراضية.
+    print(f"<{tag}>{text}</{tag}>") ¦¦ بناء الوسم.
+ ¦¦
+make_tag("أهلًا") ¦¦ الافتراضي.
+make_tag("عنوان", "h1") ¦¦ بالموضع.
+make_tag(tag="b", text="مهم") ¦¦ بالاسم — الترتيب مش مهم.
+      @end
+      @out
+<p>أهلًا</p>
+<h1>عنوان</h1>
+<b>مهم</b>
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">def f(a=1, b):</code>؟</p>
+        <label><input type="radio"> سليم</label>
+        <label><input type="radio"> b بتاخد 1</label>
+        <label><input type="radio"> SyntaxError — الافتراضي لازم يبقى بعد الإجباري</label>
+        <label><input type="radio"> TypeError وقت الاستدعاء</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">def f(x): ...</code> ثم <code class="inl">f()</code>؟</p>
+        <label><input type="radio"> TypeError: missing argument</label>
+        <label><input type="radio"> x = None</label>
+        <label><input type="radio"> x = 0</label>
+        <label><input type="radio"> مفيش مشكلة</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. الـ parameter هو…</p>
+        <label><input type="radio"> القيمة اللي بتبعتها</label>
+        <label><input type="radio"> ناتج الدالة</label>
+        <label><input type="radio"> اسم الدالة</label>
+        <label><input type="radio"> الاسم المكتوب في التعريف</label>
+      </div>
+    </div>
+
+@@append u11-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>print ولّا return؟</div>
+      <p>دالتين لمساحة المستطيل: واحدة بتطبع وواحدة بترجّع. حاول تستخدم الاتنين في حساب.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def area_print(w, h): ¦¦ بتطبع بس.
+    print(w * h) ¦¦ القيمة بتروح للشاشة وبتختفي.
+ ¦¦
+def area_return(w, h): ¦¦ بترجّع.
+    return w * h ¦¦ القيمة بترجع للي نادى.
+ ¦¦
+x = area_print(3, 4) ¦¦ بتطبع 12 ... بس x = None.
+print("x =", x) ¦¦ الدليل.
+total = area_return(3, 4) + area_return(2, 5) ¦¦ نقدر نبني على الناتج.
+print("المجموع =", total) ¦¦ 12 + 10.
+      @end
+      @out
+12
+x = None
+المجموع = 22
+      @end
+      <p>لو جرّبت <code class="inl">area_print(3, 4) + 1</code> هتاخد <code class="inl">TypeError</code> لأن None + 1 مش معرّفة.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. دالة مفيهاش return بترجّع…</p>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> ""</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. السطر اللي بعد return جوّه الدالة…</p>
+        <label><input type="radio"> بيتنفّذ عادي</label>
+        <label><input type="radio"> بيتنفّذ لو فيه print</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> مش بيتنفّذ — return بتخرج فورًا</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">def f(): return 1, 2</code> — <code class="inl">f()</code>؟</p>
+        <label><input type="radio"> (1, 2)</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+    </div>
+
+@@append u11-l4
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تتبّع النطاق</div>
+      <p>توقّع كل سطر — وبعدين شوف الطريقة الأنضف من <code class="inl">global</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+count = 0 ¦¦ متغيّر عام.
+ ¦¦
+def local_only(): ¦¦ دالة.
+    count = 99 ¦¦ ده متغيّر **محلّي جديد** بنفس الاسم — مش بيلمس العام.
+    return count ¦¦ بيرجّع المحلّي.
+ ¦¦
+def with_global(): ¦¦ دالة بتعدّل العام.
+    global count ¦¦ تصريح صريح.
+    count += 1 ¦¦ تعديل العام.
+ ¦¦
+def cleaner(value): ¦¦ الأنضف: خُد القيمة كوسيط…
+    return value + 1 ¦¦ …ورجّع الجديدة.
+ ¦¦
+print(local_only(), count) ¦¦ 99 من الدالة، والعام لسه 0.
+with_global() ¦¦ بيعدّل العام.
+print(count) ¦¦ 1.
+count = cleaner(count) ¦¦ اللي بينادي هو اللي بيقرّر يحفظ — أوضح وأسهل في الاختبار.
+print(count) ¦¦ 2.
+      @end
+      @out
+99 0
+1
+2
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. متغيّر اتعرّف جوّه دالة، وحاولت تطبعه برّاها…</p>
+        <label><input type="radio"> بيطبع قيمته</label>
+        <label><input type="radio"> بيطبع None</label>
+        <label><input type="radio"> NameError</label>
+        <label><input type="radio"> بيطبع 0</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. الدالة تقدر <strong>تقرا</strong> متغيّر عام من غير global؟</p>
+        <label><input type="radio"> أيوه — القراءة مسموحة، التعديل هو اللي محتاج global</label>
+        <label><input type="radio"> لأ خالص</label>
+        <label><input type="radio"> بس لو رقم</label>
+        <label><input type="radio"> بس جوّه حلقة</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">x = 5</code> ثم <code class="inl">def f(): x += 1</code> ثم <code class="inl">f()</code>؟</p>
+        <label><input type="radio"> x بقت 6</label>
+        <label><input type="radio"> UnboundLocalError</label>
+        <label><input type="radio"> NameError</label>
+        <label><input type="radio"> x لسه 5 من غير خطأ</label>
+      </div>
+    </div>
+
+@@append u12-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تلات أوضاع</div>
+      <p>اكتب ملف بـ <code class="inl">"w"</code>، زوّد عليه بـ <code class="inl">"a"</code>، اقراه بـ <code class="inl">"r"</code>، وجرّب <code class="inl">"x"</code> على ملف موجود.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+with open("notes.txt", "w", encoding="utf-8") as f: ¦¦ `w` بتنشئ الملف أو **تمسح** محتواه.
+    f.write("السطر الأول\n") ¦¦ كتابة.
+with open("notes.txt", "a", encoding="utf-8") as f: ¦¦ `a` بتزوّد في الآخر.
+    f.write("السطر التاني\n") ¦¦ إضافة.
+with open("notes.txt", "r", encoding="utf-8") as f: ¦¦ `r` قراءة (الافتراضي).
+    print(f.read(), end="") ¦¦ المحتوى كله؛ `end=""` لأن آخره سطر جديد بالفعل.
+print(f.closed) ¦¦ `with` قفلت الملف أوتوماتيك.
+try: ¦¦ `x` = إنشاء فقط.
+    open("notes.txt", "x") ¦¦ الملف موجود ← خطأ (حماية من المسح بالغلط).
+except FileExistsError: ¦¦ نمسكه.
+    print("الملف موجود — x رفضت تمسحه") ¦¦ رسالة.
+      @end
+      @out rtl
+السطر الأول
+السطر التاني
+True
+الملف موجود — x رفضت تمسحه
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. فتحت ملف فيه بيانات مهمة بـ <code class="inl">"w"</code>…</p>
+        <label><input type="radio"> بيزوّد في الآخر</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> بيفتح للقراءة</label>
+        <label><input type="radio"> المحتوى القديم اتمسح</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ميزة <code class="inl">with</code> الأساسية؟</p>
+        <label><input type="radio"> بتقفل الملف حتى لو حصل خطأ</label>
+        <label><input type="radio"> أسرع في القراءة</label>
+        <label><input type="radio"> بتعمل نسخة احتياطية</label>
+        <label><input type="radio"> بتشفّر الملف</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. ليه نكتب <code class="inl">encoding="utf-8"</code>؟</p>
+        <label><input type="radio"> إجباري في بايثون</label>
+        <label><input type="radio"> بيصغّر الملف</label>
+        <label><input type="radio"> عشان العربي يتقري صح على كل الأنظمة</label>
+        <label><input type="radio"> مالهاش لازمة</label>
+      </div>
+    </div>
+
+@@append u12-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>عدّاد سطور وكلمات</div>
+      <p>اكتب ملف صغير، وبعدين اقراه سطر سطر: عدّ السطور غير الفاضية والكلمات، واطبع أطول سطر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+with open("poem.txt", "w", encoding="utf-8") as f: ¦¦ تجهيز ملف للتجربة.
+    f.write("البرمجة متعة\n\nوبايثون لغة سهلة جدا\nاتعلم كل يوم\n") ¦¦ فيه سطر فاضي.
+lines = 0 ¦¦ عدّاد السطور.
+words = 0 ¦¦ عدّاد الكلمات.
+longest = "" ¦¦ أطول سطر.
+with open("poem.txt", encoding="utf-8") as f: ¦¦ القراءة (الوضع الافتراضي r).
+    for line in f: ¦¦ الملف قابل للمرور سطر سطر — موفّر للذاكرة.
+        line = line.strip() ¦¦ نشيل `\n` والمسافات.
+        if not line: ¦¦ سطر فاضي؟
+            continue ¦¦ نتخطّاه.
+        lines += 1 ¦¦ عدّ.
+        words += len(line.split()) ¦¦ كلمات السطر.
+        if len(line) > len(longest): ¦¦ أطول؟
+            longest = line ¦¦ نحفظه.
+print(lines, words) ¦¦ النتيجة.
+print(longest) ¦¦ أطول سطر.
+      @end
+      @out rtl
+3 9
+وبايثون لغة سهلة جدا
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">f.readlines()</code> بترجّع…</p>
+        <label><input type="radio"> نص واحد</label>
+        <label><input type="radio"> قائمة سطور، كل سطر بـ <code class="inl">\n</code> في آخره</label>
+        <label><input type="radio"> أول سطر بس</label>
+        <label><input type="radio"> عدد السطور</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. ملف 5 جيجا — أنسب طريقة للقراءة؟</p>
+        <label><input type="radio"> f.read()</label>
+        <label><input type="radio"> f.readlines()</label>
+        <label><input type="radio"> for line in f</label>
+        <label><input type="radio"> مستحيل</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. بعد <code class="inl">f.read()</code> مرّة، <code class="inl">f.read()</code> تاني بترجّع…</p>
+        <label><input type="radio"> "" — المؤشّر وصل للآخر</label>
+        <label><input type="radio"> نفس المحتوى</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> None</label>
+      </div>
+    </div>
+
+@@append u12-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تقرير درجات لملف</div>
+      <p>اكتب تقرير من قاموس درجات لملف (سطر لكل طالب)، وبعدين اقراه للتأكيد.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+grades = {"سارة": 92, "علي": 67, "منى": 78} ¦¦ البيانات.
+with open("report.txt", "w", encoding="utf-8") as f: ¦¦ ملف جديد.
+    f.write("تقرير الدرجات\n") ¦¦ `write` مش بتضيف سطر جديد لوحدها — لازم `\n`.
+    for name, g in grades.items(): ¦¦ على كل طالب.
+        status = "ناجح" if g >= 70 else "محتاج مراجعة" ¦¦ الحالة.
+        print(f"{name}: {g} ({status})", file=f) ¦¦ `print(..., file=f)` بتكتب في الملف ومعاها `\n`.
+    f.writelines(["---\n", "النهاية\n"]) ¦¦ `writelines` بتكتب قائمة نصوص (من غير ما تضيف `\n`).
+with open("report.txt", encoding="utf-8") as f: ¦¦ القراءة للتأكيد.
+    print(f.read(), end="") ¦¦ المحتوى.
+      @end
+      @out rtl
+تقرير الدرجات
+سارة: 92 (ناجح)
+علي: 67 (محتاج مراجعة)
+منى: 78 (ناجح)
+---
+النهاية
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="0">
+        <p class="qt">1. <code class="inl">f.write(5)</code>؟</p>
+        <label><input type="radio"> TypeError — write بتقبل نصوص بس</label>
+        <label><input type="radio"> بتكتب 5</label>
+        <label><input type="radio"> بتكتب 5 أسطر</label>
+        <label><input type="radio"> مفيش حاجة</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">f.writelines(["a", "b"])</code> بتكتب…</p>
+        <label><input type="radio"> a ثم b في سطرين</label>
+        <label><input type="radio"> ['a', 'b']</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> ab في سطر واحد</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">f.write("hi")</code> بترجّع…</p>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> عدد الحروف المكتوبة (2)</label>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> "hi"</label>
+      </div>
+    </div>
+
+@@append u14-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>بيئة مشروع نضيفة</div>
+      <p>اكتب في الطرفية خطوات: بيئة افتراضية، تفعيلها، تسطيب مكتبة، حفظ المتطلّبات. وبعدين افحص من بايثون هل مكتبة موجودة من غير ما تستوردها.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code terminal norun
+python -m venv .venv ¦¦ إنشاء بيئة معزولة للمشروع في فولدر `.venv`.
+.venv\Scripts\activate ¦¦ تفعيلها على ويندوز (على ماك/لينكس: `source .venv/bin/activate`).
+python -m pip install requests ¦¦ `python -m pip` بيضمن إن pip تبع نفس البايثون اللي في البيئة.
+python -m pip list ¦¦ المكتبات المتسطّبة.
+python -m pip freeze > requirements.txt ¦¦ حفظ الإصدارات بالظبط في ملف.
+python -m pip install -r requirements.txt ¦¦ على جهاز تاني: تسطيب نفس القائمة.
+      @end
+      @code run
+import importlib.util ¦¦ أداة بتدوّر على المكتبات.
+ ¦¦
+for name in ["json", "not_a_real_package_xyz"]: ¦¦ واحدة مدمجة وواحدة مش موجودة.
+    found = importlib.util.find_spec(name) is not None ¦¦ `find_spec` بترجّع None لو مش لاقيها — من غير ما تستورد.
+    print(name, "موجودة" if found else "مش متسطّبة") ¦¦ النتيجة.
+      @end
+      @out rtl
+json موجودة
+not_a_real_package_xyz مش متسطّبة
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">ModuleNotFoundError: No module named 'requests'</code> — الحل؟</p>
+        <label><input type="radio"> تعيد تسطيب بايثون</label>
+        <label><input type="radio"> تغيّر اسم الملف</label>
+        <label><input type="radio"> pip install requests (في نفس البيئة)</label>
+        <label><input type="radio"> import requests مرّتين</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. فايدة البيئة الافتراضية؟</p>
+        <label><input type="radio"> بتسرّع بايثون</label>
+        <label><input type="radio"> كل مشروع بمكتباته وإصداراته من غير تعارض</label>
+        <label><input type="radio"> بتحمي من الفيروسات</label>
+        <label><input type="radio"> إجبارية للتشغيل</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">pip freeze > requirements.txt</code> بتعمل…</p>
+        <label><input type="radio"> بتسطّب المكتبات</label>
+        <label><input type="radio"> بتمسح المكتبات</label>
+        <label><input type="radio"> بتحدّث pip</label>
+        <label><input type="radio"> بتحفظ أسماء وإصدارات المكتبات المتسطّبة في ملف</label>
+      </div>
+    </div>
+
+@@append u14-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>اختار المكتبة المناسبة</div>
+      <p>اعمل قاموس «مهمة ← مكتبة» من الجولة، واطبع اقتراح لكل مهمة — ولو المهمة مش معروفة اطبع نصيحة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+tools = { ¦¦ قاموس المهام والمكتبات.
+    "نص لصوت": "gTTS", ¦¦ تحويل النص لكلام.
+    "ترجمة": "deep-translator", ¦¦ الترجمة.
+    "نص من صورة": "pytesseract", ¦¦ OCR.
+    "صوت لنص": "openai-whisper", ¦¦ التفريغ الصوتي.
+    "طلبات ويب": "requests", ¦¦ الـ APIs.
+} ¦¦ نهاية القاموس.
+for task in ["ترجمة", "صوت لنص", "تعديل فيديو"]: ¦¦ مهام مطلوبة.
+    lib = tools.get(task) ¦¦ `get` بترجّع None بدل KeyError.
+    if lib: ¦¦ لقيناها؟
+        print(f"{task}: pip install {lib}") ¦¦ أمر التسطيب.
+    else: ¦¦ مش في القاموس.
+        print(f"{task}: دوّر على pypi.org واقرا التوثيق") ¦¦ نصيحة.
+      @end
+      @out rtl
+ترجمة: pip install deep-translator
+صوت لنص: pip install openai-whisper
+تعديل فيديو: دوّر على pypi.org واقرا التوثيق
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="0">
+        <p class="qt">1. pytesseract محتاجة إيه غير pip؟</p>
+        <label><input type="radio"> برنامج Tesseract متسطّب على النظام</label>
+        <label><input type="radio"> مفتاح API</label>
+        <label><input type="radio"> مفيش</label>
+        <label><input type="radio"> كارت شاشة</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. أصغر نموذج Whisper من دول…</p>
+        <label><input type="radio"> large</label>
+        <label><input type="radio"> medium</label>
+        <label><input type="radio"> base</label>
+        <label><input type="radio"> tiny</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. قبل ما تستخدم مكتبة خارجية جديدة، أهم خطوة…</p>
+        <label><input type="radio"> تنسخ أي كود من النت</label>
+        <label><input type="radio"> تقرا التوثيق وتتأكّد إنها متحدّثة ومشهورة</label>
+        <label><input type="radio"> تسطّب أقدم إصدار</label>
+        <label><input type="radio"> تسطّبها بـ sudo</label>
+      </div>
+    </div>

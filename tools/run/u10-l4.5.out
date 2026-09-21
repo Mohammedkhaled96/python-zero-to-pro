@@ -1,0 +1,5 @@
+['git', 'python', 'sql']
+['git', 'python']
+KeyError: 'java'
+1
+set()

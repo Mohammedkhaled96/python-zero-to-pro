@@ -1,0 +1,1076 @@
+@@append u4-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>توقّع True ولّا False</div>
+      <p>توقّع كل سطر قبل التشغيل.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+age = 17 ¦¦ عمر.
+has_permission = True ¦¦ معاه إذن.
+print(age >= 18) ¦¦ مقارنة ← False.
+print(age >= 18 or has_permission) ¦¦ `or` بتكفيها حاجة واحدة صح.
+print(13 <= age <= 19) ¦¦ مقارنة متسلسلة: مراهق؟
+print("a" in "banana", "z" not in "banana") ¦¦ `in` جوّه النصوص.
+print(bool(""), bool("0"), bool(0)) ¦¦ النص الفاضي والصفر Falsy، لكن `"0"` نص **مش فاضي** ← True.
+      @end
+      @out
+False
+True
+True
+True True
+False True False
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="0">
+        <p class="qt">1. <code class="inl">not True and False</code>؟</p>
+        <label><input type="radio"> False</label>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> None</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. <code class="inl">5 == "5"</code>؟</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> False — نوعين مختلفين</label>
+        <label><input type="radio"> "5"</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. أنهي قيمة Truthy؟</p>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> " " (مسافة)</label>
+        <label><input type="radio"> ""</label>
+        <label><input type="radio"> None</label>
+      </div>
+    </div>
+
+@@append u4-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>مستشار الجو</div>
+      <p>حسب درجة الحرارة اطبع نصيحة من 3، وبعدين حدّد هل الرقم زوجي بالشرط المختصر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+temp = 24 ¦¦ درجة الحرارة.
+if temp >= 30: ¦¦ الشرط الأعلى الأول.
+    print("حر — اشرب مية كتير") ¦¦ فرع.
+elif temp >= 20: ¦¦ يتفحص بس لو اللي فوقه False.
+    print("جو لطيف") ¦¦ ده اللي هيتنفّذ.
+else: ¦¦ أي حاجة تانية.
+    print("برد — البس جاكيت") ¦¦ فرع.
+label = "زوجي" if temp % 2 == 0 else "فردي" ¦¦ الشرط المختصر: قيمة حسب شرط في سطر.
+print(label) ¦¦ النتيجة.
+      @end
+      @out rtl
+جو لطيف
+زوجي
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. في <code class="inl">if/elif/else</code>، كام فرع ممكن يتنفّذ؟</p>
+        <label><input type="radio"> كل الفروع الصح</label>
+        <label><input type="radio"> اتنين</label>
+        <label><input type="radio"> ولا واحد دايمًا</label>
+        <label><input type="radio"> فرع واحد بس (أول واحد صح)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. نسيت المسافة البادئة تحت if. النتيجة؟</p>
+        <label><input type="radio"> IndentationError</label>
+        <label><input type="radio"> الكود بيشتغل عادي</label>
+        <label><input type="radio"> السطر بيتنفّذ مرّتين</label>
+        <label><input type="radio"> تحذير بس</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. الشرط المختصر الصحيح…</p>
+        <label><input type="radio"> if x > 0 "موجب" else "سالب"</label>
+        <label><input type="radio"> x > 0 ? "موجب" : "سالب"</label>
+        <label><input type="radio"> "موجب" if x > 0 else "سالب"</label>
+        <label><input type="radio"> "موجب" else "سالب" if x > 0</label>
+      </div>
+    </div>
+
+@@append u4-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>دخول بمستويين</div>
+      <p>اكتب فحص دخول بشرطين متداخلين (مستخدم ثم كلمة سر)، وبعدين اكتبه بشرط واحد لو الرسايل مش مهم تفرق.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+username = "admin" ¦¦ المستخدم.
+password = "1234" ¦¦ كلمة السر (للتجربة بس!).
+if username == "admin": ¦¦ المستوى الأول.
+    if password == "1234": ¦¦ المستوى التاني — بيتفحص بس لو الأول صح.
+        print("أهلًا يا مدير") ¦¦ الاتنين صح.
+    else: ¦¦ المستخدم صح وكلمة السر غلط.
+        print("كلمة السر غلط") ¦¦ رسالة مخصّصة.
+else: ¦¦ المستخدم نفسه غلط.
+    print("مستخدم مش معروف") ¦¦ رسالة.
+if username == "admin" and password == "1234": ¦¦ نفس الفحص مسطّح — أوضح لما مش محتاج رسالة لكل حالة.
+    print("نفس النتيجة بشرط واحد") ¦¦ الفرع.
+      @end
+      @out rtl
+أهلًا يا مدير
+نفس النتيجة بشرط واحد
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. الـ if الداخلية بتتفحص إمتى؟</p>
+        <label><input type="radio"> دايمًا</label>
+        <label><input type="radio"> بس لو شرط الـ if الخارجية صح</label>
+        <label><input type="radio"> قبل الخارجية</label>
+        <label><input type="radio"> لو الخارجية غلط</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. إمتى الأفضل تستبدل التداخل بـ <code class="inl">and</code>؟</p>
+        <label><input type="radio"> مستحيل</label>
+        <label><input type="radio"> لما الشروط كتير أوي بس</label>
+        <label><input type="radio"> لما كل فرع محتاج رسالة مختلفة</label>
+        <label><input type="radio"> لما النتيجة واحدة ومش محتاج تفرّق بين أسباب الفشل</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. التداخل العميق (4 مستويات) غالبًا…</p>
+        <label><input type="radio"> صعب القراءة ومحتاج تبسيط</label>
+        <label><input type="radio"> أسرع في التنفيذ</label>
+        <label><input type="radio"> ممنوع في بايثون</label>
+        <label><input type="radio"> مطلوب دايمًا</label>
+      </div>
+    </div>
+
+@@append u5-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>سلة الفاكهة</div>
+      <p>اعمل قائمة فاكهة، اطبع أولها وآخرها، غيّر عنصر، وافحص وجود عنصر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+fruits = ["تفاح", "موز", "عنب"] ¦¦ قائمة.
+print(fruits[0], fruits[-1]) ¦¦ أول وآخر عنصر.
+fruits[1] = "مانجو" ¦¦ القوائم قابلة للتعديل (عكس النصوص).
+print(fruits) ¦¦ بعد التعديل.
+print("موز" in fruits, len(fruits)) ¦¦ الموز اتشال، والطول لسه 3.
+mixed = [1, "اتنين", 3.0, True] ¦¦ القائمة بتقبل أنواع مختلفة.
+print(mixed[1:3]) ¦¦ التقطيع بيرجّع قائمة جديدة.
+      @end
+      @out
+تفاح عنب
+['تفاح', 'مانجو', 'عنب']
+False 3
+['اتنين', 3.0]
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">[10, 20, 30][-2]</code>؟</p>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> 30</label>
+        <label><input type="radio"> 20</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">lst = [1, 2]</code> ثم <code class="inl">lst[0] = 9</code>؟</p>
+        <label><input type="radio"> lst بقت [9, 2]</label>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> lst بقت [9, 1, 2]</label>
+        <label><input type="radio"> ما بيحصلش حاجة</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">len([[1, 2], [3]])</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 5</label>
+      </div>
+    </div>
+
+@@append u5-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>قائمة المشتريات</div>
+      <p>توقّع شكل القائمة بعد كل العمليات.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+cart = ["عيش", "لبن"] ¦¦ البداية.
+cart.append("جبنة") ¦¦ في الآخر.
+cart.insert(0, "بيض") ¦¦ في الأول.
+cart.extend(["شاي", "سكر"]) ¦¦ عنصرين في الآخر (مش قائمة جوّه قائمة).
+removed = cart.pop() ¦¦ بتشيل **الأخير** وترجّعه.
+cart.remove("لبن") ¦¦ بتشيل بالقيمة.
+print(cart) ¦¦ النتيجة.
+print("شلنا:", removed) ¦¦ القيمة اللي رجعت من pop.
+      @end
+      @out rtl
+['بيض', 'عيش', 'جبنة', 'شاي']
+شلنا: سكر
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">a = [1]</code> ثم <code class="inl">a.append([2, 3])</code> — a؟</p>
+        <label><input type="radio"> [1, 2, 3]</label>
+        <label><input type="radio"> [1, 2]</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> [1, [2, 3]]</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">[1, 2].remove(5)</code>؟</p>
+        <label><input type="radio"> ما بيحصلش حاجة</label>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> IndexError</label>
+        <label><input type="radio"> بترجّع -1</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. الفرق بين <code class="inl">pop()</code> و <code class="inl">remove(x)</code>؟</p>
+        <label><input type="radio"> pop بالفهرس وبترجّع العنصر، remove بالقيمة</label>
+        <label><input type="radio"> مفيش فرق</label>
+        <label><input type="radio"> remove أسرع دايمًا</label>
+        <label><input type="radio"> pop بتمسح كل القائمة</label>
+      </div>
+    </div>
+
+@@append u5-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>ترتيب الدرجات</div>
+      <p>رتّب من غير ما تغيّر الأصل، وبعدين رتّب الأصل تنازليًا، واحسب الإحصائيات، ورتّب أسماء من غير فرق بين الكبير والصغير.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+scores = [72, 95, 60, 88] ¦¦ درجات.
+print(sorted(scores)) ¦¦ نسخة مرتّبة.
+print(scores) ¦¦ الأصل زي ما هو.
+scores.sort(reverse=True) ¦¦ ترتيب الأصل نفسه تنازليًا (وبترجّع None).
+print(scores) ¦¦ اتغيّر.
+print(max(scores), min(scores), sum(scores) / len(scores)) ¦¦ الأعلى والأقل والمتوسّط.
+names = ["bob", "Ali", "alex"] ¦¦ أسماء بحالات مختلفة.
+print(sorted(names)) ¦¦ الحروف الكبيرة قبل الصغيرة في الترتيب الافتراضي.
+print(sorted(names, key=str.lower)) ¦¦ قارن النسخة الصغيرة من كل اسم.
+      @end
+      @out
+[60, 72, 88, 95]
+[72, 95, 60, 88]
+[95, 88, 72, 60]
+95 60 78.75
+['Ali', 'alex', 'bob']
+['alex', 'Ali', 'bob']
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">x = [3, 1].sort()</code> — x؟</p>
+        <label><input type="radio"> [1, 3]</label>
+        <label><input type="radio"> [3, 1]</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. عايز نسخة مرتّبة والأصل يفضل زي ما هو…</p>
+        <label><input type="radio"> sorted(lst)</label>
+        <label><input type="radio"> lst.sort()</label>
+        <label><input type="radio"> lst.reverse()</label>
+        <label><input type="radio"> lst[::-1]</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">sum([1, 2, 3]) / len([1, 2, 3])</code>؟</p>
+        <label><input type="radio"> 6</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 2.0</label>
+      </div>
+    </div>
+
+@@append u5-l4
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>جدول صغير</div>
+      <p>وصّل لعناصر جدول بفهرسين وعدّل واحد.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+grid = [[1, 2, 3], [4, 5, 6]] ¦¦ صفّين × 3 أعمدة.
+print(grid[1][2]) ¦¦ الصف الثاني ثم العمود التالت.
+grid[0][0] = 10 ¦¦ تعديل خانة.
+print(grid) ¦¦ بعد التعديل.
+print(len(grid), len(grid[0])) ¦¦ عدد الصفوف وعدد أعمدة الصف الأول.
+students = [["سارة", 90], ["علي", 75]] ¦¦ جدول بيانات: كل صف [اسم، درجة].
+print(students[1][0], students[0][1]) ¦¦ اسم الطالب التاني ودرجة الأولى.
+      @end
+      @out
+6
+[[10, 2, 3], [4, 5, 6]]
+2 3
+علي 90
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">[[1, 2], [3, 4]][1][0]</code>؟</p>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> [3, 4]</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. <code class="inl">m = [[0, 0], [0, 0]]</code> ثم <code class="inl">m[0].append(5)</code> — m؟</p>
+        <label><input type="radio"> [[0, 0], [0, 0], 5]</label>
+        <label><input type="radio"> [[0, 0, 5], [0, 0, 5]]</label>
+        <label><input type="radio"> [[0, 0, 5], [0, 0]]</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. الفهرس الأول في <code class="inl">grid[i][j]</code> بيحدّد…</p>
+        <label><input type="radio"> الصف</label>
+        <label><input type="radio"> العمود</label>
+        <label><input type="radio"> القيمة</label>
+        <label><input type="radio"> الطول</label>
+      </div>
+    </div>
+
+@@append u5-l5
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>سطحي ولّا عميق؟</div>
+      <p>توقّع السطرين قبل التشغيل.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import copy ¦¦ مكتبة النسخ.
+ ¦¦
+menu = [["قهوة", 20], ["شاي", 10]] ¦¦ قائمة قوائم.
+shallow = menu.copy() ¦¦ نسخة سطحية: قائمة خارجية جديدة بنفس القوائم الداخلية.
+deep = copy.deepcopy(menu) ¦¦ نسخة عميقة: كل حاجة جديدة.
+menu[0][1] = 25 ¦¦ تعديل **جوّه** قائمة داخلية.
+print(shallow[0][1], deep[0][1]) ¦¦ السطحية شايفة التعديل (نفس القائمة الداخلية)، والعميقة لأ.
+shallow.append(["عصير", 15]) ¦¦ إضافة للقائمة الخارجية للنسخة.
+print(len(menu), len(shallow)) ¦¦ القائمة الخارجية مستقلّة فعلًا.
+      @end
+      @out
+25 20
+2 3
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. أنهي طريقة <strong>مش</strong> بتنسخ القائمة؟</p>
+        <label><input type="radio"> a.copy()</label>
+        <label><input type="radio"> list(a)</label>
+        <label><input type="radio"> a[:]</label>
+        <label><input type="radio"> b = a</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. قائمة فيها قوائم، ومحتاج نسخة مستقلّة تمامًا…</p>
+        <label><input type="radio"> a.copy()</label>
+        <label><input type="radio"> copy.deepcopy(a)</label>
+        <label><input type="radio"> a[:]</label>
+        <label><input type="radio"> مستحيل</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">a is b</code> بتسأل عن…</p>
+        <label><input type="radio"> هل الاتنين نفس الكائن في الذاكرة</label>
+        <label><input type="radio"> هل القيم متساوية</label>
+        <label><input type="radio"> هل النوع واحد</label>
+        <label><input type="radio"> هل الطول واحد</label>
+      </div>
+    </div>
+
+@@append u5-l6
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>جولة في المرجع</div>
+      <p>استخدم <code class="inl">count</code> و <code class="inl">index</code> و <code class="inl">reverse</code> و <code class="inl">any</code> و <code class="inl">all</code> — وخلّي بالك من آخر سطر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+nums = [5, 3, 8, 3, 1] ¦¦ قائمة.
+print(nums.count(3), nums.index(8)) ¦¦ مرّات ظهور 3، ومكان أول 8.
+nums.reverse() ¦¦ عكس في المكان.
+print(nums) ¦¦ بعد العكس.
+print(any(nums), all(nums)) ¦¦ فيه رقم مش صفر؟ وكلهم مش صفر؟
+nums.clear() ¦¦ تفريغ.
+print(nums, all(nums)) ¦¦ ⚠️ `all` على قائمة **فاضية** بترجّع True («مفيش عنصر كاذب») — خلّي بالك منها في الشروط.
+      @end
+      @out
+2 2
+[1, 3, 8, 3, 5]
+True True
+[] True
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">["a", "b", "a"].index("a")</code>؟</p>
+        <label><input type="radio"> [0, 2]</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> 1</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">any([])</code>؟</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> False</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">nums[1:3] = []</code> بتعمل…</p>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> بتضيف قائمة فاضية</label>
+        <label><input type="radio"> بتفضّي القائمة كلها</label>
+        <label><input type="radio"> بتمسح العنصرين في الفهرس 1 و 2</label>
+      </div>
+    </div>
+
+@@append u6-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>مجموع وعدّ</div>
+      <p>اجمع أسعار قائمة، واعدّ الحروف المتحرّكة في كلمة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+prices = [120, 45, 300, 80] ¦¦ أسعار.
+total = 0 ¦¦ نمط التجميع: قيمة ابتدائية قبل الحلقة.
+for p in prices: ¦¦ على كل سعر.
+    total += p ¦¦ التجميع.
+print(total) ¦¦ بعد الحلقة.
+count = 0 ¦¦ عدّاد.
+for ch in "programming": ¦¦ الحلقة على نص = حرف حرف.
+    if ch in "aeiou": ¦¦ حرف متحرّك؟
+        count += 1 ¦¦ عدّ.
+print(count) ¦¦ o و a و i.
+      @end
+      @out
+545
+3
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="0">
+        <p class="qt">1. <code class="inl">for x in "hi": print(x)</code> بتطبع…</p>
+        <label><input type="radio"> h ثم i في سطرين</label>
+        <label><input type="radio"> hi</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> 0 ثم 1</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. في نمط التجميع، المتغيّر بيتعرّف…</p>
+        <label><input type="radio"> جوّه الحلقة</label>
+        <label><input type="radio"> بعد الحلقة</label>
+        <label><input type="radio"> قبل الحلقة</label>
+        <label><input type="radio"> مش مهم</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">for n in [1, 2, 3]: n = n * 2</code> — القائمة بعدها؟</p>
+        <label><input type="radio"> [2, 4, 6]</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> [1, 2, 3, 2, 4, 6]</label>
+        <label><input type="radio"> [1, 2, 3] زي ما هي</label>
+      </div>
+    </div>
+
+@@append u6-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تلات استخدامات لـ range</div>
+      <p>مجموع 1 لـ 100، الأرقام الزوجية لحد 10 في سطر، وعدّ تنازلي من 5.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+print(sum(range(1, 101))) ¦¦ `range(1, 101)` = 1 لحد 100 (النهاية مش مشمولة)، و `sum` بتجمعهم مباشرةً.
+for n in range(2, 11, 2): ¦¦ من 2 لـ 10 بخطوة 2.
+    print(n, end=" ") ¦¦ `end=" "` بتخلّي الطباعة في نفس السطر.
+print() ¦¦ سطر جديد.
+for n in range(5, 0, -1): ¦¦ خطوة سالبة: عدّ تنازلي لحد 1.
+    print(n, end=" ") ¦¦ نفس السطر.
+print("انطلق!") ¦¦ بتكمّل على نفس السطر.
+      @end
+      @out
+5050
+2 4 6 8 10
+5 4 3 2 1 انطلق!
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">list(range(3))</code>؟</p>
+        <label><input type="radio"> [1, 2, 3]</label>
+        <label><input type="radio"> [0, 1, 2]</label>
+        <label><input type="radio"> [0, 1, 2, 3]</label>
+        <label><input type="radio"> [3]</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">list(range(10, 0, -3))</code>؟</p>
+        <label><input type="radio"> [10, 7, 4, 1, 0]</label>
+        <label><input type="radio"> []</label>
+        <label><input type="radio"> [0, 3, 6, 9]</label>
+        <label><input type="radio"> [10, 7, 4, 1]</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">list(range(5, 1))</code>؟</p>
+        <label><input type="radio"> [] — الخطوة موجبة والبداية أكبر</label>
+        <label><input type="radio"> [5, 4, 3, 2]</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> [1, 2, 3, 4, 5]</label>
+      </div>
+    </div>
+
+@@append u6-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تعديل في المكان</div>
+      <p>ضاعف كل عنصر في القائمة نفسها، وبعدين لاقي <strong>مكان</strong> أكبر رقم من غير <code class="inl">max</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+nums = [4, 9, 2] ¦¦ قائمة.
+for i in range(len(nums)): ¦¦ محتاجين الفهرس عشان نعدّل.
+    nums[i] = nums[i] * 2 ¦¦ الكتابة في المكان نفسه.
+print(nums) ¦¦ القائمة اتغيّرت.
+best = 0 ¦¦ نفترض إن الأكبر في الفهرس 0.
+for i in range(len(nums)): ¦¦ نقارن كل عنصر.
+    if nums[i] > nums[best]: ¦¦ أكبر من الأفضل لحد دلوقتي؟
+        best = i ¦¦ نحفظ **مكانه**.
+print("أكبر رقم في المكان", best) ¦¦ النتيجة.
+      @end
+      @out rtl
+[8, 18, 4]
+أكبر رقم في المكان 1
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">range(len(["a", "b", "c"]))</code> بتدّي…</p>
+        <label><input type="radio"> a, b, c</label>
+        <label><input type="radio"> 1, 2, 3</label>
+        <label><input type="radio"> 0, 1, 2</label>
+        <label><input type="radio"> 3</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. إمتى تحتاج <code class="inl">range(len(lst))</code>؟</p>
+        <label><input type="radio"> دايمًا مع القوائم</label>
+        <label><input type="radio"> لما تعدّل العناصر في مكانها أو تحتاج الفهرس</label>
+        <label><input type="radio"> لما تقرا القيم بس</label>
+        <label><input type="radio"> مع النصوص بس</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. تمشي على قائمة من الآخر للأول بالفهارس…</p>
+        <label><input type="radio"> range(len(lst) - 1, -1, -1)</label>
+        <label><input type="radio"> range(len(lst), 0)</label>
+        <label><input type="radio"> range(-1, len(lst))</label>
+        <label><input type="radio"> range(len(lst), -1)</label>
+      </div>
+    </div>
+
+@@append u6-l4
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>قائمة طعام مرقّمة</div>
+      <p>اطبع الأصناف مرقّمة من 1.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+menu = ["كشري", "فول", "طعمية"] ¦¦ الأصناف.
+for i, item in enumerate(menu, start=1): ¦¦ `start=1` عشان الترقيم البشري.
+    print(f"{i}. {item}") ¦¦ الرقم والصنف.
+      @end
+      @out rtl
+1. كشري
+2. فول
+3. طعمية
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">list(enumerate("ab"))</code>؟</p>
+        <label><input type="radio"> ['a', 'b']</label>
+        <label><input type="radio"> [0, 1]</label>
+        <label><input type="radio"> [(1, 'a'), (2, 'b')]</label>
+        <label><input type="radio"> [(0, 'a'), (1, 'b')]</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">for i, x in enumerate(lst)</code> — i و x بيتملّوا إزاي؟</p>
+        <label><input type="radio"> تفكيك كل tuple (فهرس، قيمة)</label>
+        <label><input type="radio"> i القيمة و x الفهرس</label>
+        <label><input type="radio"> الاتنين نفس القيمة</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">enumerate(lst, 10)</code> — أول فهرس؟</p>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> 11</label>
+      </div>
+    </div>
+
+@@append u6-l5
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>درجات الطلاب</div>
+      <p>اطبع كل اسم مع درجته، وجرّب zip على مجموعتين بطولين مختلفين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+names = ["سارة", "علي", "منى"] ¦¦ الأسماء.
+scores = [90, 75, 88] ¦¦ الدرجات بنفس الترتيب.
+for name, score in zip(names, scores): ¦¦ عنصر من كل قائمة في كل دورة.
+    print(f"{name}: {score}") ¦¦ الطباعة.
+print(list(zip([1, 2, 3], "ab"))) ¦¦ بتقف عند الأقصر (النص حرفين) — والـ 3 بتتجاهل.
+      @end
+      @out
+سارة: 90
+علي: 75
+منى: 88
+[(1, 'a'), (2, 'b')]
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">len(list(zip([1, 2, 3], [4, 5])))</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. كل عنصر من zip بيبقى…</p>
+        <label><input type="radio"> قائمة</label>
+        <label><input type="radio"> نص</label>
+        <label><input type="radio"> رقم</label>
+        <label><input type="radio"> tuple</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. zip تقدر تاخد…</p>
+        <label><input type="radio"> أي عدد من المجموعات</label>
+        <label><input type="radio"> اتنين بس</label>
+        <label><input type="radio"> قوائم أرقام بس</label>
+        <label><input type="radio"> قوائم بنفس الطول بس</label>
+      </div>
+    </div>
+
+@@append u6-l6
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تخطّى الأصفار ووقف عند السالب</div>
+      <p>اطبع الأرقام ماعدا الأصفار، ووقّف أول ما تلاقي رقم سالب (واطبعه).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+numbers = [3, 0, 7, -2, 5] ¦¦ أرقام.
+for n in numbers: ¦¦ الحلقة.
+    if n == 0: ¦¦ صفر؟
+        continue ¦¦ اقفز للدورة الجاية من غير ما تطبع.
+    if n < 0: ¦¦ سالب؟
+        print("أول سالب:", n) ¦¦ رسالة.
+        break ¦¦ اخرج من الحلقة خالص — الـ 5 مش هتتطبع.
+    print(n) ¦¦ الأرقام العادية.
+      @end
+      @out rtl
+3
+7
+أول سالب: -2
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">continue</code> بتعمل…</p>
+        <label><input type="radio"> بتخرج من الحلقة</label>
+        <label><input type="radio"> بتوقف البرنامج</label>
+        <label><input type="radio"> بتتخطّى باقي الدورة الحالية</label>
+        <label><input type="radio"> بتعيد نفس الدورة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">for i in range(5): if i == 3: break</code> ثم <code class="inl">print(i)</code> بعد الحلقة؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. أنسب استخدام لـ break…</p>
+        <label><input type="radio"> تخطّي عنصر</label>
+        <label><input type="radio"> البحث — أول ما تلاقي المطلوب توقف</label>
+        <label><input type="radio"> تكرار الدورة</label>
+        <label><input type="radio"> تعريف دالة</label>
+      </div>
+    </div>
+
+@@append u6-l7
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>بطريقتين</div>
+      <p>ابني قائمة بالكلمات الأطول من 3 حروف بحروف كبيرة: مرّة بحلقة ومرّة بـ comprehension.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+words = ["hi", "python", "is", "great"] ¦¦ كلمات.
+long_words = [] ¦¦ الطريقة الأولى: قائمة فاضية.
+for w in words: ¦¦ الحلقة.
+    if len(w) > 3: ¦¦ الشرط.
+        long_words.append(w.upper()) ¦¦ التحويل والإضافة.
+print(long_words) ¦¦ النتيجة.
+print([w.upper() for w in words if len(w) > 3]) ¦¦ نفس المنطق في سطر: تعبير، حلقة، شرط.
+      @end
+      @out
+['PYTHON', 'GREAT']
+['PYTHON', 'GREAT']
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">[n * n for n in range(4)]</code>؟</p>
+        <label><input type="radio"> [1, 4, 9, 16]</label>
+        <label><input type="radio"> [0, 1, 2, 3]</label>
+        <label><input type="radio"> 14</label>
+        <label><input type="radio"> [0, 1, 4, 9]</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">[x for x in "abc" if x != "b"]</code>؟</p>
+        <label><input type="radio"> ['a', 'c']</label>
+        <label><input type="radio"> "ac"</label>
+        <label><input type="radio"> ['b']</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. إزالة التكرار مع الحفاظ على الترتيب بحلقة…</p>
+        <label><input type="radio"> list(set(lst))</label>
+        <label><input type="radio"> lst.sort()</label>
+        <label><input type="radio"> تضيف العنصر للنتيجة لو مش موجود فيها</label>
+        <label><input type="radio"> lst.reverse()</label>
+      </div>
+    </div>
+
+@@append u7-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تلات صيغ استيراد</div>
+      <p>استخدم <code class="inl">import</code> و <code class="inl">from … import</code> و <code class="inl">as</code> في برنامج واحد.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import math ¦¦ استيراد المكتبة كلها ← `math.sqrt`.
+from random import randint ¦¦ دالة بعينها ← `randint` مباشرةً.
+import string as s ¦¦ اسم مستعار.
+print(math.sqrt(49)) ¦¦ الجذر.
+print(1 <= randint(1, 6) <= 6) ¦¦ النتيجة عشوائية، فبنطبع فحص إنها في المدى (دايمًا True).
+print(s.digits) ¦¦ الأرقام من المكتبة بالاسم المستعار.
+      @end
+      @out
+7.0
+True
+0123456789
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. بعد <code class="inl">from math import sqrt</code> تكتب…</p>
+        <label><input type="radio"> math.sqrt(9)</label>
+        <label><input type="radio"> sqrt(9)</label>
+        <label><input type="radio"> math(sqrt(9))</label>
+        <label><input type="radio"> import sqrt(9)</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. مكان الاستيراد المفضّل…</p>
+        <label><input type="radio"> آخر الملف</label>
+        <label><input type="radio"> جوّه الحلقات</label>
+        <label><input type="radio"> أول الملف</label>
+        <label><input type="radio"> مش مهم خالص</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ليه <code class="inl">from x import *</code> مش منصوح بيها؟</p>
+        <label><input type="radio"> بتخلّط الأسماء ومش هتعرف كل دالة جاية منين</label>
+        <label><input type="radio"> أبطأ</label>
+        <label><input type="radio"> ممنوعة في بايثون</label>
+        <label><input type="radio"> مش بتستورد حاجة</label>
+      </div>
+    </div>
+
+@@append u7-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>اختبر العشوائية</div>
+      <p>النتايج العشوائية ما ينفعش تتوقّعها — لكن تقدر تتأكّد من <strong>خصائصها</strong>. وبـ <code class="inl">seed</code> تقدر تكرّرها.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import random ¦¦ المكتبة.
+ ¦¦
+dice = random.randint(1, 6) ¦¦ رقم عشوائي.
+print(1 <= dice <= 6) ¦¦ خاصية مضمونة: في المدى.
+colors = ["أحمر", "أخضر", "أزرق"] ¦¦ اختيارات.
+print(random.choice(colors) in colors) ¦¦ الاختيار دايمًا من القائمة.
+deck = list(range(1, 11)) ¦¦ كوتشينة من 10.
+random.shuffle(deck) ¦¦ خلط في المكان.
+print(sorted(deck) == list(range(1, 11)), len(deck)) ¦¦ نفس العناصر بترتيب مختلف.
+print(len(set(random.sample(deck, 3)))) ¦¦ `sample` من غير تكرار ← 3 عناصر مختلفة دايمًا.
+random.seed(42) ¦¦ **البذرة**: بتثبّت العشوائية — مفيدة في الاختبارات والتجارب العلمية.
+first = [random.randint(1, 6) for _ in range(5)] ¦¦ 5 رميات.
+random.seed(42) ¦¦ نفس البذرة تاني.
+second = [random.randint(1, 6) for _ in range(5)] ¦¦ نفس الـ 5 رميات بالظبط.
+print(first == second) ¦¦ متطابقين.
+      @end
+      @out
+True
+True
+True 10
+3
+True
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">random.sample(lst, 3)</code>…</p>
+        <label><input type="radio"> ممكن تكرّر نفس العنصر</label>
+        <label><input type="radio"> بتخلط القائمة</label>
+        <label><input type="radio"> 3 عناصر مختلفة من غير تكرار</label>
+        <label><input type="radio"> أول 3 عناصر</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. فايدة <code class="inl">random.seed(42)</code>؟</p>
+        <label><input type="radio"> تكرار نفس النتايج العشوائية</label>
+        <label><input type="radio"> عشوائية أقوى للأمان</label>
+        <label><input type="radio"> توليد رقم 42</label>
+        <label><input type="radio"> مالهاش فايدة</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. لكلمات السر الحقيقية تستخدم…</p>
+        <label><input type="radio"> random.choice</label>
+        <label><input type="radio"> random.seed</label>
+        <label><input type="radio"> random.shuffle</label>
+        <label><input type="radio"> secrets (درس الأمان)</label>
+      </div>
+    </div>
+
+@@append u7-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>كود تفعيل</div>
+      <p>ولّد كود من 6 حروف كبيرة وأرقام، واتأكّد إن كل حروفه من المجموعة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import random ¦¦ العشوائية.
+import string ¦¦ مجموعات الحروف.
+ ¦¦
+chars = string.ascii_uppercase + string.digits ¦¦ حروف كبيرة + أرقام.
+code = "".join(random.choices(chars, k=6)) ¦¦ 6 اختيارات (ممكن تتكرّر) ودمجهم.
+print(len(code), all(c in chars for c in code)) ¦¦ الطول، وكل الحروف من المجموعة (تعبير مولّد).
+print(string.punctuation[:5]) ¦¦ أول 5 علامات ترقيم جاهزة.
+      @end
+      @out
+6 True
+!"#$%
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">string.digits</code>؟</p>
+        <label><input type="radio"> قائمة أرقام</label>
+        <label><input type="radio"> النص "0123456789"</label>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> دالة</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">len(string.ascii_lowercase)</code>؟</p>
+        <label><input type="radio"> 52</label>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> 32</label>
+        <label><input type="radio"> 26</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">"".join(["a", "b"])</code>؟</p>
+        <label><input type="radio"> "ab"</label>
+        <label><input type="radio"> "a b"</label>
+        <label><input type="radio"> ["ab"]</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+    </div>
+
+@@append u8-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>ضاعف لحد الألف</div>
+      <p>ابدأ من 1 وضاعف لحد ما القيمة تعدّي 1000. كام خطوة؟</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+value = 1 ¦¦ القيمة الابتدائية (المكوّن 1).
+steps = 0 ¦¦ عدّاد.
+while value <= 1000: ¦¦ الشرط (المكوّن 2).
+    value *= 2 ¦¦ التحديث (المكوّن 3) — من غيره الحلقة ما بتخلصش.
+    steps += 1 ¦¦ عدّ.
+print(value, steps) ¦¦ 2 أس 10.
+      @end
+      @out
+1024 10
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">x = 0</code>، <code class="inl">while x &lt; 3: x += 1</code> — x بعدها؟</p>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 0</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. نسيت تحديث المتغيّر جوّه while…</p>
+        <label><input type="radio"> حلقة ما بتخلصش</label>
+        <label><input type="radio"> خطأ تركيب</label>
+        <label><input type="radio"> بتشتغل مرّة واحدة</label>
+        <label><input type="radio"> بايثون بتحدّثه لوحدها</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. أنسب من for لما…</p>
+        <label><input type="radio"> عدد التكرارات معروف</label>
+        <label><input type="radio"> بتكرّر لحد ما شرط يتحقّق ومش عارف امتى</label>
+        <label><input type="radio"> بتلف على قائمة</label>
+        <label><input type="radio"> مع range دايمًا</label>
+      </div>
+    </div>
+
+@@append u8-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>اسأل لحد ما يجاوب صح</div>
+      <p>حاكي مستخدم كتب 3 إجابات: اقبل أول رقم صحيح موجب، وارفض الباقي برسالة. (في برنامج حقيقي بدّل القائمة بـ <code class="inl">input</code>.)</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+answers = ["abc", "-5", "17"] ¦¦ مدخلات «مزيّفة» بدل input — عشان نقدر نجرّب.
+i = 0 ¦¦ فهرس الإجابة الجاية.
+while True: ¦¦ كرّر لحد ما break.
+    text = answers[i] ¦¦ في الحقيقة: `text = input("عمرك: ")`.
+    i += 1 ¦¦ الإجابة اللي بعدها.
+    if text.isdigit(): ¦¦ أرقام بس؟ (بترفض السالب والحروف).
+        age = int(text) ¦¦ التحويل آمن دلوقتي.
+        break ¦¦ نخرج.
+    print(f"«{text}» مش رقم صحيح موجب — حاول تاني") ¦¦ رسالة واضحة.
+print("العمر:", age) ¦¦ بعد الحلقة، القيمة سليمة أكيد.
+      @end
+      @out rtl
+«abc» مش رقم صحيح موجب — حاول تاني
+«-5» مش رقم صحيح موجب — حاول تاني
+العمر: 17
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">while True</code> من غير break…</p>
+        <label><input type="radio"> بتشتغل مرّة</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> بتقف بعد 1000 دورة</label>
+        <label><input type="radio"> ما بتخلصش أبدًا</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. في نمط «اسأل لحد ما يجاوب صح»، break مكانها…</p>
+        <label><input type="radio"> بعد ما نتأكّد إن الإجابة صحيحة</label>
+        <label><input type="radio"> أول سطر في الحلقة</label>
+        <label><input type="radio"> بعد رسالة الخطأ</label>
+        <label><input type="radio"> برّه الحلقة</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">"-5".isdigit()</code>؟</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> -5</label>
+        <label><input type="radio"> False</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+    </div>
+
+@@append u8-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>مثلث نجوم</div>
+      <p>اطبع مثلث من 4 صفوف بحلقتين متداخلتين (الصف n فيه n نجمة).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+for row in range(1, 5): ¦¦ الحلقة الخارجية: رقم الصف.
+    line = "" ¦¦ سطر جديد فاضي في كل صف.
+    for col in range(row): ¦¦ الداخلية: بتلف `row` مرّة.
+        line += "*" ¦¦ نجمة.
+    print(line) ¦¦ بعد ما الداخلية تخلص.
+      @end
+      @out
+*
+**
+***
+****
+      @end
+      <p>(وممكن من غير حلقة داخلية: <code class="inl">print("*" * row)</code> — بس الهدف هنا تتدرّب على التداخل.)</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. حلقة خارجية 3 دورات وداخلية 4 — الداخلية بتتنفّذ كام مرّة إجمالًا؟</p>
+        <label><input type="radio"> 7</label>
+        <label><input type="radio"> 12</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 3</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. نمط «تلعب تاني؟» معناه…</p>
+        <label><input type="radio"> حلقة جوّه if</label>
+        <label><input type="radio"> دالة جوّه دالة</label>
+        <label><input type="radio"> break في كل سطر</label>
+        <label><input type="radio"> حلقة خارجية حوالين اللعبة كلها</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">break</code> جوّه الداخلية…</p>
+        <label><input type="radio"> بتخرج من الداخلية بس</label>
+        <label><input type="radio"> بتخرج من الاتنين</label>
+        <label><input type="radio"> بتوقف البرنامج</label>
+        <label><input type="radio"> ممنوعة</label>
+      </div>
+    </div>

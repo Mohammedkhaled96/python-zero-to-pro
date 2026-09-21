@@ -1,0 +1,1276 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة الثامنة · التكرار الشرطي</div>
+    <h2>حلقة while: كرّر لحد ما يحصل شرط</h2>
+    <p>
+      <code class="inl">for</code> بتلف على عدد معروف من العناصر.
+      لكن لو مش عارف هتلف كام مرّة؟ زي «فضل تسأل المستخدم لحد ما يدخل إجابة صح»؟
+      هنا بيجي دور <code class="inl">while</code> — وهي اللي هتحوّل برامجك من سكريبتات
+      لتطبيقات تفاعلية بجد.
+    </p>
+  </div>
+
+  <!-- 8.1 -->
+  <article class="lesson" id="u8-l1">
+    <h3>حلقة while الأساسية <span class="tag">درس 40</span></h3>
+    <p class="goal">الهدف: تكرّر كود طول ما شرط معيّن صح.</p>
+
+    <h4>1. الشكل الأساسي</h4>
+    <div class="code"><pre>
+x = 0
+while x &lt;= 9:
+    x += 1
+    print(x)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1
+2
+3
+4
+5
+6
+7
+8
+9
+10</pre></div>
+    <p>بيحصل إيه؟</p>
+    <div class="diagram">
+<pre>   x = 0
+     │
+     ▼
+   ┌─────────────────┐
+   │  x &lt;= 9 ؟       │◄──────────┐
+   └────┬────────┬───┘           │
+    True│        │False          │
+        ▼        ▼               │
+    x += 1    [خروج]             │
+    print(x) ─────────────────────┘</pre>
+      <div class="cap">دورة حياة while</div>
+    </div>
+    <p>
+      لاحظ إن الناتج بدأ من <strong>1</strong> مش 0 — لأن <code class="inl">x += 1</code>
+      جاية <em>قبل</em> الـ <code class="inl">print</code>. ولاحظ إنه وصل لـ <strong>10</strong>
+      رغم إن الشرط <code class="inl">x &lt;= 9</code>، لأن في آخر دورة x كانت 9 (الشرط صح)
+      فزوّدها لـ 10 وطبعها.
+    </p>
+
+    <h4>2. المكوّنات التلاتة اللي لازم تكون موجودة</h4>
+    <div class="diagram">
+<pre>  x = 0            ← [1] التهيئة: قيمة ابتدائية
+  while x &lt;= 9:    ← [2] الشرط: متى نستمر؟
+      x += 1       ← [3] التحديث: لازم يقرّبنا لإنهاء الشرط!
+      print(x)</pre>
+      <div class="cap">نسيان أي واحدة = مشكلة</div>
+    </div>
+    <div class="box err">
+      <div class="bt">💥 الحلقة اللانهائية — أشهر كارثة</div>
+      <div class="code"><pre>
+x = 0
+while x &lt;= 9:
+    print(x)        # نسينا x += 1 !
+# البرنامج هيفضل يطبع 0 للأبد 🔁
+</pre></div>
+      <p>
+        لو حصل ده، اضغط <strong>Ctrl + C</strong> في الـ Terminal عشان توقّف البرنامج.
+        <br><strong>قبل ما تشغّل أي while، اسأل نفسك: «إيه اللي هيخلّي الشرط يبقى False؟»</strong>
+      </p>
+    </div>
+
+    <h4>3. while مقابل for</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th></th><th>for</th><th>while</th></tr>
+        <tr><td>بتستخدمها لما</td><td>عارف عدد التكرارات أو عندك مجموعة</td><td>مش عارف، والتكرار متوقّف على شرط</td></tr>
+        <tr><td>العدّاد</td><td>بايثون بتديره</td><td>إنت اللي بتديره</td></tr>
+        <tr><td>خطر اللانهائية</td><td>شبه معدوم</td><td>موجود — خلي بالك</td></tr>
+        <tr><td>مثال</td><td>«اطبع كل اسم في القائمة»</td><td>«اسأل لحد ما يدخل إجابة صح»</td></tr>
+      </table>
+    </div>
+    <div class="code"><pre>
+# نفس النتيجة بالطريقتين
+for i in range(1, 11):
+    print(i)
+i = 1
+while i &lt;= 10:
+    print(i)
+    i += 1
+</pre></div>
+    <p>هنا <code class="inl">for</code> أوضح وأقصر — <strong>لو تقدر تستخدم for، استخدمها.</strong></p>
+    <!-- APPEND:u8-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>ضاعف لحد الألف</div>
+      <p>ابدأ من 1 وضاعف لحد ما القيمة تعدّي 1000. كام خطوة؟</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+value = 1
+steps = 0
+while value &lt;= 1000:
+    value *= 2
+    steps += 1
+print(value, steps)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>1024 10</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">x = 0</code>، <code class="inl">while x &lt; 3: x += 1</code> — x بعدها؟</p>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 0</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. نسيت تحديث المتغيّر جوّه while…</p>
+        <label><input type="radio"> حلقة ما بتخلصش</label>
+        <label><input type="radio"> خطأ تركيب</label>
+        <label><input type="radio"> بتشتغل مرّة واحدة</label>
+        <label><input type="radio"> بايثون بتحدّثه لوحدها</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. أنسب من for لما…</p>
+        <label><input type="radio"> عدد التكرارات معروف</label>
+        <label><input type="radio"> بتكرّر لحد ما شرط يتحقّق ومش عارف امتى</label>
+        <label><input type="radio"> بتلف على قائمة</label>
+        <label><input type="radio"> مع range دايمًا</label>
+      </div>
+    </div>
+    <!-- /APPEND:u8-l1 -->
+                <!-- SUM:u8-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">while شرط:</code> بتكرّر طول ما الشرط صح.</li><li>لازم: قيمة ابتدائية + شرط + تحديث جوّه الحلقة.</li><li><code class="inl">for</code> لعدد معروف، و <code class="inl">while</code> للتكرار لحد ما حاجة تحصل.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 8.2 -->
+  <article class="lesson" id="u8-l2">
+    <h3>while True و break: الحلقة اللانهائية المتحكَّم فيها <span class="tag">درس 41 · مهم</span></h3>
+    <p class="goal">الهدف: النمط اللي هتستخدمه في كل برنامج تفاعلي.</p>
+
+    <h4>1. الفكرة</h4>
+    <div class="code"><pre>
+while True:
+    user = int(input("Enter a number\n"))
+    print(user)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Enter a number
+5
+5
+Enter a number
+8
+8
+Enter a number
+...للأبد</pre></div>
+    <p>
+      <code class="inl">while True:</code> شرطها دايمًا صح، فهي حلقة لا نهائية <strong>عن قصد</strong>.
+      وبنستخدم <code class="inl">break</code> عشان نخرج منها في اللحظة المناسبة.
+    </p>
+
+    <h4>2. النمط الكامل: اسأل لحد ما يدخل حاجة صح</h4>
+    <div class="code" data-file="input_loop.py"><pre>
+while True:
+    number = int(input("Please enter a number\n"))
+    user = input("Please enter your name: ")
+    print(f"Your number is {number} and your name is {user}")
+    break
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Please enter a number
+5
+Please enter your name: Farid
+Your number is 5 and your name is Farid</pre></div>
+    <p>
+      هنا الـ <code class="inl">break</code> في آخر الجسم، فالحلقة بتلف مرّة واحدة بس.
+      شكلها غريب دلوقتي، لكن هتبقى مفيدة جدًا لما نضيف <code class="inl">try/except</code>:
+      لو حصل خطأ، بنرجع للسؤال تاني بدل ما نوصل للـ <code class="inl">break</code>.
+    </p>
+
+    <h4>3. الخروج بأمر من المستخدم</h4>
+    <div class="code" data-file="menu_loop.py"><pre>
+while True:
+    command = input("اكتب أمر (أو 'خروج' للإنهاء): ").strip().lower()
+    if command == "خروج":
+        print("مع السلامة!")
+        break
+    elif command == "وقت":
+        import datetime
+        print(datetime.datetime.now().strftime("%H:%M"))
+    elif command == "":
+        continue                   # سطر فاضي؟ اسأل تاني
+    else:
+        print(f"أمر غير معروف: {command}")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>اكتب أمر (أو 'خروج' للإنهاء): وقت
+14:23
+اكتب أمر (أو 'خروج' للإنهاء): سلام
+أمر غير معروف: سلام
+اكتب أمر (أو 'خروج' للإنهاء): خروج
+مع السلامة!</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 ده نمط الـ REPL</div>
+      <p>
+        النمط ده اسمه <strong>Read–Eval–Print Loop</strong>: اقرا، نفّذ، اطبع، كرّر.
+        هو نفس النمط اللي بيشتغل بيه الـ Terminal، وواجهة بايثون التفاعلية،
+        وكل تطبيق سطر أوامر في الدنيا.
+      </p>
+    </div>
+
+    <h4>4. عدّاد المحاولات</h4>
+    <div class="code"><pre>
+attempts = 3
+while attempts &gt; 0:
+    password = input("كلمة السر: ")
+    if password == "1234":
+        print("أهلا بك!")
+        break
+    attempts -= 1
+    print(f"غلط. باقي لك {attempts} محاولة")
+if attempts == 0:
+    print("انتهت محاولاتك، الحساب مقفول")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>كلمة السر: abc
+غلط. باقي لك 2 محاولة
+كلمة السر: xyz
+غلط. باقي لك 1 محاولة
+كلمة السر: 000
+غلط. باقي لك 0 محاولة
+انتهت محاولاتك، الحساب مقفول</pre></div>
+    <p>
+      لاحظ إن الشرط نفسه <code class="inl">attempts &gt; 0</code> بيوقّف الحلقة تلقائيًا،
+      والـ <code class="inl">break</code> بتوقّفها بدري لو نجح. الجمع بين الاتنين أسلوب شائع جدًا.
+    </p>
+    <!-- APPEND:u8-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>اسأل لحد ما يجاوب صح</div>
+      <p>حاكي مستخدم كتب 3 إجابات: اقبل أول رقم صحيح موجب، وارفض الباقي برسالة. (في برنامج حقيقي بدّل القائمة بـ <code class="inl">input</code>.)</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+answers = ["abc", "-5", "17"]
+i = 0
+while True:
+    text = answers[i]
+    i += 1
+    if text.isdigit():
+        age = int(text)
+        break
+    print(f"«{text}» مش رقم صحيح موجب — حاول تاني")
+print("العمر:", age)
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>«abc» مش رقم صحيح موجب — حاول تاني
+«-5» مش رقم صحيح موجب — حاول تاني
+العمر: 17</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">while True</code> من غير break…</p>
+        <label><input type="radio"> بتشتغل مرّة</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> بتقف بعد 1000 دورة</label>
+        <label><input type="radio"> ما بتخلصش أبدًا</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. في نمط «اسأل لحد ما يجاوب صح»، break مكانها…</p>
+        <label><input type="radio"> بعد ما نتأكّد إن الإجابة صحيحة</label>
+        <label><input type="radio"> أول سطر في الحلقة</label>
+        <label><input type="radio"> بعد رسالة الخطأ</label>
+        <label><input type="radio"> برّه الحلقة</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">"-5".isdigit()</code>؟</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> -5</label>
+        <label><input type="radio"> False</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+    </div>
+    <!-- /APPEND:u8-l2 -->
+                <!-- SUM:u8-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">while True</code> + <code class="inl">break</code> للحلقة اللي بتقف من جوّه.</li><li>النمط الأشهر: اسأل لحد ما المستخدم يدخل حاجة صح.</li><li>عدّاد محاولات بيمنع التكرار للأبد.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 8.3 -->
+  <article class="lesson" id="u8-l3">
+    <h3>الحلقات المتداخلة (Nested Loops) <span class="tag">درس 42</span></h3>
+    <p class="goal">الهدف: حلقة جوّه حلقة — أساس «إعادة اللعب» وأي بنية ثنائية الأبعاد.</p>
+
+    <h4>1. الفكرة</h4>
+    <div class="code"><pre>
+for i in range(1, 4):
+    for j in range(1, 4):
+        print(f"i={i}, j={j}")
+    print("--- انتهت الدورة الخارجية ---")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>i=1, j=1
+i=1, j=2
+i=1, j=3
+--- انتهت الدورة الخارجية ---
+i=2, j=1
+i=2, j=2
+i=2, j=3
+--- انتهت الدورة الخارجية ---
+i=3, j=1
+i=3, j=2
+i=3, j=3
+--- انتهت الدورة الخارجية ---</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 القاعدة</div>
+      <p>
+        <strong>الحلقة الداخلية بتخلّص دورتها كاملة في كل خطوة من الحلقة الخارجية.</strong>
+        فلو الخارجية 3 دورات والداخلية 3، الإجمالي 9 تنفيذات.
+      </p>
+    </div>
+
+    <h4>2. نمط «إعادة اللعب» — أهم استخدام عملي</h4>
+    <div class="diagram">
+<pre>  while True:              ← الحلقة الخارجية: الجولات
+      while True:          ← الحلقة الداخلية: جولة واحدة
+          ...              ← منطق اللعبة
+          break            ← ينهي الجولة الحالية
+
+      again = input("تلعب تاني؟")
+      if again == "no":
+          break            ← ينهي البرنامج كله</pre>
+      <div class="cap">النمط اللي هتستخدمه في كل ألعاب الوحدة دي</div>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ break بتكسر الحلقة اللي هي جوّاها بس</div>
+      <p>
+        <code class="inl">break</code> في الحلقة الداخلية <strong>ما بتخرجش</strong> من
+        الخارجية. دي بالظبط الميزة اللي بتخلّي النمط ده يشتغل: بنخرج من الجولة،
+        وبنسأل «تلعب تاني؟»، ولو لأ بنخرج من الخارجية كمان.
+      </p>
+    </div>
+
+    <h4>3. مثال بسيط على النمط</h4>
+    <div class="code" data-file="replay_pattern.py"><pre>
+import random
+while True:                                     # الجولات
+    while True:                                 # جولة واحدة
+        guess = input("خمّن: صورة ولا كتابة؟ ").strip()
+        if guess in ["صورة", "كتابة"]:
+            break
+        print("اختيار غير صحيح، جرّب تاني")
+    coin = random.choice(["صورة", "كتابة"])
+    if guess == coin:
+        print(f"كسبت! العملة طلعت {coin}")
+    else:
+        print(f"خسرت. العملة طلعت {coin}")
+    again = input("تلعب تاني؟ (yes/no) ").strip().lower()
+    if again == "no":
+        print("شكرًا لك، لحد ما نشوفك تاني")
+        break
+    print("تمام، يلا بينا")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>خمّن: صورة ولا كتابة؟ ورقة
+اختيار غير صحيح، جرّب تاني
+خمّن: صورة ولا كتابة؟ صورة
+كسبت! العملة طلعت صورة
+تلعب تاني؟ (yes/no) no
+شكرًا لك، لحد ما نشوفك تاني</pre></div>
+    <p>
+      لاحظ إن الحلقة الداخلية دورها <strong>التحقّق من صحة المدخل</strong>، والخارجية
+      دورها <strong>تكرار اللعبة</strong>. فصل المسؤوليات ده بيخلّي الكود مفهوم.
+    </p>
+
+    <h4>4. مثال: رسم شكل</h4>
+    <div class="code"><pre>
+for i in range(1, 6):
+    for j in range(i):
+        print("*", end="")
+    print()
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>*
+**
+***
+****
+*****</pre></div>
+    <p>
+      الحلقة الداخلية بتطبع <code class="inl">i</code> نجمة من غير سطر جديد
+      (<code class="inl">end=""</code>)، والـ <code class="inl">print()</code> الفاضية
+      في الخارجية بتنزل سطر بعد كل صف.
+    </p>
+    <!-- APPEND:u8-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>مثلث نجوم</div>
+      <p>اطبع مثلث من 4 صفوف بحلقتين متداخلتين (الصف n فيه n نجمة).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+for row in range(1, 5):
+    line = ""
+    for col in range(row):
+        line += "*"
+    print(line)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>*
+**
+***
+****</pre></div>
+      <p>(وممكن من غير حلقة داخلية: <code class="inl">print("*" * row)</code> — بس الهدف هنا تتدرّب على التداخل.)</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. حلقة خارجية 3 دورات وداخلية 4 — الداخلية بتتنفّذ كام مرّة إجمالًا؟</p>
+        <label><input type="radio"> 7</label>
+        <label><input type="radio"> 12</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 3</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. نمط «تلعب تاني؟» معناه…</p>
+        <label><input type="radio"> حلقة جوّه if</label>
+        <label><input type="radio"> دالة جوّه دالة</label>
+        <label><input type="radio"> break في كل سطر</label>
+        <label><input type="radio"> حلقة خارجية حوالين اللعبة كلها</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">break</code> جوّه الداخلية…</p>
+        <label><input type="radio"> بتخرج من الداخلية بس</label>
+        <label><input type="radio"> بتخرج من الاتنين</label>
+        <label><input type="radio"> بتوقف البرنامج</label>
+        <label><input type="radio"> ممنوعة</label>
+      </div>
+    </div>
+    <!-- /APPEND:u8-l3 -->
+                <!-- SUM:u8-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>حلقة جوّه حلقة: الداخلية بتكمّل كلها في كل دورة للخارجية.</li><li>نمط «تلعب تاني؟» حلقة خارجية حوالين اللعبة.</li><li>عدد التكرارات = حاصل ضرب الحلقتين.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ADD:u8-l4 -->
+  <!-- 8.4 -->
+  <article class="lesson" id="u8-l4">
+    <h3>الحلقات المتداخلة في سطر واحد + while...else <span class="tag">درس 43</span></h3>
+    <p class="goal">الهدف: تحوّل الحلقات المتداخلة لـ comprehension متداخل وتعرف ترتيب قراءته، وتتجنّب فخ القوائم المتداخلة المشتركة، وتخرج من حلقتين مرّة واحدة.</p>
+
+    <h4>1. من حلقتين متداخلتين لسطر واحد</h4>
+    <div class="code"><pre>
+matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+flat = []
+for row in matrix:
+    for x in row:
+        flat.append(x)
+print(flat)
+flat2 = [x for row in matrix for x in row]
+print(flat2)
+print(flat == flat2)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 3, 4, 5, 6, 7, 8, 9]
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+True</pre></div>
+    <div class="diagram">
+<pre>  for row in matrix:            ─┐
+      for x in row:              │  انسخ الـ for بنفس الترتيب
+          flat.append(x)         │  من فوق لتحت ← من شمال ليمين
+                                 │
+  [ x   for row in matrix   for x in row ]
+    ↑        ↑ الأولى           ↑ التانية
+    اللي بيتضاف (بيتكتب الأول)</pre>
+      <div class="cap">القاعدة: ترتيب الـ for في السطر = ترتيبها في الحلقات العادية</div>
+    </div>
+
+    <h4>2. أشكال مفيدة للـ comprehension المتداخل</h4>
+    <div class="code"><pre>
+matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]]
+evens = [x for row in matrix for x in row if x % 2 == 0]
+print(evens)
+table = [[r * c for c in range(1, 4)] for r in range(1, 4)]
+print(table)
+transposed = [[row[i] for row in matrix] for i in range(3)]
+print(transposed)
+pairs = [(color, size) for color in ["أحمر", "أزرق"] for size in ["S", "M"]]
+print(pairs)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[2, 4, 6, 8]
+[[1, 2, 3], [2, 4, 6], [3, 6, 9]]
+[[1, 4, 7], [2, 5, 8], [3, 6, 9]]
+[('أحمر', 'S'), ('أحمر', 'M'), ('أزرق', 'S'), ('أزرق', 'M')]</pre></div>
+
+    <h4>3. الفخ الأخطر: [[0] * 3] * 3</h4>
+    <p>عايز شبكة 3×3 أصفار (زي لعبة X-O). الطريقة «المختصرة» شكلها بريء…</p>
+    <div class="code"><pre>
+grid = [[0] * 3] * 3
+grid[0][0] = 99
+print(grid)
+print(grid[0] is grid[1])
+good = [[0] * 3 for _ in range(3)]
+good[0][0] = 99
+print(good)
+print(good[0] is good[1])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[[99, 0, 0], [99, 0, 0], [99, 0, 0]]
+True
+[[99, 0, 0], [0, 0, 0], [0, 0, 0]]
+False</pre></div>
+    <div class="diagram">
+<pre>  grid = [[0]*3] * 3                good = [[0]*3 for _ in range(3)]
+
+  grid ──► [ • , • , • ]            good ──► [ • , • , • ]
+             │   │   │                         │   │   │
+             └───┼───┘                         ▼   ▼   ▼
+                 ▼                          [0,0,0] [0,0,0] [0,0,0]
+             [0, 0, 0]
+       صف واحد و3 أسهم عليه                3 صفوف مستقلة</pre>
+      <div class="cap">رجوع لدرس المراجع في الوحدة صفر: القائمة بتخزّن أسهم مش قيم</div>
+    </div>
+    <div class="box info">
+      <div class="bt">ℹ️ طب ليه [0] * 3 نفسها سليمة؟</div>
+      <p>
+        لأن الأصفار <strong>أرقام غير قابلة للتعديل</strong>. لما تعمل <code class="inl">row[0] = 5</code> إنت مش بتعدّل الصفر — إنت بتوجّه السهم لكائن جديد.
+        المشكلة بتظهر بس لما العنصر المتكرّر <strong>قابل للتعديل</strong> (قائمة، وبعدين قاموس أو كائن).
+      </p>
+    </div>
+
+    <h4>4. الخروج من حلقتين مرّة واحدة</h4>
+    <p><code class="inl">break</code> بتكسر <strong>أقرب حلقة بس</strong>. لو لقيت اللي بتدوّر عليه جوّه الحلقة الداخلية، الخارجية هتكمّل. الحل الأوضح: راية.</p>
+    <div class="code"><pre>
+grid = [[3, 8, 1], [9, 4, 7], [5, 6, 2]]
+target = 4
+found = False
+for r, row in enumerate(grid):
+    for c, value in enumerate(row):
+        if value == target:
+            found = True
+            break
+    if found:
+        break
+print(f"الصف {r} العمود {c}" if found else "مش موجود")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الصف 1 العمود 1</pre></div>
+    <p>
+      هتشوف في أكواد ناس تانية حيلة بـ <code class="inl">for...else</code>: <code class="inl">else: continue</code> بعد الحلقة الداخلية ثم <code class="inl">break</code>.
+      شغّالة، بس مش مقروءة. الأنظف من الاتنين: <strong>حط الحلقتين في دالة واستخدم <code class="inl">return</code></strong> — هتتعلّمها في وحدة الدوال.
+    </p>
+
+    <h4>5. while...else</h4>
+    <p>نفس فكرة <code class="inl">for...else</code>: الـ <code class="inl">else</code> بتتنفّذ لو الشرط بقى False والحلقة خلصت <strong>من غير break</strong>.</p>
+    <div class="code"><pre>
+secret = "1234"
+guesses = ["0000", "1111", "1234"]
+attempts = 0
+while attempts &lt; 3:
+    guess = guesses[attempts]
+    attempts += 1
+    if guess == secret:
+        print(f"اتفتح بعد {attempts} محاولات")
+        break
+else:
+    print("الحساب اتقفل 🔒")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>اتفتح بعد 3 محاولات</pre></div>
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>النقاط على الخط</div>
+      <p>بـ comprehension واحد: كل الأزواج <code class="inl">(x, y)</code> من 0 لـ 4 اللي مجموعهم = 4.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+points = [(x, y) for x in range(5) for y in range(5) if x + y == 4]
+print(points)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>[(0, 4), (1, 3), (2, 2), (3, 1), (4, 0)]</pre></div>
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>مصفوفة الوحدة</div>
+      <p>ابني مصفوفة 3×3 فيها 1 على القطر و 0 في الباقي، واطبع كل صف في سطر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+identity = [[1 if r == c else 0 for c in range(3)] for r in range(3)]
+for row in identity:
+    print(row)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 0, 0]
+[0, 1, 0]
+[0, 0, 1]</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">[a + b for a in "xy" for b in "12"]</code>؟</p>
+        <label><input type="radio"> ['x1', 'y2']</label>
+        <label><input type="radio"> ['x1', 'x2', 'y1', 'y2']</label>
+        <label><input type="radio"> ['1x', '2x', '1y', '2y']</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. بعد <code class="inl">g = [[]] * 2</code> ثم <code class="inl">g[0].append(1)</code>، قيمة g؟</p>
+        <label><input type="radio"> [[1], []]</label>
+        <label><input type="radio"> [[1]]</label>
+        <label><input type="radio"> [1, []]</label>
+        <label><input type="radio"> [[1], [1]]</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. break جوّه حلقة داخلية بتعمل إيه؟</p>
+        <label><input type="radio"> بتكسر الداخلية بس</label>
+        <label><input type="radio"> بتكسر كل الحلقات</label>
+        <label><input type="radio"> بتوقف البرنامج</label>
+        <label><input type="radio"> بتعيد الدورة</label>
+      </div>
+    </div>
+                <!-- SUM:u8-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الـ comprehension المتداخل بنفس ترتيب الـ for العادية.</li><li><code class="inl">[[0]*3]*3</code> بيعمل 3 أسهم لنفس الصف — استخدم comprehension.</li><li><code class="inl">while...else</code> زي <code class="inl">for...else</code>، والراية أوضح طريقة للخروج من حلقتين.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u8-l4 -->
+
+  <!-- 8.P1 -->
+  <article class="lesson project" id="u8-p1">
+    <h3>مشروع 12: لعبة تخمين الرقم <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: أول لعبة كاملة — تطوير تدريجي على 3 مراحل.</p>
+
+    <h4>المرحلة 1: تخمين بسيط</h4>
+    <div class="code" data-file="guess_v1.py"><pre>
+number = 20
+while True:
+    user = int(input("Please enter a guessed number\n"))
+    if user == number:
+        print("Congratulations!")
+        break
+    else:
+        print("Please try again")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Please enter a guessed number
+15
+Please try again
+Please enter a guessed number
+20
+Congratulations!</pre></div>
+    <p>
+      شغّالة، لكن الملل قاتل: مفيش أي دلالة. المستخدم بيخمّن عشوائي.
+      محتاجين نقوله «أعلى» أو «أقل».
+    </p>
+
+    <h4>المرحلة 2: مع مؤشّرات</h4>
+    <div class="code" data-file="guess_v2.py"><pre>
+number = 20
+while True:
+    user_input = int(input("Enter a guess number: "))
+    if user_input &lt; number:
+        print("Please guess again, too low.")
+    elif user_input &gt; number:
+        print("Please guess again, too high.")
+    else:
+        print("Congratulations! You guessed it right.")
+        break
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Enter a guess number: 15
+Please guess again, too low.
+Enter a guess number: 25
+Please guess again, too high.
+Enter a guess number: 20
+Congratulations! You guessed it right.</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 ليه ترتيب الشروط ده؟</div>
+      <p>
+        استخدمنا <code class="inl">if &lt;</code> ثم <code class="inl">elif &gt;</code> ثم
+        <code class="inl">else</code>. الـ <code class="inl">else</code> بتغطّي الحالة
+        المتبقّية الوحيدة (التساوي) من غير ما نكتب شرط. أنضف من
+        <code class="inl">elif user_input == number</code>.
+      </p>
+    </div>
+
+    <h4>المرحلة 3: مع إعادة اللعب</h4>
+    <div class="code" data-file="guess_v3.py"><pre>
+number = 20
+while True:                                    # الجولات
+    while True:                                # جولة واحدة
+        user_input = int(input("Enter a guess number: "))
+        if user_input &lt; number:
+            print("Please guess again, too low.")
+        elif user_input &gt; number:
+            print("Please guess again, too high.")
+        else:
+            print("Congratulations! You guessed it right.")
+            break
+    again = input("Do you want to play again? (yes/no)\n").lower()
+    if again == "no":
+        print("Thank you, see you soon.")
+        break
+    else:
+        print("It's okay, let's go.")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Enter a guess number: 15
+Please guess again, too low.
+Enter a guess number: 20
+Congratulations! You guessed it right.
+Do you want to play again? (yes/no)
+no
+Thank you, see you soon.</pre></div>
+    <div class="box err">
+      <div class="bt">💥 عيب في النسخة دي</div>
+      <p>
+        الرقم ثابت <code class="inl">number = 20</code> وبره الحلقة! فلو المستخدم لعب
+        تاني، الرقم لسه 20 وهو عارفه. لازم <strong>نولّد رقم جديد كل جولة</strong>،
+        وده اللي هنعمله في المشروع الجاي.
+      </p>
+    </div>
+
+    <h4>النسخة النهائية مع عدّاد محاولات</h4>
+    <div class="code" data-file="guess_final.py"><pre>
+import random
+print("=" * 34)
+print("لعبة تخمين الرقم (1 - 100)")
+print("=" * 34)
+while True:
+    secret = random.randint(1, 100)      # رقم جديد كل جولة ✅
+    attempts = 0
+    while True:
+        guess = int(input("خمّن رقم من 1 إلى 100: "))
+        attempts += 1
+        if guess &lt; secret:
+            print("أعلى ⬆")
+        elif guess &gt; secret:
+            print("أقل ⬇")
+        else:
+            print(f"برافو! الرقم كان {secret}, وخمّنته في {attempts} محاولة")
+            break
+    again = input("تلعب تاني؟ (yes/no) ").strip().lower()
+    if again == "no":
+        print("شكرًا للعب، نراك قريبًا")
+        break
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>==================================
+لعبة تخمين الرقم (1 - 100)
+==================================
+خمّن رقم من 1 إلى 100: 50
+أقل ⬇
+خمّن رقم من 1 إلى 100: 25
+أعلى ⬆
+خمّن رقم من 1 إلى 100: 37
+برافو! الرقم كان 37, وخمّنته في 3 محاولة
+تلعب تاني؟ (yes/no) no
+شكرًا للعب، نراك قريبًا</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 معلومة: أفضل استراتيجية للتخمين</div>
+      <p>
+        اقسم النطاق نصّين كل مرّة (50، ثم 25، ثم 37…). ده اسمه
+        <strong>Binary Search</strong>، وبيوصلك لأي رقم من 1 لـ 100 في
+        <strong>7 محاولات كحد أقصى</strong>. دي واحدة من أهم الخوارزميات في علوم الحاسب.
+      </p>
+    </div>
+  </article>
+
+  <!-- 8.P2 -->
+  <article class="lesson project" id="u8-p2">
+    <h3>مشروع 13: مواجهة الكمبيوتر بالأرقام العشوائية <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: دمج random مع الحلقات المتداخلة وقائمة مساعدة.</p>
+
+    <div class="code" data-file="random_battle.py"><pre>
+import random
+greeting = input("Welcome to the guessing number game. Press Enter to start, or write 'help'.\n").lower()
+if greeting == "help":
+    print("Please guess a number from 0 to 20 and wait for the result.")
+else:
+    print("It's okay, let's start the game.")
+while True:
+    while True:
+        number = int(input("Please enter a number from 0 to 20\n"))
+        number1 = random.randint(0, 20)
+        if number != number1:
+            print(f"Oh no, the computer's number is {number1}, and your number is {number}. Good luck next time!")
+            break
+        else:
+            print(f"Congratulations! You are the winner. The computer's number is {number1}, and your number is {number}.")
+            break
+    user = input("Do you want to start a new game? Choose yes or no.\n").lower()
+    if user == "no":
+        print("Thank you. We hope to see you again soon.")
+        break
+    else:
+        print("It's okay, let's play again.")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Welcome to the guessing number game. Press Enter to start, or write 'help'.
+help
+Please guess a number from 0 to 20 and wait for the result.
+Please enter a number from 0 to 20
+15
+Oh no, the computer's number is 10, and your number is 15. Good luck next time!
+Do you want to start a new game? Choose yes or no.
+no
+Thank you. We hope to see you again soon.</pre></div>
+
+    <h4>ملاحظات مهمّة على الكود</h4>
+    <div class="box info">
+      <div class="bt">ℹ️ قائمة المساعدة (help menu)</div>
+      <p>
+        فكرة إن البرنامج يبدأ بسؤال «تحب تشوف المساعدة؟» فكرة ممتازة في تجربة المستخدم.
+        بس لاحظ إنها متكتوبة مرّة واحدة بره الحلقة، فالمستخدم مش هيقدر يطلب المساعدة
+        وهو بيلعب. تحسين ممكن: خلّي كلمة <code class="inl">help</code> تشتغل في أي وقت.
+      </p>
+    </div>
+    <div class="box err">
+      <div class="bt">💥 تحذير: <code>print(help)</code> غلط شائع</div>
+      <div class="code"><pre>
+print(help)         # ❌ بيطبع: Type help() for interactive help...
+                    #    لأن help دالة بايثون داخلية!
+help_text = "شرح اللعبة هنا"
+print(help_text)    # ✅
+</pre></div>
+      <p>
+        لو سمّيت المتغيّر <code class="inl">help</code>، هتدهس الدالة الجاهزة.
+        <strong>استخدم اسم زي <code class="inl">help_text</code>.</strong>
+      </p>
+    </div>
+    <p>
+      كمان لاحظ إن الحلقة الداخلية هنا فيها <code class="inl">break</code> في الفرعين،
+      فهي بتلف مرّة واحدة دايمًا — يعني وجودها مش ضروري في النسخة دي.
+      هتبقى ضرورية لما نضيف <code class="inl">try/except</code> في الوحدة الجاية.
+    </p>
+
+    <h4>نسخة أنضف</h4>
+    <div class="code" data-file="random_battle_v2.py"><pre>
+import random
+HELP_TEXT = "خمّن رقم من 0 إلى 20. لو طابق رقم الكمبيوتر تكسب."
+start = input("أهلًا بك في لعبة التخمين. اضغط Enter للبدء أو اكتب help: ").strip().lower()
+if start == "help":
+    print(HELP_TEXT)
+wins = 0
+rounds = 0
+while True:
+    guess = int(input("اكتب رقم من 0 إلى 20: "))
+    computer = random.randint(0, 20)
+    rounds += 1
+    if guess == computer:
+        wins += 1
+        print(f"🎉 كسبت! الكمبيوتر اختار {computer}")
+    else:
+        print(f"❌ خسرت. الكمبيوتر اختار {computer} وإنت اخترت {guess}")
+    again = input("جولة تانية؟ (yes/no) ").strip().lower()
+    if again == "no":
+        print(f"النتيجة النهائية: كسبت {wins} من {rounds} جولة")
+        break
+</pre></div>
+    <p>
+      التحسينات: ثابت <code class="inl">HELP_TEXT</code> بحروف كابيتال (اصطلاح الثوابت في بايثون)،
+      حذف الحلقة الداخلية اللي مالهاش لازمة، وإضافة إحصائيات في النهاية.
+    </p>
+  </article>
+
+  <!-- 8.P3 -->
+  <article class="lesson project" id="u8-p3">
+    <h3>مشروع 14: لعبة «ملك أم كتابة» <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: التحقّق من صحة المدخلات داخل حلقة داخلية.</p>
+
+    <div class="code" data-file="king_or_ketaba.py"><pre>
+import random
+greeting = input("Welcome to the king or ketaba game. Press 'help' for the menu, or Enter to continue.\n").lower()
+help_text = "اختر بين 'king' و 'ketaba'. لو اخترت king تكون الملك!"
+if greeting == "help":
+    print(help_text)
+else:
+    print("It's okay, let's start.")
+while True:
+    while True:
+        user = input("Please choose between 'king' or 'ketaba': ").lower()
+        if user == "king":
+            print("Congratulations, you're the king!")
+            break
+        elif user == "ketaba":
+            print("Sorry, you're not the king.")
+            break
+        else:
+            print("Invalid input, please choose again.")
+            continue
+    again = input("Do you want to play again? (yes/no)\n").lower()
+    if again == "no":
+        print("Thank you for playing. See you again!")
+        break
+    else:
+        print("Let's play again!")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Welcome to the king or ketaba game...
+help
+اختر بين 'king' و 'ketaba'. لو اخترت king تكون الملك!
+Please choose between 'king' or 'ketaba': queen
+Invalid input, please choose again.
+Please choose between 'king' or 'ketaba': king
+Congratulations, you're the king!
+Do you want to play again? (yes/no)
+no
+Thank you for playing. See you again!</pre></div>
+
+    <h4>ملاحظة على continue هنا</h4>
+    <div class="box info">
+      <div class="bt">ℹ️ الـ <code>continue</code> الأخيرة زايدة</div>
+      <p>
+        هي آخر سطر في جسم الحلقة، فالحلقة كانت هتلف تاني على أي حال.
+        وجودها مش خطأ، لكنه بيوهم القارئ إن فيه كود بعدها هيتخطّى.
+        <strong>القاعدة:</strong> استخدم <code class="inl">continue</code> لما فيه كود
+        فعلًا بعده عايز تتخطّاه.
+      </p>
+    </div>
+
+    <h4>النسخة المطوّرة: منافسة حقيقية</h4>
+    <div class="code" data-file="king_v2.py"><pre>
+import random
+CHOICES = ["king", "ketaba"]
+score = {"you": 0, "computer": 0}
+print("لعبة ملك أم كتابة — الأول اللي يوصل 3 نقاط يكسب")
+while score["you"] &lt; 3 and score["computer"] &lt; 3:
+    while True:
+        user = input("اختر king أو ketaba: ").strip().lower()
+        if user in CHOICES:
+            break
+        print("اختيار غير صحيح")
+    coin = random.choice(CHOICES)
+    print(f"العملة طلعت: {coin}")
+    if user == coin:
+        score["you"] += 1
+        print("👑 نقطة لك!")
+    else:
+        score["computer"] += 1
+        print("💻 نقطة للكمبيوتر")
+    print(f"النتيجة: أنت {score['you']} - الكمبيوتر {score['computer']}\n")
+if score["you"] == 3:
+    print("🎉 مبروك، إنت الفائز!")
+else:
+    print("😔 الكمبيوتر كسب، حظ أوفر")
+</pre></div>
+    <p>
+      استخدمنا هنا <strong>قاموس</strong> <code class="inl">score</code> عشان نخزّن النتيجتين
+      بأسماء واضحة، وشرط الحلقة نفسه بقى شرط الفوز.
+      القواميس هي موضوع الوحدة 10.
+    </p>
+
+    <div class="ex">
+      <div class="bt">✍️ التحدّي</div>
+      <p>حوّل اللعبة لـ «حجر ورقة مقص» — تلميح: الشروط هتبقى 3 حالات فوز بدل واحدة.</p>
+      <details class="sol"><summary>شوف الحل (النسخة الكاملة في الوحدة 13)</summary>
+      <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">user</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+      <div class="code"><pre>
+if (user == "حجر" and computer == "مقص") or \
+   (user == "مقص" and computer == "ورقة") or \
+   (user == "ورقة" and computer == "حجر"):
+    print("كسبت!")
+elif user == computer:
+    print("تعادل")
+else:
+    print("خسرت")
+</pre></div>
+      <p>علامة <code class="inl">\</code> في آخر السطر معناها «الجملة مكمّلة في السطر اللي بعده».</p>
+      </details>
+    </div>
+  </article>
+  <!-- ADD:u8-ch -->
+  <!-- 8.CH -->
+  <article class="lesson" id="u8-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة الثامنة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">حلقات while: الاختبار الأهم دايمًا — هل الحلقة بتقف في الوقت الصح؟</p>
+
+    <div class="challenge" data-ch="u8-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — متتالية كولاتز <span class="lvl">⭐⭐</span></div>
+      <p>
+        ابدأ برقم n: لو زوجي اقسمه على 2، لو فردي اضربه في 3 وزوّد 1. كرّر لحد ما توصل 1.
+        اطبع <code class="inl">عدد الخطوات: N</code>. (6 ← 3 ← 10 ← 5 ← 16 ← 8 ← 4 ← 2 ← 1 = 8 خطوات)
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+n = int(input("الرقم: "))
+steps = 0
+# كرّر لحد ما n تبقى 1
+print(f"عدد الخطوات: {steps}")
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def steps_for(n):
+    out = run_program(f"{n}\n")
+    return out.strip().splitlines()[-1].strip(), out
+
+def test_6():
+    "6 ← 8 خطوات"
+    got, out = steps_for(6)
+    assert got == "عدد الخطوات: 8", out
+
+def test_1():
+    "1 ← 0 خطوات (وصلنا من الأول)"
+    got, out = steps_for(1)
+    assert got == "عدد الخطوات: 0", out
+
+def test_27():
+    "27 ← 111 خطوة"
+    got, out = steps_for(27)
+    assert got == "عدد الخطوات: 111", out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+n = int(input("الرقم: "))
+steps = 0
+while n != 1:
+    if n % 2 == 0:
+        n = n // 2
+    else:
+        n = 3 * n + 1
+    steps += 1
+print(f"عدد الخطوات: {steps}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u8-ch2">
+      <div class="ch-head">🐞 التحدّي 2 — تخمين بلا نهاية <span class="lvl">⭐⭐</span></div>
+      <p>المفروض اللاعب ياخد <strong>3 محاولات بس</strong> يخمّن فيهم الرقم 7. البرنامج ده ما بيوقفش أبدًا بعد 3 محاولات. صلّحه.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+secret = 7
+attempts = 0
+while attempts &lt; 3:
+    guess = int(input("خمّن: "))
+    if guess == secret:
+        print("صح!")
+        break
+else:
+    print("خلصت المحاولات")
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def ending(stdin):
+    out = run_program(stdin)
+    return out.strip().splitlines()[-1].strip(), out
+
+def test_three_wrong():
+    "3 تخمينات غلط ← خلصت المحاولات"
+    got, out = ending("1\n2\n3\n")
+    assert got == "خلصت المحاولات", out
+
+def test_no_fourth_chance():
+    "التخمين الرابع ما يتقبلش حتى لو صح"
+    got, out = ending("1\n2\n3\n7\n")
+    assert got == "خلصت المحاولات", out
+
+def test_second_try():
+    "صح في التاني ← صح!"
+    got, out = ending("5\n7\n")
+    assert got == "صح!", out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+secret = 7
+attempts = 0
+while attempts &lt; 3:
+    guess = int(input("خمّن: "))
+    attempts += 1
+    if guess == secret:
+        print("صح!")
+        break
+else:
+    print("خلصت المحاولات")
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u8-ch -->
+
+  <!-- 8.EX -->
+  <article class="lesson" id="u8-ex">
+    <h3>تمارين الوحدة الثامنة <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">قبل ما تشغّل أي <code>while</code>: اسأل نفسك «إيه اللي هيوقّفها؟»</p>
+
+    <h4>تمارين</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — العدّ التنازلي</div>
+      <p>اطبع من 10 لـ 1 بـ <code class="inl">while</code>، وبعدين «انطلق!».</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+n = 10
+while n &gt; 0:
+    print(n)
+    n -= 1
+print("انطلق!")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — لقّط الغلط</div>
+      <p>الكود ده هيفضل شغّال للأبد. ليه، وإزاي تصلّحه؟</p>
+      <div class="code"><pre>
+count = 0
+while count &lt; 5:
+    print("مرحبا")
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <p>
+        نسينا <strong>التحديث</strong>: <code class="inl">count</code> فضلت 0،
+        فالشرط <code class="inl">0 &lt; 5</code> صح للأبد.
+      </p>
+      <div class="code"><pre>
+count = 0
+while count &lt; 5:
+    print("مرحبا")
+    count += 1        # ← السطر الناقص
+</pre></div>
+      <p>لو حصلت معاك، اضغط <strong>Ctrl + C</strong> في الـ Terminal.</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 3 — قائمة تسوّق</div>
+      <p>
+        خلّي المستخدم يضيف أصناف لقائمة واحدًا واحدًا. لما يكتب «تم» توقّف واطبع
+        القائمة مرقّمة وعدد الأصناف.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+items = []
+while True:
+    item = input("اكتب صنف (أو 'تم' للإنهاء): ").strip()
+    if item == "تم":
+        break
+    if not item:
+        print("ما كتبتش حاجة")
+        continue
+    items.append(item)
+    print(f"✅ اتضاف: {item}")
+print(f"\nقائمتك ({len(items)} صنف):")
+for i, item in enumerate(items, start=1):
+    print(f"  {i}. {item}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — مجموع تراكمي</div>
+      <p>
+        اطلب أرقام من المستخدم واحدًا واحدًا، واجمعها. لما يكتب 0 توقّف واطبع
+        المجموع والمتوسط وعدد الأرقام.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+total = 0
+count = 0
+while True:
+    n = float(input("اكتب رقم (0 للإنهاء): "))
+    if n == 0:
+        break
+    total += n
+    count += 1
+if count == 0:
+    print("ما دخلتش أي رقم")
+else:
+    print(f"المجموع: {total}")
+    print(f"عدد الأرقام: {count}")
+    print(f"المتوسط: {total / count:.2f}")
+</pre></div>
+      <p><strong>لاحظ:</strong> فحص <code class="inl">count == 0</code> ضروري، وإلا هتقسم على صفر.</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 5 — التحقّق المتكرّر</div>
+      <p>اطلب من المستخدم سن بين 1 و 120، وفضل تسأل لحد ما يدخل رقم في النطاق.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+while True:
+    age = int(input("سنك (1-120): "))
+    if 1 &lt;= age &lt;= 120:
+        break
+    print("رقم خارج النطاق، جرّب تاني")
+print(f"سنك: {age}")
+</pre></div>
+      <p>لاحظ سلسلة المقارنات <code class="inl">1 &lt;= age &lt;= 120</code>. وبعد الوحدة 9 هتضيف <code class="inl">try/except</code> عشان الحروف كمان.</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 6 — جدول الضرب الكامل</div>
+      <p>اطبع جدول ضرب من 1×1 لـ 9×9 في شكل مصفوفة مربّعة محاذية.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+for i in range(1, 10):
+    for j in range(1, 10):
+        print(f"{i*j:4}", end="")
+    print()
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>   1   2   3   4   5   6   7   8   9
+   2   4   6   8  10  12  14  16  18
+   3   6   9  12  15  18  21  24  27
+   ...
+   9  18  27  36  45  54  63  72  81</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 7 — لعبة النرد التراكمية</div>
+      <p>
+        اللاعب يرمي زهر متكرّر ويجمّع نقاط. في كل رمية يقرّر يكمّل ولا يقف.
+        لو طلع 1، يخسر كل نقاطه وتنتهي الجولة. لو وقف بإرادته، يحتفظ بنقاطه.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import random
+score = 0
+print("لعبة النرد: اجمع نقاط، بس لو طلع 1 تخسر كل حاجة!")
+while True:
+    input("اضغط Enter عشان ترمي...")
+    roll = random.randint(1, 6)
+    print(f"طلع: {roll}")
+    if roll == 1:
+        print("💀 خسرت كل نقاطك!")
+        score = 0
+        break
+    score += roll
+    print(f"نقاطك الحالية: {score}")
+    choice = input("تكمّل؟ (yes/no) ").strip().lower()
+    if choice == "no":
+        print(f"🎉 وقفت بذكاء. نقاطك النهائية: {score}")
+        break
+</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. المكوّن اللي نسيانه بيسبّب حلقة لانهائية هو…</p>
+        <label><input type="radio"> القيمة الابتدائية</label>
+        <label><input type="radio"> النقطتين</label>
+        <label><input type="radio"> تحديث المتغيّر جوّه الحلقة</label>
+        <label><input type="radio"> المسافة البادئة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">break</code> جوّه حلقة داخلية بتخرج من…</p>
+        <label><input type="radio"> الحلقة الداخلية بس</label>
+        <label><input type="radio"> الحلقتين</label>
+        <label><input type="radio"> البرنامج كله</label>
+        <label><input type="radio"> الدالة</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. إمتى تستخدم <code class="inl">while</code> بدل <code class="inl">for</code>؟</p>
+        <label><input type="radio"> لما تكون عارف عدد التكرارات</label>
+        <label><input type="radio"> لما التكرار متوقّف على شرط مش على عدد</label>
+        <label><input type="radio"> لما تلف على قائمة</label>
+        <label><input type="radio"> دايمًا، while أحسن</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. لو الخارجية 3 دورات والداخلية 4، الجسم الداخلي بيتنفّذ كام مرّة؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 7</label>
+        <label><input type="radio"> 12</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">5. في نمط «إعادة اللعب»، الحلقة الخارجية مسؤولة عن…</p>
+        <label><input type="radio"> تكرار الجولات</label>
+        <label><input type="radio"> التحقّق من المدخلات</label>
+        <label><input type="radio"> حساب النقاط</label>
+        <label><input type="radio"> طباعة النتيجة</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:8 -->
+  <div class="checkpoint" data-unit="8">
+    <h4>✅ نقطة تفتيش: الوحدة الثامنة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أكتب حلقة while بشرط بيتغيّر وتقف.</li><li>أستخدم نمط while True + break للتحقّق من المدخلات.</li><li>أفهم الحلقات المتداخلة ونمط «تلعب تاني؟».</li><li>أتجنّب فخ القوائم المتداخلة المشتركة.</li></ul>
+  </div>
+  <!-- /CP -->

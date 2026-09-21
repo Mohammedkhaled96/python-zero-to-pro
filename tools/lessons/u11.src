@@ -1,0 +1,1038 @@
+@@lesson u11-l5 before="<!-- 11.P1 -->"
+  <!-- 11.5 -->
+  <article class="lesson" id="u11-l5">
+    <h3>تلميحات النوع (Type Hints): وثّق دوالك بطريقة يفهمها المحرّر <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تكتب أنواع الوسائط والإرجاع، تفهم إن بايثون ما بتفرضهاش، وتستخدم أداة mypy عشان تكتشف أخطاء قبل ما الكود يشتغل.</p>
+
+    <h4>1. الشكل الأساسي</h4>
+    @code run
+def greet(name: str, times: int = 1) -> str: ¦¦ `name: str` = «متوقّع نص». `times: int = 1` = نوع + قيمة افتراضية. `-> str` = «الدالة بترجّع نص».
+    return ("أهلًا " + name + " ") * times ¦¦ جسم الدالة نفسه ما اتغيّرش خالص.
+ ¦¦
+print(greet("سارة", 2)) ¦¦ الاستدعاء عادي.
+print(greet.__annotations__) ¦¦ التلميحات بتتخزّن في قاموس جوّه الدالة — أدوات زي FastAPI بتقراه عشان تتحقّق من البيانات أوتوماتيك.
+    @end
+    @out
+أهلًا سارة أهلًا سارة
+{'name': &lt;class 'str'&gt;, 'times': &lt;class 'int'&gt;, 'return': &lt;class 'str'&gt;}
+    @end
+
+    <h4>2. الحقيقة المهمّة: بايثون مش بتفرضها</h4>
+    @code run
+def double(x: int) -> int: ¦¦ التلميح بيقول int.
+    return x * 2 ¦¦ الضرب في 2.
+ ¦¦
+print(double(5)) ¦¦ الاستخدام المقصود.
+print(double("ha")) ¦¦ **مفيش خطأ**! بايثون تجاهلت التلميح ونفّذت `"ha" * 2`. التلميحات **توثيق للبشر والأدوات**، مش قيود وقت التشغيل.
+    @end
+    @out
+10
+haha
+    @end
+    <div class="box brain">
+      <div class="bt">🧠 طب فايدتها إيه لو مش بتتفرض؟</div>
+      <ul>
+        <li><strong>المحرّر بيفهمك</strong>: VS Code بيقترح دوال النصوص لما يعرف إن <code class="inl">name</code> نص، ويحط خط أحمر لو بعت رقم.</li>
+        <li><strong>توثيق ما بيقدمش</strong>: التعليقات بتتنسي، لكن التلميح جزء من الكود.</li>
+        <li><strong>أدوات فحص</strong> زي <code class="inl">mypy</code> بتلاقي أخطاء الأنواع في مشروع كامل من غير تشغيل.</li>
+        <li><strong>مكتبات حديثة بتعتمد عليها</strong>: FastAPI و Pydantic و dataclasses.</li>
+      </ul>
+    </div>
+
+    <h4>3. أنواع المجموعات والقيم الاختيارية</h4>
+    @code run
+def average(scores: list[float]) -> float: ¦¦ `list[float]` = قائمة **عناصرها** float. (من بايثون 3.9 بتكتبها كده مباشرةً.)
+    return sum(scores) / len(scores) ¦¦ المتوسّط. الـ int مقبول مكان float في التلميحات.
+ ¦¦
+def find_user(users: dict[str, int], name: str) -> int | None: ¦¦ `dict[str, int]` مفاتيح نصوص وقيم أرقام. `int | None` = «رقم **أو** None» (من 3.10).
+    return users.get(name) ¦¦ `get` بترجّع None لو مش موجود — والتلميح بيحذّر اللي بيستخدم الدالة إنه لازم يتعامل مع الاحتمال ده.
+ ¦¦
+def split_name(full: str) -> tuple[str, str]: ¦¦ `tuple[str, str]` = tuple فيها **بالظبط** عنصرين نصوص.
+    first, _, last = full.partition(" ") ¦¦ تقسيم عند أول مسافة.
+    return first, last ¦¦ إرجاع قيمتين.
+ ¦¦
+print(average([90, 85.5, 70])) ¦¦ متوسّط.
+print(find_user({"sara": 1}, "ali")) ¦¦ مش موجود ← None.
+print(split_name("سارة أحمد")) ¦¦ tuple.
+    @end
+    @out
+81.83333333333333
+None
+('سارة', 'أحمد')
+    @end
+    @code run
+from typing import Callable, Any ¦¦ مكتبة `typing` فيها أنواع خاصة.
+ ¦¦
+count: int = 0 ¦¦ ممكن تلمّح للمتغيّرات كمان — مفيدة لما القيمة الابتدائية مش بتوضّح النوع.
+names: list[str] = [] ¦¦ قائمة فاضية: من غير تلميح المحرّر مش هيعرف هتشيل إيه.
+ ¦¦
+def apply(func: Callable[[int], int], value: int) -> int: ¦¦ `Callable[[int], int]` = «دالة بتاخد int وبترجّع int».
+    return func(value) ¦¦ نداء الدالة المستلمة.
+ ¦¦
+def show(item: Any) -> None: ¦¦ `Any` = أي نوع. `-> None` = الدالة ما بترجّعش حاجة (بتطبع بس).
+    print(f"[{item}]") ¦¦ طباعة.
+ ¦¦
+print(apply(abs, -7)) ¦¦ `abs` دالة بتاخد رقم وترجّع رقم — مطابقة.
+show(3.5) ¦¦ أي حاجة مقبولة.
+    @end
+    @out
+7
+[3.5]
+    @end
+
+    <h4>4. اكتشف الأخطاء قبل التشغيل بـ mypy</h4>
+    @code app.py
+def double(x: int) -> int: ¦¦ نفس الدالة.
+    return x * 2 ¦¦ جسمها.
+ ¦¦
+result = double("ha") ¦¦ الاستدعاء الغلط اللي بايثون سكتت عليه.
+print(result.upper()) ¦¦ وسطر تاني بيستخدم النتيجة كنص رغم إن التلميح بيقول int.
+    @end
+    @code terminal
+pip install mypy ¦¦ تسطيب الأداة (مرّة واحدة).
+mypy app.py ¦¦ فحص الملف **من غير تشغيله**.
+    @end
+    @out
+app.py:4: error: Argument 1 to "double" has incompatible type "str"; expected "int"  [arg-type]
+app.py:5: error: "int" has no attribute "upper"  [attr-defined]
+Found 2 errors in 1 file (checked 1 source file)
+    @end
+    <div class="box tip">
+      <div class="bt">💡 تبدأ إزاي؟</div>
+      <p>
+        مش لازم تلمّح كل حاجة. ابدأ بـ <strong>وسائط الدوال وقيم الإرجاع</strong> — ده 80% من الفايدة.
+        المتغيّرات المحلّية الواضحة زي <code class="inl">total = 0</code> مش محتاجة.
+      </p>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">def f(x: int) -> int</code> ثم <code class="inl">f("a")</code> — إيه اللي بيحصل وقت التشغيل؟</p>
+        <label><input type="radio"> TypeError فورًا</label>
+        <label><input type="radio"> البرنامج مش هيتصرّف</label>
+        <label><input type="radio"> بايثون بتنفّذ عادي — التلميحات مش بتتفرض</label>
+        <label><input type="radio"> بتتحوّل "a" لرقم</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. دالة ممكن ترجّع نص أو None، التلميح؟</p>
+        <label><input type="radio"> -&gt; str | None</label>
+        <label><input type="radio"> -&gt; str or None</label>
+        <label><input type="radio"> -&gt; [str, None]</label>
+        <label><input type="radio"> -&gt; Any[str]</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. الأداة اللي بتفحص الأنواع من غير تشغيل؟</p>
+        <label><input type="radio"> pip</label>
+        <label><input type="radio"> pytest</label>
+        <label><input type="radio"> venv</label>
+        <label><input type="radio"> mypy</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u11-l6 before="<!-- 11.P1 -->"
+  <!-- 11.6 -->
+  <article class="lesson" id="u11-l6">
+    <h3>الدوال بعمق: lambda و map/filter والوسائط الإلزامية والـ Closures و functools <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تتعامل مع الدوال كقيم — تخزّنها، تبعتها، ترجّعها، وتصنعها — وده الأساس اللي بتقوم عليه الـ decorators والبرمجة الوظيفية.</p>
+
+    <h4>1. الدالة قيمة زي أي قيمة</h4>
+    @code run
+def shout(text): ¦¦ دالة عادية.
+    return text.upper() + "!" ¦¦ حروف كبيرة وعلامة تعجّب.
+ ¦¦
+yell = shout ¦¦ **من غير أقواس**: مش بننادي الدالة، بنعمل اسم تاني بيشاور على نفس كائن الدالة في الذاكرة.
+print(yell("hi")) ¦¦ `yell` بقت تتنادى زي `shout` بالظبط.
+print(yell.__name__) ¦¦ الكائن نفسه اسمه الأصلي shout.
+tools = [str.upper, str.lower, str.title] ¦¦ قائمة **دوال** — دوال النصوص نفسها من غير أقواس.
+for tool in tools: ¦¦ المرور على الدوال.
+    print(tool("hELLo")) ¦¦ نداء كل دالة على نفس النص.
+    @end
+    @out
+HI!
+shout
+HELLO
+hello
+Hello
+    @end
+
+    <h4>2. lambda: دالة صغيرة من غير اسم</h4>
+    <div class="diagram">
+<pre>  def square(x):            square = lambda x: x ** 2
+      return x ** 2                    ──┬─── ┬  ───┬───
+                                         │    │     └─ القيمة اللي بترجع (تعبير واحد بس)
+                                         │    └─ الوسائط
+                                         └─ الكلمة المحجوزة</pre>
+      <div class="cap">lambda = تعبير واحد بيترجّع تلقائيًا من غير return</div>
+    </div>
+    @code run
+students = [("سارة", 91), ("أحمد", 78), ("منى", 85)] ¦¦ أسماء ودرجات.
+print(sorted(students, key=lambda s: s[1], reverse=True)) ¦¦ **المكان الطبيعي لـ lambda**: دالة صغيرة بتتبعت كوسيط. هنا: «رتّب حسب العنصر رقم 1 (الدرجة)» تنازليًا.
+words = ["kiwi", "Banana", "apple", "fig"] ¦¦ كلمات بحالات مختلفة.
+print(sorted(words)) ¦¦ الترتيب الافتراضي بالـ Unicode: الحروف الكبيرة **قبل** الصغيرة، فـ Banana الأول.
+print(sorted(words, key=str.lower)) ¦¦ مش محتاجين lambda لو فيه دالة جاهزة: قارن بالنسخة الصغيرة.
+print(sorted(words, key=lambda w: (-len(w), w.lower()))) ¦¦ **مفتاح tuple**: الطول تنازليًا (السالب بيقلب الترتيب)، ولو متساوي أبجديًا.
+    @end
+    @out
+[('سارة', 91), ('منى', 85), ('أحمد', 78)]
+['Banana', 'apple', 'fig', 'kiwi']
+['apple', 'Banana', 'fig', 'kiwi']
+['Banana', 'apple', 'kiwi', 'fig']
+    @end
+    <div class="box warn">
+      <div class="bt">⚠️ ما تسمّيش lambda</div>
+      <p>
+        <code class="inl">square = lambda x: x ** 2</code> شغّالة، بس دليل PEP 8 بيقول: لو هتدّيها اسم، اكتب <code class="inl">def</code>.
+        الـ def بيبان اسمها في رسايل الخطأ، وينفع يبقى ليها docstring. lambda للدوال «اللي بتستخدمها مرّة في مكانها».
+      </p>
+    </div>
+
+    <h4>3. map و filter</h4>
+    @code run
+nums = [1, 2, 3, 4, 5, 6] ¦¦ أرقام.
+print(list(map(lambda n: n * n, nums))) ¦¦ `map(دالة, مجموعة)` بتطبّق الدالة على كل عنصر. بترجّع كائن كسول فبنحوّله لـ list عشان نشوفه.
+print([n * n for n in nums]) ¦¦ نفس الناتج بالـ comprehension — **وده الأوضح في بايثون** غالبًا.
+print(list(filter(lambda n: n % 2 == 0, nums))) ¦¦ `filter` بتسيب العناصر اللي الدالة رجّعت لها True.
+print(list(map(int, ["10", "20", "30"]))) ¦¦ **هنا map بتكسب**: لما الدالة جاهزة ومش محتاجة lambda، السطر أقصر وأوضح.
+print(list(map(str.strip, [" a ", "b  "]))) ¦¦ تنظيف قائمة نصوص.
+print(list(filter(None, ["", "x", 0, 5, None]))) ¦¦ `None` مكان الدالة = «سيب القيم الـ Truthy بس» — طريقة سريعة لشيل الفاضي والأصفار.
+    @end
+    @out
+[1, 4, 9, 16, 25, 36]
+[1, 4, 9, 16, 25, 36]
+[2, 4, 6]
+[10, 20, 30]
+['a', 'b']
+['x', 5]
+    @end
+
+    <h4>4. الوسائط المسمّاة إلزاميًا (*) والموضعية إلزاميًا (/)</h4>
+    @code run
+def create_user(name, *, admin=False, active=True): ¦¦ النجمة **لوحدها** معناها: كل اللي بعدي **لازم يتبعت بالاسم**.
+    return f"{name} admin={admin} active={active}" ¦¦ نص يوضّح القيم.
+ ¦¦
+print(create_user("sara", admin=True)) ¦¦ صح: `admin` بالاسم.
+try: ¦¦ نجرّب الاستدعاء الغلط.
+    create_user("sara", True) ¦¦ `True` هنا غامضة: admin ولّا active؟ بايثون بترفض.
+except TypeError as e: ¦¦ نمسك الخطأ.
+    print(e) ¦¦ الرسالة بتوضّح المشكلة.
+ ¦¦
+def power(base, exp, /): ¦¦ الشرطة `/` معناها: اللي **قبلي** لازم يتبعت بالترتيب بس (مش بالاسم).
+    return base ** exp ¦¦ الأس.
+ ¦¦
+print(power(2, 10)) ¦¦ صح. `power(base=2, exp=10)` كانت هتدّي TypeError.
+    @end
+    @out
+sara admin=True active=True
+create_user() takes 1 positional argument but 2 were given
+1024
+    @end
+    <div class="box brain">
+      <div class="bt">🧠 ليه نقيّد نفسنا؟</div>
+      <p>
+        <code class="inl">send_email("x@y.com", True, False)</code> — مين يفهم True و False دول؟ الـ <code class="inl">*</code> بتجبر الكاتب يقول
+        <code class="inl">send_email("x@y.com", html=True, urgent=False)</code>. <strong>الكود بيبقى بيشرح نفسه</strong>، وتقدر تغيّر ترتيب الوسائط بعدين من غير ما تكسر حد.
+        هتلاقيها في مكتبات كتير: <code class="inl">sorted(lst, *, key, reverse)</code>.
+      </p>
+    </div>
+
+    <h4>5. الـ Closures: دالة بتفتكر البيئة اللي اتولدت فيها</h4>
+    @code run
+def make_multiplier(factor): ¦¦ «مصنع دوال»: دالة بتصنع وترجّع دالة.
+    def multiply(x): ¦¦ دالة **جوّه** دالة.
+        return x * factor ¦¦ `factor` مش وسيط لـ multiply — جاي من الدالة الخارجية.
+    return multiply ¦¦ بنرجّع الدالة نفسها (من غير أقواس).
+ ¦¦
+double = make_multiplier(2) ¦¦ `make_multiplier` خلصت ورجعت… لكن الدالة الراجعة **شايلة معاها** factor = 2.
+triple = make_multiplier(3) ¦¦ نسخة تانية مستقلة بـ factor = 3.
+print(double(10), triple(10)) ¦¦ كل واحدة فاكرة الـ factor بتاعها.
+print(double.__closure__[0].cell_contents) ¦¦ نظرة من جوّه: القيمة المحفوظة في «الـ closure».
+    @end
+    @out
+20 30
+2
+    @end
+    @code run
+def make_counter(): ¦¦ مصنع عدّادات.
+    count = 0 ¦¦ متغيّر محلّي في الخارجية.
+    def increment(): ¦¦ الدالة الداخلية.
+        nonlocal count ¦¦ **nonlocal**: «count اللي هعدّله مش محلّي عندي ولا global — ده بتاع الدالة اللي فوقي». من غيرها `count += 1` هترمي UnboundLocalError.
+        count += 1 ¦¦ التعديل على متغيّر الخارجية.
+        return count ¦¦ إرجاع القيمة الجديدة.
+    return increment ¦¦ إرجاع الدالة.
+ ¦¦
+counter = make_counter() ¦¦ عدّاد.
+print(counter(), counter(), counter()) ¦¦ الحالة **محفوظة بين الاستدعاءات** — من غير متغيّر global ومن غير كلاس.
+other = make_counter() ¦¦ عدّاد تاني جديد…
+print(other()) ¦¦ …بيبدأ من الأول، مستقل تمامًا.
+    @end
+    @out
+1 2 3
+1
+    @end
+    <div class="box err">
+      <div class="bt">❌ UnboundLocalError</div>
+      <p>
+        لو شلت <code class="inl">nonlocal count</code>: بايثون بتشوف <code class="inl">count += 1</code> (إسناد) فبتقرّر إن count <strong>محلّي</strong> في increment،
+        وبعدين تحاول تقرا قيمته قبل ما يتعرّف ← <code class="inl">UnboundLocalError: cannot access local variable 'count'</code>. نفس قاعدة LEGB من درس النطاق.
+      </p>
+    </div>
+
+    <h4>6. functools: partial و reduce</h4>
+    @code run
+from functools import partial, reduce ¦¦ مكتبة أدوات الدوال.
+ ¦¦
+def power(base, exp): ¦¦ دالة عامة.
+    return base ** exp ¦¦ الأس.
+ ¦¦
+square = partial(power, exp=2) ¦¦ `partial` بتصنع دالة جديدة **وسائطها متثبّتة جزئيًا**. هنا الأس دايمًا 2.
+cube = partial(power, exp=3) ¦¦ ونسخة بأس 3.
+print(square(5), cube(2)) ¦¦ بنبعت الأساس بس.
+print_csv = partial(print, sep=",") ¦¦ تعمل نسخة مخصّصة من دالة جاهزة.
+print_csv("a", "b", "c") ¦¦ طباعة بفواصل.
+total = reduce(lambda acc, n: acc + n, [1, 2, 3, 4]) ¦¦ `reduce` بتختصر المجموعة لقيمة واحدة: ((1+2)+3)+4. `acc` = المتراكم.
+print(total) ¦¦ 10 (في الحقيقة `sum` أوضح هنا).
+longest = reduce(lambda a, b: a if len(a) >= len(b) else b, ["hi", "hello", "hey"]) ¦¦ مقارنة كل عنصر بالأطول لحد دلوقتي.
+print(longest) ¦¦ (وبرضه `max(words, key=len)` أوضح — reduce لما مفيش دالة جاهزة).
+    @end
+    @out
+25 8
+a,b,c
+10
+hello
+    @end
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>ترتيب بمفتاحين</div>
+      <p>رتّب المنتجات حسب التصنيف أبجديًا، وجوّه كل تصنيف حسب السعر من الأغلى.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+products = [ ¦¦ قائمة قواميس.
+    {"name": "Mouse", "cat": "tech", "price": 250}, ¦¦ منتج.
+    {"name": "Pen", "cat": "office", "price": 10}, ¦¦ منتج.
+    {"name": "Laptop", "cat": "tech", "price": 30000}, ¦¦ منتج.
+    {"name": "Stapler", "cat": "office", "price": 60}, ¦¦ منتج.
+] ¦¦ قفل.
+ordered = sorted(products, key=lambda p: (p["cat"], -p["price"])) ¦¦ tuple: التصنيف تصاعدي، والسعر بالسالب = تنازلي.
+print([p["name"] for p in ordered]) ¦¦ الأسماء بالترتيب.
+      @end
+      @out
+['Stapler', 'Pen', 'Laptop', 'Mouse']
+      @end
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>مصنع الخصومات</div>
+      <p>اكتب <code class="inl">make_discount(percent)</code> بترجّع دالة بتطبّق الخصم على سعر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def make_discount(percent: float): ¦¦ المصنع.
+    def apply(price: float) -> float: ¦¦ الدالة الداخلية.
+        return round(price * (1 - percent / 100), 2) ¦¦ بتستخدم `percent` من الـ closure.
+    return apply ¦¦ إرجاعها.
+ ¦¦
+black_friday = make_discount(30) ¦¦ خصم 30%.
+students = make_discount(10) ¦¦ خصم 10%.
+print(black_friday(500), students(500)) ¦¦ نفس السعر بخصمين.
+      @end
+      @out
+350.0 450.0
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">def f(a, *, b)</code> — أنهي استدعاء صحيح؟</p>
+        <label><input type="radio"> f(1, 2)</label>
+        <label><input type="radio"> f(1, b=2)</label>
+        <label><input type="radio"> f(a=1, 2)</label>
+        <label><input type="radio"> f(*, 1, 2)</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">list(filter(None, [0, 1, "", "a"]))</code>؟</p>
+        <label><input type="radio"> [0, ""]</label>
+        <label><input type="radio"> []</label>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> [1, 'a']</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ليه محتاجين <code class="inl">nonlocal</code> في العدّاد؟</p>
+        <label><input type="radio"> عشان نعدّل متغيّر الدالة الخارجية من الداخلية</label>
+        <label><input type="radio"> عشان نقرا متغيّر global</label>
+        <label><input type="radio"> عشان الدالة تبقى أسرع</label>
+        <label><input type="radio"> مش محتاجينها، مجرّد شكل</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. <code class="inl">partial(int, base=2)("101")</code>؟</p>
+        <label><input type="radio"> 101</label>
+        <label><input type="radio"> "101"</label>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> 2</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u11-l7 before="<!-- 11.P1 -->"
+  <!-- 11.7 -->
+  <article class="lesson" id="u11-l7">
+    <h3>المكرّرات والمولّدات: iter و next و yield <span class="tag">درس ؟ · جوهري</span></h3>
+    <p class="goal">الهدف: تفهم إزاي حلقة for بتشتغل من جوّه، وتكتب دوال بتولّد القيم «عند الطلب» — عشان تعالج ملايين العناصر أو ملفات بالجيجات من غير ما الذاكرة تتملي.</p>
+
+    <h4>1. بروتوكول التكرار: iter و next</h4>
+    @code run
+colors = ["أحمر", "أخضر", "أزرق"] ¦¦ قائمة = **قابلة للتكرار** (iterable).
+it = iter(colors) ¦¦ `iter` بتطلب منها **مُكرِّر** (iterator): كائن فاكر «أنا فين دلوقتي».
+print(next(it)) ¦¦ `next` = «هات اللي بعده». أول مرّة: أول عنصر.
+print(next(it)) ¦¦ المكرّر فاكر مكانه.
+print(next(it)) ¦¦ آخر عنصر.
+print(next(it, "خلصت")) ¦¦ مفيش عناصر: الوسيط التاني قيمة افتراضية بدل الخطأ. من غيره: `StopIteration`.
+    @end
+    @out
+أحمر
+أخضر
+أزرق
+خلصت
+    @end
+    <p>ده بالظبط اللي <code class="inl">for</code> بتعمله من ورا الستارة:</p>
+    @code run
+colors = ["أحمر", "أخضر", "أزرق"] ¦¦ نفس القائمة.
+it = iter(colors) ¦¦ الخطوة 1: هات مكرّر.
+while True: ¦¦ الخطوة 2: كرّر للأبد…
+    try: ¦¦ …وحاول…
+        color = next(it) ¦¦ …تاخد العنصر الجاي.
+    except StopIteration: ¦¦ لو المكرّر قال «خلصت»…
+        break ¦¦ …اخرج. **وده سبب إن for مش بترمي خطأ في الآخر**.
+    print(color) ¦¦ جسم الحلقة.
+    @end
+    @out
+أحمر
+أخضر
+أزرق
+    @end
+
+    <h4>2. دالة المولّد: yield</h4>
+    <p>
+      أي دالة فيها <code class="inl">yield</code> بتبقى <strong>مولّد</strong>. ندائها <strong>ما بينفّذش الكود</strong> — بيرجّع كائن مولّد.
+      كل <code class="inl">next</code> بيشغّل الدالة لحد أول <code class="inl">yield</code>، يسلّم القيمة، و<strong>يجمّد الدالة في مكانها</strong> بكل متغيّراتها لحد الطلب الجاي.
+    </p>
+    @code run
+def countdown(n): ¦¦ دالة عادية شكلًا…
+    print("بدأنا") ¦¦ هنشوف إمتى السطر ده بيتنفّذ.
+    while n > 0: ¦¦ حلقة.
+        yield n ¦¦ …بس فيها `yield`: سلّم n **ووقّف هنا**.
+        n -= 1 ¦¦ لما حد يطلب القيمة الجاية، بنكمّل من السطر ده بالظبط.
+    print("خلصنا") ¦¦ بيتنفّذ لما الحلقة تخلص — وبعده المولّد بيرمي StopIteration.
+ ¦¦
+gen = countdown(3) ¦¦ **مفيش «بدأنا» اتطبعت!** الكود لسه ما اشتغلش.
+print(type(gen)) ¦¦ كائن مولّد.
+print(next(gen)) ¦¦ دلوقتي بس: بيطبع «بدأنا» ويوصل لأول yield ويسلّم 3.
+print(next(gen)) ¦¦ بيكمّل من `n -= 1`، يلف، ويسلّم 2.
+for value in gen: ¦¦ `for` بتكمّل من مكان ما وقفنا.
+    print(value) ¦¦ 1، وبعدها «خلصنا».
+    @end
+    @out
+&lt;class 'generator'&gt;
+بدأنا
+3
+2
+1
+خلصنا
+    @end
+
+    <h4>3. ليه ده مهم؟ الذاكرة</h4>
+    @code run
+import sys ¦¦ `sys.getsizeof` بترجّع حجم الكائن بالبايت.
+squares_list = [n * n for n in range(1_000_000)] ¦¦ قائمة: **مليون رقم متخزّنين فعلًا** في الذاكرة.
+squares_gen = (n * n for n in range(1_000_000)) ¦¦ تعبير مولّد (أقواس عادية): **وصفة** لتوليدهم — ولا رقم اتحسب لسه.
+print(f"القائمة: {sys.getsizeof(squares_list) // 1024:,} KB") ¦¦ حوالي 8 ميجا (الرقم بيختلف شوية حسب النسخة) — وده للأسهم بس من غير الأرقام نفسها.
+print(f"المولّد: {sys.getsizeof(squares_gen)} bytes") ¦¦ حجم ثابت صغير **مهما كان العدد** — مليون ولا مليار.
+print(sum(squares_gen)) ¦¦ `sum` بتسحب منه رقم رقم وتجمع. الذاكرة ما عدّتش بضع بايتات.
+    @end
+    @out rtl
+القائمة: 8,250 KB
+المولّد: 200 bytes
+333332833333500000
+    @end
+    <div class="box brain">
+      <div class="bt">🧠 التقييم الكسول (Lazy Evaluation)</div>
+      <p>
+        القائمة = <strong>مطبخ طبخ كل الأكل مرّة واحدة</strong> وحطّه على الترابيزة. المولّد = <strong>مطبخ بيطبخ طبق طبق على حسب الطلب</strong>.
+        لو هتاكل طبقين بس من ألف، المولّد وفّر 998 طبق. وده سرّ <code class="inl">range</code> و <code class="inl">zip</code> و <code class="inl">map</code> و
+        قراءة الملفات سطر سطر: كلهم كسالى.
+      </p>
+    </div>
+
+    <h4>4. مولّدات لا نهائية وسلاسل المعالجة</h4>
+    @code run
+def invoice_ids(prefix): ¦¦ مولّد أرقام فواتير.
+    n = 1 ¦¦ البداية.
+    while True: ¦¦ **لا نهائي** — عادي جدًا في المولّدات لأنه مش هيحسب غير المطلوب.
+        yield f"{prefix}-{n:04d}" ¦¦ رقم بـ 4 خانات بأصفار.
+        n += 1 ¦¦ التالي.
+ ¦¦
+gen = invoice_ids("INV") ¦¦ إنشاء المولّد.
+print(next(gen), next(gen)) ¦¦ أول اتنين.
+for _, invoice in zip(range(3), gen): ¦¦ خُد 3 كمان: `zip` بتقف عند الأقصر (range(3)).
+    print(invoice) ¦¦ بيكمّل من 3.
+    @end
+    @out
+INV-0001 INV-0002
+INV-0003
+INV-0004
+INV-0005
+    @end
+    @code run
+def stripped(lines): ¦¦ مرحلة 1: تنظيف.
+    for line in lines: ¦¦ بتسحب من اللي قبلها.
+        yield line.strip() ¦¦ وتسلّم للي بعدها.
+ ¦¦
+def non_empty(lines): ¦¦ مرحلة 2: تصفية.
+    for line in lines: ¦¦ سحب.
+        if line: ¦¦ النص الفاضي Falsy.
+            yield line ¦¦ تسليم.
+ ¦¦
+def upper(lines): ¦¦ مرحلة 3: تحويل.
+    for line in lines: ¦¦ سحب.
+        yield line.upper() ¦¦ تسليم.
+ ¦¦
+raw = ["  hello ", "", "world  ", "   ", "python"] ¦¦ تخيّلها ملف فيه مليون سطر.
+pipeline = upper(non_empty(stripped(raw))) ¦¦ **سلسلة معالجة (pipeline)**: كل سطر بيعدّي على المراحل التلاتة **لوحده** قبل ما اللي بعده يبدأ. ولا مرحلة بتبني قائمة.
+print(list(pipeline)) ¦¦ السحب بيبدأ من هنا.
+    @end
+    @out
+['HELLO', 'WORLD', 'PYTHON']
+    @end
+
+    <h4>5. حاجتين لازم تعرفهم</h4>
+    @code run
+gen = (n for n in range(3)) ¦¦ مولّد.
+print(list(gen)) ¦¦ أول مرّة: كل القيم.
+print(list(gen)) ¦¦ ⚠️ **المولّد بيتستهلك مرّة واحدة**. خلص؟ خلص. لو محتاج تمرّ مرّتين: حوّله لقائمة أو أنشئه من جديد.
+ ¦¦
+def chain(*iterables): ¦¦ دالة بتاخد أي عدد من المجموعات.
+    for it in iterables: ¦¦ على كل مجموعة…
+        yield from it ¦¦ `yield from` = «سلّم كل عناصر دي واحد واحد» — اختصار لـ `for x in it: yield x`.
+ ¦¦
+print(list(chain([1, 2], "ab", range(3)))) ¦¦ ربط قائمة ونص وrange في تيار واحد.
+    @end
+    @out
+[0, 1, 2]
+[]
+[1, 2, 'a', 'b', 0, 1, 2]
+    @end
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>فيبوناتشي لا نهائي</div>
+      <p>اكتب مولّد بيطلّع أرقام فيبوناتشي للأبد، واطبع أول 10.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def fibonacci(): ¦¦ مولّد لا نهائي.
+    a, b = 0, 1 ¦¦ أول رقمين.
+    while True: ¦¦ للأبد.
+        yield a ¦¦ سلّم الحالي.
+        a, b = b, a + b ¦¦ تحريك الاتنين خطوة في سطر واحد.
+ ¦¦
+fib = fibonacci() ¦¦ إنشاء.
+print([next(fib) for _ in range(10)]) ¦¦ اسحب 10 بس.
+      @end
+      @out
+[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]
+      @end
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>التقطيع لدفعات</div>
+      <p>اكتب <code class="inl">chunks(items, size)</code> بتولّد دفعات من القائمة (مفيدة لإرسال إيميلات 100 ورا 100).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def chunks(items, size): ¦¦ الدالة.
+    for start in range(0, len(items), size): ¦¦ بدايات الدفعات: 0، size، 2×size…
+        yield items[start:start + size] ¦¦ التقطيع ما بيرميش خطأ لو عدّى الآخر — آخر دفعة بتطلع أصغر.
+ ¦¦
+for batch in chunks(list(range(1, 11)), 4): ¦¦ 10 عناصر في دفعات من 4.
+    print(batch) ¦¦ دفعة دفعة.
+      @end
+      @out
+[1, 2, 3, 4]
+[5, 6, 7, 8]
+[9, 10]
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. لما تنادي دالة فيها yield، إيه اللي بيحصل فورًا؟</p>
+        <label><input type="radio"> بتتنفّذ كلها وترجّع قائمة</label>
+        <label><input type="radio"> بترجّع كائن مولّد من غير ما تنفّذ ولا سطر</label>
+        <label><input type="radio"> بترجّع أول قيمة</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">g = (x for x in "ab")</code> ثم <code class="inl">list(g)</code> مرّتين. التانية؟</p>
+        <label><input type="radio"> ['a', 'b']</label>
+        <label><input type="radio"> StopIteration</label>
+        <label><input type="radio"> ['b']</label>
+        <label><input type="radio"> []</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">next(iter([]), "x")</code>؟</p>
+        <label><input type="radio"> "x"</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> StopIteration</label>
+        <label><input type="radio"> []</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. أنسب اختيار لقراءة ملف 20 جيجا ومعالجته سطر سطر؟</p>
+        <label><input type="radio"> f.readlines() في قائمة</label>
+        <label><input type="radio"> f.read() في متغيّر</label>
+        <label><input type="radio"> المرور على الملف / مولّد (كسول)</label>
+        <label><input type="radio"> مستحيل في بايثون</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u11-l8 before="<!-- 11.P1 -->"
+  <!-- 11.8 -->
+  <article class="lesson" id="u11-l8">
+    <h3>جولة استكشافية: Decorators و match-case و Walrus و Context Managers <span class="tag">درس ؟ · استكشافي</span></h3>
+    <p class="goal">الهدف: تتعرّف على 4 أدوات هتقابلها في أي كود بايثون حديث — تفهم بتشتغل إزاي من جوّه وتعرف تقراها. الإتقان هييجي مع الاستخدام.</p>
+    <div class="box info">
+      <div class="bt">ℹ️ درس استكشافي</div>
+      <p>لو حسّيت إن الدرس ده تقيل، عادي تعدّيه وترجع له بعد وحدة OOP. كل اللي بعده مش معتمد عليه — إلا إنك هتشوف <code class="inl">@</code> قدّام دوال في وحدات OOP والاختبارات والخوارزميات.</p>
+    </div>
+
+    <h4>1. الـ Decorators: دالة بتغلّف دالة</h4>
+    <p>بما إن الدالة قيمة، وبما إن الـ closure بتفتكر بيئتها — نقدر نكتب دالة <strong>بتاخد دالة وترجّع نسخة محسّنة منها</strong>.</p>
+    @code run
+def log_calls(func): ¦¦ الـ decorator: دالة بتستلم دالة.
+    def wrapper(*args, **kwargs): ¦¦ الغلاف: بيقبل **أي وسائط** عشان يشتغل مع أي دالة.
+        print(f"→ استدعاء {func.__name__} بـ {args} {kwargs}") ¦¦ شغل إضافي **قبل**.
+        result = func(*args, **kwargs) ¦¦ نداء الدالة الأصلية بنفس الوسائط (الفرد بالنجوم).
+        print(f"← رجّعت {result}") ¦¦ شغل إضافي **بعد**.
+        return result ¦¦ رجّع نتيجة الأصلية عشان السلوك ما يتغيّرش.
+    return wrapper ¦¦ رجّع الغلاف.
+ ¦¦
+def add(a, b): ¦¦ دالة عادية.
+    return a + b ¦¦ الجمع.
+ ¦¦
+add = log_calls(add) ¦¦ **ده كل السحر**: استبدلنا `add` بالنسخة المغلّفة.
+print(add(2, 3)) ¦¦ الاستدعاء بيعدّي على الغلاف.
+    @end
+    @out
+→ استدعاء add بـ (2, 3) {}
+← رجّعت 5
+5
+    @end
+    @code run
+from functools import wraps ¦¦ أداة بتنقل اسم ووثائق الدالة الأصلية للغلاف.
+ ¦¦
+def log_calls(func): ¦¦ نفس الـ decorator.
+    @wraps(func) ¦¦ من غيرها `greet.__name__` هيبقى "wrapper" — ودي بتلخبط رسايل الخطأ والتوثيق.
+    def wrapper(*args, **kwargs): ¦¦ الغلاف.
+        print(f"→ {func.__name__}{args}") ¦¦ تسجيل مختصر.
+        return func(*args, **kwargs) ¦¦ النداء والإرجاع.
+    return wrapper ¦¦ الإرجاع.
+ ¦¦
+@log_calls ¦¦ **الصيغة المختصرة**: `@log_calls` فوق التعريف = `greet = log_calls(greet)` بعده.
+def greet(name, punctuation="!"): ¦¦ الدالة المزخرفة.
+    """ترحيب بسيط""" ¦¦ docstring.
+    return f"أهلًا {name}{punctuation}" ¦¦ الإرجاع.
+ ¦¦
+print(greet("سارة")) ¦¦ التسجيل ثم النتيجة.
+print(greet.__name__, "|", greet.__doc__) ¦¦ بفضل `wraps` الاسم والوثيقة سليمين.
+    @end
+    @out
+→ greet('سارة',)
+أهلًا سارة!
+greet | ترحيب بسيط
+    @end
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>Decorator</th><th>بيعمل إيه</th><th>هتقابله في</th></tr>
+        <tr><td><code class="inl">@property</code> / <code class="inl">@classmethod</code> / <code class="inl">@staticmethod</code></td><td>بتغيّر طبيعة الدالة جوّه الكلاس</td><td>وحدة OOP</td></tr>
+        <tr><td><code class="inl">@lru_cache</code></td><td>بتحفظ النتايج وترجّعها من غير حساب</td><td>وحدة الخوارزميات</td></tr>
+        <tr><td><code class="inl">@pytest.fixture</code> / <code class="inl">@pytest.mark.parametrize</code></td><td>بتجهّز بيانات الاختبار</td><td>وحدة الاختبارات</td></tr>
+        <tr><td><code class="inl">@app.get("/users")</code></td><td>بتربط دالة برابط في موقع</td><td>Flask / FastAPI</td></tr>
+      </table>
+    </div>
+
+    <h4>2. match-case: مطابقة الأنماط (بايثون 3.10+)</h4>
+    <p><code class="inl">match</code> مش مجرّد if/elif أشيك — هي بتطابق <strong>شكل</strong> البيانات وتفكّها في نفس الوقت.</p>
+    @code run
+command = "move north" ¦¦ أمر من لاعب في لعبة نصّية.
+match command.split(): ¦¦ بنطابق **القائمة** الناتجة من التقسيم.
+    case ["quit"]: ¦¦ قائمة فيها عنصر واحد بالظبط = "quit".
+        print("باي") ¦¦ الفعل.
+    case ["move", direction]: ¦¦ قائمة من عنصرين، الأول "move"، والتاني **أي حاجة وتتحفظ في direction**.
+        print(f"بتتحرّك ناحية {direction}") ¦¦ استخدام المتغيّر اللي اتفكّ.
+    case ["pick", *items]: ¦¦ "pick" وبعدها أي عدد عناصر (تفكيك ممتد).
+        print(f"شلت: {items}") ¦¦ الفعل.
+    case _: ¦¦ `_` = أي حاجة تانية (زي else).
+        print("أمر مش مفهوم") ¦¦ الافتراضي.
+    @end
+    @out rtl
+بتتحرّك ناحية north
+    @end
+    @code run
+def http_status(code): ¦¦ ترجمة أكواد HTTP.
+    match code: ¦¦ مطابقة رقم.
+        case 200 | 201: ¦¦ `|` = «أو» بين أنماط.
+            return "نجاح" ¦¦ الإرجاع.
+        case 404: ¦¦ قيمة ثابتة.
+            return "مش موجود" ¦¦ الإرجاع.
+        case int() if 500 <= code < 600: ¦¦ نمط نوع (`int()`) + **شرط حارس** بـ if.
+            return "خطأ في السيرفر" ¦¦ الإرجاع.
+        case _: ¦¦ الباقي.
+            return "حالة تانية" ¦¦ الإرجاع.
+ ¦¦
+for c in [200, 404, 503, 302]: ¦¦ تجربة.
+    print(c, http_status(c)) ¦¦ الرقم وترجمته.
+ ¦¦
+event = {"type": "order", "id": 17, "total": 250} ¦¦ حدث بصيغة JSON.
+match event: ¦¦ مطابقة **قاموس**.
+    case {"type": "order", "total": total} if total > 200: ¦¦ القاموس لازم يحتوي المفاتيح دي (ومسموح يكون فيه غيرها) — و `total` بتتفكّ.
+        print(f"طلب كبير: {total}") ¦¦ الفعل.
+    case {"type": "order"}: ¦¦ أي طلب تاني.
+        print("طلب عادي") ¦¦ الفعل.
+    @end
+    @out rtl
+200 نجاح
+404 مش موجود
+503 خطأ في السيرفر
+302 حالة تانية
+طلب كبير: 250
+    @end
+
+    <h4>3. عامل الوالروس := (إسناد جوّه تعبير)</h4>
+    @code run
+data = [4, 8, 15, 16, 23, 42] ¦¦ بيانات.
+if (n := len(data)) > 5: ¦¦ `:=` بيحسب `len(data)`، **يخزّنها في n**، ويرجّع القيمة للمقارنة — في خطوة واحدة. شكل العامل زي عيون وأنياب حيوان الفظ (walrus).
+    print(f"القائمة طويلة: {n} عناصر") ¦¦ n متاح هنا من غير ما نحسب الطول تاني.
+values = [y for x in data if (y := x * 2) > 20] ¦¦ في comprehension: احسب `x * 2` مرّة واحدة واستخدمها في الفلتر **والقيمة**.
+print(values) ¦¦ المضاعفات اللي أكبر من 20.
+    @end
+    @out rtl
+القائمة طويلة: 6 عناصر
+[30, 32, 46, 84]
+    @end
+    @code
+while (line := input("&gt; ")) != "exit": ¦¦ الاستخدام الأشهر: اقرا وافحص في شرط الحلقة نفسه — بدل `while True` + `break`.
+    print(f"كتبت: {line}") ¦¦ جسم الحلقة.
+    @end
+    <div class="box warn">
+      <div class="bt">⚠️ باعتدال</div>
+      <p>الوالروس بيوفّر سطر، بس بيقلّل الوضوح لو اتحشر في كل مكان. استخدمه لما يشيل تكرار حقيقي (حساب مرّتين أو break مصطنعة).</p>
+    </div>
+
+    <h4>4. مدير السياق: اكتب with بتاعتك</h4>
+    <p>
+      <code class="inl">with open(...)</code> بتضمن قفل الملف <strong>حتى لو حصل خطأ</strong>. تقدر تعمل نفس الضمان لأي «افتح/اقفل»:
+      اتصال قاعدة بيانات، قفل، مؤقّت. أسهل طريقة: مولّد + <code class="inl">@contextmanager</code>.
+    </p>
+    @code run
+from contextlib import contextmanager ¦¦ decorator بيحوّل مولّد لمدير سياق.
+ ¦¦
+@contextmanager ¦¦ التحويل.
+def section(title): ¦¦ مدير سياق بيرسم إطار حوالين مخرجات.
+    print(f"┌── {title}") ¦¦ اللي **قبل** yield = كود الدخول (زي فتح الملف).
+    try: ¦¦ try/finally عشان الخروج يحصل حتى مع الأخطاء.
+        yield ¦¦ هنا جسم الـ `with` بيتنفّذ.
+    finally: ¦¦ بيتنفّذ دايمًا.
+        print(f"└── نهاية {title}") ¦¦ كود الخروج (زي قفل الملف).
+ ¦¦
+with section("تقرير"): ¦¦ الاستخدام.
+    print("│ السطر الأول") ¦¦ جسم.
+    print("│ السطر التاني") ¦¦ جسم.
+    @end
+    @out rtl
+┌── تقرير
+│ السطر الأول
+│ السطر التاني
+└── نهاية تقرير
+    @end
+    @code run
+class Connection: ¦¦ الطريقة التانية: كلاس (هتفهمه بالكامل في وحدة OOP).
+    def __init__(self, name): ¦¦ المهيّئ.
+        self.name = name ¦¦ حفظ الاسم.
+ ¦¦
+    def __enter__(self): ¦¦ `with` بتناديها عند الدخول.
+        print(f"فتح {self.name}") ¦¦ الفتح.
+        return self ¦¦ اللي بيترجع هنا هو اللي بيتحط بعد `as`.
+ ¦¦
+    def __exit__(self, exc_type, exc, tb): ¦¦ `with` بتناديها عند الخروج **دايمًا** — ولو فيه خطأ بتبعت تفاصيله.
+        status = exc_type.__name__ if exc_type else "مفيش" ¦¦ نوع الخطأ لو حصل.
+        print(f"قفل {self.name} (خطأ: {status})") ¦¦ القفل مضمون.
+        return False ¦¦ False = «ما تبلعش الخطأ، سيبه يكمّل لبرّه».
+ ¦¦
+try: ¦¦ نمسك الخطأ برّه.
+    with Connection("db") as conn: ¦¦ الدخول.
+        print("شغل على", conn.name) ¦¦ الشغل.
+        raise ValueError("مشكلة") ¦¦ خطأ في النص.
+except ValueError: ¦¦ الخطأ عدّى من `__exit__` لهنا.
+    print("اتمسك برّه") ¦¦ بعد ما الاتصال اتقفل.
+    @end
+    @out rtl
+فتح db
+شغل على db
+قفل db (خطأ: ValueError)
+اتمسك برّه
+    @end
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">@deco</code> فوق <code class="inl">def f()</code> يساوي…</p>
+        <label><input type="radio"> deco = f(deco)</label>
+        <label><input type="radio"> f() ثم deco()</label>
+        <label><input type="radio"> f = deco(f)</label>
+        <label><input type="radio"> f.deco = True</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. في <code class="inl">case ["move", d]:</code> — إيه اللي بيحصل لو الأمر "move east"؟</p>
+        <label><input type="radio"> يتطابق و d = "east"</label>
+        <label><input type="radio"> مش هيتطابق</label>
+        <label><input type="radio"> d = ["east"]</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. ليه بنحط yield جوّه try/finally في contextmanager؟</p>
+        <label><input type="radio"> عشان السرعة</label>
+        <label><input type="radio"> إلزامي في أي مولّد</label>
+        <label><input type="radio"> عشان نبلع الأخطاء</label>
+        <label><input type="radio"> عشان كود الخروج يتنفّذ حتى لو جسم with رمى خطأ</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u11-l9 before="<!-- 11.P1 -->"
+  <!-- 11.9 -->
+  <article class="lesson" id="u11-l9">
+    <h3>قسّم مشروعك: وحداتك الخاصة و __name__ وسطر الأوامر <span class="tag">درس ؟ · مهم</span></h3>
+    <p class="goal">الهدف: تحوّل ملف واحد طويل لكذا ملف منظّم تستورد منهم، تفهم الشرط الشهير <code class="inl">if __name__ == "__main__"</code>، وتخلّي برنامجك يستقبل أوامر من الـ Terminal.</p>
+
+    <h4>1. أي ملف .py = وحدة (module) تقدر تستوردها</h4>
+    @code mathtools.py
+"""أدوات حسابية بسيطة""" ¦¦ docstring للوحدة كلها — بيظهر في `help(mathtools)`.
+ ¦¦
+PI = 3.14159 ¦¦ ثابت على مستوى الوحدة.
+ ¦¦
+def area_circle(r): ¦¦ دالة.
+    return PI * r ** 2 ¦¦ بتستخدم الثابت.
+ ¦¦
+def is_even(n): ¦¦ دالة تانية.
+    return n % 2 == 0 ¦¦ فحص الزوجي.
+    @end
+    @code run main.py
+import mathtools ¦¦ **نفس صيغ الاستيراد اللي اتعلّمناها مع random** — بس المرّة دي الوحدة ملفك. لازم يكون في نفس الفولدر (أو في مسار بايثون بتدوّر فيه).
+from mathtools import is_even ¦¦ استيراد دالة بعينها.
+ ¦¦
+print(mathtools.area_circle(2)) ¦¦ الوصول بالنقطة.
+print(is_even(7)) ¦¦ مباشرةً.
+print(mathtools.__name__) ¦¦ كل وحدة ليها متغيّر `__name__` = اسمها لما تتستورد.
+    @end
+    @pre
+import importlib
+open("mathtools.py", "w", encoding="utf-8").write('"""أدوات حسابية بسيطة"""\n\nPI = 3.14159\n\ndef area_circle(r):\n    return PI * r ** 2\n\ndef is_even(n):\n    return n % 2 == 0\n')
+importlib.invalidate_caches()
+    @end
+    @out
+12.56636
+False
+mathtools
+    @end
+    <div class="box info">
+      <div class="bt">ℹ️ بايثون بتدوّر فين؟</div>
+      <p>
+        بالترتيب: <strong>فولدر الملف اللي بتشغّله</strong> ← متغيّر البيئة PYTHONPATH ← المكتبة القياسية ← <code class="inl">site-packages</code> (اللي pip بيسطّب فيها).
+        القائمة كلها في <code class="inl">sys.path</code>. عشان كده <strong>ما تسمّيش ملفك <code class="inl">random.py</code> ولا <code class="inl">json.py</code></strong> — هيغطّي على المكتبة الحقيقية وتبدأ أخطاء غريبة.
+        وعند أول استيراد بايثون بتعمل فولدر <code class="inl">__pycache__</code> فيه نسخة مترجمة (bytecode) — فاكر الوحدة صفر؟
+      </p>
+    </div>
+
+    <h4>2. الشرط الشهير: if __name__ == "__main__"</h4>
+    <p>
+      <strong>المشكلة</strong>: عند الاستيراد، بايثون بتنفّذ الملف <strong>كله</strong> من فوق لتحت. لو فيه print أو تجارب في آخر الملف، هتشتغل عند كل import.
+      <strong>الحل</strong>: <code class="inl">__name__</code> بيبقى <code class="inl">"__main__"</code> لو الملف <em>اتشغّل مباشرةً</em>، وبيبقى اسم الوحدة لو <em>اتستورد</em>.
+    </p>
+    @code mathtools.py
+def is_even(n): ¦¦ الدالة اللي عايزين نشاركها.
+    return n % 2 == 0 ¦¦ جسمها.
+ ¦¦
+print("__name__ =", __name__) ¦¦ سطر للتوضيح: هيتنفّذ في الحالتين.
+ ¦¦
+if __name__ == "__main__": ¦¦ «لو أنا الملف الرئيسي اللي اتشغّل…»
+    print("تجربة سريعة:", is_even(10)) ¦¦ «…شغّل التجارب دي». عند الاستيراد السطر ده مش هيتنفّذ.
+    @end
+    @code terminal
+python mathtools.py ¦¦ الحالة 1: تشغيل الملف مباشرةً.
+    @end
+    @out
+__name__ = __main__
+تجربة سريعة: True
+    @end
+    @code terminal
+python -c "import mathtools" ¦¦ الحالة 2: استيراد الملف من برنامج تاني (هنا سطر بايثون سريع بـ `-c`).
+    @end
+    @out
+__name__ = mathtools
+    @end
+
+    <h4>3. الحزم (Packages): فولدر فيه وحدات</h4>
+    <div class="diagram">
+<pre>  shop/                     ← المشروع
+  ├── main.py               ← نقطة التشغيل
+  └── store/                ← حزمة (package)
+      ├── __init__.py       ← بيعلن إن الفولدر حزمة (ممكن يبقى فاضي)
+      ├── products.py
+      └── payments/
+          ├── __init__.py
+          └── cards.py
+
+  # جوّه main.py:
+  from store.products import list_products
+  from store.payments.cards import charge
+  import store.products as products</pre>
+      <div class="cap">النقطة في الاستيراد = الدخول لفولدر</div>
+    </div>
+
+    <h4>4. وسائط سطر الأوامر: sys.argv</h4>
+    @code add.py
+import sys ¦¦ مكتبة النظام.
+ ¦¦
+print(sys.argv) ¦¦ `argv` قائمة **نصوص**: أول عنصر اسم الملف، والباقي الكلمات اللي اتكتبت بعده.
+if len(sys.argv) != 3: ¦¦ لازم اسم الملف + رقمين.
+    print("الاستخدام: python add.py رقم1 رقم2") ¦¦ رسالة استخدام.
+    sys.exit(1) ¦¦ إنهاء البرنامج بكود خطأ (أي رقم غير الصفر = فشل — مهم للسكريبتات اللي بتنادي بعض).
+a = float(sys.argv[1]) ¦¦ تحويل — لأنها نصوص دايمًا زي `input`.
+b = float(sys.argv[2]) ¦¦ الرقم التاني.
+print(a + b) ¦¦ الناتج.
+    @end
+    @code terminal
+python add.py 5 7 ¦¦ تشغيل مع وسيطين.
+    @end
+    @out
+['add.py', '5', '7']
+12.0
+    @end
+
+    <h4>5. argparse: واجهة سطر أوامر احترافية</h4>
+    <p><code class="inl">sys.argv</code> كويسة لحاجة بسيطة. لكن الخيارات، والقيم الافتراضية، والتحقّق، ورسالة <code class="inl">--help</code>؟ <code class="inl">argparse</code> القياسية بتعملهم.</p>
+    @code temp.py
+import argparse ¦¦ مكتبة قياسية.
+ ¦¦
+parser = argparse.ArgumentParser(description="محوّل درجات الحرارة") ¦¦ إنشاء المحلّل ووصف البرنامج.
+parser.add_argument("value", type=float, help="الدرجة") ¦¦ وسيط **موضعي إلزامي**. `type=float` بيحوّل ويتحقّق تلقائيًا.
+parser.add_argument("--to", choices=["c", "f"], default="f", help="التحويل لـ") ¦¦ خيار **اختياري** (بيبدأ بـ `--`) بقيم محدّدة وقيمة افتراضية.
+parser.add_argument("-r", "--round", type=int, default=1, help="عدد الخانات") ¦¦ خيار ليه اسم قصير وطويل.
+args = parser.parse_args() ¦¦ قراءة `sys.argv` وتحليله. لو فيه غلط بيطبع رسالة واضحة ويخرج.
+ ¦¦
+if args.to == "f": ¦¦ القيم متاحة كخصائص بأسماء الخيارات.
+    result = args.value * 9 / 5 + 32 ¦¦ مئوي ← فهرنهايت.
+else: ¦¦ العكس.
+    result = (args.value - 32) * 5 / 9 ¦¦ فهرنهايت ← مئوي.
+print(round(result, args.round)) ¦¦ التقريب بعدد الخانات المطلوب.
+    @end
+    @code terminal
+python temp.py 100 ¦¦ الافتراضي: لفهرنهايت.
+python temp.py 212 --to c ¦¦ مع خيار.
+python temp.py 37.77 --to f -r 0 ¦¦ خيارين، والاسم القصير.
+python temp.py --help ¦¦ **رسالة مساعدة اتولّدت لوحدها** من الـ help اللي كتبناه.
+    @end
+    @out
+212.0
+100.0
+100.0
+usage: temp.py [-h] [--to {c,f}] [-r ROUND] value
+
+محوّل درجات الحرارة
+
+positional arguments:
+  value                 الدرجة
+
+options:
+  -h, --help            show this help message and exit
+  --to {c,f}            التحويل لـ
+  -r ROUND, --round ROUND
+                        عدد الخانات
+    @end
+    <div class="box tip">
+      <div class="bt">💡 الخطوة الجاية</div>
+      <p>للتطبيقات الأكبر فيه مكتبات خارجية بتبسّط ده أكتر: <code class="inl">typer</code> (بتعتمد على تلميحات النوع!) و <code class="inl">click</code>.</p>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>قسّم مشروع</div>
+      <p>
+        اعمل <code class="inl">validators.py</code> فيه <code class="inl">is_valid_email</code> و <code class="inl">is_strong_password</code> + تجارب تحت
+        <code class="inl">if __name__ == "__main__"</code>. واعمل <code class="inl">signup.py</code> بيستوردهم ويسأل المستخدم.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code validators.py
+def is_valid_email(email: str) -> bool: ¦¦ تحقّق مبسّط.
+    user, at, domain = email.partition("@") ¦¦ تقسيم عند @.
+    return bool(user) and bool(at) and "." in domain ¦¦ لازم جزء قبل @، و@ موجودة، ونقطة في الدومين.
+ ¦¦
+def is_strong_password(pw: str) -> bool: ¦¦ قوّة كلمة السر.
+    return len(pw) >= 8 and any(c.isdigit() for c in pw) and any(c.isupper() for c in pw) ¦¦ 8 حروف + رقم + حرف كبير.
+ ¦¦
+if __name__ == "__main__": ¦¦ تجارب مايشتغلوش عند الاستيراد.
+    assert is_valid_email("a@b.com") ¦¦ `assert` بترمي خطأ لو الشرط False — اختبار سريع (هتتعمّق فيها في وحدة الاختبارات).
+    assert not is_valid_email("ab.com") ¦¦ حالة غلط.
+    assert is_strong_password("Secret123") ¦¦ قوية.
+    print("كل التجارب نجحت ✅") ¦¦ لو وصلنا هنا.
+      @end
+      @code signup.py
+from validators import is_valid_email, is_strong_password ¦¦ استيراد من ملفنا.
+ ¦¦
+email = input("الإيميل: ") ¦¦ إدخال.
+password = input("كلمة السر: ") ¦¦ إدخال.
+if not is_valid_email(email): ¦¦ فحص الإيميل.
+    print("إيميل غير صالح") ¦¦ رسالة.
+elif not is_strong_password(password): ¦¦ فحص كلمة السر.
+    print("كلمة السر ضعيفة") ¦¦ رسالة.
+else: ¦¦ الاتنين تمام.
+    print("تم التسجيل 🎉") ¦¦ نجاح.
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. قيمة <code class="inl">__name__</code> جوّه ملف اتشغّل بـ <code class="inl">python app.py</code>؟</p>
+        <label><input type="radio"> "app"</label>
+        <label><input type="radio"> "__main__"</label>
+        <label><input type="radio"> "app.py"</label>
+        <label><input type="radio"> None</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">python calc.py 3 4</code> — نوع <code class="inl">sys.argv[1]</code>؟</p>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> float</label>
+        <label><input type="radio"> list</label>
+        <label><input type="radio"> str</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. سمّيت ملفك <code class="inl">random.py</code> وفيه <code class="inl">import random</code>. إيه اللي هيحصل غالبًا؟</p>
+        <label><input type="radio"> هيستورد ملفك نفسه بدل المكتبة وتظهر أخطاء</label>
+        <label><input type="radio"> مفيش مشكلة</label>
+        <label><input type="radio"> بايثون هتغيّر اسم الملف</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. ميزة argparse على sys.argv؟</p>
+        <label><input type="radio"> أسرع في التنفيذ</label>
+        <label><input type="radio"> مش محتاجة import</label>
+        <label><input type="radio"> تحويل وتحقّق وقيم افتراضية و--help تلقائي</label>
+        <label><input type="radio"> بتشتغل من غير Terminal</label>
+      </div>
+    </div>
+  </article>

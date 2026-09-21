@@ -1,0 +1,2 @@
+[log] مدخل غلط: 'abc'
+الطبقة الأعلى: invalid literal for int() with base 10: 'abc'

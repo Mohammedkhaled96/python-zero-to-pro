@@ -1,0 +1,1573 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة التاسعة · الأخطاء</div>
+    <h2>معالجة الأخطاء: خلّي برنامجك ما يقعش</h2>
+    <p>
+      كل البرامج اللي كتبناها لحد دلوقتي هشّة: أي مستخدم يكتب حرف مكان رقم والبرنامج بيقع
+      برسالة حمرا مخيفة. الوحدة دي بتحوّل برامجك من «تجارب» لـ <strong>برامج حقيقية
+      تتحمّل أخطاء المستخدم</strong>. ودي الفرق الحقيقي بين الهاوي والمحترف.
+    </p>
+  </div>
+
+  <!-- 9.1 -->
+  <article class="lesson" id="u9-l1">
+    <h3>أنواع الأخطاء التلاتة <span class="tag">درس 44</span></h3>
+    <p class="goal">الهدف: تعرف تشخّص الخطأ قبل ما تحاول تصلّحه.</p>
+
+    <h4>1. خطأ التركيب (SyntaxError)</h4>
+    <div class="code"><pre>
+print("hello"          # نسينا القوس
+if x = 5:              # علامة = بدل ==
+    print("hi"
+</pre></div>
+    <p>
+      من الوحدة صفر: بايثون بتكتشفه في مرحلة التحليل، <strong>قبل ما ينفّذ أي سطر</strong>.
+      البرنامج مش هيشتغل خالص. رسالة الخطأ بتقول لك رقم السطر تقريبًا.
+    </p>
+    <div class="box tip">
+      <div class="bt">💡 نصيحة</div>
+      <p>
+        لو بايثون قالت لك SyntaxError في سطر 20 والسطر مظبوط، <strong>بصّ على السطر 19</strong>.
+        غالبًا قوس مش مقفول في السطر اللي قبله.
+      </p>
+    </div>
+
+    <h4>2. خطأ وقت التنفيذ (Runtime Error / Exception)</h4>
+    <div class="code"><pre>
+print("البرنامج بدأ")
+result = 10 / 0            # 💥 ZeroDivisionError
+print("ده مش هيتطبع")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>البرنامج بدأ
+Traceback (most recent call last):
+  File "main.py", line 2, in &lt;module&gt;
+    result = 10 / 0            # 💥 ZeroDivisionError
+             ~~~^~~
+ZeroDivisionError: division by zero</pre></div>
+    <p>
+      لاحظ إن السطر الأول <strong>اشتغل فعلًا</strong> قبل ما البرنامج يقع.
+      دي بالظبط طبيعة اللغة المفسّرة اللي اتكلمنا عنها في الوحدة صفر.
+      <strong>النوع ده هو اللي هنتعلّم نتعامل معاه في الوحدة دي.</strong>
+    </p>
+
+    <h4>3. الخطأ المنطقي (Logical Error) — الأخطر</h4>
+    <div class="code"><pre>
+scores = [80, 90, 100]
+average = sum(scores) / len(scores) - 10     # نسينا الأقواس
+print(average)      # 80.0 بدل 90.0 — مفيش أي رسالة خطأ!
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>80.0</pre></div>
+    <p>
+      البرنامج اشتغل تمام، ما قالش أي حاجة، والنتيجة <strong>غلط</strong>.
+      النوع ده ما بيتكشفش غير بالاختبار والتفكير — و<code class="inl">try/except</code>
+      ما بتنفعش معاه خالص.
+    </p>
+
+    <h4>4. إزاي تقرا رسالة الخطأ (Traceback)</h4>
+    <div class="diagram">
+<pre>  Traceback (most recent call last):        ← بداية التتبّع
+    File "main.py", line 2, in &lt;module&gt;      ← الملف والسطر
+      result = 10 / 0                        ← السطر نفسه
+  ZeroDivisionError: division by zero
+  └──────┬───────┘  └────────┬──────┘
+    نوع الخطأ            شرح الخطأ</pre>
+      <div class="cap">تشريح رسالة الخطأ</div>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 نصيحة تفرق معاك جدًا</div>
+      <p>
+        <strong>اقرا آخر سطر الأول.</strong> فيه نوع الخطأ وشرحه. وبعدين ارجع للسطر اللي
+        قبله عشان تعرف مكانه. أغلب المبتدئين بيخافوا من النص الأحمر ويقفلوه —
+        وده أسوأ حاجة ممكن تعملها. الرسالة دي <strong>صديقك</strong>، هي بتقول لك المشكلة فين بالظبط.
+      </p>
+    </div>
+    <!-- APPEND:u9-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>لاقي الخطأ المنطقي</div>
+      <p>الكود ده <strong>بيشتغل من غير أي رسالة خطأ</strong> لكن بيطلع متوسّط غلط: <code class="inl">avg = a + b / 2</code> مع a=10 و b=20 بيطلع 20.0 بدل 15. ده خطأ منطقي — صلّحه.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+a = 10
+b = 20
+wrong = a + b / 2
+right = (a + b) / 2
+print(wrong, right)
+print(right == 15)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>20.0 15.0
+True</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. نسيت <code class="inl">:</code> بعد if. نوع الخطأ؟</p>
+        <label><input type="radio"> خطأ وقت التشغيل</label>
+        <label><input type="radio"> خطأ تركيب (SyntaxError) — الملف كله مش هيشتغل</label>
+        <label><input type="radio"> خطأ منطقي</label>
+        <label><input type="radio"> مفيش خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. أصعب نوع في الاكتشاف؟</p>
+        <label><input type="radio"> SyntaxError</label>
+        <label><input type="radio"> NameError</label>
+        <label><input type="radio"> ZeroDivisionError</label>
+        <label><input type="radio"> الخطأ المنطقي — مفيش رسالة أصلًا</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. في رسالة الخطأ، أهم سطر تبدأ بيه…</p>
+        <label><input type="radio"> آخر سطر (نوع الخطأ ووصفه)</label>
+        <label><input type="radio"> أول سطر (Traceback)</label>
+        <label><input type="radio"> مش مهم</label>
+        <label><input type="radio"> السطر الأوسط</label>
+      </div>
+    </div>
+    <!-- /APPEND:u9-l1 -->
+                <!-- SUM:u9-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>خطأ التركيب بيمنع التشغيل، وخطأ التنفيذ بيوقّف البرنامج في النص.</li><li>الخطأ المنطقي هو الأخطر: البرنامج شغّال والنتيجة غلط.</li><li>اقرا الـ Traceback من تحت لفوق.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 9.2 -->
+  <article class="lesson" id="u9-l2">
+    <h3>try و except: القبض على الأخطاء <span class="tag">درس 45 · مهم جدًا</span></h3>
+    <p class="goal">الهدف: تخلّي برنامجك يتعامل مع الخطأ بدل ما يقع.</p>
+
+    <h4>1. الفكرة</h4>
+    <div class="code"><pre>
+try:
+    user = int(input("Please enter a number\n"))
+    print(user)
+except ValueError:
+    print("Invalid input, please write numbers only")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج (لو كتب abc)</div><pre>Please enter a number
+abc
+Invalid input, please write numbers only</pre></div>
+    <p>الترجمة الحرفية: <strong>«جرّب تعمل ده… ولو حصل خطأ من نوع كذا، اعمل ده بدلًا منه»</strong>.</p>
+    <div class="diagram">
+<pre>  try:
+      كود ممكن يفشل          ← بايثون بتنفّذه وهي «حاطة إيدها على قلبها»
+  except ValueError:
+      كود الطوارئ            ← بيتنفّذ بس لو حصل ValueError
+
+  ┌──────────────────────────────────────────┐
+  │ لو مفيش خطأ  → كتلة except بتتخطّى تمامًا │
+  │ لو حصل خطأ   → بايثون بتقفز لـ except     │
+  │                والسطور الباقية في try     │
+  │                بتتخطّى                     │
+  └──────────────────────────────────────────┘</pre>
+      <div class="cap">مسار التنفيذ</div>
+    </div>
+
+    <h4>2. مثال بالتتبّع</h4>
+    <div class="code"><pre>
+try:
+    number = int(input("Please enter your number\n"))
+    print(f"your number is {number}")
+except ValueError:
+    print("invalid input")
+</pre></div>
+    <div class="out"><div class="out-head">▸ لو دخل 25</div><pre>your number is 25</pre></div>
+    <div class="out"><div class="out-head">▸ لو دخل abc</div><pre>invalid input</pre></div>
+    <p>
+      في الحالة التانية، سطر <code class="inl">print(f"your number is...")</code>
+      <strong>ما اتنفّذش أصلًا</strong> لأن الخطأ حصل في السطر اللي قبله.
+    </p>
+
+    <h4>3. قاعدة ذهبية: خلّي كتلة try صغيرة</h4>
+    <div class="code"><pre>
+# ❌ سيّئ: كل حاجة جوّه try
+try:
+    name = input("الاسم: ")
+    age = int(input("السن: "))
+    email = input("الإيميل: ")
+    print(f"{name}, {age}, {email}")
+except ValueError:
+    print("خطأ")          # خطأ في إيه بالظبط؟ مش واضح
+# ✅ أحسن: try حوالين السطر الخطر بس
+name = input("الاسم: ")
+try:
+    age = int(input("السن: "))
+except ValueError:
+    print("السن لازم يكون رقم")
+    age = 0
+email = input("الإيميل: ")
+</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ كتلة try الكبيرة بتخبّي الأخطاء</div>
+      <p>
+        لو حطّيت 20 سطر جوّه <code class="inl">try</code>، لما يحصل خطأ مش هتعرف مين
+        اللي سبّبه. خلّي الـ <code class="inl">try</code> حوالين الجزء الخطر بس.
+      </p>
+    </div>
+
+    <h4>4. الوصول لتفاصيل الخطأ بـ as</h4>
+    <div class="code"><pre>
+try:
+    result = 10 / 0
+except Exception as e:
+    print(f"حدث خطأ: {e}")
+    print(f"نوعه: {type(e).__name__}")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>حدث خطأ: division by zero
+نوعه: ZeroDivisionError</pre></div>
+    <p>
+      <code class="inl">as e</code> بتخزّن كائن الخطأ في متغيّر اسمه <code class="inl">e</code>،
+      وطباعته بتدّيك شرح الخطأ. مفيدة جدًا في التطوير.
+    </p>
+    <!-- APPEND:u9-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تحويل آمن</div>
+      <p>حوّل كل نص في القائمة لرقم، ولو فشل اطبع رسالة بدل ما البرنامج يقع.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+texts = ["42", "3.5", "abc"]
+for t in texts:
+    try:
+        n = int(t)
+        print(t, "←", n * 2)
+    except ValueError:
+        print(t, "← مش رقم صحيح")
+print("البرنامج كمّل للآخر")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>42 ← 84
+3.5 ← مش رقم صحيح
+abc ← مش رقم صحيح
+البرنامج كمّل للآخر</pre></div>
+      <p>لاحظ إن <code class="inl">int("3.5")</code> بترمي خطأ — محتاج <code class="inl">float</code> الأول لو عايز تقبل الكسور.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. لو مفيش خطأ جوّه try، الـ except…</p>
+        <label><input type="radio"> بيتنفّذ برضه</label>
+        <label><input type="radio"> بيرمي خطأ</label>
+        <label><input type="radio"> بيتخطّى</label>
+        <label><input type="radio"> بيتنفّذ الأول</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ليه <code class="inl">except:</code> لوحدها وحشة؟</p>
+        <label><input type="radio"> بتبلع كل الأخطاء حتى أخطاء الكتابة ومش هتعرف فيه إيه</label>
+        <label><input type="radio"> أبطأ</label>
+        <label><input type="radio"> ممنوعة</label>
+        <label><input type="radio"> مش بتمسك أي خطأ</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">except ValueError as e</code> — e فيها…</p>
+        <label><input type="radio"> رقم السطر</label>
+        <label><input type="radio"> كائن الخطأ ورسالته</label>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> المدخل</label>
+      </div>
+    </div>
+    <!-- /APPEND:u9-l2 -->
+                <!-- SUM:u9-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">try</code> حوالين الكود الخطر، و <code class="inl">except</code> بيمسك الخطأ.</li><li>خلّي try صغيرة على السطر اللي ممكن يقع بس.</li><li><code class="inl">except X as e</code> بيدّيك تفاصيل الخطأ.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 9.3 -->
+  <article class="lesson" id="u9-l3">
+    <h3>أنواع الاستثناءات الشائعة <span class="tag">درس 46 · مرجع</span></h3>
+    <p class="goal">الهدف: مرجع تفتحه كل ما تشوف رسالة خطأ جديدة.</p>
+
+    <h4>1. Exception — الاستثناء العام</h4>
+    <p>بتمسك <strong>أي</strong> نوع استثناء:</p>
+    <div class="code"><pre>
+try:
+    result = 10 / 0
+except Exception as e:
+    print(f"حدث خطأ: {e}")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>حدث خطأ: division by zero</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ استخدمها كملجأ أخير</div>
+      <p>
+        <code class="inl">except Exception</code> بتمسك كل حاجة — بما فيها أخطاء إنت أصلًا
+        محتاج تشوفها عشان تصلّحها. حطّها <strong>آخر واحدة</strong> بعد الأنواع المحدّدة.
+      </p>
+    </div>
+
+    <h4>2. ZeroDivisionError — القسمة على صفر</h4>
+    <div class="code"><pre>
+try:
+    result = 10 / 0
+except ZeroDivisionError:
+    print("لا يمكن قسم عدد على الصفر.")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>لا يمكن قسم عدد على الصفر.</pre></div>
+
+    <h4>3. ValueError — قيمة غير صالحة</h4>
+    <p>بتحصل لما تمرّر لدالة قيمة من النوع الصح لكن المحتوى غلط:</p>
+    <div class="code"><pre>
+try:
+    num = int("abc")
+except ValueError:
+    print("لا يمكن تحويل النص إلى عدد صحيح.")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>لا يمكن تحويل النص إلى عدد صحيح.</pre></div>
+    <p><strong>ده أكتر خطأ هيقابلك</strong> لأنه بيحصل مع كل <code class="inl">int(input())</code>.</p>
+
+    <h4>4. IndexError — فهرس خارج النطاق</h4>
+    <div class="code"><pre>
+my_list = [1, 2, 3]
+try:
+    value = my_list[5]
+except IndexError:
+    print("الفهرس خارج النطاق.")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الفهرس خارج النطاق.</pre></div>
+
+    <h4>5. FileNotFoundError — الملف غير موجود</h4>
+    <div class="code"><pre>
+try:
+    with open('file_not_found.txt', 'r') as file:
+        content = file.read()
+except FileNotFoundError:
+    print("الملف غير موجود.")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الملف غير موجود.</pre></div>
+    <p>هنستخدمه كتير في الوحدة 12.</p>
+
+    <h4>6. جدول مرجعي كامل</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الاستثناء</th><th>بيحصل لما</th><th>مثال يسبّبه</th></tr>
+        <tr><td><code class="inl">ValueError</code></td><td>القيمة نوعها صح بس محتواها غلط</td><td><code class="inl">int("abc")</code></td></tr>
+        <tr><td><code class="inl">TypeError</code></td><td>عملية بين نوعين ما ينفعش</td><td><code class="inl">"5" + 5</code></td></tr>
+        <tr><td><code class="inl">ZeroDivisionError</code></td><td>قسمة على صفر</td><td><code class="inl">10 / 0</code></td></tr>
+        <tr><td><code class="inl">IndexError</code></td><td>فهرس أكبر من حجم القائمة</td><td><code class="inl">[1,2][5]</code></td></tr>
+        <tr><td><code class="inl">KeyError</code></td><td>مفتاح مش موجود في القاموس</td><td><code class="inl">{"a":1}["b"]</code></td></tr>
+        <tr><td><code class="inl">NameError</code></td><td>متغيّر مش معرّف</td><td><code class="inl">print(xyz)</code></td></tr>
+        <tr><td><code class="inl">AttributeError</code></td><td>دالة مش موجودة في النوع ده</td><td><code class="inl">"abc".append(1)</code></td></tr>
+        <tr><td><code class="inl">FileNotFoundError</code></td><td>الملف مش موجود</td><td><code class="inl">open("x.txt")</code></td></tr>
+        <tr><td><code class="inl">ImportError</code></td><td>المكتبة مش متثبّتة</td><td><code class="inl">import xyz</code></td></tr>
+        <tr><td><code class="inl">KeyboardInterrupt</code></td><td>المستخدم ضغط Ctrl+C</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 التمييز بين ValueError و TypeError</div>
+      <p>
+        <code class="inl">int("abc")</code> → <strong>ValueError</strong>: النوع صح (نص)،
+        بس المحتوى مش رقم.<br>
+        <code class="inl">int([1,2])</code> → <strong>TypeError</strong>: النوع نفسه غلط،
+        <code class="inl">int</code> ما بتقبلش قوائم أصلًا.
+      </p>
+    </div>
+    <!-- APPEND:u9-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>اصطاد وسمّي</div>
+      <p>اعمل 4 أخطاء مختلفة عن قصد، امسك كل واحد، واطبع اسم نوعه.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+try:
+    [1, 2][5]
+except IndexError as e:
+    print(type(e).__name__)
+try:
+    {"a": 1}["b"]
+except KeyError as e:
+    print(type(e).__name__, e)
+try:
+    "5" + 5
+except TypeError as e:
+    print(type(e).__name__)
+try:
+    print(undefined_name)
+except NameError as e:
+    print(type(e).__name__)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>IndexError
+KeyError 'b'
+TypeError
+NameError</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">int("hello")</code>؟</p>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> NameError</label>
+        <label><input type="radio"> KeyError</label>
+        <label><input type="radio"> ValueError</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">len(5)</code>؟</p>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> IndexError</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">open("مش_موجود.txt")</code>؟</p>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> ملف فاضي جديد</label>
+        <label><input type="radio"> FileNotFoundError</label>
+        <label><input type="radio"> None</label>
+      </div>
+    </div>
+    <!-- /APPEND:u9-l3 -->
+                <!-- SUM:u9-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>امسك الأنواع المحدّدة: <code class="inl">ValueError</code> و <code class="inl">ZeroDivisionError</code> و <code class="inl">IndexError</code> و <code class="inl">KeyError</code> و <code class="inl">FileNotFoundError</code>.</li><li><code class="inl">Exception</code> أب عام — استخدمه بحذر وفي الآخر.</li><li>كل نوع ليه رسالة ومعنى مختلف.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 9.4 -->
+  <article class="lesson" id="u9-l4">
+    <h3>معالجة أكتر من خطأ + else و finally <span class="tag">درس 47</span></h3>
+    <p class="goal">الهدف: تبني معالجة أخطاء كاملة ومنظّمة.</p>
+
+    <h4>1. أكتر من except</h4>
+    <div class="code" data-file="multi_except.py"><pre>
+try:
+    first_number = int(input("Please enter your first number\n"))
+    second_number = int(input("Please enter your second number\n"))
+    print(first_number / second_number)
+except ZeroDivisionError:
+    print("لا يمكنك القسمة على 0")
+except ValueError:
+    print("invalid input")
+except:
+    print("حاول مرة أخرى")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ لو دخل 10 و 0</div><pre>لا يمكنك القسمة على 0</pre></div>
+    <div class="out rtl"><div class="out-head">▸ لو دخل abc</div><pre>invalid input</pre></div>
+    <p>بايثون بتفحص الـ <code class="inl">except</code> بالترتيب وبتنفّذ أول واحدة مطابقة — زي <code class="inl">elif</code> بالظبط.</p>
+    <div class="box err">
+      <div class="bt">💥 <code>except:</code> العارية خطر</div>
+      <p>
+        <code class="inl">except:</code> من غير نوع بتمسك <strong>كل حاجة</strong> — حتى
+        <code class="inl">KeyboardInterrupt</code> لما المستخدم يضغط Ctrl+C!
+        فالبرنامج ممكن يرفض يقفل. استخدم <code class="inl">except Exception as e:</code>
+        بدلها — دي بتمسك أخطاء البرنامج بس وبتسيب إشارات النظام تعدّي.
+      </p>
+    </div>
+
+    <h4>2. جمع أكتر من نوع في except واحدة</h4>
+    <div class="code"><pre>
+try:
+    x = int(input("رقم: "))
+    print(100 / x)
+except (ValueError, ZeroDivisionError) as e:
+    print(f"مدخل غير صالح: {e}")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>رقم: 0
+مدخل غير صالح: division by zero</pre></div>
+
+    <h4>3. else — بيتنفّذ لو مفيش خطأ</h4>
+    <div class="code"><pre>
+try:
+    number = int(input("رقم: "))
+except ValueError:
+    print("مش رقم!")
+else:
+    print(f"تمام، الرقم {number}")        # بيتنفّذ لو try نجحت بس
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>رقم: 42
+تمام، الرقم 42</pre></div>
+
+    <h4>4. finally — بيتنفّذ في كل الأحوال</h4>
+    <div class="code"><pre>
+try:
+    file = open("data.txt", "r")
+    content = file.read()
+except FileNotFoundError:
+    print("الملف مش موجود")
+else:
+    print(content)
+finally:
+    print("انتهت المحاولة")     # بيتنفّذ سواء نجح أو فشل
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الملف مش موجود
+انتهت المحاولة</pre></div>
+    <div class="diagram">
+<pre>  try:        ← جرّب
+  except:     ← لو فشل
+  else:       ← لو نجح
+  finally:    ← في كل الحالات (تنظيف، إغلاق ملفات، إغلاق اتصالات)</pre>
+      <div class="cap">البنية الكاملة</div>
+    </div>
+
+    <h4>5. raise — ترمي خطأ بنفسك</h4>
+    <div class="code"><pre>
+age = int(input("سنك: "))
+if age &lt; 0:
+    raise ValueError("العمر ما ينفعش يكون سالب")
+print(f"سنك {age}")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>سنك: -5
+ValueError: العمر ما ينفعش يكون سالب</pre></div>
+    <p>
+      مفيدة لما تكتب دوال (الوحدة 11) وعايز تمنع استخدام غلط. القاعدة:
+      <strong>ارمِ خطأ بدل ما تكمّل ببيانات فاسدة.</strong>
+    </p>
+    <!-- APPEND:u9-l4 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>آلة قسمة كاملة</div>
+      <p>لكل زوج: اقسم، ومَيّز بين القسمة على صفر والنص الغلط، واطبع النتيجة في else، وسطر ختام في finally.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+pairs = [("10", "2"), ("7", "0"), ("x", "3")]
+for a, b in pairs:
+    try:
+        result = int(a) / int(b)
+    except ZeroDivisionError:
+        print("ما ينفعش تقسم على صفر")
+    except ValueError:
+        print("لازم أرقام")
+    else:
+        print("الناتج:", result)
+    finally:
+        print("--")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الناتج: 5.0
+--
+ما ينفعش تقسم على صفر
+--
+لازم أرقام
+--</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">else</code> بعد try بتتنفّذ إمتى؟</p>
+        <label><input type="radio"> لما يحصل خطأ</label>
+        <label><input type="radio"> لما ما يحصلش خطأ</label>
+        <label><input type="radio"> دايمًا</label>
+        <label><input type="radio"> أبدًا</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. أنسب مكان لقفل ملف أو اتصال…</p>
+        <label><input type="radio"> finally</label>
+        <label><input type="radio"> else</label>
+        <label><input type="radio"> except</label>
+        <label><input type="radio"> قبل try</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. تمسك نوعين بنفس المعالجة…</p>
+        <label><input type="radio"> except ValueError or TypeError:</label>
+        <label><input type="radio"> except ValueError and TypeError:</label>
+        <label><input type="radio"> except [ValueError, TypeError]:</label>
+        <label><input type="radio"> except (ValueError, TypeError):</label>
+      </div>
+    </div>
+    <!-- /APPEND:u9-l4 -->
+                <!-- SUM:u9-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>كذا <code class="inl">except</code> بالترتيب من المحدّد للعام.</li><li><code class="inl">else</code> بتتنفّذ لو مفيش خطأ، و <code class="inl">finally</code> دايمًا.</li><li><code class="inl">raise</code> بترمي خطأ بنفسك لما القيمة مش منطقية.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 9.5 -->
+  <article class="lesson" id="u9-l5">
+    <h3>دمج try مع الحلقات: النمط النهائي <span class="tag">درس 48 · عملي جدًا</span></h3>
+    <p class="goal">الهدف: النمط اللي هتكتبه في كل برنامج تفاعلي من هنا ورايح.</p>
+
+    <h4>1. المشكلة اللي بنحلّها</h4>
+    <div class="code"><pre>
+try:
+    age = int(input("سنك: "))
+except ValueError:
+    print("مدخل غلط")
+# البرنامج كمّل... لكن age مش موجودة أصلًا!
+</pre></div>
+    <p>معالجة الخطأ من غير تكرار = البرنامج بيسكت بس البيانات ناقصة. الحل: كرّر السؤال.</p>
+
+    <h4>2. النمط الذهبي</h4>
+    <div class="code" data-file="safe_input.py"><pre>
+while True:
+    try:
+        user = int(input("Please enter a number\n"))
+        print(user)
+        break                      # نجح؟ اخرج
+    except ValueError:
+        print("Please try again")  # فشل؟ الحلقة هتلف تاني
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Please enter a number
+abc
+Please try again
+Please enter a number
+10
+10</pre></div>
+    <div class="diagram">
+<pre>  while True:
+      try:
+          [العملية الخطرة]
+          break            ← الطريق الوحيد للخروج
+      except:
+          [رسالة]          ← بيرجع لأول الحلقة تلقائيًا</pre>
+      <div class="cap">النمط: كرّر لحد ما ينجح</div>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 ليه <code>break</code> جوّه <code>try</code> مش بعدها؟</div>
+      <p>
+        عشان لو حصل خطأ، بايثون بتقفز لـ <code class="inl">except</code> فورًا وما توصلش
+        للـ <code class="inl">break</code>. لو حطّيته بره الـ <code class="inl">try</code>،
+        الحلقة هتنتهي حتى لو الإدخال كان غلط.
+      </p>
+    </div>
+
+    <h4>3. النسخة اللي فيها كذا سؤال</h4>
+    <div class="code" data-file="multi_input.py"><pre>
+while True:
+    try:
+        number = int(input("Please enter a number\n"))
+        user = input("Please enter your name: ")
+        print(f"Your number is {number} and your name is {user}")
+        break
+    except ValueError:
+        print("Please try again")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Please enter a number
+abc
+Please try again
+Please enter a number
+5
+Please enter your name: Farid
+Your number is 5 and your name is Farid</pre></div>
+    <p>
+      لاحظ: لو غلط في الرقم، بيرجع من أول خالص ويسأل الرقم تاني.
+      لو عايز يسأل السؤال الغلط بس، افصل كل سؤال في حلقة لوحده.
+    </p>
+
+    <h4>4. استخدام continue بدل break</h4>
+    <div class="code" data-file="guess_with_errors.py"><pre>
+number = 20
+while True:
+    try:
+        user = int(input("Please enter a guessed number\n"))
+    except ValueError:
+        print("Please enter numbers only")
+        continue                        # ارجع لأول الحلقة
+    if user == number:
+        print("Congratulations!")
+        break
+    else:
+        print("Please try again")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Please enter a guessed number
+abc
+Please enter numbers only
+Please enter a guessed number
+20
+Congratulations!</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 الأسلوب ده أنضف</div>
+      <p>
+        كتلة <code class="inl">try</code> فيها السطر الخطر بس، والمنطق كله بره.
+        و<code class="inl">continue</code> بتضمن إن الكود اللي تحت ما يشتغلش ببيانات فاسدة.
+        <strong>ده الأسلوب اللي أنصحك بيه.</strong>
+      </p>
+    </div>
+
+    <h4>5. تصفية بيانات مختلطة</h4>
+    <div class="code" data-file="filter_numbers.py"><pre>
+numbers = ["10", "20", "30", "avc", "40", "def", "50", "e", "60"]
+numbers_list = []
+for i in numbers:
+    try:
+        final = int(i)
+        numbers_list.append(final)
+    except ValueError:
+        print("This is a value error")
+result = sum(numbers_list)
+print(result)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>This is a value error
+This is a value error
+This is a value error
+210</pre></div>
+    <p>
+      البرنامج مرّ على كل عنصر، حاول يحوّله لرقم، ولو فشل تخطّاه وكمّل.
+      المجموع 10+20+30+40+50+60 = 210. <strong>ده نمط أساسي في تنظيف البيانات</strong>،
+      وهتستخدمه بكثرة في الوحدة 12 لما نقرا ملفات فيها بيانات مش مضمونة.
+    </p>
+    <div class="code"><pre>
+# نسخة أوضح مع تقرير
+numbers = ["10", "20", "avc", "40", "def"]
+valid, invalid = [], []
+for item in numbers:
+    try:
+        valid.append(int(item))
+    except ValueError:
+        invalid.append(item)
+print(f"صالح: {valid} — المجموع {sum(valid)}")
+print(f"مرفوض: {invalid}")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>صالح: [10, 20, 40] — المجموع 70
+مرفوض: ['avc', 'def']</pre></div>
+    <!-- APPEND:u9-l5 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>منظّف بيانات</div>
+      <p>عندك قراءات حرارة من جهاز، بعضها بايظ. اجمع السليم، وعدّ البايظ، واطبع المتوسّط.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+readings = ["21.5", "ERR", "23", "", "22.5", "n/a"]
+good = []
+bad = 0
+for r in readings:
+    try:
+        good.append(float(r))
+    except ValueError:
+        bad += 1
+print("سليم:", good)
+print("بايظ:", bad)
+print("المتوسّط:", sum(good) / len(good))
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>سليم: [21.5, 23.0, 22.5]
+بايظ: 3
+المتوسّط: 22.333333333333332</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. try <strong>جوّه</strong> الحلقة معناها…</p>
+        <label><input type="radio"> أول خطأ بيوقف الحلقة كلها</label>
+        <label><input type="radio"> الحلقة مش بتشتغل</label>
+        <label><input type="radio"> كل عنصر ليه فرصة مستقلّة، والخطأ بيأثر على عنصره بس</label>
+        <label><input type="radio"> مفيش فرق عن برّه الحلقة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. في نمط «اسأل لحد ما يجاوب صح»، break بتيجي…</p>
+        <label><input type="radio"> بعد السطر اللي ممكن يفشل، جوّه try</label>
+        <label><input type="radio"> جوّه except</label>
+        <label><input type="radio"> قبل try</label>
+        <label><input type="radio"> في finally</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">float("")</code>؟</p>
+        <label><input type="radio"> 0.0</label>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> TypeError</label>
+      </div>
+    </div>
+    <!-- /APPEND:u9-l5 -->
+                <!-- SUM:u9-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>النمط الذهبي: <code class="inl">while True</code> + <code class="inl">try</code> + <code class="inl">break</code> بعد النجاح.</li><li><code class="inl">continue</code> بعد الخطأ بيرجّع للسؤال.</li><li>تصفية بيانات مختلطة: الحلقة برّه والـ try جوّه.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ADD:u9-l6 -->
+  <!-- 9.6 -->
+  <article class="lesson" id="u9-l6">
+    <h3>EAFP مقابل LBYL: تسأل قبل ما تعمل ولّا تعتذر بعدها؟ <span class="tag">درس 49</span></h3>
+    <p class="goal">الهدف: تفهم الفلسفتين اللي بيتعامل بيهم المبرمجين مع الحالات الغلط، وتعرف ليه مجتمع بايثون بيفضّل «اعمل وامسك الخطأ» — وإمتى العكس أصح.</p>
+
+    <h4>1. الفلسفتين</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th></th><th>LBYL</th><th>EAFP</th></tr>
+        <tr><td>الاسم</td><td>Look Before You Leap<br>«بُص قبل ما تنط»</td><td>Easier to Ask Forgiveness than Permission<br>«الاعتذار أسهل من الاستئذان»</td></tr>
+        <tr><td>الأسلوب</td><td><code class="inl">if</code> تتأكّد إن كل حاجة تمام، وبعدين تنفّذ</td><td><code class="inl">try</code> تنفّذ على طول، و <code class="inl">except</code> لو حصلت مشكلة</td></tr>
+        <tr><td>منتشر في</td><td>C، Java</td><td>بايثون (الأسلوب «البايثوني»)</td></tr>
+      </table>
+    </div>
+
+    <h4>2. مثال: تحويل قائمة نصوص لأرقام</h4>
+    <div class="code"><pre>
+values = ["10", "-3", "4.5", "abc", "", " 7 "]
+numbers = []
+for v in values:
+    s = v.strip()
+    if s.lstrip("-").isdecimal():
+        numbers.append(int(s))
+print(numbers)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[10, -3, 7]</pre></div>
+    <div class="code"><pre>
+s = "--3"
+print(s.lstrip("-").isdecimal())
+print(int(s))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+Traceback (most recent call last):
+  File "main.py", line 3, in &lt;module&gt;
+    print(int(s))
+          ^^^^^^
+ValueError: invalid literal for int() with base 10: '--3'</pre></div>
+    <div class="code"><pre>
+values = ["10", "-3", "4.5", "abc", "", " 7 ", "--3"]
+numbers = []
+for v in values:
+    try:
+        numbers.append(int(v))
+    except ValueError:
+        pass
+print(numbers)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[10, -3, 7]</pre></div>
+
+    <h4>3. مثال: الملفات و«حالة السباق»</h4>
+    <div class="code"><pre>
+import os
+path = "settings.txt"
+if os.path.exists(path):
+    with open(path, encoding="utf-8") as f:
+        print(f.read())
+else:
+    print("مفيش إعدادات — هنستخدم الافتراضي")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>مفيش إعدادات — هنستخدم الافتراضي</pre></div>
+    <div class="code"><pre>
+try:
+    with open("settings.txt", encoding="utf-8") as f:
+        print(f.read())
+except FileNotFoundError:
+    print("مفيش إعدادات — هنستخدم الافتراضي")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>مفيش إعدادات — هنستخدم الافتراضي</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 حالة السباق (Race Condition)</div>
+      <p>
+        لما يكون فيه <strong>وقت بين الفحص والتنفيذ</strong>، الدنيا ممكن تتغيّر في النص. ده نوع كامل من الثغرات الأمنية اسمه
+        <em>TOCTOU</em> (Time Of Check to Time Of Use). EAFP بيقفل الباب ده لأن «الفحص» هو نفسه «التنفيذ».
+      </p>
+    </div>
+
+    <h4>4. الفخ: try واسعة بتخبّي بيانات</h4>
+    <div class="code"><pre>
+prices = ["10", "20", "x", "30"]
+total = 0
+try:
+    for p in prices:
+        total += int(p)
+except ValueError:
+    print("فيه سعر غلط")
+print(total)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>فيه سعر غلط
+30</pre></div>
+    <div class="code"><pre>
+prices = ["10", "20", "x", "30"]
+total = 0
+bad = []
+for p in prices:
+    try:
+        total += int(p)
+    except ValueError:
+        bad.append(p)
+print(total, bad)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>60 ['x']</pre></div>
+    <div class="box err">
+      <div class="bt">❌ الخطيئة الكبرى: except Exception: pass</div>
+      <p>
+        EAFP مش معناها «ابلع كل الأخطاء». <code class="inl">except Exception: pass</code> بتخبّي الأخطاء المنطقية والـ typos وكل حاجة —
+        البرنامج يبان شغّال وهو بيطلّع نتايج غلط. <strong>امسك النوع المحدّد اللي متوقّعه بس</strong>، وسجّله أو تعامل معاه.
+      </p>
+    </div>
+
+    <h4>5. إمتى LBYL أصح؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الموقف</th><th>الأنسب</th><th>ليه</th></tr>
+        <tr><td>الخطأ نادر والعملية نفسها بتفحص</td><td>EAFP</td><td>أسرع في الحالة العادية وأقل كود</td></tr>
+        <tr><td>الخطأ <strong>متكرّر جدًا</strong> (نص الحالات غلط)</td><td>LBYL</td><td>رمي الاستثناء ومسكه أبطأ من if بسيطة</td></tr>
+        <tr><td>العملية ليها <strong>أثر ما يترجعش</strong> (خصم فلوس، إرسال إيميل)</td><td>LBYL</td><td>لازم تتأكّد من الرصيد <em>قبل</em> الخصم، مش بعده</td></tr>
+        <tr><td>التحقّق من <strong>قواعد عمل</strong> (العمر من 18 لـ 60)</td><td>LBYL</td><td>ده مش خطأ برمجي — ده شرط منطقي</td></tr>
+        <tr><td>ملفات، شبكة، تحويل أنواع</td><td>EAFP</td><td>العالم الخارجي بيتغيّر، والدالة هي المرجع</td></tr>
+      </table>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>الأسلوبين مع بعض</div>
+      <p>عندك أعمار كنصوص. حوّلها بـ EAFP، وبعدين اقبل بس اللي من 18 لـ 60 بـ LBYL. اطبع المقبول والمرفوض.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+raw = ["25", "17", "abc", "45", "70", " 33"]
+accepted = []
+rejected = []
+for r in raw:
+    try:
+        age = int(r)
+    except ValueError:
+        rejected.append(r)
+        continue
+    if 18 &lt;= age &lt;= 60:
+        accepted.append(age)
+    else:
+        rejected.append(r)
+print("مقبول:", accepted)
+print("مرفوض:", rejected)
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>مقبول: [25, 45, 33]
+مرفوض: ['17', 'abc', '70']</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. الأسلوب «البايثوني» المفضّل لتحويل نص لرقم؟</p>
+        <label><input type="radio"> if text.isdigit() ثم int</label>
+        <label><input type="radio"> try: int(text) / except ValueError</label>
+        <label><input type="radio"> except Exception: pass</label>
+        <label><input type="radio"> eval(text)</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. في تطبيق بنك، قبل خصم مبلغ من الرصيد…</p>
+        <label><input type="radio"> اخصم وامسك الخطأ لو الرصيد سالب</label>
+        <label><input type="radio"> مش مهم الترتيب</label>
+        <label><input type="radio"> افحص الرصيد الأول (LBYL) لأن الخصم أثره ما يترجعش</label>
+        <label><input type="radio"> استخدم except Exception</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. مشكلة <code class="inl">if os.path.exists(p): open(p)</code>؟</p>
+        <label><input type="radio"> الملف ممكن يتمسح بين الفحص والفتح</label>
+        <label><input type="radio"> exists مش موجودة</label>
+        <label><input type="radio"> open ما بتقراش ملفات</label>
+        <label><input type="radio"> مفيش أي مشكلة نظريًا</label>
+      </div>
+    </div>
+                <!-- SUM:u9-l6 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>LBYL: افحص قبل ما تعمل، EAFP: اعمل وامسك الخطأ — والأسلوب البايثوني EAFP.</li><li>EAFP بيتجنّب حالات السباق مع الملفات والشبكة.</li><li>LBYL أصح قبل العمليات اللي ما ترجعش (زي خصم فلوس).</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u9-l6 -->
+
+  <!-- 9.P1 -->
+  <article class="lesson project" id="u9-p1">
+    <h3>مشروع 15: الآلة الحاسبة المحصّنة (النسخة النهائية) <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: التطوير الرابع والأخير للحاسبة — دلوقتي بقت برنامج حقيقي.</p>
+
+    <div class="code" data-file="calculator_final.py"><pre>
+print("Welcome to our calculator")
+while True:
+    try:
+        first_number = float(input("Please enter your first number for calculation:\n"))
+        operation = input("Please enter the operation you want to perform (+, -, *, /):\n")
+        second_number = float(input("Please enter your second number for calculation:\n"))
+        if operation == "+":
+            print(f"Your result is: {first_number + second_number}")
+        elif operation == "-":
+            print(f"Your result is: {first_number - second_number}")
+        elif operation == "*":
+            print(f"Your result is: {first_number * second_number}")
+        elif operation == "/":
+            if second_number == 0:
+                print("You cannot divide by zero.")
+            else:
+                print(f"Your result is: {first_number / second_number}")
+        else:
+            print("Please select a correct operation (+, -, *, /)")
+    except ValueError:
+        print("Please enter numbers only.")
+        continue
+    except ZeroDivisionError:
+        print("You cannot divide by zero.")
+        continue
+    except Exception as e:
+        print(f"Sorry, an error occurred: {e}")
+        continue
+    user = input("Do you want to perform another calculation? (yes/no)\n").lower()
+    if user == "no":
+        print("Thank you.")
+        break
+    else:
+        print("Okay")
+print("Thank you for using our calculator. We hope to see you soon.")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Welcome to our calculator
+Please enter your first number for calculation:
+5
+Please enter the operation you want to perform (+, -, *, /):
++
+Please enter your second number for calculation:
+3
+Your result is: 8.0
+Do you want to perform another calculation? (yes/no)
+no
+Thank you.
+Thank you for using our calculator. We hope to see you soon.</pre></div>
+
+    <h4>رحلة الحاسبة عبر الكورس</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>النسخة</th><th>الوحدة</th><th>اللي اتضاف</th></tr>
+        <tr><td>v1</td><td>2</td><td>مدخلات + عمليات حسابية + f-string</td></tr>
+        <tr><td>v2</td><td>4</td><td>if/elif لاختيار العملية + فحص القسمة على صفر</td></tr>
+        <tr><td>v3</td><td>8</td><td>while للتكرار + سؤال «تحسب تاني؟»</td></tr>
+        <tr><td><strong>v4</strong></td><td><strong>9</strong></td><td><strong>try/except — البرنامج ما بيقعش أبدًا</strong></td></tr>
+      </table>
+    </div>
+
+    <h4>ملاحظات نقدية</h4>
+    <ul>
+      <li>
+        <strong>الـ ZeroDivisionError الاحتياطية:</strong> إحنا أصلًا بنفحص
+        <code class="inl">second_number == 0</code> بالـ if، فنظريًا الـ except دي مش
+        هتشتغل أبدًا. وجودها مش ضار — دي «حزام أمان تاني».
+      </li>
+      <li>
+        <strong>الـ except Exception الأخيرة:</strong> ممتازة كملجأ أخير. لاحظ إنها
+        آخر واحدة — لو حطّيتها الأول هتبلع كل الأخطاء والـ except اللي تحتها ما تشتغلش أبدًا.
+      </li>
+      <li>
+        <strong>موقع سؤال «تحسب تاني؟»:</strong> بره الـ try، وقبله
+        <code class="inl">continue</code> في كل except. يعني لو حصل خطأ، البرنامج
+        بيرجع للحسبة على طول من غير ما يسأل — سلوك منطقي.
+      </li>
+      <li>
+        <strong>عيب:</strong> لو المستخدم غلط في العملية بس (كتب <code class="inl">%</code>)،
+        بيضطر يدخل الرقمين تاني. تحسين ممكن: افصل السؤال في حلقة تحقّق لوحده.
+      </li>
+    </ul>
+
+    <h4>النسخة المطوّرة النهائية</h4>
+    <div class="code" data-file="calculator_pro.py"><pre>
+OPERATIONS = ["+", "-", "*", "/", "%", "**"]
+def show_header():
+    print("=" * 40)
+    print("الآلة الحاسبة")
+    print("=" * 40)
+show_header()
+while True:
+    # الرقم الأول
+    while True:
+        try:
+            a = float(input("الرقم الأول: "))
+            break
+        except ValueError:
+            print("أرقام بس من فضلك")
+    # العملية
+    while True:
+        op = input(f"العملية ({' '.join(OPERATIONS)}): ").strip()
+        if op in OPERATIONS:
+            break
+        print("عملية غير مدعومة")
+    # الرقم التاني
+    while True:
+        try:
+            b = float(input("الرقم التاني: "))
+            if op in ["/", "%"] and b == 0:
+                print("ما ينفعش تقسم على صفر")
+                continue
+            break
+        except ValueError:
+            print("أرقام بس من فضلك")
+    # الحساب
+    if op == "+":   result = a + b
+    elif op == "-": result = a - b
+    elif op == "*": result = a * b
+    elif op == "/": result = a / b
+    elif op == "%": result = a % b
+    else:           result = a ** b
+    print(f"\n  {a} {op} {b} = {round(result, 4)}\n")
+    if input("عملية تانية؟ (yes/no) ").strip().lower() == "no":
+        print("شكرًا لاستخدامك الحاسبة")
+        break
+</pre></div>
+    <p>
+      كل مدخل ليه حلقة تحقّق خاصة بيه — فالمستخدم ما بيعيدش إدخال حاجة صحيحة.
+      دي تجربة مستخدم أفضل بكتير.
+    </p>
+  </article>
+
+  <!-- 9.P2 -->
+  <article class="lesson project" id="u9-p2">
+    <h3>مشروع 16: حاسبة eval — والتحذير الأمني <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: تعرف أداة قوية جدًا، وتفهم ليه ما ينفعش تستخدمها.</p>
+
+    <h4>الفكرة</h4>
+    <p>
+      دالة <code class="inl">eval()</code> بتاخد نص وتنفّذه كأنه كود بايثون.
+      فبدل ما نكتب if لكل عملية، نخلّي المستخدم يكتب المعادلة كاملة.
+    </p>
+    <div class="code" data-file="eval_calculator.py"><pre>
+print("Welcome to our calculator")
+while True:
+    try:
+        process = eval(input("Please enter your calculation method here:\n"))
+        if process:
+            print(process)
+    except ZeroDivisionError:
+        print("You cannot divide by zero.")
+    except ValueError:
+        print("Please enter numbers only.")
+    except NameError:
+        print("Error in this process, please try again.")
+    except Exception as e:
+        print(f"Sorry, an error occurred: {e}")
+    user = input("Do you want to make another process? (yes/no)\n").lower()
+    if user == "no":
+        print("Thank you for using our calculator.")
+        break
+    else:
+        print()
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Welcome to our calculator
+Please enter your calculation method here:
+5+3
+8
+Do you want to make another process? (yes/no)
+no
+Thank you for using our calculator.</pre></div>
+    <p>10 سطور بتعمل شغل الحاسبة كلها، وبتدعم الأقواس والأولويات تلقائيًا!</p>
+
+    <div class="box err">
+      <div class="bt">💥 التحذير الأمني — اقراه كويس</div>
+      <p>
+        <code class="inl">eval()</code> بتنفّذ <strong>أي كود بايثون</strong> يكتبه المستخدم،
+        مش عمليات حسابية بس. لو المستخدم كتب:
+      </p>
+      <div class="code" data-norun><pre>
+__import__('os').system('rm -rf /')      # يمسح ملفاتك
+__import__('os').listdir('.')            # يقرا ملفاتك
+open('/etc/passwd').read()               # يقرا ملفات النظام
+</pre></div>
+      <p>
+        كله هينفّذ فعلًا. الثغرة دي اسمها <strong>Code Injection</strong> وهي من أخطر
+        الثغرات الأمنية. <strong>القاعدة المطلقة: ما تستخدمش <code class="inl">eval</code>
+        على أي مدخل جاي من مستخدم. أبدًا.</strong>
+      </p>
+    </div>
+
+    <h4>البدائل الآمنة</h4>
+    <div class="code"><pre>
+# 1) الطريقة اليدوية — الأكثر أمانًا (زي حاسبتنا الأصلية)
+# 2) ast.literal_eval — بتقيّم القيم الثابتة بس، مش العمليات
+import ast
+print(ast.literal_eval("[1, 2, 3]"))    # ✅ آمنة
+print(ast.literal_eval("{'a': 1}"))     # ✅ آمنة
+# 3) للمعادلات الرياضية: مكتبة متخصّصة
+# pip install simpleeval
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 3]
+{'a': 1}</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 ليه علّمناك حاجة مش المفروض تستخدمها؟</div>
+      <p>
+        عشان تعرفها لما تشوفها في كود غيرك وتقدر تقول «ده خطر». وعشان تفهم مبدأ مهم:
+        <strong>ما تثقش في مدخلات المستخدم أبدًا.</strong> المبدأ ده هو أساس أمن
+        التطبيقات كله، وهيلاحقك في أي تراك تدخله بعد كده.
+      </p>
+    </div>
+  </article>
+
+  <!-- 9.P3 -->
+  <article class="lesson project" id="u9-p3">
+    <h3>مشروع 17: مغامرة الجزيرة <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: لعبة قرارات متفرّعة مع تحقّق كامل من المدخلات.</p>
+
+    <div class="code" data-file="island_adventure.py"><pre>
+print("Welcome to the Fantastic Island! We wish you an interesting game.")
+while True:
+    try:
+        road = int(input("Choose your road: 1/2:\n"))
+    except ValueError:
+        print("Please enter numbers only.")
+        continue
+    if road == 1:
+        while True:
+            door = input("Please choose your door: red/blue\n").lower()
+            if door == "red" or door == "blue":
+                print(f"You choose this door: {door}")
+                break
+            else:
+                print("Try again, please choose the correct door.")
+        if door == "red":
+            print("Here you find fantastic cats!")
+        elif door == "blue":
+            print("Very sorry, you find a lake. Escape quickly!")
+        break
+    elif road == 2:
+        print("You walked into a dark forest... game over.")
+        break
+    else:
+        print("Please choose 1 or 2 only.")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Welcome to the Fantastic Island! We wish you an interesting game.
+Choose your road: 1/2:
+abc
+Please enter numbers only.
+Choose your road: 1/2:
+1
+Please choose your door: red/blue
+green
+Try again, please choose the correct door.
+Please choose your door: red/blue
+red
+You choose this door: red
+Here you find fantastic cats!</pre></div>
+
+    <h4>طبقات الحماية في اللعبة دي</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الطبقة</th><th>بتحمي من</th><th>الأداة</th></tr>
+        <tr><td>1</td><td>المستخدم كتب حروف بدل رقم الطريق</td><td><code class="inl">try/except ValueError</code> + <code class="inl">continue</code></td></tr>
+        <tr><td>2</td><td>المستخدم كتب رقم غير 1 أو 2</td><td><code class="inl">else</code> في نهاية السلسلة</td></tr>
+        <tr><td>3</td><td>المستخدم كتب لون غير موجود</td><td>حلقة داخلية بـ <code class="inl">break</code> عند النجاح</td></tr>
+        <tr><td>4</td><td>اختلاف حالة الحروف (RED / Red)</td><td><code class="inl">.lower()</code> على المدخل</td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 تحسين على الكود الأصلي</div>
+      <p>
+        في الكود الأصلي كان <code class="inl">door.lower()</code> مكتوبة 4 مرّات.
+        نقلناها لسطر الـ <code class="inl">input</code> مرّة واحدة — أنضف وأقل عرضة للخطأ.
+        كمان استخدمنا <code class="inl">door in ["red","blue"]</code> يبقى أحسن من
+        <code class="inl">or</code> المتكرّرة.
+      </p>
+    </div>
+
+    <div class="ex">
+      <div class="bt">✍️ التحدّي الكبير</div>
+      <p>
+        وسّع اللعبة: خلّي الطريق 2 يودّي لغابة فيها اختيارين كمان (كهف / نهر)،
+        وضيف نظام نقاط، وسؤال «تلعب تاني؟» في الآخر.
+      </p>
+    </div>
+  </article>
+  <!-- ADD:u9-ch -->
+  <!-- 9.CH -->
+  <article class="lesson" id="u9-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة التاسعة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">الاختبارات هنا بتلعب دور «المستخدم المزعج» — بتكتب حروف مكان أرقام وأصفار في المقام.</p>
+
+    <div class="challenge" data-ch="u9-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — قسمة مش بتقع <span class="lvl">⭐⭐</span></div>
+      <p>
+        اطلب رقمين (عشريين) واطبع <code class="inl">الناتج: X</code> مقرّب لخانتين. لو المدخل مش رقم اطبع <code class="inl">لازم تدخل أرقام</code>،
+        ولو القسمة على صفر اطبع <code class="inl">مينفعش القسمة على صفر</code>. البرنامج <strong>عمره ما يقع</strong>.
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+a = float(input("الأول: "))
+b = float(input("التاني: "))
+print(f"الناتج: {round(a / b, 2)}")
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def ending(stdin):
+    out = run_program(stdin)
+    assert "Traceback" not in out, "البرنامج وقع:\n" + out
+    return out.strip().splitlines()[-1].strip()
+
+def test_normal():
+    "10 ÷ 3 ← الناتج: 3.33"
+    assert ending("10\n3\n") == "الناتج: 3.33"
+
+def test_float():
+    "7.5 ÷ 2.5 ← الناتج: 3.0"
+    assert ending("7.5\n2.5\n") == "الناتج: 3.0"
+
+def test_zero():
+    "القسمة على صفر ← رسالة مش crash"
+    assert ending("5\n0\n") == "مينفعش القسمة على صفر"
+
+def test_text():
+    "حروف مكان رقم ← لازم تدخل أرقام"
+    assert ending("abc\n2\n") == "لازم تدخل أرقام"
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+try:
+    a = float(input("الأول: "))
+    b = float(input("التاني: "))
+    print(f"الناتج: {round(a / b, 2)}")
+except ValueError:
+    print("لازم تدخل أرقام")
+except ZeroDivisionError:
+    print("مينفعش القسمة على صفر")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u9-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — جمع الصالح بس <span class="lvl">⭐⭐</span></div>
+      <p>اطلب سطر فيه قيم مفصولة بمسافات. اجمع الأرقام الصحيحة الصالحة واطبع <code class="inl">المجموع: N</code>، وفي السطر اللي بعده <code class="inl">المرفوض: x, abc</code> (أو <code class="inl">المرفوض: لا يوجد</code>).</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+values = input("القيم: ").split()
+total = 0
+rejected = []
+# لف على القيم: حاول تحوّل كل واحدة، والغلط ضيفه للمرفوض
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def last_two(stdin):
+    out = run_program(stdin)
+    return [l.strip() for l in out.strip().splitlines()][-2:], out
+
+def test_mixed():
+    "10 x 5 -3 abc ← المجموع 12 والمرفوض x, abc"
+    got, out = last_two("10 x 5 -3 abc\n")
+    assert got == ["المجموع: 12", "المرفوض: x, abc"], out
+
+def test_clean():
+    "1 2 3 ← المجموع 6 والمرفوض لا يوجد"
+    got, out = last_two("1 2 3\n")
+    assert got == ["المجموع: 6", "المرفوض: لا يوجد"], out
+
+def test_all_bad():
+    "a b ← المجموع 0"
+    got, out = last_two("a b\n")
+    assert got == ["المجموع: 0", "المرفوض: a, b"], out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+values = input("القيم: ").split()
+total = 0
+rejected = []
+for v in values:
+    try:
+        total += int(v)
+    except ValueError:
+        rejected.append(v)
+print(f"المجموع: {total}")
+print(f"المرفوض: {', '.join(rejected) if rejected else 'لا يوجد'}")
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u9-ch -->
+
+  <!-- 9.EX -->
+  <article class="lesson" id="u9-ex">
+    <h3>تمارين الوحدة التاسعة <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">هدف التمارين دي: تكتب كود ما يقعش مهما عمل المستخدم إيه.</p>
+
+    <h4>تمارين</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — شخّص الخطأ</div>
+      <p>حدّد نوع الاستثناء اللي هيحصل في كل سطر:</p>
+      <div class="code"><pre>
+int("hello")
+[1, 2, 3][10]
+{"a": 1}["b"]
+10 / 0
+"abc" + 5
+"abc".append("d")
+open("مش_موجود.txt")
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="tbl-wrap"><table>
+        <tr><th>السطر</th><th>الاستثناء</th></tr>
+        <tr><td><code class="inl">int("hello")</code></td><td>ValueError</td></tr>
+        <tr><td><code class="inl">[1,2,3][10]</code></td><td>IndexError</td></tr>
+        <tr><td><code class="inl">{"a":1}["b"]</code></td><td>KeyError</td></tr>
+        <tr><td><code class="inl">10 / 0</code></td><td>ZeroDivisionError</td></tr>
+        <tr><td><code class="inl">"abc" + 5</code></td><td>TypeError</td></tr>
+        <tr><td><code class="inl">"abc".append("d")</code></td><td>AttributeError</td></tr>
+        <tr><td><code class="inl">open("مش_موجود.txt")</code></td><td>FileNotFoundError</td></tr>
+      </table></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — إدخال آمن</div>
+      <p>اطلب رقم من المستخدم بحيث البرنامج ما يقعش أبدًا مهما كتب إيه، ويفضل يسأل لحد ما يدخل رقم صحيح.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+while True:
+    try:
+        number = int(input("اكتب رقم: "))
+        break
+    except ValueError:
+        print("أرقام صحيحة بس من فضلك")
+print(f"شكرًا، رقمك {number}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 3 — القسمة الآمنة</div>
+      <p>اطلب رقمين واقسمهم، وتعامل مع: الحروف، القسمة على صفر، وأي خطأ تاني — كل واحد برسالة مختلفة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+while True:
+    try:
+        a = float(input("البسط: "))
+        b = float(input("المقام: "))
+        result = a / b
+    except ValueError:
+        print("❌ أرقام بس من فضلك")
+    except ZeroDivisionError:
+        print("❌ ما ينفعش القسمة على صفر")
+    except Exception as e:
+        print(f"❌ خطأ غير متوقّع: {e}")
+    else:
+        print(f"✅ الناتج: {result:.4f}")
+        break
+    finally:
+        print("---")
+</pre></div>
+      <p>لاحظ <code class="inl">else</code> (بتشتغل لو مفيش خطأ) و<code class="inl">finally</code> (بتشتغل في كل الأحوال).</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — تنظيف بيانات</div>
+      <p>
+        عندك <code class="inl">raw = ["12", "abc", "7.5", "", "30", "-5", "xyz"]</code>.
+        اعمل قائمتين: الأرقام الصالحة (كـ float) والقيم المرفوضة. واطبع تقرير.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+raw = ["12", "abc", "7.5", "", "30", "-5", "xyz"]
+valid = []
+invalid = []
+for item in raw:
+    try:
+        valid.append(float(item))
+    except ValueError:
+        invalid.append(item)
+print(f"صالح ({len(valid)}): {valid}")
+print(f"مرفوض ({len(invalid)}): {invalid}")
+print(f"المجموع: {sum(valid)}")
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>صالح (4): [12.0, 7.5, 30.0, -5.0]
+مرفوض (3): ['abc', '', 'xyz']
+المجموع: 44.5</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 5 — ليه الترتيب مهم؟</div>
+      <p>الكود ده فيه مشكلة كبيرة. لقّطها وفسّرها:</p>
+      <div class="code"><pre>
+try:
+    x = int(input("رقم: "))
+    print(10 / x)
+except Exception:
+    print("خطأ عام")
+except ValueError:
+    print("مش رقم")
+except ZeroDivisionError:
+    print("قسمة على صفر")
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <p>
+        <code class="inl">except Exception</code> هي <strong>الأب</strong> لكل الاستثناءات،
+        وهي مكتوبة <strong>أول واحدة</strong>. فبايثون هتمسك بيها كل خطأ، والـ
+        <code class="inl">except</code> اللي تحتها <strong>مش هتشتغل أبدًا</strong>.
+      </p>
+      <p>
+        في الواقع بايثون 3 بترفض الكود ده أصلًا وبترمي
+        <code class="inl">SyntaxError: default 'except:' must be last</code> في بعض الحالات،
+        أو بتتجاهل الفروع الميتة.
+      </p>
+      <p><strong>القاعدة: من الأخصّ للأعمّ. <code class="inl">Exception</code> دايمًا آخر واحدة.</strong></p>
+      <div class="code"><pre>
+try:
+    x = int(input("رقم: "))
+    print(10 / x)
+except ValueError:
+    print("مش رقم")
+except ZeroDivisionError:
+    print("قسمة على صفر")
+except Exception as e:
+    print(f"خطأ عام: {e}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 6 — حصّن مشروع قديم</div>
+      <p>
+        ارجع لمشروع «مولّد كلمات المرور» في الوحدة 7، وحصّنه: خلّي كل مدخل رقمي محميّ،
+        وخلّي البرنامج يفضل يسأل بدل ما يقفل لو المجموع مش مظبوط.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import random, string
+def ask_number(message):
+    """بتفضل تسأل لحد ما تاخد رقم صحيح موجب"""
+    while True:
+        try:
+            value = int(input(message))
+            if value &lt; 0:
+                print("لازم رقم موجب")
+                continue
+            return value
+        except ValueError:
+            print("أرقام بس من فضلك")
+while True:
+    length = ask_number("طول كلمة السر: ")
+    letters = ask_number("عدد الحروف: ")
+    numbers = ask_number("عدد الأرقام: ")
+    symbols = ask_number("عدد الرموز: ")
+    if letters + numbers + symbols == length:
+        break
+    print(f"⚠️ المجموع {letters+numbers+symbols} مش مساوي {length}، جرّب تاني\n")
+password = (random.choices(string.ascii_letters, k=letters) +
+            random.choices(string.digits, k=numbers) +
+            random.choices(string.punctuation, k=symbols))
+random.shuffle(password)
+print(f"\nكلمة السر: {''.join(password)}")
+</pre></div>
+      <p>
+        لاحظ إننا عملنا دالة <code class="inl">ask_number</code> عشان ما نكرّرش نفس الـ
+        try/except 4 مرّات — ده مبدأ DRY. (الدوال موضوع الوحدة 11، بس شوف قد إيه بتنفع هنا.)
+      </p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">int("abc")</code> بترمي…</p>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> NameError</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. كتلة <code class="inl">finally</code> بتتنفّذ…</p>
+        <label><input type="radio"> لو مفيش خطأ بس</label>
+        <label><input type="radio"> لو حصل خطأ بس</label>
+        <label><input type="radio"> في كل الأحوال</label>
+        <label><input type="radio"> مرّة واحدة في البرنامج</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ليه <code class="inl">except:</code> العارية خطر؟</p>
+        <label><input type="radio"> بتمسك حتى Ctrl+C فالبرنامج ممكن يرفض يقفل</label>
+        <label><input type="radio"> لأنها أبطأ</label>
+        <label><input type="radio"> لأنها بترمي خطأ</label>
+        <label><input type="radio"> مش خطر، دي الأفضل</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. في نمط «كرّر لحد ما ينجح»، الـ <code class="inl">break</code> لازم تكون…</p>
+        <label><input type="radio"> بعد كتلة except</label>
+        <label><input type="radio"> جوّه except</label>
+        <label><input type="radio"> بره الحلقة</label>
+        <label><input type="radio"> جوّه try بعد السطر الخطر</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">5. الخطأ المنطقي بيتحلّ بـ…</p>
+        <label><input type="radio"> try/except</label>
+        <label><input type="radio"> الاختبار وتتبّع القيم بالطباعة</label>
+        <label><input type="radio"> إعادة تشغيل البرنامج</label>
+        <label><input type="radio"> raise</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">6. ترتيب كتل <code class="inl">except</code> الصحيح هو…</p>
+        <label><input type="radio"> من الأعمّ للأخصّ</label>
+        <label><input type="radio"> الترتيب مش مهم</label>
+        <label><input type="radio"> من الأخصّ للأعمّ</label>
+        <label><input type="radio"> أبجديًا</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:9 -->
+  <div class="checkpoint" data-unit="9">
+    <h4>✅ نقطة تفتيش: الوحدة التاسعة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أفرّق بين أنواع الأخطاء التلاتة وأقرا الـ Traceback.</li><li>أمسك أخطاء محدّدة بـ try و except.</li><li>أستخدم else و finally و raise.</li><li>أعرف إمتى EAFP وإمتى LBYL.</li></ul>
+  </div>
+  <!-- /CP -->

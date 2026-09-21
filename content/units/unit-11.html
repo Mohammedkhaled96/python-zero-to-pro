@@ -1,0 +1,2387 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة الحادية عشرة · الدوال</div>
+    <h2>الدوال: نظّم كودك وأعد استخدامه</h2>
+    <p>
+      لحد دلوقتي كل برامجنا كتلة واحدة طويلة. الدوال بتخلّيك تقسّم البرنامج لقطع
+      صغيرة، كل قطعة ليها مهمّة واحدة واسم واضح. دي مش رفاهية — دي الفرق بين برنامج
+      من 50 سطر وبرنامج من 5000 سطر.
+    </p>
+  </div>
+
+  <!-- 11.1 -->
+  <article class="lesson" id="u11-l1">
+    <h3>تعريف الدالة: def <span class="tag">درس 56</span></h3>
+    <p class="goal">الهدف: تعرف تعمل دالة وتناديها، وتفهم ليه محتاجينها.</p>
+
+    <h4>1. ليه الدوال؟</h4>
+    <div class="code"><pre>
+# من غير دوال — تكرار
+print("=" * 30)
+print("مرحبا بك")
+print("=" * 30)
+# ...كود...
+print("=" * 30)
+print("مرحبا بك")
+print("=" * 30)
+</pre></div>
+    <p>لو عايز تغيّر الشكل، هتعدّل في كل مكان. مع الدالة:</p>
+    <div class="code"><pre>
+def show_header():
+    print("=" * 30)
+    print("مرحبا بك")
+    print("=" * 30)
+show_header()
+# ...كود...
+show_header()
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>==============================
+مرحبا بك
+==============================
+==============================
+مرحبا بك
+==============================</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 الأسباب الأربعة لاستخدام الدوال</div>
+      <ol>
+        <li><strong>عدم التكرار (DRY):</strong> اكتبها مرّة، استخدمها مليون.</li>
+        <li><strong>التنظيم:</strong> اسم الدالة بيوصف اللي بيحصل، فالكود بيبقى مقروء.</li>
+        <li><strong>سهولة التعديل:</strong> تغيير في مكان واحد.</li>
+        <li><strong>الاختبار:</strong> تقدر تختبر كل قطعة لوحدها.</li>
+      </ol>
+    </div>
+
+    <h4>2. الشكل الأساسي</h4>
+    <div class="diagram">
+<pre>  def  say_hello ( ) :
+   │       │      │  │
+   │       │      │  └── نقطتين
+   │       │      └───── قوسين (للوسائط، فاضيين هنا)
+   │       └──────────── اسم الدالة (snake_case)
+   └──────────────────── الكلمة المفتاحية
+
+      print("welcome")   ← الجسم، بمسافة بادئة
+
+  say_hello()            ← الاستدعاء (بره الدالة، من غير مسافة)</pre>
+      <div class="cap">تشريح الدالة</div>
+    </div>
+
+    <h4>3. مثال بالتفصيل</h4>
+    <div class="code"><pre>
+def say_hello():
+    """function for greeting message"""
+    print("welcome for you")
+print(say_hello())
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>welcome for you
+None</pre></div>
+    <div class="box err">
+      <div class="bt">💥 من فين جت None دي؟</div>
+      <p>
+        الدالة <strong>طبعت</strong> الرسالة، لكنها ما <strong>رجّعتش</strong> أي قيمة.
+        وأي دالة في بايثون ما فيهاش <code class="inl">return</code> بترجّع
+        <code class="inl">None</code> تلقائيًا. فـ <code class="inl">print(say_hello())</code>
+        طبع الرسالة (من جوّه الدالة) وبعدين طبع القيمة الراجعة وهي None.
+      </p>
+      <p><strong>الصح:</strong> اكتب <code class="inl">say_hello()</code> بس، من غير <code class="inl">print</code> حواليها.</p>
+      <p>الفرق ده هو موضوع الدرس رقم 58 وهو أهم درس في الوحدة دي.</p>
+    </div>
+
+    <h4>4. الترتيب مهم: عرّف قبل ما تنادي</h4>
+    <div class="code"><pre>
+greet()            # ❌ NameError: name 'greet' is not defined
+def greet():
+    print("hi")
+</pre></div>
+    <p>
+      بايثون بتقرا الملف من فوق لتحت. لازم تكون عرّفت الدالة قبل السطر اللي بيناديها.
+      عشان كده الاصطلاح: <strong>كل الدوال فوق، وكود التشغيل تحت</strong>.
+    </p>
+
+    <h4>5. الـ docstring</h4>
+    <div class="code"><pre>
+def calculate_area(width, height):
+    """
+    بتحسب مساحة المستطيل.
+    width: العرض
+    height: الارتفاع
+    ترجّع: المساحة
+    """
+    return width * height
+print(calculate_area.__doc__)
+help(calculate_area)
+</pre></div>
+    <p>
+      النص التلاثي في أول الدالة اسمه <strong>docstring</strong> — توثيق رسمي للدالة.
+      بايثون بتحفظه، و<code class="inl">help()</code> بتعرضه، ومحرّرات الكود بتظهره لك
+      لما تكتب اسم الدالة.
+    </p>
+    <!-- APPEND:u11-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>أول دالتين</div>
+      <p>عرّف دالة بترسم خط، ودالة بتطبع عنوان بين خطّين وبتستخدم الأولى.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def line():
+    print("-" * 12)
+def title():
+    line()
+    print("  تقرير اليوم")
+    line()
+title()
+print(type(line))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>------------
+  تقرير اليوم
+------------
+&lt;class 'function'&gt;</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. كتبت <code class="inl">def hello(): print("hi")</code> ومعملتش حاجة تانية. الناتج؟</p>
+        <label><input type="radio"> hi</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> hello</label>
+        <label><input type="radio"> مفيش — الدالة ما اتنادتش</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">hello</code> من غير أقواس…</p>
+        <label><input type="radio"> بتشغّل الدالة</label>
+        <label><input type="radio"> بتشير للدالة نفسها من غير تشغيل</label>
+        <label><input type="radio"> خطأ دايمًا</label>
+        <label><input type="radio"> بترجّع None</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ناديت دالة قبل سطر تعريفها في الملف…</p>
+        <label><input type="radio"> NameError</label>
+        <label><input type="radio"> بتشتغل عادي</label>
+        <label><input type="radio"> SyntaxError</label>
+        <label><input type="radio"> تحذير بس</label>
+      </div>
+    </div>
+    <!-- /APPEND:u11-l1 -->
+                <!-- SUM:u11-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">def اسم(وسائط):</code> بيعرّف دالة، والنداء بالأقواس.</li><li>الدالة لازم تتعرّف قبل ما تتنادى.</li><li>الـ docstring بيوثّق الدالة وبيظهر في <code class="inl">help</code>.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 11.2 -->
+  <article class="lesson" id="u11-l2">
+    <h3>الوسائط (Parameters و Arguments) <span class="tag">درس 57</span></h3>
+    <p class="goal">الهدف: تمرّر بيانات للدالة عشان تشتغل عليها.</p>
+
+    <h4>1. دالة بوسيط واحد</h4>
+    <div class="code"><pre>
+def say_hello(name):
+    print(f"welcome for you {name}")
+say_hello("farid")
+say_hello("sara")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>welcome for you farid
+welcome for you sara</pre></div>
+    <div class="diagram">
+<pre>  def say_hello( name ):        ← name = parameter (معامل)
+                  │                 اسم مؤقّت جوّه الدالة
+                  ▼
+  say_hello( "farid" )          ← "farid" = argument (وسيط)
+                                   القيمة الفعلية وقت الاستدعاء</pre>
+      <div class="cap">الفرق بين parameter و argument</div>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 المصطلحين بالعربي</div>
+      <p>
+        <strong>Parameter (معامل):</strong> الاسم في تعريف الدالة — زي «صندوق فاضي».<br>
+        <strong>Argument (وسيط):</strong> القيمة اللي بتبعتها وقت الاستدعاء.<br>
+        عمليًا الناس بتستخدم الكلمتين بالتبادل ومحدّش هيحاسبك.
+      </p>
+    </div>
+
+    <h4>2. أكتر من وسيط</h4>
+    <div class="code"><pre>
+def repeated(x, number):
+    return x * number
+print(repeated("farid mohammed", 2))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>farid mohammedfarid mohammed</pre></div>
+    <div class="box err">
+      <div class="bt">💥 الترتيب مهم</div>
+      <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">repeated</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+      <div class="code"><pre>
+print(repeated(2, "farid"))     # برضه شغّالة! لأن 2 * "farid" جايزة
+print(repeated("ab", "cd"))     # ❌ TypeError: can't multiply sequence by non-int
+</pre></div>
+      <p>بايثون بتربط الوسائط <strong>بالترتيب</strong>. لو عكست، الدالة هتشتغل غلط أو تقع.</p>
+    </div>
+
+    <h4>3. الوسائط المسمّاة (Keyword Arguments)</h4>
+    <div class="code"><pre>
+def create_user(name, age, city):
+    print(f"{name}, {age} سنة, من {city}")
+create_user("Farid", 32, "Cairo")                  # بالترتيب
+create_user(city="Cairo", name="Farid", age=32)    # بالأسماء — الترتيب مش مهم
+create_user("Farid", city="Cairo", age=32)         # خليط (الموضعية الأول)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>Farid, 32 سنة, من Cairo
+Farid, 32 سنة, من Cairo
+Farid, 32 سنة, من Cairo</pre></div>
+    <p>إنت شفت الأسلوب ده قبل كده: <code class="inl">sort(reverse=True)</code> و<code class="inl">enumerate(lst, start=1)</code> و<code class="inl">random.choices(letters, k=5)</code>.</p>
+
+    <h4>4. القيم الافتراضية</h4>
+    <div class="code"><pre>
+def greet(name, greeting="أهلا"):
+    print(f"{greeting} يا {name}")
+greet("Farid")                       # استخدم الافتراضي
+greet("Sara", "صباح الخير")           # تجاهل الافتراضي
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>أهلا يا Farid
+صباح الخير يا Sara</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ الوسائط اللي ليها قيمة افتراضية لازم تيجي في الآخر</div>
+      <div class="code"><pre>
+def bad(greeting="أهلا", name):    # ❌ SyntaxError
+def good(name, greeting="أهلا"):   # ✅
+</pre></div>
+    </div>
+    <div class="box err">
+      <div class="bt">💥 فخّ متقدّم: ما تخليش القيمة الافتراضية قائمة</div>
+      <div class="code"><pre>
+def add_item(item, basket=[]):     # ❌ خطر!
+    basket.append(item)
+    return basket
+print(add_item("a"))    # ['a']
+print(add_item("b"))    # ['a', 'b']  😱 القائمة اتشاركت!
+def add_item(item, basket=None):   # ✅ الصح
+    if basket is None:
+        basket = []
+    basket.append(item)
+    return basket
+</pre></div>
+      <p>
+        السبب: القيمة الافتراضية بتتقيّم <strong>مرّة واحدة</strong> وقت تعريف الدالة،
+        فالقائمة الواحدة بتتشارك بين كل الاستدعاءات. ارجع لدرس الـ Heap عشان تفهم ليه.
+      </p>
+    </div>
+
+    <h4>5. عدد وسائط غير محدّد</h4>
+    <div class="code"><pre>
+def add_all(*numbers):        # نجمة واحدة → tuple
+    return sum(numbers)
+print(add_all(1, 2))
+print(add_all(1, 2, 3, 4, 5))
+def show_info(**data):        # نجمتين → dict
+    for key, value in data.items():
+        print(f"{key}: {value}")
+show_info(name="Farid", age=32, city="Cairo")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>3
+15
+name: Farid
+age: 32
+city: Cairo</pre></div>
+    <!-- APPEND:u11-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>صانع الوسوم</div>
+      <p>دالة بتلفّ نص في وسم HTML، الوسم الافتراضي <code class="inl">p</code>. جرّبها بالموضع وبالاسم.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def make_tag(text, tag="p"):
+    print(f"&lt;{tag}&gt;{text}&lt;/{tag}&gt;")
+make_tag("أهلًا")
+make_tag("عنوان", "h1")
+make_tag(tag="b", text="مهم")
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>&lt;p&gt;أهلًا&lt;/p&gt;
+&lt;h1&gt;عنوان&lt;/h1&gt;
+&lt;b&gt;مهم&lt;/b&gt;</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">def f(a=1, b):</code>؟</p>
+        <label><input type="radio"> سليم</label>
+        <label><input type="radio"> b بتاخد 1</label>
+        <label><input type="radio"> SyntaxError — الافتراضي لازم يبقى بعد الإجباري</label>
+        <label><input type="radio"> TypeError وقت الاستدعاء</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">def f(x): ...</code> ثم <code class="inl">f()</code>؟</p>
+        <label><input type="radio"> TypeError: missing argument</label>
+        <label><input type="radio"> x = None</label>
+        <label><input type="radio"> x = 0</label>
+        <label><input type="radio"> مفيش مشكلة</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. الـ parameter هو…</p>
+        <label><input type="radio"> القيمة اللي بتبعتها</label>
+        <label><input type="radio"> ناتج الدالة</label>
+        <label><input type="radio"> اسم الدالة</label>
+        <label><input type="radio"> الاسم المكتوب في التعريف</label>
+      </div>
+    </div>
+    <!-- /APPEND:u11-l2 -->
+                <!-- SUM:u11-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الوسائط بالترتيب أو بالاسم.</li><li>القيم الافتراضية بتخلّي الوسيط اختياري.</li><li><code class="inl">*args</code> و <code class="inl">**kwargs</code> لعدد غير محدّد.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 11.3 -->
+  <article class="lesson" id="u11-l3">
+    <h3>return مقابل print — أهم درس في الوحدة <span class="tag">درس 58 · حاسم</span></h3>
+    <p class="goal">الهدف: تفهم الفرق اللي بيخلط على 90% من المبتدئين.</p>
+
+    <h4>1. المقارنة المباشرة</h4>
+    <div class="code"><pre>
+def add_print(a, b):
+    print(a + b)          # بتعرض النتيجة على الشاشة
+def add_return(a, b):
+    return a + b          # بتسلّم النتيجة للكود اللي ناداها
+add_print(2, 3)           # 5   ← اتطبعت
+result = add_print(2, 3)  # 5   ← اتطبعت، لكن result = None!
+print(result)             # None
+result2 = add_return(2, 3)  # ما اتطبعش حاجة
+print(result2)              # 5   ← القيمة اتخزّنت واتطبعت
+print(add_return(2, 3) * 10)  # 50  ← نقدر نستخدمها في عمليات!
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>5
+5
+None
+5
+50</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 التشبيه اللي هيخلّيك ما تنساش الفرق</div>
+      <p>
+        <strong><code class="inl">print</code></strong> = الدالة بتقول النتيجة <em>بصوت عالي</em>
+        للمستخدم. الكلام بيروح في الهوا — محدّش يقدر يمسكه أو يستخدمه.
+      </p>
+      <p>
+        <strong><code class="inl">return</code></strong> = الدالة بتسلّم النتيجة <em>في إيد</em>
+        الكود اللي ناداها. تقدر تخزّنها، تحسب عليها، تبعتها لدالة تانية.
+      </p>
+    </div>
+
+    <h4>2. الأمثلة اللي فيها None</h4>
+    <div class="code"><pre>
+def say_hello(name):
+    print(f"welcome for you {name}")
+print(say_hello("farid"))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>welcome for you farid
+None</pre></div>
+    <p>
+      كل الأمثلة في المحاضرات اللي كانت بتطبع <code class="inl">None</code> كان سببها ده:
+      الدالة بتطبع وما بترجّعش، وإحنا بنطبع اللي رجّعته.
+      <strong>الحل بسيط: شيل الـ <code class="inl">print</code> الخارجية.</strong>
+    </p>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">say_hello</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+say_hello("farid")      # ✅ كده صح
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>welcome for you farid</pre></div>
+
+    <h4>3. النسخة اللي بترجّع</h4>
+    <div class="code"><pre>
+def test(number):
+    return number * 2
+print(test(2))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>4</pre></div>
+    <div class="code"><pre>
+def test(name):
+    return f"Your name is {name}"
+print(test("farid"))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Your name is farid</pre></div>
+    <p>هنا الـ <code class="inl">print</code> الخارجية <strong>ضرورية</strong>، لأن الدالة بترجّع بس وما بتطبعش.</p>
+
+    <h4>4. return بتنهي الدالة فورًا</h4>
+    <div class="code"><pre>
+def check(age):
+    if age &lt; 18:
+        return "قاصر"
+    return "بالغ"              # مش محتاجين else!
+    print("ده مش هيتنفّذ أبدًا")
+print(check(15))
+print(check(25))
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>قاصر
+بالغ</pre></div>
+    <p>
+      أول ما بايثون تشوف <code class="inl">return</code>، بتخرج من الدالة على طول.
+      عشان كده مش محتاجين <code class="inl">else</code> — النمط ده اسمه
+      <strong>early return</strong> وبيخلّي الكود أبسط.
+    </p>
+
+    <h4>5. return بأكتر من قيمة</h4>
+    <div class="code"><pre>
+def stats(numbers):
+    return min(numbers), max(numbers), sum(numbers)/len(numbers)
+low, high, avg = stats([10, 20, 30, 40])
+print(f"الأقل: {low}, الأعلى: {high}, المتوسط: {avg}")
+# في الحقيقة الدالة بترجّع tuple واحد
+print(stats([1, 2, 3]))
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الأقل: 10, الأعلى: 40, المتوسط: 25.0
+(1, 3, 2.0)</pre></div>
+
+    <h4>6. القاعدة العملية</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>نوع الدالة</th><th>تستخدم</th><th>مثال</th></tr>
+        <tr><td>بتحسب حاجة</td><td><code class="inl">return</code></td><td><code class="inl">calculate_total()</code></td></tr>
+        <tr><td>بتفحص حاجة</td><td><code class="inl">return True/False</code></td><td><code class="inl">is_valid_email()</code></td></tr>
+        <tr><td>بتعرض حاجة للمستخدم</td><td><code class="inl">print</code></td><td><code class="inl">show_menu()</code></td></tr>
+        <tr><td>بتحوّل بيانات</td><td><code class="inl">return</code></td><td><code class="inl">clean_text()</code></td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 قاعدة المحترفين</div>
+      <p>
+        <strong>ما تخلطش الاتنين في دالة واحدة.</strong> خلّي الدالة إمّا تحسب وترجّع،
+        أو تعرض. لأن دالة بترجّع بس أسهل في الاختبار وأسهل في إعادة الاستخدام
+        (تقدر تستخدمها في موقع ويب مثلًا مش في الـ Terminal بس).
+      </p>
+      <div class="code"><pre>
+# ✅ الفصل الصح
+def calculate_area(w, h):
+    return w * h                       # بتحسب بس
+area = calculate_area(5, 3)
+print(f"المساحة: {area}")              # العرض بره
+</pre></div>
+    </div>
+    <!-- APPEND:u11-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>print ولّا return؟</div>
+      <p>دالتين لمساحة المستطيل: واحدة بتطبع وواحدة بترجّع. حاول تستخدم الاتنين في حساب.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def area_print(w, h):
+    print(w * h)
+def area_return(w, h):
+    return w * h
+x = area_print(3, 4)
+print("x =", x)
+total = area_return(3, 4) + area_return(2, 5)
+print("المجموع =", total)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>12
+x = None
+المجموع = 22</pre></div>
+      <p>لو جرّبت <code class="inl">area_print(3, 4) + 1</code> هتاخد <code class="inl">TypeError</code> لأن None + 1 مش معرّفة.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. دالة مفيهاش return بترجّع…</p>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> ""</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. السطر اللي بعد return جوّه الدالة…</p>
+        <label><input type="radio"> بيتنفّذ عادي</label>
+        <label><input type="radio"> بيتنفّذ لو فيه print</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> مش بيتنفّذ — return بتخرج فورًا</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">def f(): return 1, 2</code> — <code class="inl">f()</code>؟</p>
+        <label><input type="radio"> (1, 2)</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+    </div>
+    <!-- /APPEND:u11-l3 -->
+                <!-- SUM:u11-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">return</code> بتسلّم قيمة للكود اللي نادى، و <code class="inl">print</code> بتعرضها بس.</li><li>دالة من غير return بترجّع None.</li><li>القاعدة: الدالة ترجّع، والبرنامج الرئيسي هو اللي يطبع.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 11.4 -->
+  <article class="lesson" id="u11-l4">
+    <h3>النطاق (Scope): وين المتغيّر شغّال؟ <span class="tag">درس 59</span></h3>
+    <p class="goal">الهدف: تفهم ليه متغيّر جوّه دالة مش موجود بره — وربطها بالـ Stack.</p>
+
+    <h4>1. المتغيّر المحلّي (Local)</h4>
+    <div class="code"><pre>
+def my_function():
+    message = "أنا جوّه الدالة"
+    print(message)
+my_function()
+print(message)        # ❌ NameError: name 'message' is not defined
+</pre></div>
+    <p>
+      ارجع لدرس <a href="#u0-l5">Stack و Heap</a>: لما تنادي دالة، بايثون بتحط
+      <strong>إطار (frame)</strong> جديد فوق الـ Stack فيه متغيّرات الدالة.
+      لما الدالة تخلّص، الإطار بيتشال — والمتغيّرات بتختفي.
+    </p>
+    <div class="diagram">
+<pre>  أثناء تنفيذ my_function():        بعد ما تخلّص:
+
+  ┌────────────────────┐            ┌────────────────────┐
+  │ my_function()      │            │                    │
+  │   message = "..."  │  ← إطار    │   (اتشال)          │
+  ├────────────────────┤            ├────────────────────┤
+  │ global             │            │ global             │
+  └────────────────────┘            └────────────────────┘
+                                     message مش موجودة هنا</pre>
+      <div class="cap">دورة حياة المتغيّر المحلّي</div>
+    </div>
+
+    <h4>2. المتغيّر العام (Global)</h4>
+    <div class="code"><pre>
+counter = 0              # متغيّر عام
+def show():
+    print(counter)       # ✅ الدالة تقدر تقراه
+show()
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>0</pre></div>
+    <p>الدالة تقدر <strong>تقرا</strong> المتغيّرات العامة. لكن التعديل حكاية تانية:</p>
+    <div class="code"><pre>
+counter = 0
+def increment():
+    counter = counter + 1     # ❌ UnboundLocalError
+increment()
+</pre></div>
+    <div class="box err">
+      <div class="bt">💥 ليه الخطأ ده؟</div>
+      <p>
+        أول ما بايثون تشوف <code class="inl">counter = </code> جوّه الدالة، بتقرّر إن
+        <code class="inl">counter</code> متغيّر <strong>محلّي</strong>. وبعدين لما توصل
+        للطرف الأيمن <code class="inl">counter + 1</code> بتلاقي المتغيّر المحلّي ده
+        لسه ما اتعطّاش قيمة → خطأ.
+      </p>
+    </div>
+    <div class="code"><pre>
+counter = 0
+def increment():
+    global counter        # صرّح إنك تقصد المتغيّر العام
+    counter += 1
+increment()
+increment()
+print(counter)            # 2
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>2</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ تجنّب global قدر الإمكان</div>
+      <p>
+        استخدام <code class="inl">global</code> بيخلّي الكود صعب التتبّع — أي دالة ممكن
+        تغيّر أي حاجة، فلما يحصل باگ تتوه. <strong>البديل الصح: مرّر واسترجع.</strong>
+      </p>
+      <div class="code"><pre>
+def increment(value):
+    return value + 1
+counter = 0
+counter = increment(counter)
+counter = increment(counter)
+print(counter)     # 2
+</pre></div>
+    </div>
+
+    <h4>3. قاعدة LEGB — ترتيب البحث عن المتغيّر</h4>
+    <div class="diagram">
+<pre>  بايثون بتدوّر على المتغيّر بالترتيب ده:
+
+  L → Local        جوّه الدالة الحالية
+  E → Enclosing    في الدالة اللي محتواها (لو متداخلة)
+  G → Global       في مستوى الملف
+  B → Built-in     دوال بايثون الجاهزة (print, len …)
+
+  أول ما تلاقيه بتقف.</pre>
+      <div class="cap">قاعدة LEGB</div>
+    </div>
+    <div class="code"><pre>
+x = "global"
+def outer():
+    x = "enclosing"
+    def inner():
+        x = "local"
+        print(x)       # local
+    inner()
+    print(x)           # enclosing
+outer()
+print(x)               # global
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>local
+enclosing
+global</pre></div>
+
+    <h4>4. الوسائط محلّية دايمًا</h4>
+    <div class="code"><pre>
+def change(number):
+    number = 100
+    print(f"جوّه الدالة: {number}")
+value = 5
+change(value)
+print(f"بره الدالة: {value}")     # 5 — ما اتغيّرتش
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>جوّه الدالة: 100
+بره الدالة: 5</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 لكن انتبه مع القوائم!</div>
+      <div class="code"><pre>
+def add_item(lst):
+    lst.append("new")      # بنعدّل الكائن نفسه في الـ Heap
+items = ["a", "b"]
+add_item(items)
+print(items)               # ['a', 'b', 'new']  ← اتغيّرت!
+</pre></div>
+      <p>
+        السبب من درس الذاكرة: الوسيط بينسخ <strong>العنوان</strong>. مع الأرقام والنصوص
+        (immutable) أي تعديل بيعمل كائن جديد، فالأصل بيفضل سليم. مع القوائم والقواميس
+        (mutable) التعديل بيحصل على الكائن الأصلي. <strong>الفهم ده بيفرق جدًا.</strong>
+      </p>
+    </div>
+    <!-- APPEND:u11-l4 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تتبّع النطاق</div>
+      <p>توقّع كل سطر — وبعدين شوف الطريقة الأنضف من <code class="inl">global</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+count = 0
+def local_only():
+    count = 99
+    return count
+def with_global():
+    global count
+    count += 1
+def cleaner(value):
+    return value + 1
+print(local_only(), count)
+with_global()
+print(count)
+count = cleaner(count)
+print(count)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>99 0
+1
+2</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. متغيّر اتعرّف جوّه دالة، وحاولت تطبعه برّاها…</p>
+        <label><input type="radio"> بيطبع قيمته</label>
+        <label><input type="radio"> بيطبع None</label>
+        <label><input type="radio"> NameError</label>
+        <label><input type="radio"> بيطبع 0</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. الدالة تقدر <strong>تقرا</strong> متغيّر عام من غير global؟</p>
+        <label><input type="radio"> أيوه — القراءة مسموحة، التعديل هو اللي محتاج global</label>
+        <label><input type="radio"> لأ خالص</label>
+        <label><input type="radio"> بس لو رقم</label>
+        <label><input type="radio"> بس جوّه حلقة</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">x = 5</code> ثم <code class="inl">def f(): x += 1</code> ثم <code class="inl">f()</code>؟</p>
+        <label><input type="radio"> x بقت 6</label>
+        <label><input type="radio"> UnboundLocalError</label>
+        <label><input type="radio"> NameError</label>
+        <label><input type="radio"> x لسه 5 من غير خطأ</label>
+      </div>
+    </div>
+    <!-- /APPEND:u11-l4 -->
+                <!-- SUM:u11-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>المتغيّر جوّه الدالة محلّي ومش بيشوفه اللي برّه.</li><li>ترتيب البحث: LEGB (محلّي، محيط، عام، مدمج).</li><li>تجنّب <code class="inl">global</code> — مرّر القيم وارجّعها.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ADD:u11-l5 -->
+  <!-- 11.5 -->
+  <article class="lesson" id="u11-l5">
+    <h3>تلميحات النوع (Type Hints): وثّق دوالك بطريقة يفهمها المحرّر <span class="tag">درس 60</span></h3>
+    <p class="goal">الهدف: تكتب أنواع الوسائط والإرجاع، تفهم إن بايثون ما بتفرضهاش، وتستخدم أداة mypy عشان تكتشف أخطاء قبل ما الكود يشتغل.</p>
+
+    <h4>1. الشكل الأساسي</h4>
+    <div class="code"><pre>
+def greet(name: str, times: int = 1) -&gt; str:
+    return ("أهلًا " + name + " ") * times
+print(greet("سارة", 2))
+print(greet.__annotations__)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>أهلًا سارة أهلًا سارة
+{'name': &lt;class 'str'&gt;, 'times': &lt;class 'int'&gt;, 'return': &lt;class 'str'&gt;}</pre></div>
+
+    <h4>2. الحقيقة المهمّة: بايثون مش بتفرضها</h4>
+    <div class="code"><pre>
+def double(x: int) -&gt; int:
+    return x * 2
+print(double(5))
+print(double("ha"))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>10
+haha</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 طب فايدتها إيه لو مش بتتفرض؟</div>
+      <ul>
+        <li><strong>المحرّر بيفهمك</strong>: VS Code بيقترح دوال النصوص لما يعرف إن <code class="inl">name</code> نص، ويحط خط أحمر لو بعت رقم.</li>
+        <li><strong>توثيق ما بيقدمش</strong>: التعليقات بتتنسي، لكن التلميح جزء من الكود.</li>
+        <li><strong>أدوات فحص</strong> زي <code class="inl">mypy</code> بتلاقي أخطاء الأنواع في مشروع كامل من غير تشغيل.</li>
+        <li><strong>مكتبات حديثة بتعتمد عليها</strong>: FastAPI و Pydantic و dataclasses.</li>
+      </ul>
+    </div>
+
+    <h4>3. أنواع المجموعات والقيم الاختيارية</h4>
+    <div class="code"><pre>
+def average(scores: list[float]) -&gt; float:
+    return sum(scores) / len(scores)
+def find_user(users: dict[str, int], name: str) -&gt; int | None:
+    return users.get(name)
+def split_name(full: str) -&gt; tuple[str, str]:
+    first, _, last = full.partition(" ")
+    return first, last
+print(average([90, 85.5, 70]))
+print(find_user({"sara": 1}, "ali"))
+print(split_name("سارة أحمد"))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>81.83333333333333
+None
+('سارة', 'أحمد')</pre></div>
+    <div class="code"><pre>
+from typing import Callable, Any
+count: int = 0
+names: list[str] = []
+def apply(func: Callable[[int], int], value: int) -&gt; int:
+    return func(value)
+def show(item: Any) -&gt; None:
+    print(f"[{item}]")
+print(apply(abs, -7))
+show(3.5)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>7
+[3.5]</pre></div>
+
+    <h4>4. اكتشف الأخطاء قبل التشغيل بـ mypy</h4>
+    <div class="code" data-file="app.py"><pre>
+def double(x: int) -&gt; int:
+    return x * 2
+result = double("ha")
+print(result.upper())
+</pre></div>
+    <div class="code" data-file="terminal"><pre>
+pip install mypy
+mypy app.py
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>app.py:4: error: Argument 1 to "double" has incompatible type "str"; expected "int"  [arg-type]
+app.py:5: error: "int" has no attribute "upper"  [attr-defined]
+Found 2 errors in 1 file (checked 1 source file)</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 تبدأ إزاي؟</div>
+      <p>
+        مش لازم تلمّح كل حاجة. ابدأ بـ <strong>وسائط الدوال وقيم الإرجاع</strong> — ده 80% من الفايدة.
+        المتغيّرات المحلّية الواضحة زي <code class="inl">total = 0</code> مش محتاجة.
+      </p>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">def f(x: int) -> int</code> ثم <code class="inl">f("a")</code> — إيه اللي بيحصل وقت التشغيل؟</p>
+        <label><input type="radio"> TypeError فورًا</label>
+        <label><input type="radio"> البرنامج مش هيتصرّف</label>
+        <label><input type="radio"> بايثون بتنفّذ عادي — التلميحات مش بتتفرض</label>
+        <label><input type="radio"> بتتحوّل "a" لرقم</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. دالة ممكن ترجّع نص أو None، التلميح؟</p>
+        <label><input type="radio"> -&gt; str | None</label>
+        <label><input type="radio"> -&gt; str or None</label>
+        <label><input type="radio"> -&gt; [str, None]</label>
+        <label><input type="radio"> -&gt; Any[str]</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. الأداة اللي بتفحص الأنواع من غير تشغيل؟</p>
+        <label><input type="radio"> pip</label>
+        <label><input type="radio"> pytest</label>
+        <label><input type="radio"> venv</label>
+        <label><input type="radio"> mypy</label>
+      </div>
+    </div>
+        <!-- APPEND:u11-l5 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>دالة موثّقة بالأنواع</div>
+      <p>اكتب دالة بتحسب متوسّط قائمة أرقام وترجّع <code class="inl">None</code> لو القائمة فاضية — بتلميحات أنواع كاملة، وشوف إن بايثون <strong>مش</strong> بتفرضها.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def average(numbers: list[float]) -&gt; float | None:
+    """بترجّع المتوسّط، أو None لو مفيش أرقام."""
+    if not numbers:
+        return None
+    return sum(numbers) / len(numbers)
+print(average([10, 20, 30]))
+print(average([]))
+print(average("abc") if False else "مش هنشغّلها")
+print(average.__annotations__)
+def tag(text: str, times: int = 1) -&gt; str:
+    return (text + " ") * times
+print(tag("بايثون", 3).strip())
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>20.0
+None
+مش هنشغّلها
+{'numbers': list[float], 'return': float | None}
+بايثون بايثون بايثون</pre></div>
+      <p>شغّل <code class="inl">mypy file.py</code> وهو اللي هيقول لك «مررت نص مكان قائمة» <strong>قبل</strong> التشغيل.</p>
+      </details>
+    </div>
+    <!-- /APPEND:u11-l5 -->
+            <!-- SUM:u11-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">def f(x: int) -&gt; str:</code> بيوثّق الأنواع.</li><li>بايثون ما بتفرضهاش وقت التشغيل.</li><li><code class="inl">mypy</code> بيكتشف أخطاء الأنواع من غير تشغيل.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u11-l5 -->
+
+  <!-- ADD:u11-l6 -->
+  <!-- 11.6 -->
+  <article class="lesson" id="u11-l6">
+    <h3>الدوال بعمق: lambda و map/filter والوسائط الإلزامية والـ Closures و functools <span class="tag">درس 61</span></h3>
+    <p class="goal">الهدف: تتعامل مع الدوال كقيم — تخزّنها، تبعتها، ترجّعها، وتصنعها — وده الأساس اللي بتقوم عليه الـ decorators والبرمجة الوظيفية.</p>
+
+    <h4>1. الدالة قيمة زي أي قيمة</h4>
+    <div class="code"><pre>
+def shout(text):
+    return text.upper() + "!"
+yell = shout
+print(yell("hi"))
+print(yell.__name__)
+tools = [str.upper, str.lower, str.title]
+for tool in tools:
+    print(tool("hELLo"))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>HI!
+shout
+HELLO
+hello
+Hello</pre></div>
+
+    <h4>2. lambda: دالة صغيرة من غير اسم</h4>
+    <div class="diagram">
+<pre>  def square(x):            square = lambda x: x ** 2
+      return x ** 2                    ──┬─── ┬  ───┬───
+                                         │    │     └─ القيمة اللي بترجع (تعبير واحد بس)
+                                         │    └─ الوسائط
+                                         └─ الكلمة المحجوزة</pre>
+      <div class="cap">lambda = تعبير واحد بيترجّع تلقائيًا من غير return</div>
+    </div>
+    <div class="code"><pre>
+students = [("سارة", 91), ("أحمد", 78), ("منى", 85)]
+print(sorted(students, key=lambda s: s[1], reverse=True))
+words = ["kiwi", "Banana", "apple", "fig"]
+print(sorted(words))
+print(sorted(words, key=str.lower))
+print(sorted(words, key=lambda w: (-len(w), w.lower())))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[('سارة', 91), ('منى', 85), ('أحمد', 78)]
+['Banana', 'apple', 'fig', 'kiwi']
+['apple', 'Banana', 'fig', 'kiwi']
+['Banana', 'apple', 'kiwi', 'fig']</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ ما تسمّيش lambda</div>
+      <p>
+        <code class="inl">square = lambda x: x ** 2</code> شغّالة، بس دليل PEP 8 بيقول: لو هتدّيها اسم، اكتب <code class="inl">def</code>.
+        الـ def بيبان اسمها في رسايل الخطأ، وينفع يبقى ليها docstring. lambda للدوال «اللي بتستخدمها مرّة في مكانها».
+      </p>
+    </div>
+
+    <h4>3. map و filter</h4>
+    <div class="code"><pre>
+nums = [1, 2, 3, 4, 5, 6]
+print(list(map(lambda n: n * n, nums)))
+print([n * n for n in nums])
+print(list(filter(lambda n: n % 2 == 0, nums)))
+print(list(map(int, ["10", "20", "30"])))
+print(list(map(str.strip, [" a ", "b  "])))
+print(list(filter(None, ["", "x", 0, 5, None])))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 4, 9, 16, 25, 36]
+[1, 4, 9, 16, 25, 36]
+[2, 4, 6]
+[10, 20, 30]
+['a', 'b']
+['x', 5]</pre></div>
+
+    <h4>4. الوسائط المسمّاة إلزاميًا (*) والموضعية إلزاميًا (/)</h4>
+    <div class="code"><pre>
+def create_user(name, *, admin=False, active=True):
+    return f"{name} admin={admin} active={active}"
+print(create_user("sara", admin=True))
+try:
+    create_user("sara", True)
+except TypeError as e:
+    print(e)
+def power(base, exp, /):
+    return base ** exp
+print(power(2, 10))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>sara admin=True active=True
+create_user() takes 1 positional argument but 2 were given
+1024</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 ليه نقيّد نفسنا؟</div>
+      <p>
+        <code class="inl">send_email("x@y.com", True, False)</code> — مين يفهم True و False دول؟ الـ <code class="inl">*</code> بتجبر الكاتب يقول
+        <code class="inl">send_email("x@y.com", html=True, urgent=False)</code>. <strong>الكود بيبقى بيشرح نفسه</strong>، وتقدر تغيّر ترتيب الوسائط بعدين من غير ما تكسر حد.
+        هتلاقيها في مكتبات كتير: <code class="inl">sorted(lst, *, key, reverse)</code>.
+      </p>
+    </div>
+
+    <h4>5. الـ Closures: دالة بتفتكر البيئة اللي اتولدت فيها</h4>
+    <div class="code"><pre>
+def make_multiplier(factor):
+    def multiply(x):
+        return x * factor
+    return multiply
+double = make_multiplier(2)
+triple = make_multiplier(3)
+print(double(10), triple(10))
+print(double.__closure__[0].cell_contents)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>20 30
+2</pre></div>
+    <div class="code"><pre>
+def make_counter():
+    count = 0
+    def increment():
+        nonlocal count
+        count += 1
+        return count
+    return increment
+counter = make_counter()
+print(counter(), counter(), counter())
+other = make_counter()
+print(other())
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1 2 3
+1</pre></div>
+    <div class="box err">
+      <div class="bt">❌ UnboundLocalError</div>
+      <p>
+        لو شلت <code class="inl">nonlocal count</code>: بايثون بتشوف <code class="inl">count += 1</code> (إسناد) فبتقرّر إن count <strong>محلّي</strong> في increment،
+        وبعدين تحاول تقرا قيمته قبل ما يتعرّف ← <code class="inl">UnboundLocalError: cannot access local variable 'count'</code>. نفس قاعدة LEGB من درس النطاق.
+      </p>
+    </div>
+
+    <h4>6. functools: partial و reduce</h4>
+    <div class="code"><pre>
+from functools import partial, reduce
+def power(base, exp):
+    return base ** exp
+square = partial(power, exp=2)
+cube = partial(power, exp=3)
+print(square(5), cube(2))
+print_csv = partial(print, sep=",")
+print_csv("a", "b", "c")
+total = reduce(lambda acc, n: acc + n, [1, 2, 3, 4])
+print(total)
+longest = reduce(lambda a, b: a if len(a) &gt;= len(b) else b, ["hi", "hello", "hey"])
+print(longest)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>25 8
+a,b,c
+10
+hello</pre></div>
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>ترتيب بمفتاحين</div>
+      <p>رتّب المنتجات حسب التصنيف أبجديًا، وجوّه كل تصنيف حسب السعر من الأغلى.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+products = [
+    {"name": "Mouse", "cat": "tech", "price": 250},
+    {"name": "Pen", "cat": "office", "price": 10},
+    {"name": "Laptop", "cat": "tech", "price": 30000},
+    {"name": "Stapler", "cat": "office", "price": 60},
+]
+ordered = sorted(products, key=lambda p: (p["cat"], -p["price"]))
+print([p["name"] for p in ordered])
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>['Stapler', 'Pen', 'Laptop', 'Mouse']</pre></div>
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>مصنع الخصومات</div>
+      <p>اكتب <code class="inl">make_discount(percent)</code> بترجّع دالة بتطبّق الخصم على سعر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def make_discount(percent: float):
+    def apply(price: float) -&gt; float:
+        return round(price * (1 - percent / 100), 2)
+    return apply
+black_friday = make_discount(30)
+students = make_discount(10)
+print(black_friday(500), students(500))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>350.0 450.0</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">def f(a, *, b)</code> — أنهي استدعاء صحيح؟</p>
+        <label><input type="radio"> f(1, 2)</label>
+        <label><input type="radio"> f(1, b=2)</label>
+        <label><input type="radio"> f(a=1, 2)</label>
+        <label><input type="radio"> f(*, 1, 2)</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">list(filter(None, [0, 1, "", "a"]))</code>؟</p>
+        <label><input type="radio"> [0, ""]</label>
+        <label><input type="radio"> []</label>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> [1, 'a']</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ليه محتاجين <code class="inl">nonlocal</code> في العدّاد؟</p>
+        <label><input type="radio"> عشان نعدّل متغيّر الدالة الخارجية من الداخلية</label>
+        <label><input type="radio"> عشان نقرا متغيّر global</label>
+        <label><input type="radio"> عشان الدالة تبقى أسرع</label>
+        <label><input type="radio"> مش محتاجينها، مجرّد شكل</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. <code class="inl">partial(int, base=2)("101")</code>؟</p>
+        <label><input type="radio"> 101</label>
+        <label><input type="radio"> "101"</label>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> 2</label>
+      </div>
+    </div>
+                <!-- SUM:u11-l6 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الدوال قيم: تتخزّن وتتبعت وترجع.</li><li><code class="inl">lambda</code> لدالة صغيرة في مكانها، و <code class="inl">map</code>/<code class="inl">filter</code> للتحويل والتصفية.</li><li><code class="inl">*</code> في التعريف بيجبر الوسائط بالاسم، والـ closure بيفتكر بيئته، و <code class="inl">partial</code> بيثبّت وسائط.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u11-l6 -->
+
+  <!-- ADD:u11-l7 -->
+  <!-- 11.7 -->
+  <article class="lesson" id="u11-l7">
+    <h3>المكرّرات والمولّدات: iter و next و yield <span class="tag">درس 62 · جوهري</span></h3>
+    <p class="goal">الهدف: تفهم إزاي حلقة for بتشتغل من جوّه، وتكتب دوال بتولّد القيم «عند الطلب» — عشان تعالج ملايين العناصر أو ملفات بالجيجات من غير ما الذاكرة تتملي.</p>
+
+    <h4>1. بروتوكول التكرار: iter و next</h4>
+    <div class="code"><pre>
+colors = ["أحمر", "أخضر", "أزرق"]
+it = iter(colors)
+print(next(it))
+print(next(it))
+print(next(it))
+print(next(it, "خلصت"))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>أحمر
+أخضر
+أزرق
+خلصت</pre></div>
+    <p>ده بالظبط اللي <code class="inl">for</code> بتعمله من ورا الستارة:</p>
+    <div class="code"><pre>
+colors = ["أحمر", "أخضر", "أزرق"]
+it = iter(colors)
+while True:
+    try:
+        color = next(it)
+    except StopIteration:
+        break
+    print(color)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>أحمر
+أخضر
+أزرق</pre></div>
+
+    <h4>2. دالة المولّد: yield</h4>
+    <p>
+      أي دالة فيها <code class="inl">yield</code> بتبقى <strong>مولّد</strong>. ندائها <strong>ما بينفّذش الكود</strong> — بيرجّع كائن مولّد.
+      كل <code class="inl">next</code> بيشغّل الدالة لحد أول <code class="inl">yield</code>، يسلّم القيمة، و<strong>يجمّد الدالة في مكانها</strong> بكل متغيّراتها لحد الطلب الجاي.
+    </p>
+    <div class="code"><pre>
+def countdown(n):
+    print("بدأنا")
+    while n &gt; 0:
+        yield n
+        n -= 1
+    print("خلصنا")
+gen = countdown(3)
+print(type(gen))
+print(next(gen))
+print(next(gen))
+for value in gen:
+    print(value)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>&lt;class 'generator'&gt;
+بدأنا
+3
+2
+1
+خلصنا</pre></div>
+
+    <h4>3. ليه ده مهم؟ الذاكرة</h4>
+    <div class="code"><pre>
+import sys
+squares_list = [n * n for n in range(1_000_000)]
+squares_gen = (n * n for n in range(1_000_000))
+print(f"القائمة: {sys.getsizeof(squares_list) // 1024:,} KB")
+print(f"المولّد: {sys.getsizeof(squares_gen)} bytes")
+print(sum(squares_gen))
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>القائمة: 8,250 KB
+المولّد: 200 bytes
+333332833333500000</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 التقييم الكسول (Lazy Evaluation)</div>
+      <p>
+        القائمة = <strong>مطبخ طبخ كل الأكل مرّة واحدة</strong> وحطّه على الترابيزة. المولّد = <strong>مطبخ بيطبخ طبق طبق على حسب الطلب</strong>.
+        لو هتاكل طبقين بس من ألف، المولّد وفّر 998 طبق. وده سرّ <code class="inl">range</code> و <code class="inl">zip</code> و <code class="inl">map</code> و
+        قراءة الملفات سطر سطر: كلهم كسالى.
+      </p>
+    </div>
+
+    <h4>4. مولّدات لا نهائية وسلاسل المعالجة</h4>
+    <div class="code"><pre>
+def invoice_ids(prefix):
+    n = 1
+    while True:
+        yield f"{prefix}-{n:04d}"
+        n += 1
+gen = invoice_ids("INV")
+print(next(gen), next(gen))
+for _, invoice in zip(range(3), gen):
+    print(invoice)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>INV-0001 INV-0002
+INV-0003
+INV-0004
+INV-0005</pre></div>
+    <div class="code"><pre>
+def stripped(lines):
+    for line in lines:
+        yield line.strip()
+def non_empty(lines):
+    for line in lines:
+        if line:
+            yield line
+def upper(lines):
+    for line in lines:
+        yield line.upper()
+raw = ["  hello ", "", "world  ", "   ", "python"]
+pipeline = upper(non_empty(stripped(raw)))
+print(list(pipeline))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['HELLO', 'WORLD', 'PYTHON']</pre></div>
+
+    <h4>5. حاجتين لازم تعرفهم</h4>
+    <div class="code"><pre>
+gen = (n for n in range(3))
+print(list(gen))
+print(list(gen))
+def chain(*iterables):
+    for it in iterables:
+        yield from it
+print(list(chain([1, 2], "ab", range(3))))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[0, 1, 2]
+[]
+[1, 2, 'a', 'b', 0, 1, 2]</pre></div>
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>فيبوناتشي لا نهائي</div>
+      <p>اكتب مولّد بيطلّع أرقام فيبوناتشي للأبد، واطبع أول 10.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def fibonacci():
+    a, b = 0, 1
+    while True:
+        yield a
+        a, b = b, a + b
+fib = fibonacci()
+print([next(fib) for _ in range(10)])
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>[0, 1, 1, 2, 3, 5, 8, 13, 21, 34]</pre></div>
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>التقطيع لدفعات</div>
+      <p>اكتب <code class="inl">chunks(items, size)</code> بتولّد دفعات من القائمة (مفيدة لإرسال إيميلات 100 ورا 100).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def chunks(items, size):
+    for start in range(0, len(items), size):
+        yield items[start:start + size]
+for batch in chunks(list(range(1, 11)), 4):
+    print(batch)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>[1, 2, 3, 4]
+[5, 6, 7, 8]
+[9, 10]</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. لما تنادي دالة فيها yield، إيه اللي بيحصل فورًا؟</p>
+        <label><input type="radio"> بتتنفّذ كلها وترجّع قائمة</label>
+        <label><input type="radio"> بترجّع كائن مولّد من غير ما تنفّذ ولا سطر</label>
+        <label><input type="radio"> بترجّع أول قيمة</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">g = (x for x in "ab")</code> ثم <code class="inl">list(g)</code> مرّتين. التانية؟</p>
+        <label><input type="radio"> ['a', 'b']</label>
+        <label><input type="radio"> StopIteration</label>
+        <label><input type="radio"> ['b']</label>
+        <label><input type="radio"> []</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">next(iter([]), "x")</code>؟</p>
+        <label><input type="radio"> "x"</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> StopIteration</label>
+        <label><input type="radio"> []</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. أنسب اختيار لقراءة ملف 20 جيجا ومعالجته سطر سطر؟</p>
+        <label><input type="radio"> f.readlines() في قائمة</label>
+        <label><input type="radio"> f.read() في متغيّر</label>
+        <label><input type="radio"> المرور على الملف / مولّد (كسول)</label>
+        <label><input type="radio"> مستحيل في بايثون</label>
+      </div>
+    </div>
+                <!-- SUM:u11-l7 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">iter</code> و <code class="inl">next</code> هم اللي ورا حلقة for.</li><li>دالة فيها <code class="inl">yield</code> = مولّد بيطلّع القيم عند الطلب.</li><li>المولّدات بتوفّر الذاكرة وبتتستهلك مرّة واحدة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u11-l7 -->
+
+  <!-- ADD:u11-l8 -->
+  <!-- 11.8 -->
+  <article class="lesson" id="u11-l8">
+    <h3>جولة استكشافية: Decorators و match-case و Walrus و Context Managers <span class="tag">درس 63 · استكشافي</span></h3>
+    <p class="goal">الهدف: تتعرّف على 4 أدوات هتقابلها في أي كود بايثون حديث — تفهم بتشتغل إزاي من جوّه وتعرف تقراها. الإتقان هييجي مع الاستخدام.</p>
+    <div class="box info">
+      <div class="bt">ℹ️ درس استكشافي</div>
+      <p>لو حسّيت إن الدرس ده تقيل، عادي تعدّيه وترجع له بعد وحدة OOP. كل اللي بعده مش معتمد عليه — إلا إنك هتشوف <code class="inl">@</code> قدّام دوال في وحدات OOP والاختبارات والخوارزميات.</p>
+    </div>
+
+    <h4>1. الـ Decorators: دالة بتغلّف دالة</h4>
+    <p>بما إن الدالة قيمة، وبما إن الـ closure بتفتكر بيئتها — نقدر نكتب دالة <strong>بتاخد دالة وترجّع نسخة محسّنة منها</strong>.</p>
+    <div class="code"><pre>
+def log_calls(func):
+    def wrapper(*args, **kwargs):
+        print(f"→ استدعاء {func.__name__} بـ {args} {kwargs}")
+        result = func(*args, **kwargs)
+        print(f"← رجّعت {result}")
+        return result
+    return wrapper
+def add(a, b):
+    return a + b
+add = log_calls(add)
+print(add(2, 3))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>→ استدعاء add بـ (2, 3) {}
+← رجّعت 5
+5</pre></div>
+    <div class="code"><pre>
+from functools import wraps
+def log_calls(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        print(f"→ {func.__name__}{args}")
+        return func(*args, **kwargs)
+    return wrapper
+@log_calls
+def greet(name, punctuation="!"):
+    """ترحيب بسيط"""
+    return f"أهلًا {name}{punctuation}"
+print(greet("سارة"))
+print(greet.__name__, "|", greet.__doc__)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>→ greet('سارة',)
+أهلًا سارة!
+greet | ترحيب بسيط</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>Decorator</th><th>بيعمل إيه</th><th>هتقابله في</th></tr>
+        <tr><td><code class="inl">@property</code> / <code class="inl">@classmethod</code> / <code class="inl">@staticmethod</code></td><td>بتغيّر طبيعة الدالة جوّه الكلاس</td><td>وحدة OOP</td></tr>
+        <tr><td><code class="inl">@lru_cache</code></td><td>بتحفظ النتايج وترجّعها من غير حساب</td><td>وحدة الخوارزميات</td></tr>
+        <tr><td><code class="inl">@pytest.fixture</code> / <code class="inl">@pytest.mark.parametrize</code></td><td>بتجهّز بيانات الاختبار</td><td>وحدة الاختبارات</td></tr>
+        <tr><td><code class="inl">@app.get("/users")</code></td><td>بتربط دالة برابط في موقع</td><td>Flask / FastAPI</td></tr>
+      </table>
+    </div>
+
+    <h4>2. match-case: مطابقة الأنماط (بايثون 3.10+)</h4>
+    <p><code class="inl">match</code> مش مجرّد if/elif أشيك — هي بتطابق <strong>شكل</strong> البيانات وتفكّها في نفس الوقت.</p>
+    <div class="code"><pre>
+command = "move north"
+match command.split():
+    case ["quit"]:
+        print("باي")
+    case ["move", direction]:
+        print(f"بتتحرّك ناحية {direction}")
+    case ["pick", *items]:
+        print(f"شلت: {items}")
+    case _:
+        print("أمر مش مفهوم")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>بتتحرّك ناحية north</pre></div>
+    <div class="code"><pre>
+def http_status(code):
+    match code:
+        case 200 | 201:
+            return "نجاح"
+        case 404:
+            return "مش موجود"
+        case int() if 500 &lt;= code &lt; 600:
+            return "خطأ في السيرفر"
+        case _:
+            return "حالة تانية"
+for c in [200, 404, 503, 302]:
+    print(c, http_status(c))
+event = {"type": "order", "id": 17, "total": 250}
+match event:
+    case {"type": "order", "total": total} if total &gt; 200:
+        print(f"طلب كبير: {total}")
+    case {"type": "order"}:
+        print("طلب عادي")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>200 نجاح
+404 مش موجود
+503 خطأ في السيرفر
+302 حالة تانية
+طلب كبير: 250</pre></div>
+
+    <h4>3. عامل الوالروس := (إسناد جوّه تعبير)</h4>
+    <div class="code"><pre>
+data = [4, 8, 15, 16, 23, 42]
+if (n := len(data)) &gt; 5:
+    print(f"القائمة طويلة: {n} عناصر")
+values = [y for x in data if (y := x * 2) &gt; 20]
+print(values)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>القائمة طويلة: 6 عناصر
+[30, 32, 46, 84]</pre></div>
+    <div class="code"><pre>
+while (line := input("&gt; ")) != "exit":
+    print(f"كتبت: {line}")
+</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ باعتدال</div>
+      <p>الوالروس بيوفّر سطر، بس بيقلّل الوضوح لو اتحشر في كل مكان. استخدمه لما يشيل تكرار حقيقي (حساب مرّتين أو break مصطنعة).</p>
+    </div>
+
+    <h4>4. مدير السياق: اكتب with بتاعتك</h4>
+    <p>
+      <code class="inl">with open(...)</code> بتضمن قفل الملف <strong>حتى لو حصل خطأ</strong>. تقدر تعمل نفس الضمان لأي «افتح/اقفل»:
+      اتصال قاعدة بيانات، قفل، مؤقّت. أسهل طريقة: مولّد + <code class="inl">@contextmanager</code>.
+    </p>
+    <div class="code"><pre>
+from contextlib import contextmanager
+@contextmanager
+def section(title):
+    print(f"┌── {title}")
+    try:
+        yield
+    finally:
+        print(f"└── نهاية {title}")
+with section("تقرير"):
+    print("│ السطر الأول")
+    print("│ السطر التاني")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>┌── تقرير
+│ السطر الأول
+│ السطر التاني
+└── نهاية تقرير</pre></div>
+    <div class="code"><pre>
+class Connection:
+    def __init__(self, name):
+        self.name = name
+    def __enter__(self):
+        print(f"فتح {self.name}")
+        return self
+    def __exit__(self, exc_type, exc, tb):
+        status = exc_type.__name__ if exc_type else "مفيش"
+        print(f"قفل {self.name} (خطأ: {status})")
+        return False
+try:
+    with Connection("db") as conn:
+        print("شغل على", conn.name)
+        raise ValueError("مشكلة")
+except ValueError:
+    print("اتمسك برّه")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>فتح db
+شغل على db
+قفل db (خطأ: ValueError)
+اتمسك برّه</pre></div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">@deco</code> فوق <code class="inl">def f()</code> يساوي…</p>
+        <label><input type="radio"> deco = f(deco)</label>
+        <label><input type="radio"> f() ثم deco()</label>
+        <label><input type="radio"> f = deco(f)</label>
+        <label><input type="radio"> f.deco = True</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. في <code class="inl">case ["move", d]:</code> — إيه اللي بيحصل لو الأمر "move east"؟</p>
+        <label><input type="radio"> يتطابق و d = "east"</label>
+        <label><input type="radio"> مش هيتطابق</label>
+        <label><input type="radio"> d = ["east"]</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. ليه بنحط yield جوّه try/finally في contextmanager؟</p>
+        <label><input type="radio"> عشان السرعة</label>
+        <label><input type="radio"> إلزامي في أي مولّد</label>
+        <label><input type="radio"> عشان نبلع الأخطاء</label>
+        <label><input type="radio"> عشان كود الخروج يتنفّذ حتى لو جسم with رمى خطأ</label>
+      </div>
+    </div>
+        <!-- APPEND:u11-l8 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>الأربعة في مثال واحد</div>
+      <p>decorator بيقيس الوقت، و <code class="inl">match</code> بيفسّر أوامر، و <code class="inl">:=</code> في شرط، ومدير سياق بتاعك.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import time
+from contextlib import contextmanager
+from functools import wraps
+def timed(func):
+    @wraps(func)
+    def wrapper(*args, **kwargs):
+        start = time.perf_counter()
+        result = func(*args, **kwargs)
+        print(f"[{func.__name__}] خلصت")
+        return result
+    return wrapper
+@timed
+def total(n):
+    return sum(range(n))
+print(total(1000))
+print(total.__name__)
+def run(command):
+    match command.split():
+        case ["add", x, y]:
+            return int(x) + int(y)
+        case ["quit"] | ["exit"]:
+            return "وداعًا"
+        case _:
+            return "أمر مش معروف"
+print(run("add 2 3"), run("exit"), run("dance"))
+names = ["سارة", "علي"]
+if (count := len(names)) &gt; 1:
+    print(f"عندنا {count} أسماء")
+@contextmanager
+def section(title):
+    print(f"── {title} ──")
+    try:
+        yield
+    finally:
+        print("── تم ──")
+with section("التقرير"):
+    print("سطر جوّه القسم")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>[total] خلصت
+499500
+total
+5 وداعًا أمر مش معروف
+عندنا 2 أسماء
+── التقرير ──
+سطر جوّه القسم
+── تم ──</pre></div>
+      </details>
+    </div>
+    <!-- /APPEND:u11-l8 -->
+            <!-- SUM:u11-l8 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الـ decorator دالة بتغلّف دالة: <code class="inl">@deco</code> = <code class="inl">f = deco(f)</code>.</li><li><code class="inl">match/case</code> بيطابق شكل البيانات ويفكّها.</li><li><code class="inl">:=</code> إسناد جوّه تعبير، و <code class="inl">@contextmanager</code> لكتابة with بتاعتك.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u11-l8 -->
+
+  <!-- ADD:u11-l9 -->
+  <!-- 11.9 -->
+  <article class="lesson" id="u11-l9">
+    <h3>قسّم مشروعك: وحداتك الخاصة و __name__ وسطر الأوامر <span class="tag">درس 64 · مهم</span></h3>
+    <p class="goal">الهدف: تحوّل ملف واحد طويل لكذا ملف منظّم تستورد منهم، تفهم الشرط الشهير <code class="inl">if __name__ == "__main__"</code>، وتخلّي برنامجك يستقبل أوامر من الـ Terminal.</p>
+
+    <h4>1. أي ملف .py = وحدة (module) تقدر تستوردها</h4>
+    <div class="code" data-file="mathtools.py"><pre>
+"""أدوات حسابية بسيطة"""
+PI = 3.14159
+def area_circle(r):
+    return PI * r ** 2
+def is_even(n):
+    return n % 2 == 0
+</pre></div>
+    <div class="code" data-file="main.py"><pre>
+import mathtools
+from mathtools import is_even
+print(mathtools.area_circle(2))
+print(is_even(7))
+print(mathtools.__name__)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>12.56636
+False
+mathtools</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ بايثون بتدوّر فين؟</div>
+      <p>
+        بالترتيب: <strong>فولدر الملف اللي بتشغّله</strong> ← متغيّر البيئة PYTHONPATH ← المكتبة القياسية ← <code class="inl">site-packages</code> (اللي pip بيسطّب فيها).
+        القائمة كلها في <code class="inl">sys.path</code>. عشان كده <strong>ما تسمّيش ملفك <code class="inl">random.py</code> ولا <code class="inl">json.py</code></strong> — هيغطّي على المكتبة الحقيقية وتبدأ أخطاء غريبة.
+        وعند أول استيراد بايثون بتعمل فولدر <code class="inl">__pycache__</code> فيه نسخة مترجمة (bytecode) — فاكر الوحدة صفر؟
+      </p>
+    </div>
+
+    <h4>2. الشرط الشهير: if __name__ == "__main__"</h4>
+    <p>
+      <strong>المشكلة</strong>: عند الاستيراد، بايثون بتنفّذ الملف <strong>كله</strong> من فوق لتحت. لو فيه print أو تجارب في آخر الملف، هتشتغل عند كل import.
+      <strong>الحل</strong>: <code class="inl">__name__</code> بيبقى <code class="inl">"__main__"</code> لو الملف <em>اتشغّل مباشرةً</em>، وبيبقى اسم الوحدة لو <em>اتستورد</em>.
+    </p>
+    <div class="code" data-file="mathtools.py"><pre>
+def is_even(n):
+    return n % 2 == 0
+print("__name__ =", __name__)
+if __name__ == "__main__":
+    print("تجربة سريعة:", is_even(10))
+</pre></div>
+    <div class="code" data-file="terminal"><pre>
+python mathtools.py
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>__name__ = __main__
+تجربة سريعة: True</pre></div>
+    <div class="code" data-file="terminal"><pre>
+python -c "import mathtools"
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>__name__ = mathtools</pre></div>
+
+    <h4>3. الحزم (Packages): فولدر فيه وحدات</h4>
+    <div class="diagram">
+<pre>  shop/                     ← المشروع
+  ├── main.py               ← نقطة التشغيل
+  └── store/                ← حزمة (package)
+      ├── __init__.py       ← بيعلن إن الفولدر حزمة (ممكن يبقى فاضي)
+      ├── products.py
+      └── payments/
+          ├── __init__.py
+          └── cards.py
+
+  # جوّه main.py:
+  from store.products import list_products
+  from store.payments.cards import charge
+  import store.products as products</pre>
+      <div class="cap">النقطة في الاستيراد = الدخول لفولدر</div>
+    </div>
+
+    <h4>4. وسائط سطر الأوامر: sys.argv</h4>
+    <div class="code" data-file="add.py"><pre>
+import sys
+print(sys.argv)
+if len(sys.argv) != 3:
+    print("الاستخدام: python add.py رقم1 رقم2")
+    sys.exit(1)
+a = float(sys.argv[1])
+b = float(sys.argv[2])
+print(a + b)
+</pre></div>
+    <div class="code" data-file="terminal"><pre>
+python add.py 5 7
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['add.py', '5', '7']
+12.0</pre></div>
+
+    <h4>5. argparse: واجهة سطر أوامر احترافية</h4>
+    <p><code class="inl">sys.argv</code> كويسة لحاجة بسيطة. لكن الخيارات، والقيم الافتراضية، والتحقّق، ورسالة <code class="inl">--help</code>؟ <code class="inl">argparse</code> القياسية بتعملهم.</p>
+    <div class="code" data-file="temp.py"><pre>
+import argparse
+parser = argparse.ArgumentParser(description="محوّل درجات الحرارة")
+parser.add_argument("value", type=float, help="الدرجة")
+parser.add_argument("--to", choices=["c", "f"], default="f", help="التحويل لـ")
+parser.add_argument("-r", "--round", type=int, default=1, help="عدد الخانات")
+args = parser.parse_args()
+if args.to == "f":
+    result = args.value * 9 / 5 + 32
+else:
+    result = (args.value - 32) * 5 / 9
+print(round(result, args.round))
+</pre></div>
+    <div class="code" data-file="terminal"><pre>
+python temp.py 100
+python temp.py 212 --to c
+python temp.py 37.77 --to f -r 0
+python temp.py --help
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>212.0
+100.0
+100.0
+usage: temp.py [-h] [--to {c,f}] [-r ROUND] value
+
+محوّل درجات الحرارة
+
+positional arguments:
+  value                 الدرجة
+
+options:
+  -h, --help            show this help message and exit
+  --to {c,f}            التحويل لـ
+  -r ROUND, --round ROUND
+                        عدد الخانات</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 الخطوة الجاية</div>
+      <p>للتطبيقات الأكبر فيه مكتبات خارجية بتبسّط ده أكتر: <code class="inl">typer</code> (بتعتمد على تلميحات النوع!) و <code class="inl">click</code>.</p>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>قسّم مشروع</div>
+      <p>
+        اعمل <code class="inl">validators.py</code> فيه <code class="inl">is_valid_email</code> و <code class="inl">is_strong_password</code> + تجارب تحت
+        <code class="inl">if __name__ == "__main__"</code>. واعمل <code class="inl">signup.py</code> بيستوردهم ويسأل المستخدم.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code" data-file="validators.py"><pre>
+def is_valid_email(email: str) -&gt; bool:
+    user, at, domain = email.partition("@")
+    return bool(user) and bool(at) and "." in domain
+def is_strong_password(pw: str) -&gt; bool:
+    return len(pw) &gt;= 8 and any(c.isdigit() for c in pw) and any(c.isupper() for c in pw)
+if __name__ == "__main__":
+    assert is_valid_email("a@b.com")
+    assert not is_valid_email("ab.com")
+    assert is_strong_password("Secret123")
+    print("كل التجارب نجحت ✅")
+</pre></div>
+      <div class="code" data-file="signup.py"><pre>
+from validators import is_valid_email, is_strong_password
+email = input("الإيميل: ")
+password = input("كلمة السر: ")
+if not is_valid_email(email):
+    print("إيميل غير صالح")
+elif not is_strong_password(password):
+    print("كلمة السر ضعيفة")
+else:
+    print("تم التسجيل 🎉")
+</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. قيمة <code class="inl">__name__</code> جوّه ملف اتشغّل بـ <code class="inl">python app.py</code>؟</p>
+        <label><input type="radio"> "app"</label>
+        <label><input type="radio"> "__main__"</label>
+        <label><input type="radio"> "app.py"</label>
+        <label><input type="radio"> None</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">python calc.py 3 4</code> — نوع <code class="inl">sys.argv[1]</code>؟</p>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> float</label>
+        <label><input type="radio"> list</label>
+        <label><input type="radio"> str</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. سمّيت ملفك <code class="inl">random.py</code> وفيه <code class="inl">import random</code>. إيه اللي هيحصل غالبًا؟</p>
+        <label><input type="radio"> هيستورد ملفك نفسه بدل المكتبة وتظهر أخطاء</label>
+        <label><input type="radio"> مفيش مشكلة</label>
+        <label><input type="radio"> بايثون هتغيّر اسم الملف</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. ميزة argparse على sys.argv؟</p>
+        <label><input type="radio"> أسرع في التنفيذ</label>
+        <label><input type="radio"> مش محتاجة import</label>
+        <label><input type="radio"> تحويل وتحقّق وقيم افتراضية و--help تلقائي</label>
+        <label><input type="radio"> بتشتغل من غير Terminal</label>
+      </div>
+    </div>
+                <!-- SUM:u11-l9 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>أي ملف <code class="inl">.py</code> وحدة تقدر تستوردها.</li><li><code class="inl">if __name__ == "__main__":</code> للكود اللي يشتغل بس لما الملف يتشغّل مباشرةً.</li><li><code class="inl">sys.argv</code> للوسائط البسيطة و <code class="inl">argparse</code> للواجهات الاحترافية.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u11-l9 -->
+
+  <!-- 11.P1 -->
+  <article class="lesson project" id="u11-p1">
+    <h3>مشروع 19: مكتبة دوال التحقّق <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: تبني مجموعة دوال قابلة لإعادة الاستخدام — أول «مكتبة» ليك.</p>
+
+    <h4>النسخة اللي بتطبع (الأسلوب المبتدئ)</h4>
+    <div class="code" data-file="validators_v1.py"><pre>
+def user_email(your_email):
+    if "@" in your_email and " " not in your_email:
+        print("this email is valid")
+    else:
+        print("this email is not valid")
+your_email = input("Please enter your email\n").lower()
+user_email(your_email)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Please enter your email
+test@example.com
+this email is valid</pre></div>
+
+    <h4>النسخة اللي بترجّع (الأسلوب المحترف)</h4>
+    <div class="code" data-file="validators_v2.py"><pre>
+def is_valid_email(email):
+    """بترجّع True لو الإيميل صالح شكليًا"""
+    return "@" in email and " " not in email and "." in email.split("@")[-1]
+def is_valid_egyptian_phone(phone):
+    """بترجّع True لو الرقم مصري صالح (11 رقم يبدأ بـ 01)"""
+    return phone.isdigit() and len(phone) == 11 and phone.startswith("01")
+def is_strong_password(password):
+    """بترجّع True لو كلمة السر قوية"""
+    if len(password) &lt; 8:
+        return False
+    has_digit = any(c.isdigit() for c in password)
+    has_upper = any(c.isupper() for c in password)
+    return has_digit and has_upper
+# --- الاستخدام ---
+email = input("الإيميل: ").strip().lower()
+if is_valid_email(email):
+    print("✅ إيميل صالح")
+else:
+    print("❌ إيميل غير صالح")
+phone = input("رقم الموبايل: ").strip()
+print("✅ رقم صالح" if is_valid_egyptian_phone(phone) else "❌ رقم غير صالح")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الإيميل: farid@gmail.com
+✅ إيميل صالح
+رقم الموبايل: 01020621983
+✅ رقم صالح</pre></div>
+
+    <h4>ليه النسخة التانية أحسن؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>النسخة 1 (print)</th><th>النسخة 2 (return)</th></tr>
+        <tr><td>تعرض رسالة بالإنجليزي بس</td><td>تقدر تعرض أي رسالة بأي لغة</td></tr>
+        <tr><td>ما تقدرش تستخدم النتيجة في شرط</td><td><code class="inl">if is_valid_email(x):</code></td></tr>
+        <tr><td>ما تقدرش تستخدمها في موقع ويب</td><td>تشتغل في أي مكان</td></tr>
+        <tr><td>صعبة الاختبار</td><td><code class="inl">assert is_valid_email("a@b.c") == True</code></td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 اصطلاح التسمية</div>
+      <p>
+        الدوال اللي بترجّع <code class="inl">True/False</code> بتبدأ بـ
+        <code class="inl">is_</code> أو <code class="inl">has_</code> أو <code class="inl">can_</code>.
+        كده أي حد يقرا <code class="inl">if is_valid_email(x):</code> يفهم فورًا.
+      </p>
+    </div>
+
+    <h4>التحقّق من رقم الهاتف — النسختين من المحاضرة</h4>
+    <div class="code"><pre>
+def telephone_number(egyptian_telephone):
+    if len(egyptian_telephone) == 10:
+        print("this is a valid egyptian telephone number")
+    else:
+        print("this invalid egyptian number")
+number = input("Please enter your phone\n")
+telephone_number(number)
+</pre></div>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">telephone_number</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+# النسخة التانية: استقبال كرقم وتحويله لنص
+number = int(input("Please enter your phone\n"))
+telephone_number(str(number))
+</pre></div>
+    <div class="box err">
+      <div class="bt">💥 النسخة التانية فيها باگ خفي</div>
+      <p>
+        لو المستخدم كتب <code class="inl">0102062198</code>، الـ <code class="inl">int()</code>
+        هتشيل الصفر البادئ فيبقى <code class="inl">102062198</code>، وطوله 9 مش 10 —
+        فالبرنامج هيقول رقم غير صالح رغم إنه صالح!
+      </p>
+      <p>
+        <strong>القاعدة اللي اتعلّمناها في الوحدة 1 لسه صح:</strong>
+        أرقام الهواتف والأرقام القومية والأكواد البريدية = <strong>نصوص</strong>،
+        مش أرقام. ما تحوّلهاش لـ <code class="inl">int</code> أبدًا.
+      </p>
+    </div>
+
+    <h4>دالة العمر</h4>
+    <div class="code"><pre>
+def user_age(age):
+    if age &lt;= 20:
+        print("You are a young man")
+    elif age &gt; 20:
+        print("you are a old man")
+age = int(input("Please enter your age\n"))
+user_age(age)
+</pre></div>
+    <p>نسخة بترجّع، أنضف وأمرن:</p>
+    <div class="code"><pre>
+def age_group(age):
+    if age &lt; 13:
+        return "طفل"
+    elif age &lt; 20:
+        return "مراهق"
+    elif age &lt; 60:
+        return "بالغ"
+    return "كبير سن"
+print(age_group(15))     # مراهق
+print(age_group(35))     # بالغ
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>مراهق
+بالغ</pre></div>
+  </article>
+
+  <!-- 11.P2 -->
+  <article class="lesson project" id="u11-p2">
+    <h3>مشروع 20: إعادة بناء دوال بايثون بنفسك <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: أفضل تمرين على الحلقات والدوال — تعيد اختراع العجلة عشان تفهمها.</p>
+
+    <h4>1. دالة الطول (نسختك من len)</h4>
+    <div class="code"><pre>
+def length(x):
+    count = 0
+    for i in x:
+        count += 1
+    return count
+print(length("farid mohammed"))
+print(len("farid mohammed"))      # للمقارنة
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>14
+14</pre></div>
+    <p>نمط التجميع من الوحدة 6 + <code class="inl">return</code> من الوحدة دي.</p>
+
+    <h4>2. دالة الجمع (نسختك من sum)</h4>
+    <div class="code"><pre>
+def plus_function(numbers):
+    total = 0
+    for i in numbers:
+        total += i
+    return total
+print(plus_function([1, 5, 7, 8, 6]))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>27</pre></div>
+
+    <h4>3. دالة الضرب (المضروب)</h4>
+    <div class="code"><pre>
+def multiple_function(numbers):
+    total = 1                     # لاحظ: 1 مش 0!
+    for i in numbers:
+        total *= i
+    return total
+print(multiple_function([1, 5, 7, 8, 6]))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1680</pre></div>
+
+    <h4>4. عكس النص</h4>
+    <div class="code"><pre>
+def opposite_order(p):
+    return p[::-1]
+print(opposite_order("Marwa"))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>awraM</pre></div>
+    <p>نسخة يدوية من غير slicing، عشان تفهم اللي بيحصل:</p>
+    <div class="code"><pre>
+def reverse_manual(text):
+    result = ""
+    for char in text:
+        result = char + result      # الحرف الجديد قدّام القديم
+    return result
+print(reverse_manual("Marwa"))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>awraM</pre></div>
+
+    <h4>5. إزالة التكرار</h4>
+    <div class="code"><pre>
+def del_repeated(p):
+    empty_list = []
+    for i in p:
+        if i not in empty_list:
+            empty_list.append(i)
+    return empty_list
+print(del_repeated(["Randa", "Nahla", "Marwa", "Nahla", "Azza"]))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['Randa', 'Nahla', 'Marwa', 'Azza']</pre></div>
+    <p>نفس منطق الوحدة 6، بس دلوقتي داخل دالة — يعني قابل لإعادة الاستخدام في أي مكان.</p>
+
+    <h4>6. قائمة مرقّمة</h4>
+    <div class="code"><pre>
+def numbered(items):
+    result = []
+    for i in range(len(items)):
+        result.append(f"{i+1}- {items[i]}")
+    return result
+print(numbered(["apple", "banana", "tomato"]))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['1- apple', '2- banana', '3- tomato']</pre></div>
+    <p>نسخة أنضف بـ enumerate و list comprehension:</p>
+    <div class="code"><pre>
+def numbered(items):
+    return [f"{i}- {item}" for i, item in enumerate(items, start=1)]
+print(numbered(["apple", "banana", "tomato"]))
+</pre></div>
+
+    <h4>7. جدول الضرب كدالة</h4>
+    <div class="code"><pre>
+def multiplication(x):
+    for i in range(1, 13):
+        print(f"{i}*{x}={i*x}")
+multiplication(5)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1*5=5
+2*5=10
+3*5=15
+...
+12*5=60</pre></div>
+
+    <div class="box brain">
+      <div class="bt">🧠 ليه التمرين ده مهم؟</div>
+      <p>
+        إنت مش هتستخدم <code class="inl">length()</code> بتاعتك بدل
+        <code class="inl">len()</code> — دي أسرع وأدق. لكن إعادة بنائها بتعلّمك
+        <strong>إزاي تفكّر خوارزميًا</strong>: تبدأ من إيه، تلف على إيه، تجمّع فين، ترجّع إمتى.
+        والمهارة دي هي اللي هتنفعك لما تقابل مشكلة مالهاش دالة جاهزة.
+      </p>
+    </div>
+
+    <div class="ex">
+      <div class="bt">✍️ التحدّي</div>
+      <p>اكتب دوالك الخاصة لـ: <code class="inl">my_max(lst)</code>، <code class="inl">my_count(lst, x)</code>، <code class="inl">is_palindrome(text)</code> (هل النص يُقرأ من الاتجاهين؟).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def my_max(lst):
+    biggest = lst[0]
+    for item in lst:
+        if item &gt; biggest:
+            biggest = item
+    return biggest
+def my_count(lst, x):
+    count = 0
+    for item in lst:
+        if item == x:
+            count += 1
+    return count
+def is_palindrome(text):
+    clean = text.lower().replace(" ", "")
+    return clean == clean[::-1]
+print(my_max([3, 9, 2]))              # 9
+print(my_count([1,2,2,3,2], 2))       # 3
+print(is_palindrome("level"))         # True
+print(is_palindrome("سلس"))           # True
+</pre></div>
+      </details>
+    </div>
+  </article>
+  <!-- ADD:u11-ch -->
+  <!-- 11.CH -->
+  <article class="lesson" id="u11-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة الحادية عشرة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">من هنا الاختبارات بتنادي <strong>دوالك</strong> مباشرةً — زي pytest بالظبط. الدالة لازم <strong>ترجّع</strong> القيمة، مش تطبعها.</p>
+
+    <div class="challenge" data-ch="u11-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — الكلمة المتناظرة <span class="lvl">⭐⭐</span></div>
+      <p>اكتب <code class="inl">is_palindrome(text)</code> بترجّع <code class="inl">True</code> لو النص بيتقري زي ما هو من الناحيتين — من غير المسافات ومن غير فرق بين الحروف الكبيرة والصغيرة.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+def is_palindrome(text):
+    """True لو النص متناظر (من غير مسافات وحالة الحروف)"""
+    pass
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_simple():
+    "level ← True"
+    assert is_palindrome("level") is True
+
+def test_case():
+    "Level ← True (الحروف الكبيرة مش فارقة)"
+    assert is_palindrome("Level") is True
+
+def test_spaces():
+    "Never odd or even ← True (المسافات مش فارقة)"
+    assert is_palindrome("Never odd or even") is True
+
+def test_false():
+    "python ← False"
+    assert is_palindrome("python") is False
+
+def test_returns_bool():
+    "الدالة بترجّع True/False مش None"
+    result = is_palindrome("ab")
+    assert result is False, f"رجّعت {result!r} — استخدم return"
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+def is_palindrome(text):
+    """True لو النص متناظر (من غير مسافات وحالة الحروف)"""
+    clean = text.replace(" ", "").lower()
+    return clean == clean[::-1]
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u11-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — الخصم بقواعد <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        اكتب <code class="inl">apply_discount(price, percent=10, *, min_price=0)</code>:
+        ترجّع السعر بعد الخصم مقرّب لخانتين، <strong>عمره ما يقلّ عن</strong> <code class="inl">min_price</code>،
+        وترمي <code class="inl">ValueError</code> لو النسبة خارج 0–100. و <code class="inl">min_price</code> لازم يتبعت بالاسم.
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+def apply_discount(price, percent=10):
+    return price - price * percent / 100
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_default():
+    "apply_discount(200) ← 180.0"
+    assert apply_discount(200) == 180.0
+
+def test_percent():
+    "apply_discount(200, 25) ← 150.0"
+    assert apply_discount(200, 25) == 150.0
+
+def test_rounding():
+    "apply_discount(9.99, 15) ← 8.49"
+    assert apply_discount(9.99, 15) == 8.49, apply_discount(9.99, 15)
+
+def test_min_price():
+    "مش أقل من min_price: apply_discount(100, 90, min_price=50) ← 50"
+    assert apply_discount(100, 90, min_price=50) == 50
+
+def test_invalid():
+    "نسبة 120 أو -5 ← ValueError"
+    for bad in (120, -5):
+        try:
+            apply_discount(100, bad)
+        except ValueError:
+            continue
+        raise AssertionError(f"النسبة {bad} ما رمتش ValueError")
+
+def test_keyword_only():
+    "min_price بالاسم بس: apply_discount(100, 10, 50) ← TypeError"
+    try:
+        apply_discount(100, 10, 50)
+    except TypeError:
+        return
+    raise AssertionError("المفروض ترمي TypeError — استخدم * في تعريف الدالة")
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+def apply_discount(price, percent=10, *, min_price=0):
+    if not 0 &lt;= percent &lt;= 100:
+        raise ValueError(f"نسبة غير صالحة: {percent}")
+    result = round(price * (1 - percent / 100), 2)
+    return max(result, min_price)
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u11-ch3">
+      <div class="ch-head">🐞 التحدّي 3 — القائمة اللي بتفتكر <span class="lvl">⭐⭐⭐</span></div>
+      <p>كل نداء لـ <code class="inl">add_item("x")</code> من غير قائمة المفروض يرجّع قائمة جديدة فيها <code class="inl">["x"]</code> بس. لكن الدالة دي «بتفتكر» النداءات القديمة! صلّحها.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+def add_item(item, items=[]):
+    items.append(item)
+    return items
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_fresh_each_time():
+    "كل نداء من غير قائمة بيبدأ فاضي"
+    first = add_item("a")
+    second = add_item("b")
+    assert second == ["b"], f"النداء التاني رجّع {second!r}"
+    assert first == ["a"], f"النداء الأول بقى {first!r}"
+
+def test_given_list():
+    "لو بعتّ قائمة، العنصر بيتضاف لها هي"
+    box = ["x"]
+    result = add_item("y", box)
+    assert box == ["x", "y"] and result is box
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+def add_item(item, items=None):
+    if items is None:
+        items = []
+    items.append(item)
+    return items
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u11-ch4">
+      <div class="ch-head">🧪 التحدّي 4 — مولّد الدفعات <span class="lvl">⭐⭐⭐</span></div>
+      <p>اكتب <strong>مولّد</strong> <code class="inl">chunks(items, size)</code> بيطلّع القائمة دفعات بالحجم ده (آخر دفعة ممكن تكون أصغر)، ويرمي <code class="inl">ValueError</code> لو الحجم أقل من 1.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+def chunks(items, size):
+    pass
+</textarea>
+      <script type="text/plain" class="ch-tests">
+import inspect
+
+def test_basic():
+    "[1..5] بحجم 2 ← [1,2] [3,4] [5]"
+    assert list(chunks([1, 2, 3, 4, 5], 2)) == [[1, 2], [3, 4], [5]]
+
+def test_empty():
+    "قائمة فاضية ← ولا دفعة"
+    assert list(chunks([], 3)) == []
+
+def test_big_size():
+    "حجم أكبر من القائمة ← دفعة واحدة"
+    assert list(chunks([1, 2], 10)) == [[1, 2]]
+
+def test_is_generator():
+    "الدالة مولّد (فيها yield)"
+    assert inspect.isgeneratorfunction(chunks), "استخدم yield"
+
+def test_bad_size():
+    "حجم 0 ← ValueError"
+    try:
+        list(chunks([1], 0))
+    except ValueError:
+        return
+    raise AssertionError("المفروض ValueError")
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+def chunks(items, size):
+    if size &lt; 1:
+        raise ValueError("size لازم يكون 1 أو أكتر")
+    for start in range(0, len(items), size):
+        yield items[start:start + size]
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u11-ch -->
+
+  <!-- 11.EX -->
+  <article class="lesson" id="u11-ex">
+    <h3>تمارين الوحدة الحادية عشرة <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">قاعدة التمارين دي: كل دالة تعمل حاجة واحدة، و<strong>ترجّع</strong> مش تطبع.</p>
+
+    <h4>تمارين</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — دوال بسيطة</div>
+      <p>اكتب دوال: <code class="inl">square(n)</code> ترجّع المربّع، <code class="inl">is_even(n)</code> ترجّع True/False، <code class="inl">celsius_to_f(c)</code> تحوّل الحرارة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def square(n):
+    return n ** 2
+def is_even(n):
+    return n % 2 == 0
+def celsius_to_f(c):
+    return c * 9 / 5 + 32
+print(square(5))          # 25
+print(is_even(4))         # True
+print(celsius_to_f(37))   # 98.6
+</pre></div>
+      <p>لاحظ <code class="inl">return n % 2 == 0</code> — المقارنة أصلًا بترجّع bool، فمش محتاجين <code class="inl">if/else</code>.</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — توقّع الناتج</div>
+      <p>إيه اللي هيتطبع؟</p>
+      <div class="code"><pre>
+def greet(name):
+    print(f"أهلا {name}")
+result = greet("علي")
+print(result)
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>أهلا علي
+None</pre></div>
+      <p>
+        الدالة <strong>طبعت</strong> لكن ما <strong>رجّعتش</strong>، فأي دالة من غير
+        <code class="inl">return</code> بترجّع <code class="inl">None</code> تلقائيًا.
+      </p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 3 — القيم الافتراضية</div>
+      <p>اكتب دالة <code class="inl">make_tag(text, tag="p", css_class=None)</code> ترجّع وسم HTML. جرّبها بكل الاحتمالات.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def make_tag(text, tag="p", css_class=None):
+    if css_class:
+        return f"&lt;{tag} class='{css_class}'&gt;{text}&lt;/{tag}&gt;"
+    return f"&lt;{tag}&gt;{text}&lt;/{tag}&gt;"
+print(make_tag("مرحبا"))
+print(make_tag("عنوان", "h1"))
+print(make_tag("نص", "span", "highlight"))
+print(make_tag("نص", css_class="box"))
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — النطاق (Scope)</div>
+      <p>توقّع الناتج وفسّر:</p>
+      <div class="code"><pre>
+x = 10
+numbers = [1, 2]
+def change(value, lst):
+    value = 99
+    lst.append(3)
+change(x, numbers)
+print(x)
+print(numbers)
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>10
+[1, 2, 3]</pre></div>
+      <p>
+        <code class="inl">x</code> نوعه <strong>immutable</strong>: <code class="inl">value = 99</code>
+        جوّه الدالة عملت كائن جديد وربطت الاسم المحلّي بيه — الأصل ما اتغيّرش.
+      </p>
+      <p>
+        <code class="inl">numbers</code> نوعه <strong>mutable</strong>:
+        <code class="inl">lst.append(3)</code> عدّلت <em>نفس الكائن</em> في الـ Heap،
+        فالتغيير ظهر بره.
+      </p>
+      <p><strong>ده أهم فرق في الوحدة، وهو نفس الفرق من درس Stack و Heap.</strong></p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 5 — إعادة تنظيم</div>
+      <p>الكود ده مكرّر. حوّله لدالة:</p>
+      <div class="code"><pre>
+print("=" * 30)
+print("القسم الأول")
+print("=" * 30)
+# ...
+print("=" * 30)
+print("القسم الثاني")
+print("=" * 30)
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def header(title, char="=", width=30):
+    line = char * width
+    print(line)
+    print(title.center(width))
+    print(line)
+header("القسم الأول")
+header("القسم الثاني")
+header("تنبيه", char="*", width=40)
+</pre></div>
+      <p><code class="inl">.center(width)</code> بتوسّط النص في عرض معيّن.</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 6 — دوال ترجّع أكتر من قيمة</div>
+      <p>
+        اكتب دالة <code class="inl">analyze(numbers)</code> ترجّع (المجموع، المتوسط، الأصغر، الأكبر)
+        وتتعامل مع القائمة الفاضية من غير ما تقع.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def analyze(numbers):
+    """بترجّع (المجموع، المتوسط، الأصغر، الأكبر)"""
+    if not numbers:
+        return 0, 0, None, None
+    total = sum(numbers)
+    return total, total / len(numbers), min(numbers), max(numbers)
+total, avg, low, high = analyze([10, 20, 30])
+print(f"المجموع {total} — المتوسط {avg:.1f} — من {low} لـ {high}")
+print(analyze([]))     # (0, 0, None, None)
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 7 — الفخّ القاتل</div>
+      <p>الدالة دي فيها باگ خطير. شغّلها 3 مرّات وشوف:</p>
+      <div class="code"><pre>
+def add_student(name, classroom=[]):
+    classroom.append(name)
+    return classroom
+print(add_student("أحمد"))
+print(add_student("سارة"))
+print(add_student("علي"))
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="out rtl"><div class="out-head">▸ الناتج الفعلي</div><pre>['أحمد']
+['أحمد', 'سارة']
+['أحمد', 'سارة', 'علي']</pre></div>
+      <p>
+        <strong>السبب:</strong> القيمة الافتراضية بتتقيّم <strong>مرّة واحدة</strong> وقت
+        <em>تعريف</em> الدالة، مش مع كل استدعاء. فالقائمة دي كائن واحد في الـ Heap
+        بيتشارك بين كل الاستدعاءات.
+      </p>
+      <div class="code"><pre>
+def add_student(name, classroom=None):     # ✅ الحل
+    if classroom is None:
+        classroom = []
+    classroom.append(name)
+    return classroom
+</pre></div>
+      <p><strong>القاعدة: ما تستخدمش قيمة mutable (قائمة/قاموس) كقيمة افتراضية أبدًا.</strong></p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. دالة من غير <code class="inl">return</code> بترجّع…</p>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> ""</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> ما بترجّعش حاجة خالص</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">return</code> بتعمل إيه بعد ما تتنفّذ؟</p>
+        <label><input type="radio"> بتخرج من الدالة فورًا</label>
+        <label><input type="radio"> بتكمّل باقي الدالة</label>
+        <label><input type="radio"> بتطبع القيمة</label>
+        <label><input type="radio"> بتنهي البرنامج</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. متغيّر معرّف جوّه دالة…</p>
+        <label><input type="radio"> متاح في كل البرنامج</label>
+        <label><input type="radio"> محلّي وبيختفي لما الدالة تخلص</label>
+        <label><input type="radio"> بيتحفظ في ملف</label>
+        <label><input type="radio"> بيدهس المتغيّرات العامة</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. ترتيب البحث عن متغيّر (LEGB) هو…</p>
+        <label><input type="radio"> Global → Local → Built-in</label>
+        <label><input type="radio"> Built-in → Global → Local</label>
+        <label><input type="radio"> Local → Global → Enclosing → Built-in</label>
+        <label><input type="radio"> Local → Enclosing → Global → Built-in</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">5. الوسائط اللي ليها قيمة افتراضية لازم تيجي…</p>
+        <label><input type="radio"> بعد الوسائط العادية</label>
+        <label><input type="radio"> قبل الوسائط العادية</label>
+        <label><input type="radio"> في أي مكان</label>
+        <label><input type="radio"> في سطر منفصل</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">6. دالة بتفحص حاجة المفروض اسمها يبدأ بـ…</p>
+        <label><input type="radio"> get_</label>
+        <label><input type="radio"> check</label>
+        <label><input type="radio"> is_ أو has_</label>
+        <label><input type="radio"> do_</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:11 -->
+  <div class="checkpoint" data-unit="11">
+    <h4>✅ نقطة تفتيش: الوحدة الحادية عشرة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أكتب دوال بوسائط وقيم افتراضية وأرجّع نتايج.</li><li>أفهم الفرق بين return و print ومتى أستخدم كل واحد.</li><li>أفهم النطاق وأتجنّب global.</li><li>أكتب مولّد، وأقسّم مشروعي لوحدات بـ __name__.</li></ul>
+  </div>
+  <!-- /CP -->

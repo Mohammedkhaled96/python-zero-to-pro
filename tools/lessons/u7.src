@@ -1,0 +1,411 @@
+@@lesson u7-l4 before="<!-- 7.P1 -->"
+  <!-- 7.4 -->
+  <article class="lesson" id="u7-l4">
+    <h3>مكتبات الأرقام: math و decimal و fractions و statistics <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تختار الأداة الصح لكل نوع حساب — علمي، مالي، كسور، أو إحصاء — وتعرف ليه float مش كفاية لكل حاجة.</p>
+
+    <h4>1. مكتبة math: الآلة الحاسبة العلمية</h4>
+    @code run
+import math ¦¦ مكتبة قياسية — موجودة مع بايثون من غير تسطيب.
+print(math.pi, math.e) ¦¦ ثوابت جاهزة بأقصى دقة ممكنة لـ float.
+print(math.sqrt(16), math.isqrt(17)) ¦¦ `sqrt` جذر تربيعي بيرجّع float. `isqrt` = الجذر **الصحيح** (بيقرّب لتحت) وبيرجّع int — دقيق حتى مع الأرقام الضخمة.
+print(math.ceil(4.1), math.floor(4.9), math.trunc(-4.9)) ¦¦ `ceil` لفوق دايمًا، `floor` لتحت دايمًا، `trunc` يشيل الكسر (ناحية الصفر) ← -4 مش -5.
+print(math.factorial(5), math.comb(5, 2), math.perm(5, 2)) ¦¦ المضروب، **التوافيق** (كام طريقة تختار 2 من 5 من غير ترتيب = 10)، و**التباديل** (بالترتيب = 20).
+print(math.gcd(12, 18), math.lcm(4, 6)) ¦¦ القاسم المشترك الأكبر والمضاعف المشترك الأصغر.
+print(math.isclose(0.1 + 0.2, 0.3)) ¦¦ **الطريقة الرسمية** لمقارنة الأرقام العشرية — بدل `abs(a - b) < 1e-9` اللي عملناها بإيدينا.
+print(math.hypot(3, 4)) ¦¦ الوتر في مثلث قائم (فيثاغورس): √(3² + 4²). مفيدة لحساب المسافة بين نقطتين في الألعاب.
+print(math.log10(1000), math.log2(8)) ¦¦ اللوغاريتمات: 10 أس كام = 1000؟ و 2 أس كام = 8؟ (هتحتاج log2 في درس تعقيد الخوارزميات).
+    @end
+    @out
+3.141592653589793 2.718281828459045
+4.0 4
+5 4 -4
+120 10 20
+6 12
+True
+5.0
+3.0 3.0
+    @end
+    @code run
+import math ¦¦ استيراد.
+radius = 2.5 ¦¦ نصف قطر دائرة.
+area = math.pi * radius ** 2 ¦¦ المساحة = ط نق². الأس بيتنفّذ قبل الضرب.
+print(f"مساحة الدائرة: {area:.2f}") ¦¦ عرض بخانتين.
+students = 47 ¦¦ عدد طلاب رحلة.
+per_bus = 12 ¦¦ سعة الأتوبيس.
+print(f"محتاجين {math.ceil(students / per_bus)} أتوبيس") ¦¦ **أشهر استخدام لـ ceil**: 47 ÷ 12 = 3.9 ← محتاجين 4 مش 3 (مش هنسيب 11 طالب!). نفس الفكرة في عدد صفحات النتائج (pagination).
+    @end
+    @out rtl
+مساحة الدائرة: 19.63
+محتاجين 4 أتوبيس
+    @end
+
+    <h4>2. مكتبة decimal: حسابات الفلوس بدقة</h4>
+    <p>
+      <code class="inl">Decimal</code> بتخزّن الرقم <strong>بالنظام العشري</strong> زي ما بنكتبه، مش بالثنائي — فمفيش أخطاء تقريب مخفية.
+      البنوك والمحاسبة وأنظمة الدفع بتستخدمها (أو بتخزّن بالقروش كـ int).
+    </p>
+    @code run
+from decimal import Decimal, ROUND_HALF_UP ¦¦ النوع `Decimal` وثابت طريقة التقريب «التقليدية».
+print(0.1 + 0.2) ¦¦ مشكلة float المعروفة.
+print(Decimal("0.1") + Decimal("0.2")) ¦¦ بـ Decimal: **0.3 بالظبط**.
+print(Decimal(0.1)) ¦¦ ⚠️ **الفخ**: لو أنشأتها من float، هي بتنسخ الخطأ اللي فيه بالحرف! وده بيورّيك القيمة الحقيقية المتخزّنة لـ 0.1. **دايمًا أنشئها من نص**.
+price = Decimal("19.99") ¦¦ السعر كنص.
+qty = 3 ¦¦ الكمية int — مسموح تضرب Decimal في int.
+total = price * qty ¦¦ الإجمالي دقيق.
+print(total) ¦¦ 59.97.
+vat = total * Decimal("0.14") ¦¦ ضريبة 14%.
+print(vat) ¦¦ Decimal بتحتفظ بكل الخانات: 8.3958.
+print(vat.quantize(Decimal("0.01"))) ¦¦ `quantize` = قرّب لنفس عدد خانات الرقم ده (خانتين) ← 8.40. لاحظ إنها بتحتفظ بالصفر اللي على اليمين، بعكس float.
+print(Decimal("2.675").quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)) ¦¦ تقريب «المدرسة» اللي .5 فيه بيطلع لفوق ← 2.68.
+print(round(2.675, 2)) ¦¦ مقارنة: float بيطلّع 2.67 (فاكر ليه من الوحدة 2؟).
+    @end
+    @out
+0.30000000000000004
+0.3
+0.1000000000000000055511151231257827021181583404541015625
+59.97
+8.3958
+8.40
+2.68
+2.67
+    @end
+
+    <h4>3. مكتبة fractions: كسور حقيقية</h4>
+    @code run
+from fractions import Fraction ¦¦ نوع الكسر.
+a = Fraction(1, 3) ¦¦ ثلث — **متخزّن كبسط ومقام** مش كـ 0.333…
+b = Fraction(1, 6) ¦¦ سدس.
+print(a + b) ¦¦ ⅓ + ⅙ = ½ — والكسر بيتبسّط تلقائيًا.
+print(a * 3) ¦¦ ⅓ × 3 = 1 بالظبط (float كان هيدّي 1.0 أو 0.9999…).
+print(Fraction("0.75")) ¦¦ من نص عشري ← ¾.
+print(float(Fraction(22, 7))) ¦¦ التحويل لـ float لما تحتاجه (22/7 تقريب مشهور لـ ط).
+print(Fraction(0.1).limit_denominator(100)) ¦¦ `Fraction(0.1)` لوحدها بتطلع كسر ضخم (خطأ float تاني)، و `limit_denominator` بتدوّر على أقرب كسر مقامه ≤ 100 ← 1/10.
+    @end
+    @out
+1/2
+1
+3/4
+3.142857142857143
+1/10
+    @end
+
+    <h4>4. مكتبة statistics: إحصاء جاهز</h4>
+    @code run
+import statistics ¦¦ مكتبة الإحصاء القياسية.
+grades = [70, 85, 85, 90, 100, 45] ¦¦ درجات فصل.
+print(statistics.mean(grades)) ¦¦ **المتوسّط** الحسابي = المجموع ÷ العدد.
+print(statistics.median(grades)) ¦¦ **الوسيط**: القيمة اللي في النص بعد الترتيب (ولو العدد زوجي، متوسّط الاتنين اللي في النص). مش بيتأثّر بالقيم الشاذّة زي الـ 45.
+print(statistics.mode(grades)) ¦¦ **المنوال**: الأكتر تكرارًا.
+print(round(statistics.stdev(grades), 2)) ¦¦ **الانحراف المعياري**: الدرجات متفرّقة قد إيه حوالين المتوسّط. رقم كبير = مستويات متفاوتة.
+    @end
+    @out
+79.16666666666667
+85.0
+85
+19.34
+    @end
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>النوع</th><th>الدقة</th><th>السرعة</th><th>استخدمه في</th></tr>
+        <tr><td><code class="inl">int</code></td><td>دقيق وبلا حدود</td><td>سريع جدًا</td><td>العدّ، الفلوس بالقروش، الأرقام الضخمة</td></tr>
+        <tr><td><code class="inl">float</code></td><td>تقريبي (~15 خانة)</td><td>الأسرع (مدعوم من المعالج)</td><td>العلوم، الهندسة، الرسوم، تعلّم الآلة</td></tr>
+        <tr><td><code class="inl">Decimal</code></td><td>دقيق عشريًا</td><td>أبطأ</td><td>الفلوس، الفواتير، الضرايب</td></tr>
+        <tr><td><code class="inl">Fraction</code></td><td>دقيق تمامًا</td><td>الأبطأ</td><td>الرياضيات، الوصفات، النِسب</td></tr>
+      </table>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تقسيم الفاتورة</div>
+      <p>فاتورة مطعم 347.50 جنيه + خدمة 12%، هتتقسم على 4 أصحاب. اطبع نصيب كل واحد مقرّب لقرشين بـ Decimal.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+from decimal import Decimal, ROUND_HALF_UP ¦¦ الاستيراد.
+bill = Decimal("347.50") ¦¦ الفاتورة من نص.
+total = bill * Decimal("1.12") ¦¦ إضافة 12% = الضرب في 1.12.
+share = (total / 4).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP) ¦¦ القسمة ثم التقريب لقرشين.
+print(f"الإجمالي: {total} — نصيب كل واحد: {share}") ¦¦ Decimal بتتعرض عادي جوّه f-string.
+      @end
+      @out rtl
+الإجمالي: 389.2000 — نصيب كل واحد: 97.30
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">math.ceil(10 / 3)</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 3.33</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 3.0</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. أصح طريقة لإنشاء Decimal لـ 0.1؟</p>
+        <label><input type="radio"> Decimal("0.1")</label>
+        <label><input type="radio"> Decimal(0.1)</label>
+        <label><input type="radio"> Decimal(1/10)</label>
+        <label><input type="radio"> كلهم نفس الشيء</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. أنهي مقياس ما بيتأثّرش بدرجة واحدة شاذّة جدًا؟</p>
+        <label><input type="radio"> mean</label>
+        <label><input type="radio"> median</label>
+        <label><input type="radio"> stdev</label>
+        <label><input type="radio"> sum</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. <code class="inl">Fraction(2, 4)</code> بتتعرض كـ…</p>
+        <label><input type="radio"> 2/4</label>
+        <label><input type="radio"> 0.5</label>
+        <label><input type="radio"> Fraction(2, 4)</label>
+        <label><input type="radio"> 1/2</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u7-l5 before="<!-- 7.P1 -->"
+  <!-- 7.5 -->
+  <article class="lesson" id="u7-l5">
+    <h3>التاريخ والوقت بعمق: datetime و timedelta <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تنشئ تواريخ، تعرضها بأي شكل، تقرا تاريخ من نص كتبه مستخدم، وتحسب الفروق — أعمار، مواعيد، ساعات شغل.</p>
+
+    <h4>1. الأنواع التلاتة: date و time و datetime</h4>
+    @code run
+from datetime import date, datetime ¦¦ مكتبة `datetime` فيها **كلاس** اسمه برضه `datetime` — عشان كده بنستورد بـ `from` ونتجنّب `datetime.datetime`.
+today = date(2025, 3, 15) ¦¦ تاريخ ثابت (سنة، شهر، يوم) عشان النتايج تبقى ثابتة. في برنامج حقيقي: `date.today()`.
+print(today) ¦¦ الشكل الافتراضي: ISO 8601 (سنة-شهر-يوم) — المعيار العالمي.
+print(today.year, today.month, today.day) ¦¦ كل جزء كرقم.
+print(today.weekday(), today.isoweekday()) ¦¦ `weekday`: الاتنين = 0 … الأحد = 6. `isoweekday`: الاتنين = 1 … الأحد = 7. يوم 15 مارس 2025 سبت.
+moment = datetime(2025, 3, 15, 14, 30, 5) ¦¦ تاريخ + وقت: ساعة 14 (2 الضهر)، دقيقة 30، ثانية 5. في برنامج حقيقي: `datetime.now()`.
+print(moment) ¦¦ الشكل الافتراضي.
+print(moment.hour, moment.minute) ¦¦ أجزاء الوقت.
+print(moment.date()) ¦¦ استخراج التاريخ بس من datetime.
+    @end
+    @out
+2025-03-15
+2025 3 15
+5 6
+2025-03-15 14:30:05
+14 30
+2025-03-15
+    @end
+
+    <h4>2. من تاريخ لنص: strftime</h4>
+    <p><code class="inl">strftime</code> = <strong>str</strong>ing <strong>f</strong>ormat <strong>time</strong>: بتاخد «قالب» فيه أكواد بتبدأ بـ <code class="inl">%</code> وبتستبدلها بأجزاء التاريخ.</p>
+    @code run
+from datetime import datetime ¦¦ استيراد.
+moment = datetime(2025, 3, 15, 14, 30) ¦¦ لحظة ثابتة.
+print(moment.strftime("%d/%m/%Y")) ¦¦ الشكل المصري/العربي المعتاد: يوم/شهر/سنة.
+print(moment.strftime("%Y-%m-%d %H:%M")) ¦¦ شكل قواعد البيانات والملفات: `%H` ساعة بنظام 24.
+print(moment.strftime("%I:%M %p")) ¦¦ نظام 12 ساعة: `%I` الساعة و `%p` = AM/PM.
+print(moment.strftime("%A %d %B %Y")) ¦¦ `%A` اسم اليوم و `%B` اسم الشهر (بلغة نظام التشغيل — غالبًا إنجليزي).
+print(f"{moment:%d-%m-%Y}") ¦¦ **اختصار**: نفس الأكواد مباشرةً جوّه f-string بعد `:`.
+    @end
+    @out
+15/03/2025
+2025-03-15 14:30
+02:30 PM
+Saturday 15 March 2025
+15-03-2025
+    @end
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الكود</th><th>المعنى</th><th>مثال</th></tr>
+        <tr><td><code class="inl">%Y</code> / <code class="inl">%y</code></td><td>السنة كاملة / آخر رقمين</td><td>2025 / 25</td></tr>
+        <tr><td><code class="inl">%m</code></td><td>الشهر برقمين</td><td>03</td></tr>
+        <tr><td><code class="inl">%d</code></td><td>اليوم برقمين</td><td>15</td></tr>
+        <tr><td><code class="inl">%H</code> / <code class="inl">%I</code></td><td>الساعة 24 / 12</td><td>14 / 02</td></tr>
+        <tr><td><code class="inl">%M</code> / <code class="inl">%S</code></td><td>الدقايق / الثواني</td><td>30 / 05</td></tr>
+        <tr><td><code class="inl">%p</code></td><td>AM أو PM</td><td>PM</td></tr>
+        <tr><td><code class="inl">%A</code> / <code class="inl">%a</code></td><td>اسم اليوم كامل / مختصر</td><td>Saturday / Sat</td></tr>
+        <tr><td><code class="inl">%B</code> / <code class="inl">%b</code></td><td>اسم الشهر كامل / مختصر</td><td>March / Mar</td></tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ فخ الحروف الكبيرة والصغيرة</div>
+      <p><code class="inl">%M</code> = <strong>دقايق</strong> و <code class="inl">%m</code> = <strong>شهر</strong>. لو كتبت <code class="inl">%Y-%M-%d</code> هيطلع «2025-30-15» من غير أي خطأ — خطأ منطقي صامت.</p>
+    </div>
+
+    <h4>3. من نص لتاريخ: strptime</h4>
+    <p><code class="inl">strptime</code> = <strong>str</strong>ing <strong>p</strong>arse <strong>time</strong>: العكس. بتاخد النص <strong>والقالب اللي مكتوب بيه</strong> وبترجّع كائن datetime تقدر تحسب بيه.</p>
+    @code run
+from datetime import datetime ¦¦ استيراد.
+text = "25/12/2024 09:15" ¦¦ نص جاي من مستخدم أو ملف.
+parsed = datetime.strptime(text, "%d/%m/%Y %H:%M") ¦¦ القالب لازم يطابق النص **حرف بحرف** — حتى الشرط والمسافات. لاحظ إن `strptime` بتتنادى على الكلاس نفسه.
+print(parsed) ¦¦ بقى datetime حقيقي، والثواني اتحطّت صفر.
+print(type(parsed)) ¦¦ تأكيد النوع.
+iso = datetime.fromisoformat("2024-12-25T09:15:00") ¦¦ لو النص بصيغة ISO (الشائعة في الـ APIs وJSON) مش محتاج قالب أصلًا.
+print(iso == parsed) ¦¦ نفس اللحظة.
+    @end
+    @out
+2024-12-25 09:15:00
+&lt;class 'datetime.datetime'&gt;
+True
+    @end
+    <div class="box err">
+      <div class="bt">❌ لو القالب ما طابقش</div>
+      <p>
+        <code class="inl">datetime.strptime("2024-12-25", "%d/%m/%Y")</code> ← <code class="inl">ValueError: time data '2024-12-25' does not match format '%d/%m/%Y'</code>.
+        ولو المستخدم كتب <code class="inl">31/02/2025</code> ← <code class="inl">ValueError: day is out of range for month</code>.
+        يعني <code class="inl">strptime</code> جوّه <code class="inl">try/except</code> = <strong>تحقّق مجاني من صحّة التاريخ</strong> (هتعمله في الوحدة 9).
+      </p>
+    </div>
+
+    <h4>4. الحساب بالتواريخ: timedelta</h4>
+    <p><code class="inl">timedelta</code> = <strong>مدّة</strong> (مش لحظة). تاريخ + مدّة = تاريخ. تاريخ − تاريخ = مدّة.</p>
+    @code run
+from datetime import date, timedelta ¦¦ استيراد.
+start = date(2025, 1, 30) ¦¦ تاريخ بداية.
+print(start + timedelta(days=30)) ¦¦ بعد 30 يوم — المكتبة عارفة إن فبراير 2025 فيه 28 يوم، فالنتيجة أول مارس.
+print(start - timedelta(weeks=2)) ¦¦ قبل أسبوعين. `timedelta` بتقبل: days, weeks, hours, minutes, seconds.
+exam = date(2025, 6, 1) ¦¦ ميعاد امتحان.
+left = exam - start ¦¦ طرح تاريخين ← **timedelta**.
+print(left) ¦¦ الشكل الافتراضي: عدد الأيام + الوقت.
+print(left.days) ¦¦ الأيام كرقم int تقدر تستخدمه.
+    @end
+    @out
+2025-03-01
+2025-01-16
+122 days, 0:00:00
+122
+    @end
+    @code run
+from datetime import datetime, timedelta ¦¦ استيراد.
+login = datetime(2025, 3, 15, 8, 45) ¦¦ وقت الحضور.
+logout = datetime(2025, 3, 15, 17, 20) ¦¦ وقت الانصراف.
+worked = logout - login ¦¦ مدّة الشغل.
+print(worked) ¦¦ ساعات:دقايق:ثواني.
+hours = worked.total_seconds() / 3600 ¦¦ `total_seconds` = المدّة كلها بالثواني (float)، وبنقسم على 3600 عشان ساعات.
+print(f"{hours:.2f} ساعة") ¦¦ 8 ساعات و35 دقيقة = 8.58 ساعة.
+print(worked > timedelta(hours=8)) ¦¦ المُدد بتتقارن ببعض — «هل اشتغل أوفر تايم؟».
+    @end
+    @out rtl
+8:35:00
+8.58 ساعة
+True
+    @end
+
+    <h4>5. حساب العمر الصح</h4>
+    @code run
+from datetime import date ¦¦ استيراد.
+birth = date(2000, 8, 20) ¦¦ تاريخ الميلاد.
+today = date(2025, 3, 15) ¦¦ النهارده.
+had_birthday = (today.month, today.day) >= (birth.month, birth.day) ¦¦ **مقارنة tuples**: بتقارن الشهر الأول، ولو متساوي تقارن اليوم. هل عيد ميلاده السنة دي عدّى؟
+age = today.year - birth.year - (not had_birthday) ¦¦ فرق السنين، ناقص 1 لو لسه ما عدّاش. `not had_birthday` بتبقى True = **1** أو False = **0** في الحسابات.
+print(age) ¦¦ 24 مش 25 — لأن أغسطس لسه ما جاش.
+print(f"{(today - birth).days:,} يوم") ¦¦ الأيام اللي عاشها بفاصل الآلاف.
+    @end
+    @out rtl
+24
+8,973 يوم
+    @end
+    <div class="box info">
+      <div class="bt">ℹ️ ليه ما قسمناش الأيام على 365؟</div>
+      <p>
+        <code class="inl">8973 // 365</code> = 24 هنا بالصدفة، لكن السنين الكبيسة بتخلّي القسمة تغلط بيوم قريب من عيد الميلاد.
+        المقارنة بالشهر واليوم <strong>دايمًا صح</strong>. وللمناطق الزمنية (القاهرة مقابل طوكيو) فيه مكتبة <code class="inl">zoneinfo</code> القياسية.
+      </p>
+    </div>
+
+    <h4>6. مكتبة time: القياس والانتظار</h4>
+    <p><code class="inl">datetime</code> للتواريخ والمواعيد. أما <code class="inl">time</code> فللحاجات «التقنية»: توقيف البرنامج شوية، وقياس مدّة تنفيذ الكود.</p>
+    @code run
+import time ¦¦ مكتبة قياسية.
+start = time.perf_counter() ¦¦ `perf_counter` = أدقّ ساعة لقياس المُدد (قيمتها نفسها مالهاش معنى — المهم الفرق بين قراءتين).
+for i in range(3, 0, -1): ¦¦ عدّ تنازلي.
+    print(f"{i}…") ¦¦ طباعة الرقم.
+    time.sleep(0.2) ¦¦ `sleep(ثواني)` = **وقّف البرنامج** المدّة دي (بتقبل كسور). هنا خُمس ثانية.
+print("انطلق! 🚀") ¦¦ بعد العدّ.
+elapsed = time.perf_counter() - start ¦¦ المدّة الفعلية.
+print(f"المدّة: {elapsed:.1f} ثانية") ¦¦ 3 × 0.2 = 0.6 تقريبًا (ممكن تزيد جزء صغير — الـ sleep بيضمن «على الأقل»).
+print(time.time() > 1_700_000_000) ¦¦ `time.time()` = عدد الثواني من أول يناير 1970 (Unix timestamp) — الشكل اللي قواعد البيانات والـ APIs بتخزّن بيه الوقت كتير.
+    @end
+    @out rtl
+3…
+2…
+1…
+انطلق! 🚀
+المدّة: 0.6 ثانية
+True
+    @end
+    <div class="box tip">
+      <div class="bt">💡 إمتى تستخدم sleep؟</div>
+      <p>
+        <strong>تهدئة الطلبات</strong>: لما تكلّم API بيسمح بعدد محدود من الطلبات في الدقيقة، أو بتسحب صفحات موقع من غير ما تضغط عليه.
+        <strong>إعادة المحاولة</strong>: فشل الاتصال؟ استنّى ثانيتين وجرّب تاني. ⚠️ لكن <code class="inl">sleep</code> بتجمّد البرنامج كله —
+        في الواجهات الرسومية والسيرفرات بيستخدموا بدايل (زي <code class="inl">asyncio.sleep</code>).
+      </p>
+    </div>
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>جدول المحاضرات</div>
+      <p>أول محاضرة يوم 1 مارس 2025، وبعدها محاضرة كل أسبوع. اطبع مواعيد أول 4 محاضرات باسم اليوم والتاريخ.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+from datetime import date, timedelta ¦¦ استيراد.
+first = date(2025, 3, 1) ¦¦ أول محاضرة.
+for i in range(4): ¦¦ 4 محاضرات.
+    session = first + timedelta(weeks=i) ¦¦ أول مرّة `i = 0` فالتاريخ نفسه، وبعدين أسبوع، اتنين، تلاتة.
+    print(f"المحاضرة {i + 1}: {session:%A %d/%m}") ¦¦ تنسيق التاريخ جوّه f-string.
+      @end
+      @out rtl
+المحاضرة 1: Saturday 01/03
+المحاضرة 2: Saturday 08/03
+المحاضرة 3: Saturday 15/03
+المحاضرة 4: Saturday 22/03
+      @end
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>فاضل كام يوم على عيد ميلادك؟</div>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+from datetime import date ¦¦ استيراد.
+today = date(2025, 3, 15) ¦¦ النهارده.
+birthday = date(today.year, 8, 20) ¦¦ عيد الميلاد **السنة دي**.
+if birthday < today: ¦¦ التواريخ بتتقارن مباشرةً. لو عدّى…
+    birthday = birthday.replace(year=today.year + 1) ¦¦ …`replace` بترجّع **نسخة جديدة** بسنة مختلفة (التواريخ غير قابلة للتعديل زي النصوص).
+print((birthday - today).days) ¦¦ الفرق بالأيام.
+      @end
+      @out
+158
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. عندك النص <code class="inl">"2025-03-15"</code> وعايز كائن تاريخ. تستخدم…</p>
+        <label><input type="radio"> strftime</label>
+        <label><input type="radio"> strptime (أو fromisoformat)</label>
+        <label><input type="radio"> timedelta</label>
+        <label><input type="radio"> int()</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">date(2025, 5, 10) - date(2025, 5, 1)</code> نوعها؟</p>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> date</label>
+        <label><input type="radio"> str</label>
+        <label><input type="radio"> timedelta</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. في القالب، <code class="inl">%M</code> معناها…</p>
+        <label><input type="radio"> الدقايق</label>
+        <label><input type="radio"> الشهر</label>
+        <label><input type="radio"> AM/PM</label>
+        <label><input type="radio"> الثواني</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. إزاي تجيب عدد الساعات من <code class="inl">timedelta</code> اسمها d؟</p>
+        <label><input type="radio"> d.hours</label>
+        <label><input type="radio"> d.days * 24 بس</label>
+        <label><input type="radio"> d.total_seconds() / 3600</label>
+        <label><input type="radio"> int(d)</label>
+      </div>
+    </div>
+  </article>

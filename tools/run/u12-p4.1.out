@@ -1,0 +1,6 @@
+إجمالي مارس: 895.50
+bills        650.00  (1 عملية)
+food         200.00  (2 عملية)
+transport     45.50  (1 عملية)
+اترفض: CHECK constraint failed: amount > 0
+895.5

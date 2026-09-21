@@ -1,0 +1,6 @@
+Status.DOING DOING doing
+True
+Status.DONE
+['todo', 'doing', 'done']
+'finished' is not a valid Status
+2

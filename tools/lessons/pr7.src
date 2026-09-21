@@ -1,0 +1,291 @@
+@@append u19-l1
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. «لغة الغراء» معناها إن بايثون…</p>
+        <label><input type="radio"> أسرع لغة في التنفيذ</label>
+        <label><input type="radio"> بتشتغل على المتصفّح بس</label>
+        <label><input type="radio"> بتوصّل مكتبات مكتوبة بـ C وCUDA وبتديك واجهة سهلة تتحكّم بيها</label>
+        <label><input type="radio"> بديل كامل للغات التانية</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. المكتبات التقيلة (NumPy، TensorFlow) الحساب الفعلي فيها بيتم…</p>
+        <label><input type="radio"> في كود C/C++ مترجَم تحت السطح</label>
+        <label><input type="radio"> في بايثون سطر سطر</label>
+        <label><input type="radio"> في المتصفّح</label>
+        <label><input type="radio"> على السيرفر بس</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. بايثون <strong>مش</strong> الاختيار الأول في…</p>
+        <label><input type="radio"> تحليل البيانات</label>
+        <label><input type="radio"> الأتمتة</label>
+        <label><input type="radio"> تعلّم الآلة</label>
+        <label><input type="radio"> تطبيقات الموبايل والألعاب التقيلة</label>
+      </div>
+    </div>
+
+@@append u19-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>آلة بتتعلّم قاعدة بسيطة</div>
+      <p>عندك أمثلة (مساحة الشقة ← السعر). خلّي البرنامج «يتعلّم» السعر للمتر من البيانات بدل ما تكتبه بإيدك، وبعدين يتوقّع سعر شقة جديدة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+data = [(60, 600000), (80, 800000), (100, 1000000), (120, 1200000)] ¦¦ (مساحة، سعر) — بيانات التدريب.
+rate = sum(price / area for area, price in data) / len(data) ¦¦ **التعلّم**: متوسّط سعر المتر من الأمثلة، مش رقم كتبناه إحنا.
+print("سعر المتر اللي اتعلّمه:", round(rate)) ¦¦ ده «النموذج» بتاعنا: رقم واحد.
+def predict(area): ¦¦ التوقّع.
+    return round(rate * area) ¦¦ بنستخدم اللي اتعلّمناه.
+print("توقّع 90 متر:", predict(90)) ¦¦ مساحة **مش** موجودة في البيانات.
+errors = [abs(predict(a) - p) for a, p in data] ¦¦ نقيس الخطأ على بيانات التدريب.
+print("أكبر خطأ على بيانات التدريب:", max(errors)) ¦¦ صفر هنا لأن العلاقة خطّية تمامًا — في الحقيقة الخطأ عمره ما يبقى صفر.
+      @end
+      @out rtl
+سعر المتر اللي اتعلّمه: 10000
+توقّع 90 متر: 900000
+أكبر خطأ على بيانات التدريب: 0
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. الترتيب الصح من الأعمّ للأخصّ…</p>
+        <label><input type="radio"> تعلّم عميق ← تعلّم آلة ← ذكاء اصطناعي</label>
+        <label><input type="radio"> ذكاء اصطناعي ← تعلّم آلة ← تعلّم عميق</label>
+        <label><input type="radio"> تعلّم آلة ← ذكاء اصطناعي ← تعلّم عميق</label>
+        <label><input type="radio"> كلهم نفس الحاجة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. الفرق الجوهري بين البرمجة العادية وتعلّم الآلة…</p>
+        <label><input type="radio"> في العادية إنت بتكتب القاعدة، وفي التعلّم البرنامج بيستنتجها من أمثلة</label>
+        <label><input type="radio"> تعلّم الآلة أسرع في التنفيذ</label>
+        <label><input type="radio"> تعلّم الآلة مش محتاج بيانات</label>
+        <label><input type="radio"> مفيش فرق حقيقي</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. «التعلّم المُوجَّه» (supervised) محتاج…</p>
+        <label><input type="radio"> إنترنت سريع</label>
+        <label><input type="radio"> كارت شاشة</label>
+        <label><input type="radio"> مفيش شروط</label>
+        <label><input type="radio"> أمثلة معروف ناتجها الصح (بيانات موسومة)</label>
+      </div>
+    </div>
+
+@@append u19-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>أقرب جار بإيدك</div>
+      <p>نفّذ 1-NN: صنّف فاكهة جديدة (وزن، خشونة) حسب أقرب مثال، وبعدين قسّم البيانات تدريب/اختبار وقيس الدقّة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+train = [ ¦¦ (وزن بالجرام، خشونة من 10، النوع).
+    (150, 8, "برتقان"), (170, 9, "برتقان"), (140, 7, "برتقان"), ¦¦ أمثلة برتقان.
+    (120, 2, "تفاح"), (130, 3, "تفاح"), (110, 1, "تفاح"), ¦¦ أمثلة تفاح.
+] ¦¦ بيانات التدريب.
+def distance(a, b): ¦¦ المسافة بين نقطتين.
+    return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5 ¦¦ فيثاغورس — بس الوزن بيسيطر لأن مداه أكبر (عشان كده بنعمل تقييس في الحقيقة).
+def classify(point): ¦¦ 1-NN.
+    nearest = min(train, key=lambda row: distance(row, point)) ¦¦ أقرب مثال.
+    return nearest[2] ¦¦ نوعه هو تنبؤنا.
+print(classify((160, 8))) ¦¦ تقيل وخشن ← برتقان.
+print(classify((115, 2))) ¦¦ خفيف وناعم ← تفاح.
+test = [(155, 9, "برتقان"), (125, 2, "تفاح"), (135, 6, "برتقان")] ¦¦ بيانات **اختبار** لسه النموذج ما شافهاش.
+correct = sum(1 for point in test if classify(point) == point[2]) ¦¦ نعدّ الصح.
+print(f"الدقّة: {correct}/{len(test)}") ¦¦ 3 من 3 — البيانات هنا مفصولة بوضوح. جرّب تضيف عيّنة على الحدّ (130, 5) وشوف النموذج هيغلط.
+      @end
+      @out rtl
+برتقان
+تفاح
+الدقّة: 3/3
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. «هل الرسالة سبام؟» دي مشكلة…</p>
+        <label><input type="radio"> انحدار (Regression)</label>
+        <label><input type="radio"> تجميع (Clustering)</label>
+        <label><input type="radio"> تصنيف (Classification)</label>
+        <label><input type="radio"> ترتيب</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ليه بنقسم البيانات تدريب واختبار؟</p>
+        <label><input type="radio"> عشان نقيس الأداء على بيانات النموذج ما شافهاش</label>
+        <label><input type="radio"> عشان التدريب يبقى أسرع</label>
+        <label><input type="radio"> عشان نوفّر ذاكرة</label>
+        <label><input type="radio"> مفيش سبب حقيقي</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. دقّة 100% على بيانات التدريب و60% على الاختبار معناها…</p>
+        <label><input type="radio"> نموذج ممتاز</label>
+        <label><input type="radio"> حفظ مش تعلّم (Overfitting)</label>
+        <label><input type="radio"> بيانات ناقصة</label>
+        <label><input type="radio"> خطأ في الكود أكيد</label>
+      </div>
+    </div>
+
+@@append u19-l4
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. «الأوزان» في الشبكة العصبية هي…</p>
+        <label><input type="radio"> سرعة التدريب</label>
+        <label><input type="radio"> عدد الطبقات</label>
+        <label><input type="radio"> البيانات نفسها</label>
+        <label><input type="radio"> الأرقام اللي بتتعدّل في التدريب وبتحدّد أهمية كل مدخل</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. نموذج اللغة الكبير (LLM) في جوهره بيعمل…</p>
+        <label><input type="radio"> بيدوّر على الجواب في قاعدة بيانات</label>
+        <label><input type="radio"> بيتوقّع الوحدة النصّية الجاية حسب الاحتمالات</label>
+        <label><input type="radio"> بينفّذ كود بايثون داخليًا</label>
+        <label><input type="radio"> بيترجم بس</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. عايز تطبيق بذكاء اصطناعي من غير ما تدرّب نموذج…</p>
+        <label><input type="radio"> استخدم API لنموذج جاهز (ومفتاحك في متغيّر بيئة)</label>
+        <label><input type="radio"> مستحيل من غير تدريب</label>
+        <label><input type="radio"> لازم كارت شاشة قوي</label>
+        <label><input type="radio"> لازم تكتب الشبكة من الصفر</label>
+      </div>
+    </div>
+
+@@append u19-l5
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تحليل من غير مكتبات</div>
+      <p>نفس فكرة pandas بأدوات بايثون العادية: اقرا صفوف، اجمع حسب مفتاح، واطبع متوسّط لكل مجموعة مرتّب تنازليًا. (بيشتغل فورًا من غير تحميل مكتبات.)</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+from collections import defaultdict ¦¦ قاموس بقيمة افتراضية.
+rows = [ ¦¦ «جدول»: كل صف قاموس.
+    {"branch": "المعادي", "day": "السبت", "sales": 4200}, ¦¦ صف.
+    {"branch": "المعادي", "day": "الأحد", "sales": 3800}, ¦¦ صف.
+    {"branch": "الزمالك", "day": "السبت", "sales": 5200}, ¦¦ صف.
+    {"branch": "الزمالك", "day": "الأحد", "sales": 6100}, ¦¦ صف.
+    {"branch": "طنطا", "day": "السبت", "sales": 2500}, ¦¦ صف.
+] ¦¦ نهاية البيانات.
+groups = defaultdict(list) ¦¦ فرع ← قائمة مبيعاته (ده اللي `groupby` بتعمله).
+for row in rows: ¦¦ على كل صف.
+    groups[row["branch"]].append(row["sales"]) ¦¦ من غير `if` لأن defaultdict بتعمل القائمة لوحدها.
+summary = [(b, sum(v), round(sum(v) / len(v))) for b, v in groups.items()] ¦¦ (الفرع، الإجمالي، المتوسّط).
+for branch, total, avg in sorted(summary, key=lambda r: r[1], reverse=True): ¦¦ ترتيب بالإجمالي تنازليًا.
+    print(f"{branch:<8} إجمالي {total:>6,} · متوسّط {avg:>5,}") ¦¦ عرض منسّق.
+print("إجمالي الكل:", f"{sum(r['sales'] for r in rows):,}") ¦¦ المجموع العام.
+      @end
+      @out rtl
+الزمالك  إجمالي 11,300 · متوسّط 5,650
+المعادي  إجمالي  8,000 · متوسّط 4,000
+طنطا     إجمالي  2,500 · متوسّط 2,500
+إجمالي الكل: 21,800
+      @end
+      <p>في pandas السطور دي كلها بتبقى: <code class="inl">df.groupby("branch")["sales"].agg(["sum", "mean"]).sort_values("sum", ascending=False)</code>.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">DataFrame</code> في pandas أقرب حاجة ليه في بايثون العادية؟</p>
+        <label><input type="radio"> نص</label>
+        <label><input type="radio"> قاموس بسيط</label>
+        <label><input type="radio"> جدول = قائمة من قواميس (صفوف وأعمدة بأسماء)</label>
+        <label><input type="radio"> مجموعة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ليه NumPy أسرع بكتير من القوائم في الحساب؟</p>
+        <label><input type="radio"> بتخزّن أرقام من نوع واحد في ذاكرة متّصلة والحساب بيتم في كود مترجَم</label>
+        <label><input type="radio"> بتستخدم الإنترنت</label>
+        <label><input type="radio"> بتضغط البيانات</label>
+        <label><input type="radio"> بتشغّل أكتر من نسخة بايثون</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">df.head()</code> بتعرض…</p>
+        <label><input type="radio"> أسماء الأعمدة بس</label>
+        <label><input type="radio"> أول 5 صفوف</label>
+        <label><input type="radio"> آخر 5 صفوف</label>
+        <label><input type="radio"> الإحصائيات</label>
+      </div>
+    </div>
+
+@@append u19-l6
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. «التوجيه» (Routing) معناه…</p>
+        <label><input type="radio"> تخزين البيانات في قاعدة</label>
+        <label><input type="radio"> ربط مسار في الرابط بدالة بترد عليه</label>
+        <label><input type="radio"> تشفير الاتصال</label>
+        <label><input type="radio"> تسريع الموقع</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. الترتيب الصح لما تفتح صفحة…</p>
+        <label><input type="radio"> السيرفر يبعت طلب للمتصفّح</label>
+        <label><input type="radio"> قاعدة البيانات بتكلّم المتصفّح</label>
+        <label><input type="radio"> بايثون بتشتغل في المتصفّح</label>
+        <label><input type="radio"> المتصفّح يبعت طلب ← السيرفر ينفّذ الدالة ← يرجّع رد (HTML أو JSON)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. FastAPI مناسبة أكتر لما…</p>
+        <label><input type="radio"> تبني API بيرجّع JSON مع توثيق وتحقّق تلقائي</label>
+        <label><input type="radio"> تعمل سكريبت صغير</label>
+        <label><input type="radio"> تحلّل بيانات</label>
+        <label><input type="radio"> تعمل لعبة</label>
+      </div>
+    </div>
+
+@@append u19-l7
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. أنسب مكتبة لقراءة وكتابة ملفات Excel…</p>
+        <label><input type="radio"> requests</label>
+        <label><input type="radio"> pygame</label>
+        <label><input type="radio"> openpyxl</label>
+        <label><input type="radio"> tkinter</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. قبل أي سكريبت بيعيد تسمية أو يمسح ملفات بالجملة…</p>
+        <label><input type="radio"> اطبع اللي هيحصل الأول (dry run) واعمل نسخة احتياطية</label>
+        <label><input type="radio"> شغّله على كل الجهاز مرّة واحدة</label>
+        <label><input type="radio"> شغّله كمسؤول (admin)</label>
+        <label><input type="radio"> مفيش احتياطات</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. قبل ما تعمل Web Scraping لموقع…</p>
+        <label><input type="radio"> مفيش حاجة تشوفها</label>
+        <label><input type="radio"> شوف هل فيه API رسمي، واقرا شروط الموقع و<code class="inl">robots.txt</code>، وما تحمّلوش بطلبات</label>
+        <label><input type="radio"> ابعت أكبر عدد طلبات بأسرع وقت</label>
+        <label><input type="radio"> غيّر الـ IP بتاعك</label>
+      </div>
+    </div>
+
+@@append u19-l8
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. كاشف التلاعب بالملفات بيشتغل بـ…</p>
+        <label><input type="radio"> حجم الملف بس</label>
+        <label><input type="radio"> اسم الملف</label>
+        <label><input type="radio"> تاريخ التعديل بس</label>
+        <label><input type="radio"> بصمة (hash) للمحتوى، وأي تغيير بيغيّر البصمة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. أي لعبة بـ Pygame جوهرها…</p>
+        <label><input type="radio"> حلقة رئيسية: أحداث ← تحديث الحالة ← رسم ← تكرار</label>
+        <label><input type="radio"> دالة واحدة بترسم الشاشة</label>
+        <label><input type="radio"> ملف صور بس</label>
+        <label><input type="radio"> قاعدة بيانات</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. MicroPython بتستخدمها لما…</p>
+        <label><input type="radio"> تعمل موقع</label>
+        <label><input type="radio"> تحلّل بيانات ضخمة</label>
+        <label><input type="radio"> تبرمج متحكّم صغير (ESP32) يقرا حسّاسات ويشغّل أجهزة</label>
+        <label><input type="radio"> تدرّب شبكة عصبية</label>
+      </div>
+    </div>

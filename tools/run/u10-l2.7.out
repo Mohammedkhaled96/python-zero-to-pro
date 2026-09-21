@@ -1,0 +1,3 @@
+RuntimeError: dictionary changed size during iteration
+{'كشكول': 5}
+{'كشكول': 5}

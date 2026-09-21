@@ -1,0 +1,2056 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة السادسة · التكرار</div>
+    <h2>حلقة for: كرّر الشغل من غير ما تكرّر الكود</h2>
+    <p>
+      دي الوحدة اللي بتحوّلك من «واحد بيكتب سطور» لـ «واحد بيبرمج». الحلقة بتخلّيك
+      تشتغل على 10 عناصر أو 10 مليون بنفس عدد السطور. لو فهمت الوحدة دي كويس،
+      نص البرمجة بقى في إيدك.
+    </p>
+  </div>
+
+  <!-- 6.1 -->
+  <article class="lesson" id="u6-l1">
+    <h3>حلقة for: المرور على العناصر <span class="tag">درس 27 · جوهري</span></h3>
+    <p class="goal">الهدف: تكرّر عملية على كل عنصر في قائمة أو نص.</p>
+
+    <h4>1. المشكلة اللي بتحلّها</h4>
+    <div class="code"><pre>
+# من غير حلقة — كارثة
+names = ["ahmed", "sara", "ali", "mona"]
+print(names[0])
+print(names[1])
+print(names[2])
+print(names[3])
+# ولو القائمة فيها 1000 اسم؟!
+</pre></div>
+    <p>مع الحلقة:</p>
+    <div class="code"><pre>
+names = ["ahmed", "sara", "ali", "mona"]
+for name in names:
+    print(name)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>ahmed
+sara
+ali
+mona</pre></div>
+    <p><strong>سطرين، وبيشتغلوا على أي عدد عناصر.</strong></p>
+
+    <h4>2. تشريح الحلقة</h4>
+    <div class="diagram">
+<pre>  for  name  in  names :
+   │     │    │    │    │
+   │     │    │    │    └── نقطتين إلزامية
+   │     │    │    └─────── الشيء اللي بنمر عليه
+   │     │    └──────────── كلمة مفتاحية
+   │     └───────────────── متغيّر مؤقّت، إنت اللي بتسمّيه
+   └─────────────────────── كلمة مفتاحية
+
+      print(name)
+      └── الجسم — مسافة بادئة زي الـ if</pre>
+      <div class="cap">تشريح حلقة for</div>
+    </div>
+    <p>بيحصل إيه خطوة بخطوة؟</p>
+    <div class="diagram">
+<pre>  الدورة 1:  name = "ahmed"  →  print(name)  →  ahmed
+  الدورة 2:  name = "sara"   →  print(name)  →  sara
+  الدورة 3:  name = "ali"    →  print(name)  →  ali
+  الدورة 4:  name = "mona"   →  print(name)  →  mona
+  ─────────  خلصت العناصر → الحلقة تنتهي</pre>
+      <div class="cap">دورة الحياة</div>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 اسم المتغيّر حرّ لكن خلّيه معبّر</div>
+      <div class="code" data-norun><pre>
+for i in names:      # شغّالة لكن مبهمة
+for name in names:   # ✅ واضحة
+for student in students:
+for price in prices:
+</pre></div>
+    </div>
+
+    <h4>3. الحلقة على النصوص</h4>
+    <div class="code"><pre>
+for char in "python":
+    print(char)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>p
+y
+t
+h
+o
+n</pre></div>
+    <p>النص «قابل للتكرار» (iterable) زي القائمة بالظبط — الحلقة بتمر على كل حرف.</p>
+
+    <h4>4. حلقة مع شرط جوّاها</h4>
+    <div class="code" data-file="greet_special.py"><pre>
+names = ["Mohammed Khaled", "Farid Mohammed", "Marwa Soliman", "Randa Tarek", "Abdallah Ashraf"]
+for i in names:
+    if i == "Farid Mohammed":
+        print("hello Farid")
+    print(i)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Mohammed Khaled
+hello Farid
+Farid Mohammed
+Marwa Soliman
+Randa Tarek
+Abdallah Ashraf</pre></div>
+    <p>لاحظ الترتيب: <code class="inl">"hello Farid"</code> طلعت <strong>قبل</strong> الاسم، لأن الـ <code class="inl">print</code> بتاعة الشرط جاية قبل الـ <code class="inl">print</code> العادية في الجسم.</p>
+    <div class="box brain">
+      <div class="bt">🧠 مستويات المسافات هنا</div>
+      <div class="diagram">
+<pre>for i in names:              ← مستوى 0
+    if i == "Farid...":      ← مستوى 1 (جوّه الحلقة، بيتنفّذ كل دورة)
+        print("hello")       ← مستوى 2 (جوّه الشرط، بيتنفّذ لو الشرط صح)
+    print(i)                 ← مستوى 1 (جوّه الحلقة، بيتنفّذ كل دورة)</pre>
+      </div>
+      <p>لو حطّيت <code class="inl">print(i)</code> على مستوى 0 (بره الحلقة) هتطبع آخر اسم مرّة واحدة بس!</p>
+    </div>
+
+    <h4>5. نمط التجميع (Accumulator)</h4>
+    <p>أهم نمط في الحلقات: متغيّر بره الحلقة بيتراكم عليه جوّاها.</p>
+    <div class="code"><pre>
+numbers = [1, 2, 3, 4, 5]
+total = 1
+for i in numbers:
+    total *= i
+    print(total)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1
+2
+6
+24
+120</pre></div>
+    <p>ده حساب <strong>المضروب</strong> (factorial). تتبّع الخطوات:</p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الدورة</th><th>i</th><th>total قبل</th><th>العملية</th><th>total بعد</th></tr>
+        <tr><td>1</td><td>1</td><td>1</td><td>1 × 1</td><td>1</td></tr>
+        <tr><td>2</td><td>2</td><td>1</td><td>1 × 2</td><td>2</td></tr>
+        <tr><td>3</td><td>3</td><td>2</td><td>2 × 3</td><td>6</td></tr>
+        <tr><td>4</td><td>4</td><td>6</td><td>6 × 4</td><td>24</td></tr>
+        <tr><td>5</td><td>5</td><td>24</td><td>24 × 5</td><td>120</td></tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ القيمة الابتدائية مهمة جدًا</div>
+      <p>
+        للضرب ابدأ بـ <code class="inl">total = 1</code> (لأن أي رقم × 1 = نفسه).<br>
+        للجمع ابدأ بـ <code class="inl">total = 0</code>.<br>
+        لو بدأت الضرب من صفر، الناتج هيفضل صفر للأبد.
+      </p>
+    </div>
+    <div class="code"><pre>
+numbers = [10, 20, 30]
+total = 0
+for n in numbers:
+    total += n
+print(total)        # 60   ← نفس نتيجة sum(numbers)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>60</pre></div>
+    <!-- APPEND:u6-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>مجموع وعدّ</div>
+      <p>اجمع أسعار قائمة، واعدّ الحروف المتحرّكة في كلمة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+prices = [120, 45, 300, 80]
+total = 0
+for p in prices:
+    total += p
+print(total)
+count = 0
+for ch in "programming":
+    if ch in "aeiou":
+        count += 1
+print(count)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>545
+3</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="0">
+        <p class="qt">1. <code class="inl">for x in "hi": print(x)</code> بتطبع…</p>
+        <label><input type="radio"> h ثم i في سطرين</label>
+        <label><input type="radio"> hi</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> 0 ثم 1</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. في نمط التجميع، المتغيّر بيتعرّف…</p>
+        <label><input type="radio"> جوّه الحلقة</label>
+        <label><input type="radio"> بعد الحلقة</label>
+        <label><input type="radio"> قبل الحلقة</label>
+        <label><input type="radio"> مش مهم</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">for n in [1, 2, 3]: n = n * 2</code> — القائمة بعدها؟</p>
+        <label><input type="radio"> [2, 4, 6]</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> [1, 2, 3, 2, 4, 6]</label>
+        <label><input type="radio"> [1, 2, 3] زي ما هي</label>
+      </div>
+    </div>
+    <!-- /APPEND:u6-l1 -->
+                <!-- SUM:u6-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">for x in مجموعة:</code> بتلف على كل عنصر بالترتيب.</li><li>نمط التجميع: متغيّر يبدأ بقيمة ابتدائية ويتحدّث كل دورة.</li><li>الحلقة بتشتغل على النصوص والقوائم وأي مجموعة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 6.2 -->
+  <article class="lesson" id="u6-l2">
+    <h3>دالة range: توليد سلسلة أرقام <span class="tag">درس 28</span></h3>
+    <p class="goal">الهدف: تعمل حلقة تتكرّر عدد معيّن من المرّات من غير ما تحتاج قائمة جاهزة.</p>
+
+    <h4>1. الأشكال التلاتة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الشكل</th><th>معناه</th><th>الناتج</th></tr>
+        <tr><td><code class="inl">range(5)</code></td><td>من 0 لحد 4</td><td>0, 1, 2, 3, 4</td></tr>
+        <tr><td><code class="inl">range(2, 6)</code></td><td>من 2 لحد 5</td><td>2, 3, 4, 5</td></tr>
+        <tr><td><code class="inl">range(0, 10, 2)</code></td><td>من 0 لحد 9 بخطوة 2</td><td>0, 2, 4, 6, 8</td></tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ النهاية غير مشمولة — زي التقطيع بالظبط</div>
+      <p>
+        <code class="inl">range(0, 21)</code> بتعدّ لحد <strong>20</strong> مش 21.
+        لو عايز توصل لـ 20 لازم تكتب 21.
+      </p>
+    </div>
+
+    <h4>2. أمثلة عملية</h4>
+    <div class="code"><pre>
+for i in range(0, 21):
+    print(i)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>0
+1
+2
+...
+20</pre></div>
+
+    <div class="code"><pre>
+for i in range(0, 20, 2):
+    print(i)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>0
+2
+4
+6
+8
+10
+12
+14
+16
+18</pre></div>
+
+    <h4>3. الخطوة السالبة — العدّ للورا</h4>
+    <div class="code"><pre>
+for i in range(10, 0, -1):
+    print(i, end=" ")
+print("انطلق!")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>10 9 8 7 6 5 4 3 2 1 انطلق!</pre></div>
+    <p>لاحظ: البداية 10 والنهاية 0 (غير مشمولة فوقف عند 1) والخطوة −1.</p>
+
+    <h4>4. توليد الحروف بدمج range مع chr</h4>
+    <div class="code"><pre>
+# الحروف الإنجليزية من a إلى z
+for i in range(97, 123):
+    print(chr(i))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>a
+b
+c
+...
+z</pre></div>
+    <div class="code"><pre>
+# الحروف العربية من ا إلى ي مع فواصل
+for i in range(1575, 1611):
+    print(chr(i), end="/")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>ا/ب/ة/ت/ث/ج/ح/خ/د/ذ/ر/ز/س/ش/ص/ض/ط/ظ/ع/غ/ػ/ؼ/ؽ/ؾ/ؿ/ـ/ف/ق/ك/ل/م/ن/ه/و/ى/ي/</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ جدول Unicode مش هو الأبجدية بالظبط</div>
+      <p>
+        لاحظ حاجتين في الناتج: <strong>«ة» جت بعد «ب»</strong>، وبين «غ» و «ف» ظهرت رموز غريبة (<code class="inl">ػ ؼ ؽ ؾ ؿ</code>) —
+        دي حروف بتستخدمها لغات تانية بتتكتب بالحروف العربية — وبعدها <code class="inl">ـ</code> (التطويل/الكشيدة) وهو مش حرف أصلًا.
+        يعني ترتيب الأرقام في Unicode مش مطابق للأبجدية. لو محتاج الحروف بترتيبها الصح، اكتبها صريحة في نص:
+        <code class="inl">"ابتثجحخدذرزسشصضطظعغفقكلمنهوي"</code>.
+      </p>
+    </div>
+    <p>
+      هنا اتجمعت 3 دروس مع بعض: <code class="inl">range</code> من الوحدة دي،
+      <code class="inl">chr</code> من الوحدة 3، و<code class="inl">end=</code> من الوحدة 1.
+      <strong>ده بالظبط اللي المفروض يحصل — المعرفة بتتراكم.</strong>
+    </p>
+
+    <h4>5. مثال بنمط التجميع</h4>
+    <div class="code"><pre>
+count = 0
+for i in range(0, 10):
+    count += 10
+    print(count)
+print(count + 100)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>10
+20
+30
+40
+50
+60
+70
+80
+90
+100
+200</pre></div>
+    <p>
+      لاحظ آخر سطر <code class="inl">print(count + 100)</code> — مسافته البادئة صفر يعني
+      <strong>بره الحلقة</strong>، فبيتنفّذ مرّة واحدة بعد ما الحلقة تخلّص.
+      ولاحظ إن الحلقة لفّت 10 مرّات وكل مرّة زوّدت 10، فالنتيجة 100 وبعدين + 100 = 200.
+    </p>
+
+    <h4>6. حاجة مهمّة: range مش قائمة</h4>
+    <div class="code"><pre>
+print(range(5))          # range(0, 5)   ← مش قائمة!
+print(list(range(5)))    # [0, 1, 2, 3, 4]
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>range(0, 5)
+[0, 1, 2, 3, 4]</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ ليه بايثون عملت كده؟ (كفاءة الذاكرة)</div>
+      <p>
+        <code class="inl">range(1000000)</code> ما بتحجزش مليون رقم في الـ Heap. هي بتحفظ
+        البداية والنهاية والخطوة بس، وبتولّد كل رقم <em>وقت الحاجة له</em>.
+        ده اسمه <strong>lazy evaluation</strong> وهو أحد أسباب كفاءة بايثون في الحلقات الكبيرة.
+      </p>
+    </div>
+    <!-- APPEND:u6-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تلات استخدامات لـ range</div>
+      <p>مجموع 1 لـ 100، الأرقام الزوجية لحد 10 في سطر، وعدّ تنازلي من 5.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+print(sum(range(1, 101)))
+for n in range(2, 11, 2):
+    print(n, end=" ")
+print()
+for n in range(5, 0, -1):
+    print(n, end=" ")
+print("انطلق!")
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>5050
+2 4 6 8 10
+5 4 3 2 1 انطلق!</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">list(range(3))</code>؟</p>
+        <label><input type="radio"> [1, 2, 3]</label>
+        <label><input type="radio"> [0, 1, 2]</label>
+        <label><input type="radio"> [0, 1, 2, 3]</label>
+        <label><input type="radio"> [3]</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">list(range(10, 0, -3))</code>؟</p>
+        <label><input type="radio"> [10, 7, 4, 1, 0]</label>
+        <label><input type="radio"> []</label>
+        <label><input type="radio"> [0, 3, 6, 9]</label>
+        <label><input type="radio"> [10, 7, 4, 1]</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">list(range(5, 1))</code>؟</p>
+        <label><input type="radio"> [] — الخطوة موجبة والبداية أكبر</label>
+        <label><input type="radio"> [5, 4, 3, 2]</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> [1, 2, 3, 4, 5]</label>
+      </div>
+    </div>
+    <!-- /APPEND:u6-l2 -->
+                <!-- SUM:u6-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">range(stop)</code> و <code class="inl">range(start, stop)</code> و <code class="inl">range(start, stop, step)</code>.</li><li>النهاية مش مشمولة، والخطوة السالبة بتعدّ لورا.</li><li><code class="inl">range</code> كسولة — مش قائمة متخزّنة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 6.3 -->
+  <article class="lesson" id="u6-l3">
+    <h3>الحلقة بالفهارس: range(len()) <span class="tag">درس 29</span></h3>
+    <p class="goal">الهدف: تمر على القائمة وإنت عارف رقم كل عنصر — عشان الترقيم والتعديل.</p>
+
+    <h4>1. المشكلة</h4>
+    <p>
+      <code class="inl">for name in names</code> بتديك <strong>القيمة</strong> بس. طيب لو عايز
+      الرقم كمان عشان تطبع «1. المهمة الأولى»؟
+    </p>
+    <div class="code" data-file="numbered_tasks.py"><pre>
+tasks = ["i will go to Gem", "I will play", "I will check my Email"]
+for i in range(len(tasks)):
+    print(f"{i+1}: {tasks[i]}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1: i will go to Gem
+2: I will play
+3: I will check my Email</pre></div>
+    <p>الفكرة:</p>
+    <ul>
+      <li><code class="inl">len(tasks)</code> = 3</li>
+      <li><code class="inl">range(3)</code> بتدّي 0، 1، 2 — وديّ بالظبط فهارس القائمة</li>
+      <li><code class="inl">tasks[i]</code> بتجيب العنصر</li>
+      <li><code class="inl">i+1</code> عشان الترقيم يبدأ من 1 للمستخدم (البشر بيعدّوا من 1)</li>
+    </ul>
+
+    <h4>2. مثال بمدخلات المستخدم</h4>
+    <div class="code" data-file="user_tasks.py"><pre>
+tasks = input("Please enter your tasks, separated by slashes: ").lower().split("/")
+for i in range(len(tasks)):
+    print(f"{i+1}. {tasks[i]}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Please enter your tasks, separated by slashes: gym/play/email
+1. gym
+2. play
+3. email</pre></div>
+    <p>
+      لاحظ سلسلة الدوال: <code class="inl">input()</code> ← <code class="inl">.lower()</code>
+      ← <code class="inl">.split("/")</code>. كل واحدة بتشتغل على ناتج اللي قبلها،
+      والنتيجة النهائية قائمة.
+    </p>
+
+    <h4>3. المرور بالفهارس على القوائم</h4>
+    <div class="code"><pre>
+colors = ["red", "green", "yellow", "blue", "purple"]
+# لون وسيب لون
+for i in range(0, len(colors), 2):
+    print(colors[i])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>red
+yellow
+purple</pre></div>
+
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">colors</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+# بالعكس من الآخر للأول
+for i in range(len(colors)-1, -1, -1):
+    print(colors[i])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>purple
+blue
+yellow
+green
+red</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 فكّ الأرقام التلاتة دي</div>
+      <div class="diagram">
+<pre>  range( len(colors)-1 , -1 , -1 )
+            │            │     │
+            │            │     └── الخطوة: امشِ للورا
+            │            └──────── النهاية: -1 عشان نوصل للفهرس 0
+            │                       (النهاية غير مشمولة!)
+            └───────────────────── البداية: آخر فهرس = 5-1 = 4</pre>
+      </div>
+      <p>
+        <strong>ليه النهاية -1 مش 0؟</strong> لأن النهاية مش مشمولة. لو كتبنا 0 هتقف عند
+        الفهرس 1 وما تطبعش أول عنصر.
+      </p>
+    </div>
+
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">colors</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+# بالعكس وبخطوة 2
+for i in range(len(colors)-1, -1, -2):
+    print(colors[i])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>purple
+yellow
+red</pre></div>
+
+    <h4>4. متى تستخدم كل أسلوب؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الأسلوب</th><th>استخدمه لما</th></tr>
+        <tr><td><code class="inl">for x in lst</code></td><td>عايز القيم بس — <strong>الأفضل والأنضف</strong></td></tr>
+        <tr><td><code class="inl">for i in range(len(lst))</code></td><td>محتاج الفهرس عشان تعدّل العنصر، أو تمشي بخطوة، أو للورا</td></tr>
+        <tr><td><code class="inl">for i, x in enumerate(lst)</code></td><td>محتاج الاتنين — <strong>الأفضل في الحالة دي</strong> (الدرس الجاي)</td></tr>
+      </table>
+    </div>
+    <div class="code"><pre>
+# مثال: التعديل محتاج الفهرس فعلًا
+prices = [100, 200, 300]
+for i in range(len(prices)):
+    prices[i] = prices[i] * 1.14      # إضافة ضريبة 14%
+print(prices)
+# ده مش هيشتغل:
+for p in prices:
+    p = p * 1.14        # ❌ p نسخة، تعديلها مش بيأثّر على القائمة
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[113.99999999999999, 227.99999999999997, 341.99999999999994]</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ ليه مش 114.0 بالظبط؟</div>
+      <p>
+        نفس سبب <code class="inl">0.1 + 0.2</code> في الوحدة 2: <code class="inl">1.14</code> مش متخزّنة بدقة في النظام الثنائي.
+        في الأسعار قرّب دايمًا: <code class="inl">prices[i] = round(prices[i] * 1.14, 2)</code> ← <code class="inl">[114.0, 228.0, 342.0]</code>.
+      </p>
+    </div>
+    <!-- APPEND:u6-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تعديل في المكان</div>
+      <p>ضاعف كل عنصر في القائمة نفسها، وبعدين لاقي <strong>مكان</strong> أكبر رقم من غير <code class="inl">max</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+nums = [4, 9, 2]
+for i in range(len(nums)):
+    nums[i] = nums[i] * 2
+print(nums)
+best = 0
+for i in range(len(nums)):
+    if nums[i] &gt; nums[best]:
+        best = i
+print("أكبر رقم في المكان", best)
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>[8, 18, 4]
+أكبر رقم في المكان 1</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">range(len(["a", "b", "c"]))</code> بتدّي…</p>
+        <label><input type="radio"> a, b, c</label>
+        <label><input type="radio"> 1, 2, 3</label>
+        <label><input type="radio"> 0, 1, 2</label>
+        <label><input type="radio"> 3</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. إمتى تحتاج <code class="inl">range(len(lst))</code>؟</p>
+        <label><input type="radio"> دايمًا مع القوائم</label>
+        <label><input type="radio"> لما تعدّل العناصر في مكانها أو تحتاج الفهرس</label>
+        <label><input type="radio"> لما تقرا القيم بس</label>
+        <label><input type="radio"> مع النصوص بس</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. تمشي على قائمة من الآخر للأول بالفهارس…</p>
+        <label><input type="radio"> range(len(lst) - 1, -1, -1)</label>
+        <label><input type="radio"> range(len(lst), 0)</label>
+        <label><input type="radio"> range(-1, len(lst))</label>
+        <label><input type="radio"> range(len(lst), -1)</label>
+      </div>
+    </div>
+    <!-- /APPEND:u6-l3 -->
+                <!-- SUM:u6-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">for i in range(len(lst))</code> لما تحتاج الفهرس.</li><li>استخدمها لما تعدّل عناصر في مكانها.</li><li>لو محتاج القيمة بس — لف على القائمة مباشرةً.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 6.4 -->
+  <article class="lesson" id="u6-l4">
+    <h3>enumerate: الفهرس والقيمة مع بعض <span class="tag">درس 30</span></h3>
+    <p class="goal">الهدف: تستبدل <code>range(len())</code> بحاجة أنضف وأوضح.</p>
+
+    <h4>1. الفكرة</h4>
+    <div class="code"><pre>
+products = ["juice", "drink", "water", "biscuit", "chocolate", "milk", "meat", "chicken"]
+for i, product in enumerate(products, start=1):
+    print(f"{i}: {product}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1: juice
+2: drink
+3: water
+4: biscuit
+5: chocolate
+6: milk
+7: meat
+8: chicken</pre></div>
+    <p>مقارنة سريعة:</p>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">products</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+# الطريقة القديمة
+for i in range(len(products)):
+    print(f"{i+1}: {products[i]}")
+# مع enumerate — أنضف
+for i, product in enumerate(products, start=1):
+    print(f"{i}: {product}")
+</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 مميّزات enumerate</div>
+      <ul>
+        <li>مفيش <code class="inl">i+1</code> — <code class="inl">start=1</code> بتعمل ده.</li>
+        <li>مفيش <code class="inl">products[i]</code> — المتغيّر جاهز.</li>
+        <li>أوضح للقارئ: «أنا محتاج الرقم والقيمة».</li>
+      </ul>
+    </div>
+
+    <h4>2. الافتراضي بيبدأ من صفر</h4>
+    <div class="code"><pre>
+names = ["ahmed", "mohammed", "farid", "randa", "sara"]
+for i, name in enumerate(names):
+    print(f"{i}: {name}")
+print("---")
+for i, name in enumerate(names, start=1):
+    print(f"{i}: {name}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>0: ahmed
+1: mohammed
+2: farid
+3: randa
+4: sara
+---
+1: ahmed
+2: mohammed
+3: farid
+4: randa
+5: sara</pre></div>
+
+    <h4>3. التفكيك (Unpacking) — إزاي بتشتغل</h4>
+    <div class="code"><pre>
+names = ["ahmed", "sara"]
+print(list(enumerate(names)))     # [(0, 'ahmed'), (1, 'sara')]
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[(0, 'ahmed'), (1, 'sara')]</pre></div>
+    <p>
+      <code class="inl">enumerate</code> بترجّع أزواج على شكل <strong>tuples</strong>.
+      وبايثون بتسمح إنك تفكّ الزوج ده لمتغيّرين مباشرةً — وده اسمه
+      <strong>tuple unpacking</strong>:
+    </p>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">names</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+pair = (0, "ahmed")
+i, name = pair          # تفكيك
+print(i, name)          # 0 ahmed
+# ودي نفس اللي بيحصل في الحلقة:
+for i, name in enumerate(names):
+    ...
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>0 ahmed</pre></div>
+
+    <h4>4. مثال آخر: قائمة مهام</h4>
+    <div class="code"><pre>
+tasks = ["i want to eat", "i want to go out", "i want to sleep"]
+for i, task in enumerate(tasks, start=1):
+    print(f"{i}: {task}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1: i want to eat
+2: i want to go out
+3: i want to sleep</pre></div>
+    <!-- APPEND:u6-l4 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>قائمة طعام مرقّمة</div>
+      <p>اطبع الأصناف مرقّمة من 1.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+menu = ["كشري", "فول", "طعمية"]
+for i, item in enumerate(menu, start=1):
+    print(f"{i}. {item}")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>1. كشري
+2. فول
+3. طعمية</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">list(enumerate("ab"))</code>؟</p>
+        <label><input type="radio"> ['a', 'b']</label>
+        <label><input type="radio"> [0, 1]</label>
+        <label><input type="radio"> [(1, 'a'), (2, 'b')]</label>
+        <label><input type="radio"> [(0, 'a'), (1, 'b')]</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">for i, x in enumerate(lst)</code> — i و x بيتملّوا إزاي؟</p>
+        <label><input type="radio"> تفكيك كل tuple (فهرس، قيمة)</label>
+        <label><input type="radio"> i القيمة و x الفهرس</label>
+        <label><input type="radio"> الاتنين نفس القيمة</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">enumerate(lst, 10)</code> — أول فهرس؟</p>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> 11</label>
+      </div>
+    </div>
+    <!-- /APPEND:u6-l4 -->
+                <!-- SUM:u6-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">enumerate</code> بتدّيك الفهرس والقيمة مع بعض.</li><li><code class="inl">start=1</code> للترقيم البشري.</li><li>التفكيك <code class="inl">for i, x in ...</code> بيفصل الاتنين.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 6.5 -->
+  <article class="lesson" id="u6-l5">
+    <h3>zip: المرور على قائمتين مع بعض <span class="tag">درس 31</span></h3>
+    <p class="goal">الهدف: تربط عناصر قائمتين متوازيتين في حلقة واحدة.</p>
+
+    <h4>1. المشكلة</h4>
+    <div class="code"><pre>
+products = ["coffee", "tea", "milk", "water"]
+prices = [15, 10, 20, 5]
+# عايز أطبع كل منتج مع سعره
+</pre></div>
+    <p>الحل بالفهرس شغّال بس مش أنيق:</p>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">products</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+for i in range(len(products)):
+    print(products[i], prices[i])
+</pre></div>
+    <p>الحل بـ <code class="inl">zip</code>:</p>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">products</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+for product, price in zip(products, prices):
+    print(f"{product}: {price}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>coffee: 15
+tea: 10
+milk: 20
+water: 5</pre></div>
+    <div class="diagram">
+<pre>  products:  "coffee"   "tea"   "milk"   "water"
+                 │         │       │        │
+     zip →      (│)       (│)     (│)      (│)
+                 │         │       │        │
+  prices:        15        10      20        5
+
+  النتيجة: ("coffee",15)  ("tea",10)  ("milk",20)  ("water",5)</pre>
+      <div class="cap">zip بتسحّب القائمتين زي سوستة الجاكيت</div>
+    </div>
+
+    <h4>2. دمج zip مع enumerate</h4>
+    <div class="code" data-file="price_list.py"><pre>
+products = ["coffee", "tea", "milk", "water"]
+prices = [15, 10, 20, 5]
+for i, (product, price) in enumerate(zip(products, prices), start=1):
+    print(f"{i}: {product}, {price}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1: coffee, 15
+2: tea, 10
+3: milk, 20
+4: water, 5</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 ليه الأقواس حوالين <code>(product, price)</code>؟</div>
+      <p>
+        <code class="inl">enumerate</code> بترجّع زوج: <code class="inl">(رقم, عنصر)</code>.
+        والعنصر هنا نفسه زوج جاي من <code class="inl">zip</code>:
+        <code class="inl">("coffee", 15)</code>.
+        فالشكل الكامل: <code class="inl">(1, ("coffee", 15))</code>.
+        الأقواس بتقول لبايثون: «فكّي العنصر التاني كمان لمتغيّرين».
+      </p>
+    </div>
+
+    <h4>3. zip بتقف عند أقصر قائمة</h4>
+    <div class="code"><pre>
+a = [1, 2, 3, 4, 5]
+b = ["x", "y", "z"]
+for n, letter in zip(a, b):
+    print(n, letter)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1 x
+2 y
+3 z</pre></div>
+    <p>
+      العنصرين 4 و5 اتجاهلوا. ده سلوك آمن (ما بيرميش خطأ)، لكن ممكن يخبّي عنك بيانات
+      ناقصة — فتأكّد إن القوائم متساوية الطول لو ده مهم.
+    </p>
+
+    <h4>4. أكتر من قائمتين</h4>
+    <div class="code"><pre>
+names = ["Ahmed", "Sara"]
+ages = [25, 30]
+cities = ["Cairo", "Giza"]
+for name, age, city in zip(names, ages, cities):
+    print(f"{name}, {age}, {city}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Ahmed, 25, Cairo
+Sara, 30, Giza</pre></div>
+    <!-- APPEND:u6-l5 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>درجات الطلاب</div>
+      <p>اطبع كل اسم مع درجته، وجرّب zip على مجموعتين بطولين مختلفين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+names = ["سارة", "علي", "منى"]
+scores = [90, 75, 88]
+for name, score in zip(names, scores):
+    print(f"{name}: {score}")
+print(list(zip([1, 2, 3], "ab")))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>سارة: 90
+علي: 75
+منى: 88
+[(1, 'a'), (2, 'b')]</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">len(list(zip([1, 2, 3], [4, 5])))</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. كل عنصر من zip بيبقى…</p>
+        <label><input type="radio"> قائمة</label>
+        <label><input type="radio"> نص</label>
+        <label><input type="radio"> رقم</label>
+        <label><input type="radio"> tuple</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. zip تقدر تاخد…</p>
+        <label><input type="radio"> أي عدد من المجموعات</label>
+        <label><input type="radio"> اتنين بس</label>
+        <label><input type="radio"> قوائم أرقام بس</label>
+        <label><input type="radio"> قوائم بنفس الطول بس</label>
+      </div>
+    </div>
+    <!-- /APPEND:u6-l5 -->
+                <!-- SUM:u6-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">zip</code> بيلف على أكتر من مجموعة بالتوازي.</li><li>بتقف عند أقصر مجموعة.</li><li>بيتدمج مع <code class="inl">enumerate</code> لترقيم الأزواج.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 6.6 -->
+  <article class="lesson" id="u6-l6">
+    <h3>break و continue: التحكم في مسار الحلقة <span class="tag">درس 32</span></h3>
+    <p class="goal">الهدف: توقّف الحلقة بدري، أو تتخطّى دورة معيّنة.</p>
+
+    <h4>1. break — اخرج من الحلقة خالص</h4>
+    <div class="code"><pre>
+for i in range(0, 11):
+    if i == 5:
+        break
+    print(i)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>0
+1
+2
+3
+4</pre></div>
+    <p>
+      لما <code class="inl">i</code> بقت 5، <code class="inl">break</code> أنهت الحلقة كلها.
+      لاحظ إن 5 نفسها ما اتطبعتش لأن <code class="inl">break</code> جاية
+      <strong>قبل</strong> الـ <code class="inl">print</code>.
+    </p>
+
+    <h4>2. continue — تخطَّ الدورة دي بس وكمّل</h4>
+    <div class="code"><pre>
+for i in range(0, 11):
+    if i == 5:
+        continue
+    print(i)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>0
+1
+2
+3
+4
+6
+7
+8
+9
+10</pre></div>
+    <p>الرقم 5 اتخطّى، لكن الحلقة كمّلت لآخرها.</p>
+    <div class="diagram">
+<pre>   break                        continue
+   ─────                        ────────
+   ┌─ دورة 1  ✓                 ┌─ دورة 1  ✓
+   ├─ دورة 2  ✓                 ├─ دورة 2  ✓
+   ├─ دورة 3  ✗ break           ├─ دورة 3  ⤴ continue (تخطّى)
+   └─ [الحلقة انتهت]            ├─ دورة 4  ✓
+                                └─ دورة 5  ✓</pre>
+      <div class="cap">break بتوقف كل حاجة، continue بتقفز للدورة الجاية</div>
+    </div>
+
+    <h4>3. مثال عملي على continue</h4>
+    <div class="code"><pre>
+for i in range(0, 50):
+    if i % 5 == 0:
+        continue
+    print(i)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1
+2
+3
+4
+6
+7
+8
+9
+11
+...
+49</pre></div>
+    <p>
+      كل رقم بيقبل القسمة على 5 (باقيه صفر) اتخطّى. لاحظ إن 0 نفسه اتخطّى لأن
+      <code class="inl">0 % 5 == 0</code>.
+    </p>
+
+    <h4>4. متى تستخدم كل واحدة؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th></th><th>break</th><th>continue</th></tr>
+        <tr><td>بتعمل إيه</td><td>تخرج من الحلقة نهائيًا</td><td>تقفز للدورة الجاية</td></tr>
+        <tr><td>مثال استخدام</td><td>لقيت اللي بتدوّر عليه → مفيش داعي تكمّل</td><td>العنصر ده مش مناسب → تجاهله وكمّل</td></tr>
+      </table>
+    </div>
+    <div class="code"><pre>
+# البحث: لقيته → break
+names = ["ahmed", "sara", "ali", "mona"]
+for name in names:
+    if name == "ali":
+        print("لقيته!")
+        break
+# التصفية: تجاهل الفاضي → continue
+entries = ["ahmed", "", "sara", "   ", "ali"]
+for e in entries:
+    if not e.strip():
+        continue
+    print(e)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>لقيته!
+ahmed
+sara
+ali</pre></div>
+    <!-- APPEND:u6-l6 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تخطّى الأصفار ووقف عند السالب</div>
+      <p>اطبع الأرقام ماعدا الأصفار، ووقّف أول ما تلاقي رقم سالب (واطبعه).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+numbers = [3, 0, 7, -2, 5]
+for n in numbers:
+    if n == 0:
+        continue
+    if n &lt; 0:
+        print("أول سالب:", n)
+        break
+    print(n)
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>3
+7
+أول سالب: -2</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">continue</code> بتعمل…</p>
+        <label><input type="radio"> بتخرج من الحلقة</label>
+        <label><input type="radio"> بتوقف البرنامج</label>
+        <label><input type="radio"> بتتخطّى باقي الدورة الحالية</label>
+        <label><input type="radio"> بتعيد نفس الدورة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">for i in range(5): if i == 3: break</code> ثم <code class="inl">print(i)</code> بعد الحلقة؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. أنسب استخدام لـ break…</p>
+        <label><input type="radio"> تخطّي عنصر</label>
+        <label><input type="radio"> البحث — أول ما تلاقي المطلوب توقف</label>
+        <label><input type="radio"> تكرار الدورة</label>
+        <label><input type="radio"> تعريف دالة</label>
+      </div>
+    </div>
+    <!-- /APPEND:u6-l6 -->
+                <!-- SUM:u6-l6 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">break</code> بتخرج من الحلقة خالص.</li><li><code class="inl">continue</code> بتتخطّى الدورة الحالية بس.</li><li>الاتنين بيأثّروا على أقرب حلقة بس.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 6.7 -->
+  <article class="lesson" id="u6-l7">
+    <h3>بناء القوائم داخل الحلقات <span class="tag">درس 33</span></h3>
+    <p class="goal">الهدف: أهم نمط عملي — قائمة فاضية بتتملّى جوّه الحلقة.</p>
+
+    <h4>1. النمط الأساسي</h4>
+    <div class="diagram">
+<pre>  1) اعمل قائمة فاضية    →  result = []
+  2) لفّ على البيانات    →  for item in data:
+  3) اشتغل على العنصر   →      new = ...
+  4) ضيفه للقائمة        →      result.append(new)
+  5) استخدم النتيجة      →  print(result)</pre>
+      <div class="cap">نمط البناء (Builder Pattern)</div>
+    </div>
+
+    <h4>2. تطبيق: إزالة التكرار</h4>
+    <div class="code" data-file="remove_duplicates.py"><pre>
+friends = ["Farid Mohammed", "Farid Mohammed", "Abdallah Ashraf",
+           "Marwa Soliman", "Farid Mohammed", "Randa Tarek"]
+friends_list = []
+for i in friends:
+    if i not in friends_list:
+        friends_list.append(i)
+print(friends_list)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['Farid Mohammed', 'Abdallah Ashraf', 'Marwa Soliman', 'Randa Tarek']</pre></div>
+    <p>تتبّع المنطق:</p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>العنصر</th><th>موجود في friends_list؟</th><th>القرار</th></tr>
+        <tr><td>Farid Mohammed</td><td>لأ (القائمة فاضية)</td><td>ضيفه</td></tr>
+        <tr><td>Farid Mohammed</td><td>أيوة</td><td>تجاهله</td></tr>
+        <tr><td>Abdallah Ashraf</td><td>لأ</td><td>ضيفه</td></tr>
+        <tr><td>Marwa Soliman</td><td>لأ</td><td>ضيفه</td></tr>
+        <tr><td>Farid Mohammed</td><td>أيوة</td><td>تجاهله</td></tr>
+        <tr><td>Randa Tarek</td><td>لأ</td><td>ضيفه</td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 الطريقة المختصرة (لكن بتغيّر الترتيب)</div>
+      <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">friends</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+      <div class="code"><pre>
+print(list(set(friends)))       # سريعة لكن الترتيب بيتلخبط
+print(list(dict.fromkeys(friends)))   # سريعة والترتيب محفوظ ✅
+</pre></div>
+      <p>
+        <code class="inl">set</code> نوع بيانات ما بيقبلش تكرار — هنشرحه في الوحدة 10.
+        بس افهم النسخة اليدوية الأول، لأنها بتعلّمك تفكّر مش تحفظ.
+      </p>
+    </div>
+
+    <h4>3. تطبيق: تحويل وتصفية</h4>
+    <div class="code"><pre>
+prices = [100, 250, 80, 500, 150]
+expensive = []
+for p in prices:
+    if p &gt;= 150:
+        expensive.append(p)
+print(expensive)
+# مع التحويل كمان
+with_tax = []
+for p in prices:
+    with_tax.append(round(p * 1.14, 2))
+print(with_tax)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[250, 500, 150]
+[114.0, 285.0, 91.2, 570.0, 171.0]</pre></div>
+
+    <h4>4. الاختصار: List Comprehension</h4>
+    <p>بايثون بتقدّم صيغة مختصرة للنمط ده كله في سطر واحد:</p>
+    <div class="code"><pre>
+prices = [100, 250, 80, 500, 150]
+# التحويل
+with_tax = [round(p * 1.14, 2) for p in prices]
+# التصفية
+expensive = [p for p in prices if p &gt;= 150]
+# الاتنين مع بعض
+big_with_tax = [round(p * 1.14, 2) for p in prices if p &gt;= 150]
+print(with_tax)
+print(expensive)
+print(big_with_tax)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[114.0, 285.0, 91.2, 570.0, 171.0]
+[250, 500, 150]
+[285.0, 570.0, 171.0]</pre></div>
+    <div class="diagram">
+<pre>  [ round(p*1.14, 2)   for p in prices   if p &gt;= 150 ]
+    └──────┬───────┘   └──────┬──────┘   └────┬────┘
+      ماذا نضيف؟          الحلقة           الشرط
+                                        (اختياري)
+
+  يعادل:
+    result = []
+    for p in prices:
+        if p &gt;= 150:
+            result.append(round(p*1.14, 2))</pre>
+      <div class="cap">تشريح الـ list comprehension</div>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ استخدمها بحكمة</div>
+      <p>
+        الاختصار حلو للحالات البسيطة. لو المنطق فيه شروط متداخلة أو أكتر من خطوة،
+        <strong>الحلقة العادية أوضح</strong> — والوضوح أهم من الاختصار دايمًا.
+      </p>
+    </div>
+
+    <h4>5. مثال: مختصر الأسماء التلاثية</h4>
+    <div class="code" data-file="abbreviations.py"><pre>
+abbreviations = []
+names = input("Enter names (first middle last), separated by commas:\n").split(", ")
+for name in names:
+    name_parts = name.split()
+    first_name = name_parts[0]
+    middle_name = name_parts[1]
+    last_name = name_parts[2]
+    abbreviation = f"{first_name[0]}.{middle_name[0]}.{last_name[0]}"
+    abbreviations.append(abbreviation)
+for j in abbreviations:
+    print(j)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Enter names: Ahmed Bakr Cairo, Xena Yara Zaki
+A.B.C
+X.Y.Z</pre></div>
+    <p>حلقتين هنا: الأولى بتبني القائمة، والتانية بتعرضها. ممكن ندمجهم في حلقة واحدة، لكن الفصل بيخلّي كل حلقة ليها مهمّة واحدة واضحة.</p>
+    <div class="box err">
+      <div class="bt">💥 الكود ده بيقع لو الاسم مش تلاثي</div>
+      <p>
+        لو المستخدم كتب «Ahmed Ali» بس، <code class="inl">name_parts[2]</code> هترمي
+        <code class="inl">IndexError</code>. الحل الآمن:
+      </p>
+      <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">names</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+      <div class="code"><pre>
+for name in names:
+    parts = name.split()
+    if len(parts) &lt; 2:
+        print(f"تخطّي: {name} — الاسم قصير")
+        continue
+    abbreviation = ".".join(p[0].upper() for p in parts)
+    abbreviations.append(abbreviation)
+</pre></div>
+      <p>النسخة دي بتشتغل مع أي عدد أجزاء، وبتتخطّى الأسماء الناقصة بدل ما تقع.</p>
+    </div>
+    <!-- APPEND:u6-l7 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>بطريقتين</div>
+      <p>ابني قائمة بالكلمات الأطول من 3 حروف بحروف كبيرة: مرّة بحلقة ومرّة بـ comprehension.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+words = ["hi", "python", "is", "great"]
+long_words = []
+for w in words:
+    if len(w) &gt; 3:
+        long_words.append(w.upper())
+print(long_words)
+print([w.upper() for w in words if len(w) &gt; 3])
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>['PYTHON', 'GREAT']
+['PYTHON', 'GREAT']</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">[n * n for n in range(4)]</code>؟</p>
+        <label><input type="radio"> [1, 4, 9, 16]</label>
+        <label><input type="radio"> [0, 1, 2, 3]</label>
+        <label><input type="radio"> 14</label>
+        <label><input type="radio"> [0, 1, 4, 9]</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">[x for x in "abc" if x != "b"]</code>؟</p>
+        <label><input type="radio"> ['a', 'c']</label>
+        <label><input type="radio"> "ac"</label>
+        <label><input type="radio"> ['b']</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. إزالة التكرار مع الحفاظ على الترتيب بحلقة…</p>
+        <label><input type="radio"> list(set(lst))</label>
+        <label><input type="radio"> lst.sort()</label>
+        <label><input type="radio"> تضيف العنصر للنتيجة لو مش موجود فيها</label>
+        <label><input type="radio"> lst.reverse()</label>
+      </div>
+    </div>
+    <!-- /APPEND:u6-l7 -->
+                <!-- SUM:u6-l7 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>نمط بناء قائمة جديدة: فاضية + append جوّه الحلقة.</li><li>الـ List Comprehension: <code class="inl">[تعبير for x in مجموعة if شرط]</code>.</li><li>إزالة التكرار بالحفاظ على الترتيب: افحص قبل الإضافة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ADD:u6-l8 -->
+  <!-- 6.8 -->
+  <article class="lesson" id="u6-l8">
+    <h3>for...else والـ Comprehension بعمق <span class="tag">درس 34</span></h3>
+    <p class="goal">الهدف: تستخدم ميزة «else على الحلقة» اللي بايثون بتنفرد بيها، وتكتب comprehensions فيها تحويل وتصفية مع بعض، وتستخدم التعبيرات المولِّدة مع sum و any و all و max.</p>
+
+    <h4>1. for...else: «لو الحلقة خلصت من غير break»</h4>
+    <p>
+      بايثون بتسمح تحط <code class="inl">else</code> بعد <code class="inl">for</code>. الـ else دي <strong>بتتنفّذ بس لو الحلقة كمّلت كل دوراتها من غير ما تقابل break</strong>.
+      أشهر استخدام: البحث — «دوّرت على كل حاجة وما لقيتش».
+    </p>
+    <div class="code"><pre>
+numbers = [7, 11, 13, 15, 17]
+for n in numbers:
+    if n % 5 == 0:
+        print(f"أول مضاعف لـ 5: {n}")
+        break
+else:
+    print("مفيش ولا رقم بيقبل القسمة على 5")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>أول مضاعف لـ 5: 15</pre></div>
+    <div class="code"><pre>
+n = 29
+for d in range(2, n):
+    if n % d == 0:
+        print(f"{n} مش أولي — بيقبل القسمة على {d}")
+        break
+else:
+    print(f"{n} عدد أولي")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>29 عدد أولي</pre></div>
+    <p>نفس المنطق من غير <code class="inl">else</code> محتاج «راية» (flag):</p>
+    <div class="code"><pre>
+n = 91
+is_prime = True
+for d in range(2, n):
+    if n % d == 0:
+        is_prime = False
+        break
+if is_prime:
+    print(f"{n} عدد أولي")
+else:
+    print(f"{n} مش أولي")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>91 مش أولي</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 إزاي تفتكرها؟</div>
+      <p>
+        الاسم <code class="inl">else</code> هنا مُربك، حتى مصمّم بايثون قال إنه كان يتمنّى يسمّيها <code class="inl">nobreak</code>.
+        اقراها في دماغك: <strong>«لو ما حصلش break»</strong>. ونفس الميزة موجودة مع <code class="inl">while</code> — هتشوفها في الوحدة 8.
+        استخدمها لما تبسّط الكود فعلًا؛ لو فريقك مش متعوّد عليها، الراية أوضح.
+      </p>
+    </div>
+
+    <h4>2. التحويل مقابل التصفية في الـ Comprehension</h4>
+    <div class="diagram">
+<pre>  تصفية (فلتر):   [ n        for n in nums   if n > 0 ]
+                                              └─ الـ if في الآخر: «خُد العنصر ولّا سيبه؟»
+
+  تحويل (اختيار):  [ n if n > 0 else 0   for n in nums ]
+                     └─ if/else في الأول: «أحط إيه مكان كل عنصر؟» (العدد ثابت)
+
+  الاتنين مع بعض:  [ n * 2   for n in nums   if n > 0 ]</pre>
+      <div class="cap">مكان الـ if بيغيّر المعنى تمامًا</div>
+    </div>
+    <div class="code"><pre>
+nums = [4, -2, 0, 7, -9]
+evens = [n for n in nums if n % 2 == 0]
+abs_vals = [n if n &gt;= 0 else -n for n in nums]
+labels = ["زوجي" if n % 2 == 0 else "فردي" for n in nums]
+positive_doubled = [n * 2 for n in nums if n &gt; 0]
+print(evens)
+print(abs_vals)
+print(labels)
+print(positive_doubled)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[4, -2, 0]
+[4, 2, 0, 7, 9]
+['زوجي', 'زوجي', 'زوجي', 'فردي', 'فردي']
+[8, 14]</pre></div>
+    <div class="box err">
+      <div class="bt">❌ خطأ شائع</div>
+      <p>
+        <code class="inl">[n for n in nums if n &gt; 0 else 0]</code> ← <code class="inl">SyntaxError</code>.
+        الـ <code class="inl">if</code> اللي في الآخر (الفلتر) <strong>ما ينفعش يبقى ليها else</strong>. لو محتاج else انقل الشرط كله قبل <code class="inl">for</code>.
+      </p>
+    </div>
+
+    <h4>3. الـ Comprehension مع enumerate و zip ودوال النصوص</h4>
+    <div class="code"><pre>
+names = ["  sara ", "AHMED", "mona  "]
+clean = [name.strip().title() for name in names]
+print(clean)
+scores = [88, 45, 92]
+passed = [name for name, s in zip(clean, scores) if s &gt;= 50]
+print(passed)
+numbered = [f"{i}. {name}" for i, name in enumerate(clean, 1)]
+print(numbered)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['Sara', 'Ahmed', 'Mona']
+['Sara', 'Mona']
+['1. Sara', '2. Ahmed', '3. Mona']</pre></div>
+
+    <h4>4. التعبيرات المولِّدة: comprehension من غير أقواس مربعة</h4>
+    <p>
+      لو هتدخّل النتيجة على طول في دالة زي <code class="inl">sum</code> أو <code class="inl">any</code> أو <code class="inl">max</code>،
+      <strong>شيل الأقواس المربعة</strong>. كده بايثون ما بتبنيش قائمة كاملة في الذاكرة — بتولّد القيم واحدة واحدة وتسلّمها للدالة.
+      اسمها <em>Generator Expression</em>، وهنفهم من جوّه إزاي بتشتغل في وحدة الدوال.
+    </p>
+    <div class="code"><pre>
+nums = [4, -2, 0, 7, -9]
+print(sum(n * n for n in nums))
+print(any(n &lt; 0 for n in nums))
+print(all(n != 0 for n in nums))
+print(max(nums, key=abs))
+words = ["python", "is", "awesome"]
+print(max(words, key=len))
+print(sum(1 for w in words if len(w) &gt; 2))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>150
+True
+False
+-9
+awesome
+2</pre></div>
+
+    <h4>5. إمتى ما تستخدمش الـ Comprehension؟</h4>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">nums</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+# ❌ comprehension عشان تطبع — بتبني قائمة None على الفاضي
+[print(n) for n in nums]
+# ✅ الحلقة العادية للأفعال
+for n in nums:
+    print(n)
+</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 قاعدة عملية</div>
+      <p>
+        لو الـ comprehension <strong>مش بيتقري بصوت عالي في نَفَس واحد</strong>، أو فيه أكتر من شرطين، أو محتاج try/except جوّاه —
+        اكتبه حلقة عادية. الكود بيتقري أكتر ما بيتكتب.
+      </p>
+    </div>
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>FizzBuzz في comprehension</div>
+      <p>ابني قائمة من 1 لـ 15: مضاعف 15 ← "FizzBuzz"، مضاعف 3 ← "Fizz"، مضاعف 5 ← "Buzz"، غير كده الرقم كنص. اطبعها مفصولة بمسافات.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+result = [
+    "FizzBuzz" if i % 15 == 0 else
+    "Fizz" if i % 3 == 0 else
+    "Buzz" if i % 5 == 0 else
+    str(i)
+    for i in range(1, 16)
+]
+print(" ".join(result))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>1 2 Fizz 4 Buzz Fizz 7 8 Fizz Buzz 11 Fizz 13 14 FizzBuzz</pre></div>
+      <p>ده <strong>أقصى</strong> تعقيد مقبول لـ comprehension — ولو زاد شرط كمان، الحلقة العادية أوضح.</p>
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>هل كلمة السر فيها رقم؟ بطريقتين</div>
+      <p>مرّة بـ <code class="inl">for...else</code> ومرّة بـ <code class="inl">any</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+password = "secretPass"
+for ch in password:
+    if ch.isdigit():
+        print("تمام: فيها رقم")
+        break
+else:
+    print("ضعيفة: مفيهاش ولا رقم")
+print(any(ch.isdigit() for ch in password))
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>ضعيفة: مفيهاش ولا رقم
+False</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. الـ else بتاعة for بتتنفّذ إمتى؟</p>
+        <label><input type="radio"> لو الحلقة ما اشتغلتش خالص بس</label>
+        <label><input type="radio"> لو حصل break</label>
+        <label><input type="radio"> لو الحلقة خلصت من غير break</label>
+        <label><input type="radio"> دايمًا بعد كل دورة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. أنهي سطر صحيح؟</p>
+        <label><input type="radio"> [x if x &gt; 0 else 0 for x in a]</label>
+        <label><input type="radio"> [x for x in a if x &gt; 0 else 0]</label>
+        <label><input type="radio"> [for x in a: x]</label>
+        <label><input type="radio"> [x for x in a else 0]</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">max(["aa", "b", "ccc"], key=len)</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> "b"</label>
+        <label><input type="radio"> "aa"</label>
+        <label><input type="radio"> "ccc"</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">4. ميزة <code class="inl">sum(x for x in data)</code> على <code class="inl">sum([x for x in data])</code>؟</p>
+        <label><input type="radio"> ناتج مختلف</label>
+        <label><input type="radio"> ما بتبنيش قائمة وسيطة في الذاكرة</label>
+        <label><input type="radio"> بتشتغل مع النصوص بس</label>
+        <label><input type="radio"> مفيش أي فرق خالص</label>
+      </div>
+    </div>
+                <!-- SUM:u6-l8 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">for...else</code>: الـ else بتتنفّذ لو الحلقة خلصت من غير break.</li><li>مكان الـ if بيفرق: في الآخر فلتر، وقبل for تحويل.</li><li>التعبير المولّد مع <code class="inl">sum</code> و <code class="inl">any</code> و <code class="inl">all</code> و <code class="inl">max(key=…)</code> من غير قائمة وسيطة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u6-l8 -->
+
+  <!-- 6.P1 -->
+  <article class="lesson project" id="u6-p1">
+    <h3>مشروع 8: مشفّر الرسائل (Caesar Cipher) <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: دمج ord/chr من الوحدة 3 مع الحلقات — أول برنامج «حقيقي» ليك.</p>
+
+    <h4>الفكرة</h4>
+    <p>
+      نمشي على كل حرف في الرسالة، نزوّد رقمه في Unicode بمقدار ثابت (المفتاح)،
+      ونحوّل الرقم الجديد لحرف. النتيجة نص مش مفهوم — ومحدّش يقدر يقراه غير اللي عنده المفتاح.
+    </p>
+
+    <div class="code" data-file="encrypt.py"><pre>
+message = input("Please enter your message to encrypt it: ").lower()
+key = int(input("Please enter your key: "))
+encryption_message = ""
+for char in message:
+    encrypted_character = chr(ord(char) + key)
+    encryption_message += encrypted_character
+print(encryption_message)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج (الرسالة: farid mohammed، المفتاح: 3)</div><pre>idulg#prkdpphg</pre></div>
+
+    <h4>تتبّع أول حرفين</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>char</th><th>ord(char)</th><th>+ key (3)</th><th>chr(النتيجة)</th></tr>
+        <tr><td><code class="inl">f</code></td><td>102</td><td>105</td><td><code class="inl">i</code></td></tr>
+        <tr><td><code class="inl">a</code></td><td>97</td><td>100</td><td><code class="inl">d</code></td></tr>
+        <tr><td><code class="inl">r</code></td><td>114</td><td>117</td><td><code class="inl">u</code></td></tr>
+        <tr><td>مسافة</td><td>32</td><td>35</td><td><code class="inl">#</code></td></tr>
+      </table>
+    </div>
+    <p>عشان كده المسافة اتحوّلت لـ <code class="inl">#</code> — لأن المسافة نفسها حرف له رقم!</p>
+
+    <h4>ملاحظات على المنطق</h4>
+    <ul>
+      <li>
+        <code class="inl">encryption_message = ""</code> بره الحلقة: ده نمط التجميع بس مع نص
+        بدل رقم. بنبدأ بنص فاضي وبنضيف عليه.
+      </li>
+      <li>
+        <code class="inl">+=</code> على النصوص بتعمل نص جديد كل مرّة (لأن النصوص immutable).
+        للرسايل الطويلة جدًا الأكفأ إنك تجمّع في قائمة وتستخدم
+        <code class="inl">"".join()</code> في الآخر.
+      </li>
+    </ul>
+
+    <h4>البرنامج الكامل: تشفير وفكّ تشفير</h4>
+    <div class="code" data-file="cipher_full.py"><pre>
+print("=" * 40)
+print("برنامج التشفير")
+print("=" * 40)
+mode = input("تشفير أم فك؟ (e/d): ").strip().lower()
+message = input("اكتب رسالتك: ")
+key = int(input("اكتب المفتاح (رقم): "))
+if mode == "d":
+    key = -key          # فك التشفير = تشفير بمفتاح سالب
+result = ""
+for char in message:
+    result += chr(ord(char) + key)
+print(f"النتيجة: {result}")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>تشفير أم فك؟ (e/d): e
+اكتب رسالتك: hello
+اكتب المفتاح (رقم): 3
+النتيجة: khoor</pre></div>
+    <div class="out rtl"><div class="out-head">▸ ومرّة تانية لفكّه</div><pre>تشفير أم فك؟ (e/d): d
+اكتب رسالتك: khoor
+اكتب المفتاح (رقم): 3
+النتيجة: hello</pre></div>
+
+    <div class="box warn">
+      <div class="bt">⚠️ ده مش تشفير حقيقي</div>
+      <p>
+        شيفرة قيصر ضعيفة جدًا — بتنكسر في ثواني بالتجربة (25 احتمال بس للحروف الإنجليزية).
+        إحنا بنستخدمها كتمرين تعليمي ممتاز على الحلقات و ord/chr، مش كأمان حقيقي.
+        التشفير الحقيقي بيستخدم مكتبات زي <code class="inl">cryptography</code>.
+      </p>
+    </div>
+
+    <div class="ex">
+      <div class="bt">✍️ التحدّي</div>
+      <p>
+        عدّل البرنامج عشان يشفّر الحروف بس ويسيب المسافات وعلامات الترقيم زي ما هي
+        (تلميح: <code class="inl">char.isalpha()</code>).
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">message</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+      <div class="code"><pre>
+result = ""
+for char in message:
+    if char.isalpha():
+        result += chr(ord(char) + key)
+    else:
+        result += char        # سيبه زي ما هو
+print(result)
+</pre></div>
+      </details>
+    </div>
+  </article>
+
+  <!-- 6.P2 -->
+  <article class="lesson project" id="u6-p2">
+    <h3>مشروع 9: جدول الضرب <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: أبسط وأشهر تمرين على الحلقات — لكن بتفاصيل مهمّة.</p>
+
+    <div class="code" data-file="multiplication.py"><pre>
+user_number = int(input("Please enter your number to show its table\n"))
+for i in range(1, 13):
+    print(f"{user_number}*{i}={user_number*i}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج (لو دخل 2)</div><pre>2*1=2
+2*2=4
+2*3=6
+2*4=8
+2*5=10
+2*6=12
+2*7=14
+2*8=16
+2*9=18
+2*10=20
+2*11=22
+2*12=24</pre></div>
+    <p>
+      لاحظ <code class="inl">range(1, 13)</code> — بدأنا من 1 (مش صفر عشان مفيش
+      جدول × 0 مفيد) وانتهينا عند 13 عشان نوصل لـ 12.
+    </p>
+
+    <h4>نسخة منسّقة</h4>
+    <div class="code" data-file="multiplication_v2.py"><pre>
+number = int(input("Enter a number: "))
+print("=" * 22)
+print(f"  جدول ضرب رقم {number}")
+print("=" * 22)
+for i in range(1, 13):
+    total = number * i
+    print(f"  {number:2} × {i:2} = {total:4}")
+print("=" * 22)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>======================
+  جدول ضرب رقم 7
+======================
+   7 ×  1 =    7
+   7 ×  2 =   14
+   7 ×  3 =   21
+   7 ×  4 =   28
+   7 ×  5 =   35
+   7 ×  6 =   42
+   7 ×  7 =   49
+   7 ×  8 =   56
+   7 ×  9 =   63
+   7 × 10 =   70
+   7 × 11 =   77
+   7 × 12 =   84
+======================</pre></div>
+    <p>
+      <code class="inl">{number:2}</code> معناها «احجز خانتين للرقم ده» — فالأرقام بتتحاذى
+      تحت بعضها والجدول بيبقى مستقيم. دي من مزايا تنسيق الـ f-string.
+    </p>
+
+    <div class="ex">
+      <div class="bt">✍️ التحدّي</div>
+      <p>اطبع جداول الضرب من 1 لـ 5 كلها — تلميح: حلقة جوّه حلقة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+for number in range(1, 6):
+    print(f"--- جدول {number} ---")
+    for i in range(1, 13):
+        print(f"{number} × {i} = {number*i}")
+    print()
+</pre></div>
+      <p>ده اسمه <strong>حلقة متداخلة</strong>، وهنشرحها بالتفصيل في الوحدة 8.</p>
+      </details>
+    </div>
+  </article>
+
+  <!-- 6.P3 -->
+  <article class="lesson project" id="u6-p3">
+    <h3>مشروع 10: منظّم المهام المرقّم <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: دمج input + split + الحلقة + enumerate في أداة مفيدة فعلًا.</p>
+
+    <div class="code" data-file="task_organizer.py"><pre>
+print("=" * 40)
+print("منظّم المهام")
+print("=" * 40)
+raw = input("اكتب مهامك مفصولة بشرطة مائلة /: ")
+tasks = [t.strip() for t in raw.split("/") if t.strip()]
+if not tasks:
+    print("ما كتبتش أي مهمة!")
+else:
+    print(f"\nعندك {len(tasks)} مهمة:\n")
+    for i, task in enumerate(tasks, start=1):
+        print(f"  [{i}] {task.capitalize()}")
+    print("\n" + "-" * 40)
+    longest = max(tasks, key=len)
+    print(f"أطول مهمة: {longest}")
+    print(f"إجمالي الحروف: {sum(len(t) for t in tasks)}")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>========================================
+منظّم المهام
+========================================
+اكتب مهامك مفصولة بشرطة مائلة /: gym / read a book / check email /
+
+عندك 3 مهمة:
+
+  [1] Gym
+  [2] Read a book
+  [3] Check email
+
+----------------------------------------
+أطول مهمة: read a book
+إجمالي الحروف: 25</pre></div>
+
+    <h4>شرح الأجزاء الجديدة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الجزء</th><th>الشرح</th></tr>
+        <tr>
+          <td><code class="inl">[t.strip() for t in raw.split("/") if t.strip()]</code></td>
+          <td>بتقسم على <code class="inl">/</code>، تنضّف المسافات من كل عنصر، وتتجاهل العناصر الفاضية (زي اللي بتنتج من الشرطة الأخيرة).</td>
+        </tr>
+        <tr>
+          <td><code class="inl">if not tasks:</code></td>
+          <td>القائمة الفاضية قيمتها Falsy، فده معناه «لو القائمة فاضية». من درس Truthy/Falsy.</td>
+        </tr>
+        <tr>
+          <td><code class="inl">max(tasks, key=len)</code></td>
+          <td><code class="inl">key=len</code> بتقول لـ max: «قارن بالطول مش أبجديًا».</td>
+        </tr>
+        <tr>
+          <td><code class="inl">sum(len(t) for t in tasks)</code></td>
+          <td>بتحسب طول كل مهمة وتجمعهم.</td>
+        </tr>
+      </table>
+    </div>
+
+    <div class="box brain">
+      <div class="bt">🧠 لسه ناقص حاجتين</div>
+      <p>
+        (1) البرنامج بيشتغل مرّة واحدة — محتاج <code class="inl">while</code> عشان يفضل شغّال.
+        (2) المهام بتضيع لما تقفله — محتاج <strong>ملفات</strong> عشان تحفظها.
+        هنعمل الاتنين في الوحدة 8 والوحدة 12، ونبني منه نسخة كاملة في مشروع
+        <strong>Task Manager</strong> النهائي.
+      </p>
+    </div>
+  </article>
+  <!-- ADD:u6-ch -->
+  <!-- 6.CH -->
+  <article class="lesson" id="u6-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة السادسة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">الحلقات: فكّر في الحالات الغريبة — قائمة فيها عنصر واحد، أو كلمتين بنفس الطول.</p>
+
+    <div class="challenge" data-ch="u6-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — الكلمات الطويلة <span class="lvl">⭐⭐</span></div>
+      <p>اطلب جملة. اطبع في سطرين: <code class="inl">عدد الكلمات الطويلة: N</code> (أطول من 3 حروف) ثم <code class="inl">أطول كلمة: X</code> (لو فيه تعادل، الأولى في الجملة).</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+sentence = input("اكتب جملة: ")
+# لف على الكلمات واحسب المطلوب
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def last_two(stdin):
+    out = run_program(stdin)
+    lines = [l.strip() for l in out.strip().splitlines() if l.strip()]
+    return lines[-2:], out
+
+def test_sentence():
+    "python is fun and powerful ← 2 و powerful"
+    got, out = last_two("python is fun and powerful\n")
+    assert got == ["عدد الكلمات الطويلة: 2", "أطول كلمة: powerful"], out
+
+def test_small_words():
+    "a bb ccc dddd ← 1 و dddd"
+    got, out = last_two("a bb ccc dddd\n")
+    assert got == ["عدد الكلمات الطويلة: 1", "أطول كلمة: dddd"], out
+
+def test_tie():
+    "تعادل: abcd efgh ← أطول كلمة هي الأولى abcd"
+    got, out = last_two("abcd efgh\n")
+    assert got == ["عدد الكلمات الطويلة: 2", "أطول كلمة: abcd"], out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+sentence = input("اكتب جملة: ")
+count = 0
+longest = ""
+for word in sentence.split():
+    if len(word) &gt; 3:
+        count += 1
+    if len(word) &gt; len(longest):
+        longest = word
+print(f"عدد الكلمات الطويلة: {count}")
+print(f"أطول كلمة: {longest}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u6-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — FizzBuzz <span class="lvl">⭐⭐</span></div>
+      <p>اطلب رقم n، واطبع الأرقام من 1 لحد n كل واحد في سطر: مضاعفات 15 ← <code class="inl">FizzBuzz</code>، مضاعفات 3 ← <code class="inl">Fizz</code>، مضاعفات 5 ← <code class="inl">Buzz</code>.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+n = int(input("لحد كام؟ "))
+# اطبع كل رقم (أو الكلمة) في سطر
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def expected(n):
+    res = []
+    for i in range(1, n + 1):
+        res.append("FizzBuzz" if i % 15 == 0 else "Fizz" if i % 3 == 0 else "Buzz" if i % 5 == 0 else str(i))
+    return res
+
+def lines_for(n):
+    out = run_program(f"{n}\n")
+    lines = [l.strip() for l in out.strip().splitlines()]
+    return lines[-n:], out
+
+def test_15():
+    "n = 15: السطور كلها صح"
+    got, out = lines_for(15)
+    assert got == expected(15), out
+
+def test_1():
+    "n = 1: سطر واحد فيه 1"
+    got, out = lines_for(1)
+    assert got == ["1"], out
+
+def test_count():
+    "n = 20: بالظبط 20 سطر نتيجة"
+    out = run_program("20\n")
+    assert out.strip().splitlines()[-20:] == expected(20), out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+n = int(input("لحد كام؟ "))
+for i in range(1, n + 1):
+    if i % 15 == 0:
+        print("FizzBuzz")
+    elif i % 3 == 0:
+        print("Fizz")
+    elif i % 5 == 0:
+        print("Buzz")
+    else:
+        print(i)
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u6-ch3">
+      <div class="ch-head">🐞 التحدّي 3 — مجموع الزوجي <span class="lvl">⭐⭐</span></div>
+      <p>البرنامج المفروض يجمع الأرقام الزوجية من 1 لحد n (شامل n). فيه <strong>غلطتين</strong>. (n = 10 ← <code class="inl">مجموع الزوجي: 30</code>)</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+n = int(input("لحد كام؟ "))
+for i in range(1, n):
+    total = 0
+    if i % 2 == 0:
+        total += i
+print(f"مجموع الزوجي: {total}")
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def total_for(n):
+    out = run_program(f"{n}\n")
+    return out.strip().splitlines()[-1].strip(), out
+
+def test_10():
+    "n = 10 ← 30"
+    got, out = total_for(10)
+    assert got == "مجموع الزوجي: 30", out
+
+def test_includes_n():
+    "n = 2 ← 2 (لازم n نفسها تدخل)"
+    got, out = total_for(2)
+    assert got == "مجموع الزوجي: 2", out
+
+def test_one():
+    "n = 1 ← 0 (مفيش زوجي)"
+    got, out = total_for(1)
+    assert got == "مجموع الزوجي: 0", out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+n = int(input("لحد كام؟ "))
+total = 0
+for i in range(1, n + 1):
+    if i % 2 == 0:
+        total += i
+print(f"مجموع الزوجي: {total}")
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u6-ch -->
+
+  <!-- 6.EX -->
+  <article class="lesson" id="u6-ex">
+    <h3>تمارين الوحدة السادسة <span class="tag">✍️ تدريب مكثّف</span></h3>
+    <p class="goal">دي أهم وحدة في الكورس، فتمارينها أكتر. ما تعدّيهاش من غير ما تحلّها.</p>
+
+    <h4>المستوى الأول</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — الأساسيات</div>
+      <p>اكتب حلقات تطبع: (أ) الأرقام من 1 لـ 10، (ب) الأرقام الزوجية من 2 لـ 20، (ج) من 10 لـ 1 تنازليًا، (د) كل حرف في كلمة "بايثون" في سطر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+for i in range(1, 11):
+    print(i)
+for i in range(2, 21, 2):
+    print(i)
+for i in range(10, 0, -1):
+    print(i)
+for char in "بايثون":
+    print(char)
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — المجموع والمتوسط</div>
+      <p>عندك <code class="inl">prices = [120, 340, 85, 200, 95]</code>. احسب المجموع والمتوسط بحلقة — من غير <code class="inl">sum()</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+prices = [120, 340, 85, 200, 95]
+total = 0
+for price in prices:
+    total += price
+print(f"المجموع: {total}")
+print(f"المتوسط: {total / len(prices)}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 3 — العدّ الشرطي</div>
+      <p>عندك قائمة درجات. اطبع عدد الناجحين (60 فأكتر) وعدد الراسبين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+scores = [78, 45, 92, 55, 67, 88, 30]
+passed = 0
+failed = 0
+for score in scores:
+    if score &gt;= 60:
+        passed += 1
+    else:
+        failed += 1
+print(f"ناجح: {passed} — راسب: {failed}")
+</pre></div>
+      </details>
+    </div>
+
+    <h4>المستوى الثاني</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — عدّاد الحروف المتحرّكة</div>
+      <p>اطلب جملة من المستخدم واعد كام حرف متحرّك إنجليزي فيها (a, e, i, o, u).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+text = input("اكتب جملة إنجليزية: ").lower()
+vowels = "aeiou"
+count = 0
+for char in text:
+    if char in vowels:
+        count += 1
+print(f"عدد الحروف المتحرّكة: {count}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 5 — جدول أسعار</div>
+      <p>
+        عندك <code class="inl">products = ["شاي","قهوة","عصير"]</code> و
+        <code class="inl">prices = [10, 15, 12]</code>. اطبع جدول مرقّم بالمنتج وسعره
+        وسعره بعد ضريبة 14%، وفي الآخر الإجمالي.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+products = ["شاي", "قهوة", "عصير"]
+prices = [10, 15, 12]
+total = 0
+for i, (product, price) in enumerate(zip(products, prices), start=1):
+    with_tax = price * 1.14
+    total += with_tax
+    print(f"{i}. {product:8} {price:5} → {with_tax:6.2f}")
+print(f"{'الإجمالي':&lt;11} {total:14.2f}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 6 — البحث والتوقّف</div>
+      <p>
+        دوّر على أول رقم يقبل القسمة على 7 في القائمة
+        <code class="inl">[12, 25, 33, 49, 56, 70]</code> واطبعه مع موقعه، وقف الحلقة على طول لما تلاقيه.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+numbers = [12, 25, 33, 49, 56, 70]
+found = False
+for i, n in enumerate(numbers):
+    if n % 7 == 0:
+        print(f"لقيته: {n} في الموقع {i}")
+        found = True
+        break
+if not found:
+    print("مفيش رقم يقبل القسمة على 7")
+</pre></div>
+      <p>متغيّر <code class="inl">found</code> ضروري عشان نعرف بعد الحلقة هل لقينا حاجة ولا لأ.</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 7 — تصفية وتحويل</div>
+      <p>
+        عندك <code class="inl">data = ["10", "abc", "25", "", "40", "xyz"]</code>.
+        اعمل قائمة جديدة فيها الأرقام الصحيحة بس (كأعداد مش نصوص)، واطبع مجموعها.
+        استخدم <code class="inl">.isdigit()</code>.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+data = ["10", "abc", "25", "", "40", "xyz"]
+numbers = []
+for item in data:
+    if item.isdigit():
+        numbers.append(int(item))
+print(numbers)          # [10, 25, 40]
+print(sum(numbers))     # 75
+# بالاختصار:
+numbers = [int(x) for x in data if x.isdigit()]
+</pre></div>
+      </details>
+    </div>
+
+    <h4>المستوى الثالث</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 8 — الأرقام الأوّلية</div>
+      <p>اطبع كل الأعداد الأوّلية من 2 لـ 50. (العدد الأوّلي: ما يقبلش القسمة إلا على 1 وعلى نفسه.)</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+for n in range(2, 51):
+    is_prime = True
+    for d in range(2, int(n ** 0.5) + 1):
+        if n % d == 0:
+            is_prime = False
+            break
+    if is_prime:
+        print(n, end=" ")
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>2 3 5 7 11 13 17 19 23 29 31 37 41 43 47</pre></div>
+      <p>
+        <strong>ليه <code class="inl">int(n ** 0.5) + 1</code>؟</strong> كفاية نفحص لحد الجذر
+        التربيعي: لو <code class="inl">n</code> له قاسم أكبر من جذره، لازم يكون له قاسم
+        أصغر منه اتفحص خلاص. ده بيخلّي الخوارزمية أسرع بكتير.
+      </p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 9 — عدّاد الكلمات</div>
+      <p>
+        اطلب جملة واطبع كل كلمة مع عدد مرّات تكرارها — من غير قواميس
+        (استخدم قائمتين: واحدة للكلمات الفريدة وواحدة للعدّادات).
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+text = input("اكتب جملة: ").lower()
+words = text.split()
+unique = []
+counts = []
+for word in words:
+    if word in unique:
+        index = unique.index(word)
+        counts[index] += 1
+    else:
+        unique.append(word)
+        counts.append(1)
+for word, count in zip(unique, counts):
+    print(f"{word}: {count}")
+</pre></div>
+      <p>في الوحدة 10 هتعمل ده في 3 سطور بالقاموس — بس التمرين ده بيعلّمك تفكّر بالقوائم.</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 10 — الهرم</div>
+      <p>اطبع الشكل ده باستخدام حلقتين متداخلتين:</p>
+      <div class="out"><div class="out-head">▸ المطلوب</div><pre>    *
+   ***
+  *****
+ *******
+*********</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+rows = 5
+for i in range(1, rows + 1):
+    spaces = " " * (rows - i)
+    stars = "*" * (2 * i - 1)
+    print(spaces + stars)
+</pre></div>
+      <p>
+        المفتاح: في الصف رقم <code class="inl">i</code>، عدد المسافات
+        <code class="inl">rows - i</code> وعدد النجوم <code class="inl">2i - 1</code>.
+        <strong>الدرس:</strong> لمّا تقابل مشكلة رسم، دوّر على العلاقة الرياضية بين رقم الصف والمحتوى.
+      </p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">range(0, 21)</code> بتوصل لحد…</p>
+        <label><input type="radio"> 21</label>
+        <label><input type="radio"> 20</label>
+        <label><input type="radio"> 19</label>
+        <label><input type="radio"> 22</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. الفرق بين <code class="inl">break</code> و <code class="inl">continue</code>؟</p>
+        <label><input type="radio"> مفيش فرق</label>
+        <label><input type="radio"> continue بتخرج من الحلقة و break بتتخطّى</label>
+        <label><input type="radio"> break بتخرج من الحلقة و continue بتتخطّى الدورة</label>
+        <label><input type="radio"> break للـ for و continue للـ while</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">enumerate(lst, start=1)</code> بترجّع أزواج شكلها…</p>
+        <label><input type="radio"> (1, أول عنصر)</label>
+        <label><input type="radio"> (0, أول عنصر)</label>
+        <label><input type="radio"> (أول عنصر, 1)</label>
+        <label><input type="radio"> أول عنصر بس</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. <code class="inl">zip([1,2,3], ["a","b"])</code> بتنتج كام زوج؟</p>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> 6</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 2</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">5. لحساب المضروب، القيمة الابتدائية للمتغيّر المجمّع لازم تكون…</p>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> -1</label>
+        <label><input type="radio"> None</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">6. <code class="inl">range(len(colors)-1, -1, -1)</code> بتعمل إيه؟</p>
+        <label><input type="radio"> بتلف من الأول للآخر</label>
+        <label><input type="radio"> بتلف على العناصر الفردية</label>
+        <label><input type="radio"> بتلف من الآخر للأول</label>
+        <label><input type="radio"> بترمي خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">7. <code class="inl">[x*2 for x in [1,2,3] if x &gt; 1]</code> بترجّع…</p>
+        <label><input type="radio"> [4, 6]</label>
+        <label><input type="radio"> [2, 4, 6]</label>
+        <label><input type="radio"> [2, 3]</label>
+        <label><input type="radio"> [4]</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:6 -->
+  <div class="checkpoint" data-unit="6">
+    <h4>✅ نقطة تفتيش: الوحدة السادسة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أكتب حلقات for على قوائم ونصوص و range.</li><li>أستخدم enumerate و zip و break و continue.</li><li>أبني قوائم بالحلقات وبالـ comprehension.</li><li>أفهم for...else والتعبيرات المولّدة.</li></ul>
+  </div>
+  <!-- /CP -->

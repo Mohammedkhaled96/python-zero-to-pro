@@ -1,0 +1,513 @@
+@@lesson u12-l4 before="<!-- 12.P1 -->"
+  <!-- 12.4 -->
+  <article class="lesson" id="u12-l4">
+    <h3>ملفات CSV: الجداول اللي بتتبادل بين كل البرامج <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تقرا وتكتب ملفات CSV صح بمكتبة csv القياسية — وتفهم ليه <code class="inl">split(",")</code> هتكسرك أول ما البيانات تبقى حقيقية.</p>
+
+    <h4>1. إيه هو CSV؟</h4>
+    <p>
+      <strong>C</strong>omma-<strong>S</strong>eparated <strong>V</strong>alues: ملف نصّي عادي، كل سطر = صف، والأعمدة مفصولة بفاصلة.
+      Excel و Google Sheets وقواعد البيانات وكل مواقع التصدير بتتكلّمه. بسيط جدًا… لحد ما قيمة فيها فاصلة أو علامة تنصيص.
+    </p>
+
+    <h4>2. الكتابة بـ csv.writer</h4>
+    @code run
+import csv ¦¦ مكتبة قياسية.
+ ¦¦
+rows = [ ¦¦ بيانات كقائمة قوائم.
+    ["name", "city", "score"], ¦¦ صف العناوين (header).
+    ["سارة", "القاهرة", 91], ¦¦ صف بيانات — الرقم هيتحوّل لنص تلقائيًا.
+    ["أحمد", "الإسكندرية, العجمي", 78], ¦¦ ⚠️ **قيمة فيها فاصلة** — الحالة اللي بتكسر الحلول اليدوية.
+    ["منى", "طنطا", 85], ¦¦ صف.
+] ¦¦ قفل.
+with open("students.csv", "w", newline="", encoding="utf-8") as f: ¦¦ `newline=""` **مطلوبة مع csv**: المكتبة بتتحكّم في نهايات الأسطر بنفسها، ومن غيرها يطلع سطر فاضي بين كل صفين على ويندوز.
+    writer = csv.writer(f) ¦¦ كائن كاتب مربوط بالملف.
+    writer.writerows(rows) ¦¦ كتابة كل الصفوف مرّة واحدة (`writerow` لصف واحد).
+ ¦¦
+with open("students.csv", encoding="utf-8") as f: ¦¦ نفتحه تاني نشوف شكله الخام.
+    print(f.read()) ¦¦ القراءة كنص عادي.
+    @end
+    @out rtl
+name,city,score
+سارة,القاهرة,91
+أحمد,"الإسكندرية, العجمي",78
+منى,طنطا,85
+    @end
+    <p>لاحظ إن المكتبة <strong>حطّت القيمة اللي فيها فاصلة بين علامتين تنصيص</strong> تلقائيًا. ده جزء من معيار CSV.</p>
+
+    <h4>3. ليه ما نستخدمش split(",")؟</h4>
+    @code run
+import csv ¦¦ استيراد.
+line = 'أحمد,"الإسكندرية, العجمي",78' ¦¦ السطر التالت من الملف زي ما هو.
+print(line.split(",")) ¦¦ ❌ `split` ما تعرفش حاجة عن علامات التنصيص: قسمت المدينة لجزئين وسابت علامات التنصيص — **4 أعمدة بدل 3**.
+print(next(csv.reader([line]))) ¦¦ ✅ `csv.reader` بتفهم القواعد. بتقبل أي حاجة تتلفّ عليها أسطر (هنا قائمة فيها سطر)، و `next` بتاخد أول صف.
+    @end
+    @out
+['أحمد', '"الإسكندرية', ' العجمي"', '78']
+['أحمد', 'الإسكندرية, العجمي', '78']
+    @end
+
+    <h4>4. القراءة بـ csv.reader</h4>
+    @code run
+import csv ¦¦ استيراد.
+ ¦¦
+with open("students.csv", encoding="utf-8", newline="") as f: ¦¦ فتح للقراءة — و `newline=""` مستحسنة هنا كمان.
+    reader = csv.reader(f) ¦¦ كائن قارئ: كل عنصر فيه = صف كقائمة نصوص.
+    header = next(reader) ¦¦ **استهلاك صف العناوين** عشان الحلقة تبدأ من البيانات (المكرّرات من وحدة الدوال).
+    for row in reader: ¦¦ باقي الصفوف.
+        name, city, score = row ¦¦ تفكيك الأعمدة.
+        print(f"{name}: {int(score) + 5}") ¦¦ ⚠️ **كل القيم نصوص** — لازم تحوّل قبل الحساب.
+    @end
+    @out rtl
+سارة: 96
+أحمد: 83
+منى: 90
+    @end
+
+    <h4>5. DictReader: الأعمدة بأسمائها</h4>
+    @code run
+import csv ¦¦ استيراد.
+ ¦¦
+with open("students.csv", encoding="utf-8", newline="") as f: ¦¦ فتح.
+    students = list(csv.DictReader(f)) ¦¦ `DictReader` بتقرا أول صف كعناوين، وكل صف بعده بيبقى **قاموس**. حوّلناه لقائمة عشان نستخدمه بعد قفل الملف.
+ ¦¦
+print(students[0]) ¦¦ قاموس — `row["score"]` أوضح بكتير من `row[2]`، ومش هيبوظ لو حد غيّر ترتيب الأعمدة.
+top = max(students, key=lambda s: int(s["score"])) ¦¦ الأعلى درجة (مع التحويل لرقم في المفتاح).
+print(top["name"], top["score"]) ¦¦ الاسم والدرجة.
+avg = sum(int(s["score"]) for s in students) / len(students) ¦¦ متوسّط بتعبير مولّد.
+print(f"المتوسط: {avg:.1f}") ¦¦ خانة عشرية واحدة.
+    @end
+    @out
+{'name': 'سارة', 'city': 'القاهرة', 'score': '91'}
+سارة 91
+المتوسط: 84.7
+    @end
+
+    <h4>6. DictWriter والعربي في Excel</h4>
+    @code run
+import csv ¦¦ استيراد.
+ ¦¦
+products = [ ¦¦ قائمة قواميس (الشكل اللي بييجي من APIs وقواعد البيانات).
+    {"sku": "P1", "name": "قلم", "price": 5}, ¦¦ منتج.
+    {"sku": "P2", "name": "كشكول", "price": 25}, ¦¦ منتج.
+] ¦¦ قفل.
+with open("products.csv", "w", newline="", encoding="utf-8-sig") as f: ¦¦ `utf-8-sig` بتكتب علامة صغيرة في أول الملف (BOM) — **من غيرها Excel بيفتح العربي حروف غريبة**.
+    writer = csv.DictWriter(f, fieldnames=["sku", "name", "price"]) ¦¦ لازم تحدّد الأعمدة وترتيبها.
+    writer.writeheader() ¦¦ كتابة صف العناوين من `fieldnames`.
+    writer.writerows(products) ¦¦ كتابة القواميس.
+ ¦¦
+with open("products.csv", encoding="utf-8-sig") as f: ¦¦ القراءة بنفس الترميز بتشيل العلامة.
+    print(f.read()) ¦¦ العرض.
+    @end
+    @out rtl
+sku,name,price
+P1,قلم,5
+P2,كشكول,25
+    @end
+    <div class="box tip">
+      <div class="bt">💡 ملفات بفواصل تانية</div>
+      <p>
+        Excel في إعدادات لغات كتير بيصدّر بفاصلة منقوطة. الحل: <code class="inl">csv.reader(f, delimiter=";")</code>.
+        وللبيانات الضخمة أو التحليل (تجميع، فلترة، رسوم) — <code class="inl">pandas.read_csv</code> اللي شفناها في وحدة المكتبات الخارجية.
+      </p>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>المتفوّقين</div>
+      <p>اقرا <code class="inl">students.csv</code> واكتب <code class="inl">top.csv</code> فيه اللي درجتهم 80 أو أكتر بس، بنفس الأعمدة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import csv ¦¦ استيراد.
+ ¦¦
+with open("students.csv", encoding="utf-8", newline="") as src, \ ¦¦ فتح ملفين في `with` واحدة. الـ `\` بتكمّل السطر.
+     open("top.csv", "w", encoding="utf-8", newline="") as dst: ¦¦ ملف الكتابة.
+    reader = csv.DictReader(src) ¦¦ قارئ قواميس.
+    writer = csv.DictWriter(dst, fieldnames=reader.fieldnames) ¦¦ `reader.fieldnames` = نفس عناوين الملف الأصلي.
+    writer.writeheader() ¦¦ العناوين.
+    for row in reader: ¦¦ صف صف (ما حمّلناش الملف كله في الذاكرة).
+        if int(row["score"]) >= 80: ¦¦ الشرط.
+            writer.writerow(row) ¦¦ كتابة الصف كما هو.
+ ¦¦
+with open("top.csv", encoding="utf-8") as f: ¦¦ التأكّد.
+    print(f.read()) ¦¦ العرض.
+      @end
+      @out rtl
+name,city,score
+سارة,القاهرة,91
+منى,طنطا,85
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">csv.reader</code> بترجّع قيمة عمود الدرجة كـ…</p>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> float</label>
+        <label><input type="radio"> str</label>
+        <label><input type="radio"> حسب القيمة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ليه بنكتب <code class="inl">newline=""</code> مع csv؟</p>
+        <label><input type="radio"> عشان المكتبة تتحكّم في نهايات الأسطر وما يطلعش سطور فاضية</label>
+        <label><input type="radio"> عشان العربي</label>
+        <label><input type="radio"> عشان الملف يتقفل</label>
+        <label><input type="radio"> مش مهمّة خالص</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. ملف CSV عربي بيظهر حروف غريبة في Excel. الحل؟</p>
+        <label><input type="radio"> encoding="ascii"</label>
+        <label><input type="radio"> delimiter=";"</label>
+        <label><input type="radio"> تحويله لـ JSON</label>
+        <label><input type="radio"> encoding="utf-8-sig"</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u12-l5 before="<!-- 12.P1 -->"
+  <!-- 12.5 -->
+  <article class="lesson" id="u12-l5">
+    <h3>pathlib و shutil و glob: إدارة الملفات والفولدرات <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تتعامل مع المسارات بكائنات ذكية بدل النصوص، تدوّر على ملفات بأنماط، وتنسخ وتنقل وتمسح فولدرات — وتبني منظّم تحميلات حقيقي.</p>
+
+    <h4>1. Path: المسار ككائن</h4>
+    @code run
+from pathlib import Path ¦¦ `Path` الطريقة الحديثة (بدل `os.path` القديمة).
+ ¦¦
+p = Path("reports") / "2025" / "sales.final.csv" ¦¦ **العامل `/` بيبني مسارات**: بايثون بتحط الفاصل الصح لنظام التشغيل (`\` في ويندوز و `/` في لينكس وماك). وداعًا لأخطاء لصق النصوص.
+print(p.as_posix()) ¦¦ `as_posix` بتعرض بـ `/` دايمًا. (`print(p)` على ويندوز هتعرض `reports\2025\sales.final.csv`.)
+print(p.name) ¦¦ اسم الملف بالامتداد.
+print(p.stem) ¦¦ الاسم **من غير** آخر امتداد.
+print(p.suffix) ¦¦ آخر امتداد بالنقطة.
+print(p.parent.as_posix()) ¦¦ الفولدر اللي فيه الملف — وهو نفسه Path.
+print(p.parts) ¦¦ الأجزاء كـ tuple.
+print(p.with_suffix(".xlsx").name) ¦¦ مسار جديد بامتداد مختلف (مفيد لما تحوّل ملف لصيغة تانية).
+    @end
+    @out
+reports/2025/sales.final.csv
+sales.final.csv
+sales.final
+.csv
+reports/2025
+('reports', '2025', 'sales.final.csv')
+sales.final.xlsx
+    @end
+
+    <h4>2. إنشاء وقراءة وكتابة وفحص</h4>
+    @code run
+from pathlib import Path ¦¦ استيراد.
+ ¦¦
+folder = Path("demo") ¦¦ مسار فولدر (لسه مش موجود).
+folder.mkdir(exist_ok=True) ¦¦ إنشاؤه. `exist_ok=True` = ما ترميش خطأ لو موجود.
+note = folder / "note.txt" ¦¦ مسار ملف جوّاه.
+note.write_text("سطر أول\nسطر تاني\n", encoding="utf-8", newline="\n") ¦¦ **فتح + كتابة + قفل** في سطر واحد (للملفات الصغيرة). `newline="\n"` بتمنع ويندوز يحوّل `\n` لـ `\r\n` — عشان الحجم يطلع واحد على كل الأنظمة.
+print(note.exists(), note.is_file(), folder.is_dir()) ¦¦ أسئلة الوجود والنوع.
+print(note.read_text(encoding="utf-8").splitlines()) ¦¦ قراءة كاملة ثم تقسيم لأسطر من غير `\n`.
+print(note.stat().st_size, "bytes") ¦¦ الحجم بالبايت — الحرف العربي بياخد 2 بايت في UTF-8 (الدرس الجاي).
+(folder / "sub" / "deep").mkdir(parents=True, exist_ok=True) ¦¦ `parents=True` بتنشئ كل الفولدرات الناقصة في السكة (زي `mkdir -p`).
+print(sorted(x.name for x in folder.iterdir())) ¦¦ `iterdir` = محتويات الفولدر المباشرة (ملفات وفولدرات).
+    @end
+    @out
+True True True
+['سطر أول', 'سطر تاني']
+30 bytes
+['note.txt', 'sub']
+    @end
+
+    <h4>3. البحث بالأنماط: glob و rglob</h4>
+    @code run
+from pathlib import Path ¦¦ استيراد.
+ ¦¦
+base = Path("project") ¦¦ هنبني مشروع وهمي للتجربة.
+for name in ["main.py", "utils.py", "data/a.csv", "data/b.csv", "data/old/c.csv", "README.md"]: ¦¦ ملفات في مستويات مختلفة.
+    f = base / name ¦¦ `/` بتقبل نص فيه فواصل كمان.
+    f.parent.mkdir(parents=True, exist_ok=True) ¦¦ تأكّد إن الفولدر موجود.
+    f.write_text("x", encoding="utf-8") ¦¦ محتوى وهمي.
+ ¦¦
+print(sorted(p.name for p in base.glob("*.py"))) ¦¦ `*` = أي أحرف. `glob` بتدوّر **في الفولدر ده بس**.
+print(sorted(p.name for p in base.glob("data/*.csv"))) ¦¦ النمط ممكن يدخل فولدر محدّد.
+print(sorted(p.as_posix() for p in base.rglob("*.csv"))) ¦¦ `rglob` = recursive: **في كل الفولدرات الفرعية** مهما كان العمق (زي `**/*.csv`).
+    @end
+    @out
+['main.py', 'utils.py']
+['a.csv', 'b.csv']
+['project/data/a.csv', 'project/data/b.csv', 'project/data/old/c.csv']
+    @end
+
+    <h4>4. shutil: نسخ ونقل ومسح</h4>
+    @code run
+import shutil ¦¦ «shell utilities»: عمليات الملفات عالية المستوى.
+from pathlib import Path ¦¦ استيراد.
+ ¦¦
+shutil.copy("project/README.md", "project/README_backup.md") ¦¦ نسخ ملف واحد.
+shutil.copytree("project/data", "backup_data", dirs_exist_ok=True) ¦¦ نسخ **فولدر بكل محتوياته**.
+shutil.move("project/utils.py", "project/data/utils.py") ¦¦ نقل (أو إعادة تسمية) ملف أو فولدر.
+print(sorted(p.relative_to("project").as_posix() for p in Path("project").rglob("*") if p.is_file())) ¦¦ كل الملفات بمسارها النسبي للمشروع.
+shutil.rmtree("backup_data") ¦¦ ⚠️ مسح فولدر **بكل محتوياته نهائيًا** — مش بيروح سلّة المحذوفات.
+print(Path("backup_data").exists()) ¦¦ اتمسح.
+    @end
+    @out
+['README.md', 'README_backup.md', 'data/a.csv', 'data/b.csv', 'data/old/c.csv', 'data/utils.py', 'main.py']
+False
+    @end
+    <div class="box err">
+      <div class="bt">❌ خطر حقيقي</div>
+      <p>
+        <code class="inl">shutil.rmtree</code> و <code class="inl">Path.unlink</code> بيمسحوا فورًا ومن غير رجعة. غلطة في متغيّر المسار = فولدر شغلك راح.
+        <strong>اطبع المسار الأول وتأكّد</strong> قبل أي مسح في سكريبت، أو استخدم مكتبة <code class="inl">send2trash</code> اللي بتبعت لسلّة المحذوفات.
+      </p>
+    </div>
+
+    <h4>5. تطبيق: منظّم فولدر التحميلات</h4>
+    @code run organizer.py
+from pathlib import Path ¦¦ استيراد.
+import shutil ¦¦ استيراد.
+ ¦¦
+downloads = Path("downloads") ¦¦ الفولدر اللي هننظّمه (في الحقيقة: `Path.home() / "Downloads"`).
+downloads.mkdir(exist_ok=True) ¦¦ تجهيز للتجربة.
+for name in ["cv.pdf", "photo.JPG", "song.mp3", "notes.txt", "scan.PDF"]: ¦¦ ملفات وهمية — لاحظ الامتدادات بحروف كبيرة.
+    (downloads / name).write_text("x") ¦¦ إنشاء.
+ ¦¦
+CATEGORIES = {".pdf": "Documents", ".txt": "Documents", ".jpg": "Images", ".png": "Images", ".mp3": "Music"} ¦¦ الامتداد ← الفولدر.
+ ¦¦
+for file in list(downloads.iterdir()): ¦¦ `list` عشان ناخد «صورة» من المحتويات قبل ما نبدأ ننقل ونعمل فولدرات جوّه نفس الفولدر.
+    if file.is_file(): ¦¦ الملفات بس.
+        folder = CATEGORIES.get(file.suffix.lower(), "Other") ¦¦ `lower` عشان `.JPG` = `.jpg`. أي امتداد مش معروف ← Other.
+        target = downloads / folder ¦¦ فولدر الوجهة.
+        target.mkdir(exist_ok=True) ¦¦ إنشاؤه لو مش موجود.
+        shutil.move(file, target / file.name) ¦¦ النقل.
+ ¦¦
+for rel in sorted(p.relative_to(downloads).as_posix() for p in downloads.rglob("*") if p.is_file()): ¦¦ عرض النتيجة النهائية مرتّبة.
+    print(rel) ¦¦ مسار نسبي.
+    @end
+    @out
+Documents/cv.pdf
+Documents/notes.txt
+Documents/scan.PDF
+Images/photo.JPG
+Music/song.mp3
+    @end
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المهمّة</th><th>القديم (os / os.path)</th><th>الحديث (pathlib)</th></tr>
+        <tr><td>ربط مسارات</td><td><code class="inl">os.path.join(a, b)</code></td><td><code class="inl">Path(a) / b</code></td></tr>
+        <tr><td>اسم الملف</td><td><code class="inl">os.path.basename(p)</code></td><td><code class="inl">p.name</code></td></tr>
+        <tr><td>الامتداد</td><td><code class="inl">os.path.splitext(p)[1]</code></td><td><code class="inl">p.suffix</code></td></tr>
+        <tr><td>موجود؟</td><td><code class="inl">os.path.exists(p)</code></td><td><code class="inl">p.exists()</code></td></tr>
+        <tr><td>إنشاء فولدرات</td><td><code class="inl">os.makedirs(p, exist_ok=True)</code></td><td><code class="inl">p.mkdir(parents=True, exist_ok=True)</code></td></tr>
+        <tr><td>البحث</td><td><code class="inl">glob.glob("**/*.py", recursive=True)</code></td><td><code class="inl">Path(".").rglob("*.py")</code></td></tr>
+      </table>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>أكبر 3 ملفات</div>
+      <p>اطبع أكبر 3 ملفات في فولدر <code class="inl">project</code> وكل فولدراته الفرعية، بالحجم.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code
+from pathlib import Path ¦¦ استيراد.
+ ¦¦
+files = [p for p in Path("project").rglob("*") if p.is_file()] ¦¦ كل الملفات بأي عمق.
+biggest = sorted(files, key=lambda p: p.stat().st_size, reverse=True)[:3] ¦¦ ترتيب بالحجم تنازليًا وأخذ أول 3.
+for p in biggest: ¦¦ العرض.
+    print(f"{p.stat().st_size:>10,} bytes  {p.as_posix()}") ¦¦ الحجم بمحاذاة يمين وفاصل آلاف.
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">Path("a/b/report.tar.gz").suffix</code>؟</p>
+        <label><input type="radio"> ".tar.gz"</label>
+        <label><input type="radio"> ".gz"</label>
+        <label><input type="radio"> "report"</label>
+        <label><input type="radio"> ".tar"</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. تدوّر على كل ملفات .py في مشروع بكل فولدراته…</p>
+        <label><input type="radio"> Path(".").glob("*.py")</label>
+        <label><input type="radio"> Path(".").iterdir()</label>
+        <label><input type="radio"> os.listdir(".")</label>
+        <label><input type="radio"> Path(".").rglob("*.py")</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">shutil.rmtree(folder)</code>…</p>
+        <label><input type="radio"> بتمسح الفولدر ومحتوياته نهائيًا</label>
+        <label><input type="radio"> بتنقله لسلّة المحذوفات</label>
+        <label><input type="radio"> بتمسح الفولدر لو فاضي بس</label>
+        <label><input type="radio"> بتعرض شجرة الفولدر</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u12-l6 before="<!-- 12.P1 -->"
+  <!-- 12.6 -->
+  <article class="lesson" id="u12-l6">
+    <h3>النصوص مقابل البايتات: encode و decode والملفات الثنائية <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تفهم الفرق الجوهري بين <code class="inl">str</code> و <code class="inl">bytes</code>، تحلّ مشاكل الحروف العربية «المبهدلة» من جذورها، وتقرا وتكتب ملفات غير نصّية (صور، PDF) بايت ببايت.</p>
+
+    <h4>1. الفكرة: النص مفهوم بشري، والبايتات تخزين فعلي</h4>
+    <div class="diagram">
+<pre>        str (نص)                                  bytes (بايتات)
+    "سارة"  ─────── encode("utf-8") ───────►  b'\xd8\xb3\xd8\xa7\xd8\xb1\xd8\xa9'
+    حروف Unicode   ◄────── decode("utf-8") ───────   أرقام من 0 لـ 255
+
+    الترميز (encoding) = القاموس اللي بيحوّل بين الاتنين
+    UTF-8: الإنجليزي 1 بايت · العربي 2 بايت · الإيموجي 4 بايت</pre>
+      <div class="cap">الشاشة بتعرض str — والملفات والشبكة بتنقل bytes</div>
+    </div>
+    @code run
+text = "Hi سارة 😀" ¦¦ نص فيه إنجليزي وعربي وإيموجي.
+data = text.encode("utf-8") ¦¦ **encode**: نص ← بايتات، بترميز UTF-8.
+print(data) ¦¦ `b''` = bytes. الحروف الإنجليزية بتتعرض زي ما هي، والباقي بصيغة `\x..` سادس عشر (الوحدة 2).
+print(type(data)) ¦¦ نوع مختلف تمامًا عن str.
+print(len(text), len(data)) ¦¦ 9 **حروف** لكن 16 **بايت**: 3 إنجليزي + مسافتين (1 لكل واحدة) + 4 عربي × 2 + إيموجي × 4.
+print(data.decode("utf-8")) ¦¦ **decode**: بايتات ← نص. رجع زي ما كان.
+print(list("A".encode()), list("س".encode())) ¦¦ البايتات مجرّد أرقام: A = 65 (زي ord)، و «س» = بايتين. الترميز الافتراضي لـ `encode()` هو UTF-8.
+    @end
+    @out
+b'Hi \xd8\xb3\xd8\xa7\xd8\xb1\xd8\xa9 \xf0\x9f\x98\x80'
+&lt;class 'bytes'&gt;
+9 16
+Hi سارة 😀
+[65] [216, 179]
+    @end
+
+    <h4>2. ليه العربي بيطلع «ط³ط§ط±ط©»؟</h4>
+    @code run
+data = "سارة".encode("utf-8") ¦¦ بايتات مكتوبة بـ UTF-8.
+try: ¦¦ نجرّب نفكّها بترميز غلط.
+    print(data.decode("ascii")) ¦¦ ASCII بيعرف 128 رمز بس (إنجليزي).
+except UnicodeDecodeError as e: ¦¦ الخطأ الشهير.
+    print("خطأ:", e) ¦¦ البايت 0xd8 أكبر من 127 — مالوش معنى في ASCII.
+print(data.decode("cp1256")) ¦¦ **الـ Mojibake**: ترميز ويندوز العربي القديم فهم كل بايت كحرف لوحده — مفيش خطأ، بس نتيجة مبهدلة. ده اللي بتشوفه في الإيميلات والملفات القديمة.
+print(data.decode("ascii", errors="replace")) ¦¦ `errors="replace"` = حط علامة � مكان أي بايت مش مفهوم بدل ما ترمي خطأ.
+print("café".encode("ascii", errors="ignore")) ¦¦ `errors="ignore"` = تجاهل اللي مش ممكن — حرف é اختفى (خطر: فقدان بيانات بصمت).
+    @end
+    @out
+خطأ: 'ascii' codec can't decode byte 0xd8 in position 0: ordinal not in range(128)
+ط³ط§ط±ط©
+��������
+b'caf'
+    @end
+    <div class="box brain">
+      <div class="bt">🧠 القاعدة الذهبية</div>
+      <p>
+        <strong>البايتات مالهاش معنى من غير ترميزها.</strong> لازم تعرف الملف اتكتب بإيه عشان تقراه صح.
+        عشان كده بنكتب <code class="inl">encoding="utf-8"</code> صريحة في كل <code class="inl">open</code> — ويندوز الافتراضي عنده ممكن يكون <code class="inl">cp1256</code>،
+        فنفس الكود يشتغل على جهازك ويبوظ على السيرفر.
+      </p>
+    </div>
+
+    <h4>3. الملفات الثنائية: rb و wb</h4>
+    <p>الصور والـ PDF والصوت <strong>مش نصوص</strong> — لو فتحتها بـ <code class="inl">"r"</code> بايثون هتحاول تعمل decode وتقع. <code class="inl">b</code> في الوضع = اقرا واكتب بايتات خام.</p>
+    @code run
+png_header = bytes([0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A]) ¦¦ أول 8 بايت في **أي** صورة PNG في العالم («التوقيع» أو magic bytes). `bytes([...])` بتبني بايتات من أرقام.
+with open("fake.png", "wb") as f: ¦¦ `wb` = كتابة ثنائية — ومفيش `encoding` لأن مفيش ترميز أصلًا.
+    f.write(png_header + b"rest of image data") ¦¦ البايتات بتتجمع بـ `+`. `b"..."` بايتات حرفية (ASCII بس).
+ ¦¦
+with open("fake.png", "rb") as f: ¦¦ `rb` = قراءة ثنائية.
+    first = f.read(8) ¦¦ `read(8)` = أول 8 **بايت** (مش حروف).
+print(first) ¦¦ البايتات اللي ليها شكل ASCII بتظهر كحروف: PNG و `\r\n`.
+print(first[1:4]) ¦¦ التقطيع بيرجّع bytes.
+print(first[0], hex(first[0])) ¦¦ لكن الفهرسة **بترجّع int** (0–255) — مش حرف زي النصوص.
+print(first == png_header) ¦¦ مطابقة.
+    @end
+    @out
+b'\x89PNG\r\n\x1a\n'
+b'PNG'
+137 0x89
+True
+    @end
+
+    <h4>4. تطبيق: كشف نوع الملف الحقيقي</h4>
+    <p>الامتداد ممكن يتغيّر بسهولة (فيروس اسمه <code class="inl">photo.jpg</code>). التوقيع في أول الملف أصدق — ودي الطريقة اللي المواقع بتتحقّق بيها من الملفات المرفوعة.</p>
+    @code run
+SIGNATURES = { ¦¦ توقيعات مشهورة.
+    b"\x89PNG": "PNG", ¦¦ صورة PNG.
+    b"%PDF": "PDF", ¦¦ ملف PDF بيبدأ بالنص `%PDF`.
+    b"PK\x03\x04": "ZIP/DOCX/XLSX", ¦¦ ملفات Word و Excel الحديثة **هي أصلًا ملفات ZIP**!
+    b"\xff\xd8\xff": "JPEG", ¦¦ صورة JPEG.
+} ¦¦ قفل.
+for name, content in [("a.bin", b"%PDF-1.7 ..."), ("b.bin", b"PK\x03\x04..."), ("c.bin", b"hello")]: ¦¦ ملفات وهمية بامتداد مضلّل.
+    with open(name, "wb") as f: ¦¦ كتابة ثنائية.
+        f.write(content) ¦¦ المحتوى.
+ ¦¦
+for name in ["a.bin", "b.bin", "c.bin", "fake.png"]: ¦¦ فحص كل ملف.
+    with open(name, "rb") as f: ¦¦ فتح ثنائي.
+        head = f.read(8) ¦¦ أول 8 بايت كفاية.
+    kind = next((t for sig, t in SIGNATURES.items() if head.startswith(sig)), "غير معروف") ¦¦ أول توقيع يطابق بداية الملف، أو القيمة الافتراضية (`next` بوسيطين من درس المولّدات).
+    print(name, "→", kind) ¦¦ النتيجة.
+    @end
+    @out
+a.bin → PDF
+b.bin → ZIP/DOCX/XLSX
+c.bin → غير معروف
+fake.png → PNG
+    @end
+
+    <h4>5. نسخ ملف ضخم على دفعات</h4>
+    @code run
+from pathlib import Path ¦¦ للمقارنة في الآخر.
+ ¦¦
+def copy_file(src, dst, chunk_size=4096): ¦¦ نسخ يدوي — عشان نفهم إزاي `shutil.copy` بتشتغل.
+    total = 0 ¦¦ عدّاد البايتات.
+    with open(src, "rb") as fin, open(dst, "wb") as fout: ¦¦ ملفين ثنائيين.
+        while chunk := fin.read(chunk_size): ¦¦ اقرا 4 KB؛ لما الملف يخلص `read` بترجّع `b""` (Falsy) فالحلقة تقف. الوالروس من الدرس الاستكشافي.
+            fout.write(chunk) ¦¦ اكتب الدفعة.
+            total += len(chunk) ¦¦ عدّ.
+    return total ¦¦ الإجمالي. **الذاكرة عمرها ما شالت أكتر من 4 KB** — حتى لو الملف 50 جيجا.
+ ¦¦
+with open("big.bin", "wb") as f: ¦¦ ملف تجربة.
+    f.write(bytes(range(256)) * 1000) ¦¦ 256 بايت × 1000 = 256 ألف بايت.
+print(copy_file("big.bin", "big_copy.bin"), "bytes") ¦¦ النسخ.
+print(Path("big.bin").read_bytes() == Path("big_copy.bin").read_bytes()) ¦¦ `read_bytes` = قراءة ثنائية كاملة في سطر. النسخة مطابقة.
+    @end
+    @out
+256000 bytes
+True
+    @end
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>عارض سادس عشر (Hex Dump)</div>
+      <p>اطبع أول 16 بايت من ترميز <code class="inl">"مرحبا Python"</code> بصيغة سادس عشر مفصولة بمسافات.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+data = "مرحبا Python".encode("utf-8") ¦¦ الترميز.
+print(" ".join(f"{b:02x}" for b in data[:16])) ¦¦ المرور على bytes بيدّي أرقام، و `02x` = سادس عشر بخانتين.
+      @end
+      @out
+d9 85 d8 b1 d8 ad d8 a8 d8 a7 20 50 79 74 68 6f
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">len("مصر".encode("utf-8"))</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 6</label>
+        <label><input type="radio"> 12</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">b"AB"[0]</code>؟</p>
+        <label><input type="radio"> 65</label>
+        <label><input type="radio"> "A"</label>
+        <label><input type="radio"> b"A"</label>
+        <label><input type="radio"> 0x41 كنص</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. تفتح صورة JPG عشان تنسخها — الوضع الصح؟</p>
+        <label><input type="radio"> "r" مع encoding="utf-8"</label>
+        <label><input type="radio"> "r+"</label>
+        <label><input type="radio"> "a"</label>
+        <label><input type="radio"> "rb"</label>
+      </div>
+    </div>
+  </article>

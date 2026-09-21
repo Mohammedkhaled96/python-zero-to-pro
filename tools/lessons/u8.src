@@ -1,0 +1,188 @@
+@@lesson u8-l4 before="<!-- 8.P1 -->"
+  <!-- 8.4 -->
+  <article class="lesson" id="u8-l4">
+    <h3>الحلقات المتداخلة في سطر واحد + while...else <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تحوّل الحلقات المتداخلة لـ comprehension متداخل وتعرف ترتيب قراءته، وتتجنّب فخ القوائم المتداخلة المشتركة، وتخرج من حلقتين مرّة واحدة.</p>
+
+    <h4>1. من حلقتين متداخلتين لسطر واحد</h4>
+    @code run
+matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] ¦¦ «مصفوفة»: قائمة فيها 3 قوائم (صفوف).
+flat = [] ¦¦ الطريقة العادية: قائمة فاضية.
+for row in matrix: ¦¦ الحلقة الخارجية: كل صف.
+    for x in row: ¦¦ الحلقة الداخلية: كل رقم في الصف.
+        flat.append(x) ¦¦ نضيفه.
+print(flat) ¦¦ قائمة مسطّحة.
+flat2 = [x for row in matrix for x in row] ¦¦ **نفس الحلقتين بنفس الترتيب** بس في سطر: الـ `for` الخارجية الأول، والداخلية بعدها.
+print(flat2) ¦¦ نفس الناتج.
+print(flat == flat2) ¦¦ تأكيد.
+    @end
+    @out
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+[1, 2, 3, 4, 5, 6, 7, 8, 9]
+True
+    @end
+    <div class="diagram">
+<pre>  for row in matrix:            ─┐
+      for x in row:              │  انسخ الـ for بنفس الترتيب
+          flat.append(x)         │  من فوق لتحت ← من شمال ليمين
+                                 │
+  [ x   for row in matrix   for x in row ]
+    ↑        ↑ الأولى           ↑ التانية
+    اللي بيتضاف (بيتكتب الأول)</pre>
+      <div class="cap">القاعدة: ترتيب الـ for في السطر = ترتيبها في الحلقات العادية</div>
+    </div>
+
+    <h4>2. أشكال مفيدة للـ comprehension المتداخل</h4>
+    @code run
+matrix = [[1, 2, 3], [4, 5, 6], [7, 8, 9]] ¦¦ نفس المصفوفة.
+evens = [x for row in matrix for x in row if x % 2 == 0] ¦¦ تسطيح + تصفية: الـ `if` في الآخر بتتطبّق على كل `x`.
+print(evens) ¦¦ الزوجي بس.
+table = [[r * c for c in range(1, 4)] for r in range(1, 4)] ¦¦ **comprehension جوّه comprehension**: الخارجي بيبني صفوف، والداخلي بيبني كل صف. ده بيطلع قائمة **متداخلة** مش مسطّحة.
+print(table) ¦¦ جدول ضرب 3×3.
+transposed = [[row[i] for row in matrix] for i in range(3)] ¦¦ **قلب المصفوفة** (الصفوف تبقى أعمدة): لكل عمود `i`، هات العنصر `i` من كل صف.
+print(transposed) ¦¦ العمود الأول بقى الصف الأول.
+pairs = [(color, size) for color in ["أحمر", "أزرق"] for size in ["S", "M"]] ¦¦ **كل التوافيق**: كل لون مع كل مقاس. العنصر اللي بيتضاف هنا tuple.
+print(pairs) ¦¦ 2 × 2 = 4 توافيق.
+    @end
+    @out
+[2, 4, 6, 8]
+[[1, 2, 3], [2, 4, 6], [3, 6, 9]]
+[[1, 4, 7], [2, 5, 8], [3, 6, 9]]
+[('أحمر', 'S'), ('أحمر', 'M'), ('أزرق', 'S'), ('أزرق', 'M')]
+    @end
+
+    <h4>3. الفخ الأخطر: [[0] * 3] * 3</h4>
+    <p>عايز شبكة 3×3 أصفار (زي لعبة X-O). الطريقة «المختصرة» شكلها بريء…</p>
+    @code run
+grid = [[0] * 3] * 3 ¦¦ `[0] * 3` بتعمل صف واحد، و `* 3` بتكرّر **المرجع** للصف ده 3 مرّات — مش 3 صفوف مستقلة!
+grid[0][0] = 99 ¦¦ غيّرنا أول خانة في أول صف بس.
+print(grid) ¦¦ 😱 التغيير ظهر في **الصفوف التلاتة** — لأنهم أصلًا نفس القائمة.
+print(grid[0] is grid[1]) ¦¦ `is` بتسأل «هل ده نفس الكائن في الذاكرة؟» ← True. تأكيد إن الـ 3 أسهم بيشاوروا على صندوق واحد.
+good = [[0] * 3 for _ in range(3)] ¦¦ **الحل**: comprehension بيشغّل `[0] * 3` من جديد في كل دورة ← 3 قوائم منفصلة. `_` = متغيّر مش محتاجينه.
+good[0][0] = 99 ¦¦ نفس التعديل.
+print(good) ¦¦ أول صف بس اتغيّر ✅.
+print(good[0] is good[1]) ¦¦ كائنين مختلفين.
+    @end
+    @out
+[[99, 0, 0], [99, 0, 0], [99, 0, 0]]
+True
+[[99, 0, 0], [0, 0, 0], [0, 0, 0]]
+False
+    @end
+    <div class="diagram">
+<pre>  grid = [[0]*3] * 3                good = [[0]*3 for _ in range(3)]
+
+  grid ──► [ • , • , • ]            good ──► [ • , • , • ]
+             │   │   │                         │   │   │
+             └───┼───┘                         ▼   ▼   ▼
+                 ▼                          [0,0,0] [0,0,0] [0,0,0]
+             [0, 0, 0]
+       صف واحد و3 أسهم عليه                3 صفوف مستقلة</pre>
+      <div class="cap">رجوع لدرس المراجع في الوحدة صفر: القائمة بتخزّن أسهم مش قيم</div>
+    </div>
+    <div class="box info">
+      <div class="bt">ℹ️ طب ليه [0] * 3 نفسها سليمة؟</div>
+      <p>
+        لأن الأصفار <strong>أرقام غير قابلة للتعديل</strong>. لما تعمل <code class="inl">row[0] = 5</code> إنت مش بتعدّل الصفر — إنت بتوجّه السهم لكائن جديد.
+        المشكلة بتظهر بس لما العنصر المتكرّر <strong>قابل للتعديل</strong> (قائمة، وبعدين قاموس أو كائن).
+      </p>
+    </div>
+
+    <h4>4. الخروج من حلقتين مرّة واحدة</h4>
+    <p><code class="inl">break</code> بتكسر <strong>أقرب حلقة بس</strong>. لو لقيت اللي بتدوّر عليه جوّه الحلقة الداخلية، الخارجية هتكمّل. الحل الأوضح: راية.</p>
+    @code run
+grid = [[3, 8, 1], [9, 4, 7], [5, 6, 2]] ¦¦ شبكة أرقام.
+target = 4 ¦¦ اللي بندوّر عليه.
+found = False ¦¦ الراية.
+for r, row in enumerate(grid): ¦¦ الصفوف بأرقامها.
+    for c, value in enumerate(row): ¦¦ الأعمدة بأرقامها.
+        if value == target: ¦¦ لقيناه.
+            found = True ¦¦ نرفع الراية.
+            break ¦¦ نكسر **الداخلية** بس.
+    if found: ¦¦ الخارجية بتفحص الراية بعد كل صف…
+        break ¦¦ …وتكسر نفسها.
+print(f"الصف {r} العمود {c}" if found else "مش موجود") ¦¦ `r` و `c` لسه محتفظين بآخر قيمة — وهي مكان العنصر.
+    @end
+    @out rtl
+الصف 1 العمود 1
+    @end
+    <p>
+      هتشوف في أكواد ناس تانية حيلة بـ <code class="inl">for...else</code>: <code class="inl">else: continue</code> بعد الحلقة الداخلية ثم <code class="inl">break</code>.
+      شغّالة، بس مش مقروءة. الأنظف من الاتنين: <strong>حط الحلقتين في دالة واستخدم <code class="inl">return</code></strong> — هتتعلّمها في وحدة الدوال.
+    </p>
+
+    <h4>5. while...else</h4>
+    <p>نفس فكرة <code class="inl">for...else</code>: الـ <code class="inl">else</code> بتتنفّذ لو الشرط بقى False والحلقة خلصت <strong>من غير break</strong>.</p>
+    @code run
+secret = "1234" ¦¦ الرقم السرّي.
+guesses = ["0000", "1111", "1234"] ¦¦ تخمينات (في برنامج حقيقي هتيجي من `input`).
+attempts = 0 ¦¦ عدّاد المحاولات.
+while attempts < 3: ¦¦ 3 محاولات بحدّ أقصى.
+    guess = guesses[attempts] ¦¦ التخمين الحالي.
+    attempts += 1 ¦¦ نزوّد العدّاد **قبل** الفحص عشان الرسالة تعرض الرقم الصح.
+    if guess == secret: ¦¦ صح؟
+        print(f"اتفتح بعد {attempts} محاولات") ¦¦ رسالة النجاح.
+        break ¦¦ نخرج — والـ else مش هتتنفّذ.
+else: ¦¦ الشرط بقى False (خلصت المحاولات) من غير break.
+    print("الحساب اتقفل 🔒") ¦¦ جرّب تغيّر آخر تخمين لـ "2222" وشغّل تاني.
+    @end
+    @out rtl
+اتفتح بعد 3 محاولات
+    @end
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>النقاط على الخط</div>
+      <p>بـ comprehension واحد: كل الأزواج <code class="inl">(x, y)</code> من 0 لـ 4 اللي مجموعهم = 4.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+points = [(x, y) for x in range(5) for y in range(5) if x + y == 4] ¦¦ 25 توفيقة، والفلتر بيسيب 5 بس.
+print(points) ¦¦ النتيجة.
+      @end
+      @out
+[(0, 4), (1, 3), (2, 2), (3, 1), (4, 0)]
+      @end
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>مصفوفة الوحدة</div>
+      <p>ابني مصفوفة 3×3 فيها 1 على القطر و 0 في الباقي، واطبع كل صف في سطر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+identity = [[1 if r == c else 0 for c in range(3)] for r in range(3)] ¦¦ تعبير شرطي جوّه comprehension متداخل: 1 لما رقم الصف = رقم العمود.
+for row in identity: ¦¦ طباعة صف صف.
+    print(row) ¦¦ كل صف قائمة.
+      @end
+      @out
+[1, 0, 0]
+[0, 1, 0]
+[0, 0, 1]
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">[a + b for a in "xy" for b in "12"]</code>؟</p>
+        <label><input type="radio"> ['x1', 'y2']</label>
+        <label><input type="radio"> ['x1', 'x2', 'y1', 'y2']</label>
+        <label><input type="radio"> ['1x', '2x', '1y', '2y']</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. بعد <code class="inl">g = [[]] * 2</code> ثم <code class="inl">g[0].append(1)</code>، قيمة g؟</p>
+        <label><input type="radio"> [[1], []]</label>
+        <label><input type="radio"> [[1]]</label>
+        <label><input type="radio"> [1, []]</label>
+        <label><input type="radio"> [[1], [1]]</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. break جوّه حلقة داخلية بتعمل إيه؟</p>
+        <label><input type="radio"> بتكسر الداخلية بس</label>
+        <label><input type="radio"> بتكسر كل الحلقات</label>
+        <label><input type="radio"> بتوقف البرنامج</label>
+        <label><input type="radio"> بتعيد الدورة</label>
+      </div>
+    </div>
+  </article>

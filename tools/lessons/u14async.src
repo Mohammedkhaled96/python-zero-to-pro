@@ -1,0 +1,265 @@
+@@lesson u14-l4 before="<!-- ADD:u14-ch -->"
+  <!-- 14.4 -->
+  <article class="lesson" id="u14-l4">
+    <h3>التزامن: async و await وasyncio <span class="tag">درس ؟ · مهارة احترافية</span></h3>
+    <p class="goal">الهدف: تخلّي برنامجك يستنى 10 طلبات في نفس وقت الطلب الواحد، وتعرف إمتى asyncio وإمتى الخيوط وإمتى العمليات.</p>
+
+    <h4>1. المشكلة: البرنامج بيقعد يستنى</h4>
+    <p>
+      في الدرس اللي فات كل <code class="inl">requests.get</code> كانت بتوقف البرنامج لحد ما الرد يوصل.
+      لو عندك 3 طلبات كل واحد بياخد ثانية، البرنامج بياخد 3 ثواني — <strong>وهو قاعد مستني، مش بيحسب حاجة</strong>.
+    </p>
+    @code run
+import time ¦¦ للقياس والمحاكاة.
+ ¦¦
+def fetch(name, seconds): ¦¦ بنحاكي طلب شبكة بـ `sleep` (نفس السلوك: استنى من غير شغل).
+    time.sleep(seconds) ¦¦ البرنامج **كله** واقف هنا.
+    return f"{name} جاهز" ¦¦ «الرد».
+ ¦¦
+start = time.perf_counter() ¦¦ بداية القياس.
+results = [fetch("طلب 1", 0.3), fetch("طلب 2", 0.3), fetch("طلب 3", 0.3)] ¦¦ واحد ورا التاني = بالتوالي.
+print(results) ¦¦ النتايج.
+print("الوقت:", round(time.perf_counter() - start, 1), "ثانية") ¦¦ 0.9 = مجموع الانتظار كله.
+    @end
+    @out rtl
+['طلب 1 جاهز', 'طلب 2 جاهز', 'طلب 3 جاهز']
+الوقت: 0.9 ثانية
+    @end
+
+    <h4>2. نوعين من الشغل — والحل مختلف</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>نوع الشغل</th><th>مثال</th><th>الحل الصح</th><th>ليه</th></tr>
+        <tr><td><strong>مرتبط بالإدخال/الإخراج</strong> (I/O-bound)</td><td>طلبات شبكة، قراءة ملفات، قواعد بيانات</td><td><code class="inl">asyncio</code> (أو خيوط)</td><td>البرنامج بيستنى، فنسيبه يبدأ الباقي وهو مستني</td></tr>
+        <tr><td><strong>مرتبط بالمعالج</strong> (CPU-bound)</td><td>حسابات تقيلة، معالجة صور، تشفير</td><td><code class="inl">multiprocessing</code></td><td>محتاج أنوية فعلية — الخيوط مش بتفيد بسبب الـ GIL</td></tr>
+      </table>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 الـ GIL في سطرين</div>
+      <p>
+        بايثون (CPython) بتسمح لخيط واحد بس ينفّذ bytecode في اللحظة (Global Interpreter Lock).
+        يعني الخيوط <strong>مش</strong> بتسرّع الحسابات، لكنها بتفيد في الانتظار (لأن الخيط بيسيب القفل وهو مستني).
+        وde نفس سبب وجود <code class="inl">asyncio</code>: تزامن بخيط واحد بدل تعقيد الخيوط.
+      </p>
+    </div>
+
+    <h4>3. أول كوروتين: <code>async def</code> و <code>await</code></h4>
+    @code run
+import asyncio ¦¦ مكتبة التزامن المدمجة.
+ ¦¦
+async def fetch(name, seconds): ¦¦ `async def` بتعمل **كوروتين** (coroutine) مش دالة عادية.
+    await asyncio.sleep(seconds) ¦¦ `await` = «استنى الحاجة دي، وسيب غيرك يشتغل». (`asyncio.sleep` مش `time.sleep`!)
+    return f"{name} جاهز" ¦¦ نفس الـ return العادي.
+ ¦¦
+async def main(): ¦¦ نقطة البداية غير المتزامنة.
+    result = await fetch("طلب 1", 0.1) ¦¦ استدعاء كوروتين **لازم** معاه await.
+    print(result) ¦¦ النتيجة.
+    coro = fetch("طلب 2", 0.1) ¦¦ من غير await: مفيش حاجة اتنفّذت…
+    print(type(coro).__name__) ¦¦ …ده كائن كوروتين مستني.
+    print(await coro) ¦¦ دلوقتي بس بيشتغل.
+ ¦¦
+asyncio.run(main()) ¦¦ `asyncio.run` بتشغّل حلقة الأحداث وتنفّذ الكوروتين للآخر. (مرّة واحدة في البرنامج).
+    @end
+    @out rtl
+طلب 1 جاهز
+coroutine
+طلب 2 جاهز
+    @end
+    <div class="box warn">
+      <div class="bt">⚠️ أشهر 3 غلطات</div>
+      <ul>
+        <li>نسيان <code class="inl">await</code> ← الكود مش بيتنفّذ وبيجيلك تحذير <code class="inl">coroutine was never awaited</code>.</li>
+        <li><code class="inl">time.sleep</code> جوّه <code class="inl">async def</code> ← بتوقّف <strong>كل</strong> المهام (استخدم <code class="inl">asyncio.sleep</code>).</li>
+        <li>استخدام <code class="inl">requests</code> جوّه async ← مكتبة متزامنة بتقفل الحلقة (استخدم <code class="inl">httpx</code> أو <code class="inl">aiohttp</code>).</li>
+      </ul>
+    </div>
+
+    <h4>4. التشغيل مع بعض: <code>gather</code></h4>
+    <p>هنا بتحصل الفايدة: التلات طلبات بيبدأوا في نفس اللحظة، والوقت الكلي = <strong>أطول</strong> طلب مش مجموعهم.</p>
+    @code run
+import asyncio ¦¦ المكتبة.
+import time ¦¦ للقياس.
+ ¦¦
+async def fetch(name, seconds): ¦¦ نفس الكوروتين.
+    await asyncio.sleep(seconds) ¦¦ انتظار «شبكة».
+    return f"{name} ({seconds}s)" ¦¦ النتيجة.
+ ¦¦
+async def main(): ¦¦ البداية.
+    start = time.perf_counter() ¦¦ قياس.
+    results = await asyncio.gather( ¦¦ `gather` بتشغّل كل الكوروتينات **في نفس الوقت**…
+        fetch("طلب 1", 0.3), ¦¦ مهمة.
+        fetch("طلب 2", 0.2), ¦¦ مهمة.
+        fetch("طلب 3", 0.1), ¦¦ مهمة.
+    ) ¦¦ …وبترجّع النتايج **بترتيب ما انت كتبتهم**، مش ترتيب الانتهاء.
+    print(results) ¦¦ النتايج.
+    print("الوقت:", round(time.perf_counter() - start, 1), "ثانية") ¦¦ 0.3 = أطول واحد.
+ ¦¦
+asyncio.run(main()) ¦¦ التشغيل.
+    @end
+    @out rtl
+['طلب 1 (0.3s)', 'طلب 2 (0.2s)', 'طلب 3 (0.1s)']
+الوقت: 0.3 ثانية
+    @end
+
+    <h4>5. مهام، ومهلة، وأول نتيجة تخلص</h4>
+    @code run
+import asyncio ¦¦ المكتبة.
+ ¦¦
+async def work(name, seconds): ¦¦ مهمة.
+    await asyncio.sleep(seconds) ¦¦ انتظار.
+    print("خلص:", name) ¦¦ بنطبع وقت الانتهاء الفعلي.
+    return name ¦¦ النتيجة.
+ ¦¦
+async def main(): ¦¦ البداية.
+    task = asyncio.create_task(work("خلفية", 0.1)) ¦¦ `create_task` بتشغّلها **فورًا** في الخلفية وترجّع مهمة.
+    print("المهمة اتجدولت وإحنا لسه شغالين") ¦¦ الكود بيكمّل من غير انتظار.
+    await task ¦¦ دلوقتي نستنى نتيجتها.
+    try: ¦¦ مهلة.
+        await asyncio.wait_for(work("بطيء", 1.0), timeout=0.2) ¦¦ `wait_for` بتلغي المهمة لو عدّت المهلة.
+    except asyncio.TimeoutError: ¦¦ الاستثناء المخصّص للمهلة.
+        print("اتأخّر فألغيناه") ¦¦ معالجة نظيفة.
+    done, pending = await asyncio.wait( ¦¦ `wait` بتديك تحكّم أدق…
+        [asyncio.create_task(work("سريع", 0.1)), asyncio.create_task(work("متأخّر", 0.5))], ¦¦ مهمتين.
+        return_when=asyncio.FIRST_COMPLETED, ¦¦ …ترجع أول ما واحدة تخلص.
+    ) ¦¦ نتيجتها مجموعتين.
+    print("خلصت:", len(done), "· فاضل:", len(pending)) ¦¦ واحدة خلصت وواحدة لسه.
+    for t in pending: ¦¦ تنظيف المهام المعلّقة.
+        t.cancel() ¦¦ إلغاء صريح — مهم عشان ما تسيبش مهام شغّالة.
+ ¦¦
+asyncio.run(main()) ¦¦ التشغيل.
+    @end
+    @out rtl
+المهمة اتجدولت وإحنا لسه شغالين
+خلص: خلفية
+اتأخّر فألغيناه
+خلص: سريع
+خلصت: 1 · فاضل: 1
+    @end
+
+    <h4>6. الشكل الحقيقي مع طلبات ويب</h4>
+    <p>في مشروع حقيقي بتستخدم مكتبة غير متزامنة زي <code class="inl">httpx</code> (تسطيبها: <code class="inl">pip install httpx</code>).</p>
+    @code fetch_all.py
+import asyncio ¦¦ المكتبة.
+import httpx ¦¦ زي requests بس بتدعم async.
+ ¦¦
+URLS = [ ¦¦ الروابط.
+    "https://httpbin.org/delay/1", ¦¦ رد بعد ثانية.
+    "https://httpbin.org/delay/1", ¦¦ زي بعضه.
+    "https://httpbin.org/delay/1", ¦¦ تالت.
+] ¦¦ 3 روابط.
+ ¦¦
+async def get(client, url): ¦¦ طلب واحد.
+    response = await client.get(url, timeout=10) ¦¦ `await` على الطلب — البرنامج بيسيب غيره يشتغل وهو مستني.
+    return response.status_code ¦¦ كود الحالة.
+ ¦¦
+async def main(): ¦¦ البداية.
+    async with httpx.AsyncClient() as client: ¦¦ `async with` = مدير سياق غير متزامن (بيقفل الاتصالات في الآخر).
+        codes = await asyncio.gather(*(get(client, u) for u in URLS)) ¦¦ `*` بتفرد المهام، وكلهم بيبدأوا مع بعض.
+    print(codes) ¦¦ [200, 200, 200] في حوالي ثانية بدل 3.
+ ¦¦
+asyncio.run(main()) ¦¦ التشغيل.
+    @end
+    @out
+[200, 200, 200]
+    @end
+
+    <h4>7. الحسابات التقيلة: العمليات مش الخيوط</h4>
+    @code cpu_work.py
+from concurrent.futures import ProcessPoolExecutor ¦¦ مجموعة **عمليات** (processes) — كل واحدة مفسّر بايثون لوحده.
+import time ¦¦ للقياس.
+ ¦¦
+def heavy(n): ¦¦ شغل معالج حقيقي.
+    return sum(i * i for i in range(n)) ¦¦ حسابات.
+ ¦¦
+if __name__ == "__main__": ¦¦ **إجباري** على ويندوز مع العمليات، وإلا بتتكرّر للأبد.
+    numbers = [2_000_000] * 4 ¦¦ 4 مهام تقيلة.
+    start = time.perf_counter() ¦¦ قياس بالتوالي.
+    serial = [heavy(n) for n in numbers] ¦¦ واحدة ورا التانية.
+    print("بالتوالي:", round(time.perf_counter() - start, 2), "ثانية") ¦¦ الوقت.
+    start = time.perf_counter() ¦¦ قياس بالتوازي.
+    with ProcessPoolExecutor() as pool: ¦¦ بتفتح عمليات بعدد الأنوية.
+        parallel = list(pool.map(heavy, numbers)) ¦¦ توزيع المهام على الأنوية.
+    print("بالتوازي:", round(time.perf_counter() - start, 2), "ثانية") ¦¦ أقل على جهاز بأكتر من نواة.
+    print(serial == parallel) ¦¦ نفس النتايج بالظبط.
+    @end
+    @out rtl
+بالتوالي: 0.84 ثانية
+بالتوازي: 0.31 ثانية
+True
+    @end
+    <div class="box info">
+      <div class="bt">ℹ️ القاعدة العملية</div>
+      <ul>
+        <li>بتستنى شبكة أو ملفات؟ <strong><code class="inl">asyncio</code></strong> (أو <code class="inl">ThreadPoolExecutor</code> لو المكتبة متزامنة ومش بتدعم async).</li>
+        <li>بتحسب؟ <strong><code class="inl">ProcessPoolExecutor</code></strong>.</li>
+        <li>مش متأكّد إن فيه مشكلة سرعة؟ <strong>قيس الأول</strong> — التزامن بيزوّد تعقيد، فما تضيفوش من غير سبب.</li>
+      </ul>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>من بالتوالي لبالتوازي</div>
+      <p>حوّل الكود ده لغير متزامن، وخلّي التلات مهام تشتغل مع بعض، واطبع الوقت (المتوقّع: 0.4 بدل 0.9).</p>
+      @code before.py norun
+import time ¦¦ الكود الحالي: انتظار متزامن.
+def download(name, seconds): ¦¦ دالة عادية.
+    time.sleep(seconds) ¦¦ بتوقّف البرنامج كله.
+    return name ¦¦ النتيجة.
+start = time.perf_counter() ¦¦ قياس.
+files = [download("a", 0.4), download("b", 0.3), download("c", 0.2)] ¦¦ واحد ورا التاني ← 0.9 ثانية.
+print(files, round(time.perf_counter() - start, 1)) ¦¦ المطلوب: تخلّيهم مع بعض.
+      @end
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import asyncio ¦¦ بدل الانتظار الصامت.
+import time ¦¦ للقياس.
+ ¦¦
+async def download(name, seconds): ¦¦ `async def` بدل `def`.
+    await asyncio.sleep(seconds) ¦¦ `await asyncio.sleep` بدل `time.sleep`.
+    return name ¦¦ نفس النتيجة.
+ ¦¦
+async def main(): ¦¦ نغلّف الشغل في كوروتين.
+    start = time.perf_counter() ¦¦ قياس.
+    files = await asyncio.gather(download("a", 0.4), download("b", 0.3), download("c", 0.2)) ¦¦ الكل مع بعض، والترتيب محفوظ.
+    print(files, round(time.perf_counter() - start, 1)) ¦¦ الوقت = أطول مهمة.
+ ¦¦
+asyncio.run(main()) ¦¦ نقطة الدخول.
+      @end
+      @out
+['a', 'b', 'c'] 0.4
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">asyncio</code> بتفيد أكتر في…</p>
+        <label><input type="radio"> الحسابات التقيلة على المعالج</label>
+        <label><input type="radio"> الانتظار (شبكة، ملفات، قواعد بيانات)</label>
+        <label><input type="radio"> تصغير حجم الكود</label>
+        <label><input type="radio"> الرسومات</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. ناديت كوروتين من غير <code class="inl">await</code>؟</p>
+        <label><input type="radio"> بيتنفّذ عادي</label>
+        <label><input type="radio"> بيرمي SyntaxError</label>
+        <label><input type="radio"> بيتنفّذ بعد شوية لوحده</label>
+        <label><input type="radio"> بترجع كائن كوروتين ومفيش حاجة اتنفّذت (مع تحذير)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">time.sleep(1)</code> جوّه <code class="inl">async def</code>…</p>
+        <label><input type="radio"> بتوقّف كل المهام — الصح <code class="inl">await asyncio.sleep(1)</code></label>
+        <label><input type="radio"> نفس <code class="inl">asyncio.sleep</code></label>
+        <label><input type="radio"> بترمي خطأ</label>
+        <label><input type="radio"> بتلغي المهمة</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. 4 مهام حساب تقيلة على 4 أنوية — الأنسب…</p>
+        <label><input type="radio"> asyncio.gather</label>
+        <label><input type="radio"> ThreadPoolExecutor</label>
+        <label><input type="radio"> ProcessPoolExecutor</label>
+        <label><input type="radio"> حلقة for عادية</label>
+      </div>
+    </div>
+  </article>

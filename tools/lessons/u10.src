@@ -1,0 +1,424 @@
+@@lesson u10-l5 before="<!-- 10.P1 -->"
+  <!-- 10.5 -->
+  <article class="lesson" id="u10-l5">
+    <h3>التفكيك المتقدّم، دمج القواميس، واستيعاب القواميس والمجموعات <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تستخدم النجمة <code class="inl">*</code> والنجمتين <code class="inl">**</code> لتفكيك وتجميع البيانات، وتدمج القواميس في سطر، وتبني قواميس ومجموعات بالـ comprehension.</p>
+
+    <h4>1. التفكيك الممتد: *rest</h4>
+    <p>في التفكيك العادي لازم عدد المتغيّرات = عدد العناصر. النجمة بتقول: <strong>«المتغيّر ده ياخد كل اللي فاضل كقائمة»</strong>.</p>
+    @code run
+first, *rest = [10, 20, 30, 40] ¦¦ `first` ياخد أول عنصر، و `*rest` تلمّ الباقي **في قائمة**.
+print(first, rest) ¦¦ 10 والباقي.
+*init, last = [10, 20, 30, 40] ¦¦ النجمة ممكن تيجي في الأول: كله ما عدا الأخير.
+print(init, last) ¦¦ القائمة وآخر عنصر.
+head, *middle, tail = "python" ¦¦ أو في النص. بتشتغل مع أي حاجة تتلفّ عليها (نص، tuple، range…) — بس النتيجة دايمًا **list**.
+print(head, middle, tail) ¦¦ أول حرف، الحروف اللي في النص كقائمة، آخر حرف.
+a, *b = [1] ¦¦ لو مفيش باقي…
+print(a, b) ¦¦ …النجمة بتاخد قائمة فاضية بدل ما يحصل خطأ.
+name, (x, y) = "نقطة", (3, 4) ¦¦ **تفكيك متداخل**: الأقواس على الشمال بتطابق شكل البيانات على اليمين.
+print(name, x, y) ¦¦ اتفكّت على مستويين.
+    @end
+    @out
+10 [20, 30, 40]
+[10, 20, 30] 40
+p ['y', 't', 'h', 'o'] n
+1 []
+نقطة 3 4
+    @end
+    <div class="box warn">
+      <div class="bt">⚠️ قاعدتين</div>
+      <p>
+        <strong>نجمة واحدة بس</strong> في كل تفكيك: <code class="inl">*a, *b = lst</code> ← <code class="inl">SyntaxError</code> (بايثون مش هتعرف تقسم إزاي).
+        و <code class="inl">*_</code> اصطلاح لـ «باقي مش محتاجه».
+      </p>
+    </div>
+    @code run
+record = ("سارة", 28, "القاهرة", "مهندسة", "sara@mail.com") ¦¦ سجل فيه بيانات كتير ومحتاجين أوله وآخره بس.
+name, age, *_, email = record ¦¦ `*_` بتبلع كل اللي في النص ونتجاهله.
+print(name, age, email) ¦¦ اللي محتاجينه بس.
+students = [("سارة", (90, 85)), ("أحمد", (70, 95))] ¦¦ قائمة tuples، وجوّه كل واحدة tuple درجات.
+for student, (math_score, science) in students: ¦¦ تفكيك متداخل **في رأس الحلقة** مباشرةً.
+    print(student, math_score + science) ¦¦ الاسم والمجموع.
+    @end
+    @out
+سارة 28 sara@mail.com
+سارة 175
+أحمد 165
+    @end
+
+    <h4>2. الفرد: النجمة في الاستدعاء وجوّه القوائم</h4>
+    <p>العكس: النجمة قبل مجموعة <strong>بتفرد عناصرها</strong> كأنك كتبتهم واحد واحد مفصولين بفاصلة.</p>
+    @code run
+nums = [3, 1, 2] ¦¦ قائمة.
+print(nums) ¦¦ من غير نجمة: `print` استلمت **حاجة واحدة** (قائمة) فطبعتها بأقواسها.
+print(*nums) ¦¦ بالنجمة: كأنك كتبت `print(3, 1, 2)` — 3 وسائط منفصلة.
+print(*nums, sep=" | ") ¦¦ ومع `sep` بقت طريقة سريعة لطباعة قائمة بفاصل.
+more = [*nums, 4, *range(5, 7)] ¦¦ **فرد جوّه قائمة**: ادمج قوائم وrange وعناصر مفردة في قائمة جديدة.
+print(more) ¦¦ كله في مستوى واحد.
+letters = [*"abc"] ¦¦ فرد نص = حروفه (زي `list("abc")`).
+print(letters) ¦¦ قائمة حروف.
+unique = {*nums, *[2, 3, 9]} ¦¦ فرد جوّه أقواس `{}` بيعمل **set** — دمج مع شيل التكرار.
+print(sorted(unique)) ¦¦ رتّبناها للعرض لأن ترتيب الـ set مش مضمون.
+    @end
+    @out
+[3, 1, 2]
+3 1 2
+3 | 1 | 2
+[3, 1, 2, 4, 5, 6]
+['a', 'b', 'c']
+[1, 2, 3, 9]
+    @end
+
+    <h4>3. دمج القواميس: ** و |</h4>
+    @code run
+defaults = {"theme": "dark", "lang": "ar", "font": 14} ¦¦ الإعدادات الافتراضية للتطبيق.
+user = {"lang": "en", "font": 18} ¦¦ اللي المستخدم غيّره بس.
+merged = {**defaults, **user} ¦¦ `**` بتفرد أزواج القاموس. **اللي بعده بيكسب**: مفاتيح `user` بتغطّي على `defaults`.
+print(merged) ¦¦ الثيم فضل dark، واللغة والخط اتغيّروا.
+merged2 = defaults | user ¦¦ نفس الحكاية بعامل `|` (من بايثون 3.9) — أوضح في القراءة.
+print(merged2 == merged) ¦¦ متطابقين.
+print(user | defaults) ¦¦ **الترتيب مهم**: لو قلبتهم، الافتراضي هو اللي بيكسب.
+defaults |= {"font": 16} ¦¦ `|=` بتعدّل القاموس **نفسه** (زي `update`).
+print(defaults) ¦¦ اتعدّل في مكانه.
+settings = {**defaults, "debug": True} ¦¦ دمج مع إضافة مفاتيح جديدة في نفس السطر.
+print(settings) ¦¦ نسخة جديدة فيها debug، والأصل ما اتلمسش.
+    @end
+    @out
+{'theme': 'dark', 'lang': 'en', 'font': 18}
+True
+{'lang': 'ar', 'font': 14, 'theme': 'dark'}
+{'theme': 'dark', 'lang': 'ar', 'font': 16}
+{'theme': 'dark', 'lang': 'ar', 'font': 16, 'debug': True}
+    @end
+    <div class="box tip">
+      <div class="bt">💡 نمط «الافتراضي + التخصيص»</div>
+      <p>
+        <code class="inl">config = defaults | user_settings</code> من أكتر الأنماط استخدامًا في البرامج الحقيقية: إعدادات تطبيق، خيارات مكتبة، هيدرز طلبات HTTP.
+        الدمج بيعمل <strong>قاموس جديد</strong> — الأصلي ما بيتغيّرش (إلا مع <code class="inl">|=</code>).
+      </p>
+    </div>
+
+    <h4>4. استيعاب القواميس (Dict Comprehension)</h4>
+    @code run
+prices = {"قلم": 5, "كشكول": 25, "شنطة": 350} ¦¦ قاموس أسعار.
+with_vat = {item: round(p * 1.14, 2) for item, p in prices.items()} ¦¦ نفس شكل list comprehension لكن بـ `{مفتاح: قيمة for …}`. هنا بنضيف 14% لكل سعر.
+print(with_vat) ¦¦ قاموس جديد بنفس المفاتيح وقيم محسوبة.
+cheap = {item: p for item, p in prices.items() if p < 100} ¦¦ **تصفية** قاموس بالـ if في الآخر.
+print(cheap) ¦¦ الشنطة اتشالت.
+flipped = {p: item for item, p in prices.items()} ¦¦ **قلب القاموس**: القيم بقت مفاتيح. (لو فيه قيم مكرّرة، الأخير بيكسب ويضيع اللي قبله.)
+print(flipped) ¦¦ من السعر للصنف.
+names = ["sara", "ahmed", "mona"] ¦¦ قائمة عادية.
+lengths = {n: len(n) for n in names} ¦¦ بناء قاموس من قائمة: الاسم ← طوله.
+print(lengths) ¦¦ النتيجة.
+    @end
+    @out
+{'قلم': 5.7, 'كشكول': 28.5, 'شنطة': 399.0}
+{'قلم': 5, 'كشكول': 25}
+{5: 'قلم', 25: 'كشكول', 350: 'شنطة'}
+{'sara': 4, 'ahmed': 5, 'mona': 4}
+    @end
+
+    <h4>5. استيعاب المجموعات (Set Comprehension)</h4>
+    @code run
+emails = ["Sara@Mail.com", "sara@mail.com", "ahmed@Gmail.com"] ¦¦ نفس الإيميل مكتوب بحالتين.
+unique = {e.lower() for e in emails} ¦¦ `{قيمة for …}` **من غير نقطتين** = set. التوحيد بـ lower ثم التكرار بيتشال تلقائيًا.
+print(len(unique)) ¦¦ 2 مستخدمين حقيقيين مش 3.
+domains = {e.split("@")[1].lower() for e in emails} ¦¦ كل الدومينات المختلفة.
+print(sorted(domains)) ¦¦ مرتّبة للعرض.
+    @end
+    @out
+2
+['gmail.com', 'mail.com']
+    @end
+    <div class="box warn">
+      <div class="bt">⚠️ {} لوحدها قاموس مش set</div>
+      <p><code class="inl">{}</code> = قاموس فاضي. الـ set الفاضية لازم <code class="inl">set()</code>. والفرق في الـ comprehension: <strong>وجود النقطتين</strong> <code class="inl">k: v</code> هو اللي بيحدّد.</p>
+    </div>
+
+    <h4>6. frozenset: مجموعة مقفولة</h4>
+    <p>
+      <code class="inl">frozenset</code> لـ <code class="inl">set</code> زي ما <code class="inl">tuple</code> لـ <code class="inl">list</code>: نفس الفكرة (عناصر مش مكرّرة، فحص <code class="inl">in</code> سريع) لكن <strong>غير قابلة للتعديل</strong>.
+      والميزة الأهم: بما إنها ثابتة، تنفع تبقى <strong>مفتاح قاموس</strong> أو عنصر جوّه set — وده مستحيل مع set العادية.
+    </p>
+    @code run
+roles = frozenset(["admin", "editor", "admin"]) ¦¦ إنشاء من أي مجموعة — والتكرار بيتشال زي set.
+print(len(roles), "admin" in roles) ¦¦ عنصرين، والفحص بـ `in` سريع.
+try: ¦¦ نجرّب نعدّل.
+    roles.add("viewer") ¦¦ مفيش دالة `add` أصلًا.
+except AttributeError as e: ¦¦ الخطأ اللي هيحصل.
+    print("مقفولة:", e) ¦¦ رسالته.
+permissions = {roles: "لوحة التحكم"} ¦¦ **مفتاح قاموس**: مجموعة صلاحيات ← الصفحة المسموحة. بـ set عادية كان هيحصل `TypeError: unhashable type`.
+print(permissions[frozenset(["editor", "admin"])]) ¦¦ الترتيب مش مهم في المجموعات، فالمفتاح اتلاقى.
+groups = {frozenset({"a", "b"}), frozenset({"b", "a"})} ¦¦ set فيها frozensets — الاتنين نفس المجموعة فبيتحسبوا واحد.
+print(len(groups)) ¦¦ عنصر واحد.
+    @end
+    @out
+2 True
+مقفولة: 'frozenset' object has no attribute 'add'
+لوحة التحكم
+1
+    @end
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>درجات بالتقدير</div>
+      <p>من قاموس درجات، اعمل قاموس جديد بـ «ناجح/راسب» (النجاح من 50)، وقاموس تاني بالناجحين بس.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+grades = {"سارة": 91, "أحمد": 42, "منى": 77} ¦¦ الدرجات.
+status = {n: "ناجح" if g >= 50 else "راسب" for n, g in grades.items()} ¦¦ تعبير شرطي في مكان القيمة.
+passed = {n: g for n, g in grades.items() if g >= 50} ¦¦ فلتر في الآخر.
+print(status) ¦¦ كل الأسماء بحالتها.
+print(passed) ¦¦ الناجحين بدرجاتهم.
+      @end
+      @out
+{'سارة': 'ناجح', 'أحمد': 'راسب', 'منى': 'ناجح'}
+{'سارة': 91, 'منى': 77}
+      @end
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تلات طبقات إعدادات</div>
+      <p>عندك إعدادات افتراضية، وإعدادات ملف، وإعدادات سطر الأوامر (الأعلى أولوية). ادمجهم في سطر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+defaults = {"port": 8000, "debug": False, "host": "localhost"} ¦¦ الأقل أولوية.
+file_cfg = {"port": 5000} ¦¦ من ملف.
+cli_cfg = {"debug": True} ¦¦ الأعلى أولوية.
+final = defaults | file_cfg | cli_cfg ¦¦ من الأقل للأعلى — كل واحد بيغطّي على اللي قبله.
+print(final) ¦¦ البورت من الملف، والـ debug من سطر الأوامر، والـ host من الافتراضي.
+      @end
+      @out
+{'port': 5000, 'debug': True, 'host': 'localhost'}
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">a, *b, c = [1, 2, 3, 4]</code> — قيمة b؟</p>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> (2, 3)</label>
+        <label><input type="radio"> [2, 3]</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">{"a": 1} | {"a": 2}</code>؟</p>
+        <label><input type="radio"> {'a': 2}</label>
+        <label><input type="radio"> {'a': 1}</label>
+        <label><input type="radio"> {'a': [1, 2]}</label>
+        <label><input type="radio"> TypeError</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">{x % 3 for x in range(10)}</code> نوعه وقيمته؟</p>
+        <label><input type="radio"> قاموس</label>
+        <label><input type="radio"> قائمة من 10 عناصر</label>
+        <label><input type="radio"> SyntaxError</label>
+        <label><input type="radio"> set فيها {0, 1, 2}</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">4. <code class="inl">print(*"hi")</code> بتطبع…</p>
+        <label><input type="radio"> hi</label>
+        <label><input type="radio"> h i</label>
+        <label><input type="radio"> ['h', 'i']</label>
+        <label><input type="radio"> *hi</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u10-l6 before="<!-- 10.P1 -->"
+  <!-- 10.6 -->
+  <article class="lesson" id="u10-l6">
+    <h3>مكتبة collections: Counter و defaultdict و namedtuple و deque <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تستبدل أنماط كتبتها بإيدك عشرات المرّات (العدّ، التجميع، السجلات) بأدوات جاهزة أسرع وأوضح — من المكتبة القياسية.</p>
+
+    <h4>1. Counter: العدّاد الجاهز</h4>
+    <p>فاكر «عدّاد التكرار» اللي بنيناه بقاموس و if؟ <code class="inl">Counter</code> بيعمله في سطر — وبيزوّد عليه.</p>
+    @code run
+from collections import Counter ¦¦ `Counter` نوع قاموس متخصّص في العدّ.
+words = "بايثون لغة سهلة بايثون لغة قوية بايثون".split() ¦¦ قائمة كلمات.
+counts = Counter(words) ¦¦ **سطر واحد** بدل الحلقة والـ if: عدّ كل عنصر.
+print(counts) ¦¦ بيتعرض مرتّب من الأكتر للأقل.
+print(counts["بايثون"]) ¦¦ بيتقرا زي القاموس.
+print(counts["جافا"]) ¦¦ **مفتاح مش موجود ← 0 مش KeyError**. منطقي: عدّها صفر.
+print(counts.most_common(2)) ¦¦ أكتر عنصرين تكرارًا كقائمة tuples — «التوب 2».
+print(Counter("mississippi").most_common(1)) ¦¦ مع نص بيعدّ الحروف. i و s الاتنين 4 مرّات، والتعادل بيتحسم بترتيب الظهور.
+    @end
+    @out
+Counter({'بايثون': 3, 'لغة': 2, 'سهلة': 1, 'قوية': 1})
+3
+0
+[('بايثون', 3), ('لغة', 2)]
+[('i', 4)]
+    @end
+    @code run
+from collections import Counter ¦¦ استيراد.
+week1 = Counter({"قهوة": 5, "شاي": 3}) ¦¦ مبيعات أسبوع — ممكن تنشئه من قاموس جاهز.
+week2 = Counter({"قهوة": 2, "عصير": 4}) ¦¦ الأسبوع اللي بعده.
+print(week1 + week2) ¦¦ **جمع العدّادات**: كل مفتاح بيتجمع، واللي في واحد بس بيتضاف زي ما هو.
+print(week1 - week2) ¦¦ الطرح — والنتايج صفر أو أقل **بتتشال** تلقائيًا (العصير مش هيظهر).
+print(week1.total()) ¦¦ مجموع كل العدّات (من بايثون 3.10).
+week1.update(["شاي", "شاي"]) ¦¦ `update` بتزوّد (مش بتستبدل زي القاموس العادي).
+print(week1["شاي"]) ¦¦ 3 + 2.
+    @end
+    @out
+Counter({'قهوة': 7, 'عصير': 4, 'شاي': 3})
+Counter({'قهوة': 3, 'شاي': 3})
+8
+5
+    @end
+
+    <h4>2. defaultdict: قاموس بقيمة افتراضية تلقائية</h4>
+    <p>أشهر نمط في معالجة البيانات: <strong>التجميع</strong>. الطريقة العادية محتاجة «لو المفتاح مش موجود اعمله الأول».</p>
+    @code run
+students = [("سارة", "أ"), ("أحمد", "ب"), ("منى", "أ"), ("علي", "ج"), ("خالد", "ب")] ¦¦ طلاب وفصولهم.
+manual = {} ¦¦ الطريقة اليدوية.
+for name, cls in students: ¦¦ المرور مع التفكيك.
+    if cls not in manual: ¦¦ أول مرّة نشوف الفصل ده؟
+        manual[cls] = [] ¦¦ نعمله قائمة فاضية.
+    manual[cls].append(name) ¦¦ وبعدين نضيف.
+print(manual) ¦¦ النتيجة.
+    @end
+    @out
+{'أ': ['سارة', 'منى'], 'ب': ['أحمد', 'خالد'], 'ج': ['علي']}
+    @end
+    @code run
+from collections import defaultdict ¦¦ استيراد.
+students = [("سارة", "أ"), ("أحمد", "ب"), ("منى", "أ"), ("علي", "ج"), ("خالد", "ب")] ¦¦ نفس البيانات.
+by_class = defaultdict(list) ¦¦ بنسلّمه **دالة بتصنع القيمة الافتراضية**: `list` (من غير أقواس). أي مفتاح جديد هياخد `list()` = قائمة فاضية.
+for name, cls in students: ¦¦ المرور.
+    by_class[cls].append(name) ¦¦ **مفيش if**: لو الفصل جديد، القائمة بتتعمل لوحدها وبعدين append.
+print(dict(by_class)) ¦¦ حوّلناه لقاموس عادي للعرض (عشان شكل الطباعة يبقى أنضف).
+stock = defaultdict(int) ¦¦ `int()` بترجّع 0 — مثالي للعدّ والتجميع الرقمي.
+stock["قلم"] += 10 ¦¦ من غير ما نعرّفه الأول: 0 + 10.
+print(stock["كشكول"]) ¦¦ ⚠️ **الفخ**: مجرّد **القراءة** بتنشئ المفتاح بقيمة 0.
+print(dict(stock)) ¦¦ «كشكول» بقى موجود في القاموس! لو محتاج تسأل بس، استخدم `in` أو `get`.
+print("مسطرة" in stock) ¦¦ `in` ما بتنشئش حاجة.
+    @end
+    @out
+{'أ': ['سارة', 'منى'], 'ب': ['أحمد', 'خالد'], 'ج': ['علي']}
+0
+{'قلم': 10, 'كشكول': 0}
+False
+    @end
+
+    <h4>3. namedtuple: tuple بأسماء</h4>
+    <p><code class="inl">point[0]</code> مش واضحة. <code class="inl">point.x</code> واضحة. <code class="inl">namedtuple</code> بتدّيك سجل خفيف غير قابل للتعديل بأسماء حقول — خطوة قبل الكلاسات في وحدة OOP.</p>
+    @code run
+from collections import namedtuple ¦¦ استيراد.
+Point = namedtuple("Point", ["x", "y"]) ¦¦ **بنصنع نوع جديد** اسمه Point بحقلين. الاسم بحرف كبير لأنه نوع (زي الكلاسات).
+p = Point(3, 4) ¦¦ إنشاء نقطة.
+print(p) ¦¦ طباعة مقروءة فيها أسماء الحقول.
+print(p.x, p[1]) ¦¦ الوصول بالاسم **أو** بالفهرس — لسه tuple.
+x, y = p ¦¦ والتفكيك شغّال.
+print(x + y) ¦¦ 7.
+Student = namedtuple("Student", "name grade city") ¦¦ الحقول ممكن تتكتب كنص مفصول بمسافات.
+s = Student("سارة", 95, "الجيزة") ¦¦ طالب.
+print(s.name, s.grade) ¦¦ كود بيشرح نفسه.
+print(s._replace(grade=97)) ¦¦ مش قابل للتعديل (`s.grade = 97` ← AttributeError)، فـ `_replace` بترجّع **نسخة جديدة** بقيمة مختلفة.
+    @end
+    @out
+Point(x=3, y=4)
+3 4
+7
+سارة 95
+Student(name='سارة', grade=97, city='الجيزة')
+    @end
+
+    <h4>4. deque: قائمة بطرفين سريعين</h4>
+    <p>نظرة سريعة — هنفهم ليه هي أسرع من القائمة من جوّه في وحدة الخوارزميات.</p>
+    @code run
+from collections import deque ¦¦ استيراد.
+recent = deque(maxlen=3) ¦¦ `maxlen`: لما تتملي، الإضافة من ناحية بتشيل من الناحية التانية تلقائيًا.
+for n in [1, 2, 3, 4, 5]: ¦¦ نضيف 5 أرقام.
+    recent.append(n) ¦¦ بعد التالت، كل إضافة بتطرد الأقدم.
+print(recent) ¦¦ آخر 3 بس — مثالي لـ «آخر عمليات» أو «آخر رسايل».
+d = deque([1, 2, 3]) ¦¦ deque عادية.
+d.appendleft(0) ¦¦ إضافة **في الأول** بسرعة (في القائمة العادية `insert(0, x)` بطيئة).
+d.rotate(1) ¦¦ لفّ العناصر خطوة لليمين: الأخير بقى الأول.
+print(d) ¦¦ النتيجة.
+    @end
+    @out
+deque([3, 4, 5], maxlen=3)
+deque([3, 0, 1, 2])
+    @end
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الأداة</th><th>بتحلّ مشكلة</th><th>بدل ما تكتب</th></tr>
+        <tr><td><code class="inl">Counter</code></td><td>العدّ والتوب N</td><td>قاموس + if + ترتيب</td></tr>
+        <tr><td><code class="inl">defaultdict</code></td><td>التجميع والتراكم</td><td><code class="inl">if key not in d: d[key] = []</code></td></tr>
+        <tr><td><code class="inl">namedtuple</code></td><td>سجلات صغيرة مقروءة</td><td><code class="inl">record[2]</code> الغامضة</td></tr>
+        <tr><td><code class="inl">deque</code></td><td>طوابير و«آخر N»</td><td><code class="inl">lst.pop(0)</code> البطيئة</td></tr>
+      </table>
+    </div>
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>أكتر 3 حروف</div>
+      <p>اطبع أكتر 3 حروف تكرارًا في جملة إنجليزي، من غير المسافات، ومن غير فرق بين الكبير والصغير.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+from collections import Counter ¦¦ استيراد.
+text = "Python is Powerful and Popular" ¦¦ الجملة.
+counts = Counter(text.lower().replace(" ", "")) ¦¦ توحيد الحالة وشيل المسافات، ثم العدّ على الحروف.
+for letter, n in counts.most_common(3): ¦¦ تفكيك كل tuple.
+    print(letter, n) ¦¦ الحرف وعدده.
+      @end
+      @out
+p 4
+o 3
+n 2
+      @end
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>فهرس الكلمات</div>
+      <p>جمّع الكلمات حسب أول حرف بـ <code class="inl">defaultdict</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+from collections import defaultdict ¦¦ استيراد.
+words = ["apple", "banana", "avocado", "blueberry", "cherry"] ¦¦ الكلمات.
+index = defaultdict(list) ¦¦ كل حرف ← قائمة كلمات.
+for w in words: ¦¦ المرور.
+    index[w[0]].append(w) ¦¦ أول حرف هو المفتاح.
+print(dict(index)) ¦¦ العرض.
+      @end
+      @out
+{'a': ['apple', 'avocado'], 'b': ['banana', 'blueberry'], 'c': ['cherry']}
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">Counter("aab")["z"]</code>؟</p>
+        <label><input type="radio"> KeyError</label>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> 1</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">defaultdict(list)</code> — القيمة الافتراضية لأي مفتاح جديد؟</p>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> الدالة list نفسها</label>
+        <label><input type="radio"> قائمة فاضية []</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. تعدّل حقل في namedtuple إزاي؟</p>
+        <label><input type="radio"> بـ _replace اللي بترجّع نسخة جديدة</label>
+        <label><input type="radio"> p.x = 5</label>
+        <label><input type="radio"> p[0] = 5</label>
+        <label><input type="radio"> مستحيل تجيب نسخة معدّلة</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. <code class="inl">deque(maxlen=2)</code> ضفت فيها 1 ثم 2 ثم 3. محتواها؟</p>
+        <label><input type="radio"> [1, 2]</label>
+        <label><input type="radio"> خطأ عند إضافة 3</label>
+        <label><input type="radio"> [2, 3]</label>
+        <label><input type="radio"> [1, 2, 3]</label>
+      </div>
+    </div>
+  </article>

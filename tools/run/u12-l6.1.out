@@ -1,0 +1,5 @@
+b'Hi \xd8\xb3\xd8\xa7\xd8\xb1\xd8\xa9 \xf0\x9f\x98\x80'
+<class 'bytes'>
+9 16
+Hi سارة 😀
+[65] [216, 179]

@@ -1,0 +1,1081 @@
+@@lesson u13-ch before="<!-- UNIT-END:13 -->"
+  <!-- 13.CH -->
+  <article class="lesson" id="u13-ch">
+    <h3>تحدّيات بتصحيح آلي: منطق الألعاب <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">افصل «منطق اللعبة» في دوال صغيرة تتختبر لوحدها — ده اللي بيخلّي المشاريع الكبيرة قابلة للتطوير.</p>
+
+    <div class="challenge" data-ch="u13-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — قلب لعبة Hangman <span class="lvl">⭐⭐</span></div>
+      <p>
+        <code class="inl">mask(word, guessed)</code>: ترجّع الكلمة بحروفها المخمّنة وشرطة مكان الباقي، مفصولين بمسافة (<code class="inl">"p _ _ _ o _"</code>)،
+        والمقارنة من غير فرق بين الكبير والصغير (والحرف يظهر بشكله الأصلي).<br>
+        <code class="inl">is_won(word, guessed)</code>: <code class="inl">True</code> لو كل حروف الكلمة اتخمّنت.
+      </p>
+      @starter u13-ch1
+def mask(word, guessed):
+    pass
+
+def is_won(word, guessed):
+    pass
+      @end
+      @tests u13-ch1
+def test_mask_basic():
+    "mask('python', {'p', 'o'}) ← 'p _ _ _ o _'"
+    assert mask("python", {"p", "o"}) == "p _ _ _ o _", repr(mask("python", {"p", "o"}))
+
+def test_mask_case():
+    "mask('Python', {'p'}) ← 'P _ _ _ _ _' (الحرف بشكله الأصلي)"
+    assert mask("Python", {"p"}) == "P _ _ _ _ _"
+
+def test_mask_nothing():
+    "من غير تخمينات ← كله شرط"
+    assert mask("abc", set()) == "_ _ _"
+
+def test_won():
+    "is_won: كل الحروف ← True، ناقص حرف ← False"
+    assert is_won("level", {"l", "e", "v"}) is True
+    assert is_won("level", {"l", "e"}) is False
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u13-ch1
+def mask(word, guessed): ¦¦ عرض الكلمة.
+    lowered = {g.lower() for g in guessed} ¦¦ set comprehension: نوحّد التخمينات مرّة واحدة.
+    return " ".join(ch if ch.lower() in lowered else "_" for ch in word) ¦¦ تعبير مولّد جوّه `join`: الحرف لو اتخمّن، وإلا شرطة.
+ ¦¦
+def is_won(word, guessed): ¦¦ الفوز.
+    lowered = {g.lower() for g in guessed} ¦¦ نفس التوحيد.
+    return set(word.lower()) <= lowered ¦¦ `<=` بين مجموعتين = «كل حروف الكلمة موجودة في التخمينات» (subset).
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u13-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — حَكَم حجر ورقة مقص <span class="lvl">⭐⭐</span></div>
+      <p><code class="inl">winner(p1, p2)</code> — الحركات <code class="inl">"rock"</code> و <code class="inl">"paper"</code> و <code class="inl">"scissors"</code>. ترجّع <code class="inl">"p1"</code> أو <code class="inl">"p2"</code> أو <code class="inl">"draw"</code>، وترمي <code class="inl">ValueError</code> لأي حركة تانية.</p>
+      @starter u13-ch2
+def winner(p1, p2):
+    if p1 == p2:
+        return "draw"
+    if p1 == "rock" and p2 == "scissors":
+        return "p1"
+    return "p2"
+      @end
+      @tests u13-ch2
+def test_all_combinations():
+    "كل التوافيق التسعة"
+    table = {
+        ("rock", "scissors"): "p1", ("scissors", "paper"): "p1", ("paper", "rock"): "p1",
+        ("scissors", "rock"): "p2", ("paper", "scissors"): "p2", ("rock", "paper"): "p2",
+        ("rock", "rock"): "draw", ("paper", "paper"): "draw", ("scissors", "scissors"): "draw",
+    }
+    for (a, b), expected in table.items():
+        got = winner(a, b)
+        assert got == expected, f"winner({a!r}, {b!r}) رجّعت {got!r} والمفروض {expected!r}"
+
+def test_invalid():
+    "حركة غلط ← ValueError"
+    for a, b in [("rock", "lizard"), ("stone", "paper")]:
+        try:
+            winner(a, b)
+        except ValueError:
+            continue
+        raise AssertionError(f"winner({a!r}, {b!r}) ما رمتش ValueError")
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u13-ch2
+BEATS = {"rock": "scissors", "scissors": "paper", "paper": "rock"} ¦¦ **البيانات بدل الشروط**: كل حركة ← اللي بتغلبها. إضافة حركة جديدة = سطر في القاموس.
+ ¦¦
+def winner(p1, p2): ¦¦ الحَكَم.
+    if p1 not in BEATS or p2 not in BEATS: ¦¦ التحقّق الأول.
+        raise ValueError(f"حركة غير معروفة: {p1!r} / {p2!r}") ¦¦ رسالة.
+    if p1 == p2: ¦¦ تعادل.
+        return "draw" ¦¦ النتيجة.
+    return "p1" if BEATS[p1] == p2 else "p2" ¦¦ لو حركة الأول بتغلب حركة التاني، الأول كسب.
+      @end
+      </details>
+    </div>
+  </article>
+
+@@lesson u14-ch before="<!-- UNIT-END:14 -->"
+  <!-- 14.CH -->
+  <article class="lesson" id="u14-ch">
+    <h3>تحدّيات بتصحيح آلي: بيانات الـ APIs <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">الـ API بيرجّع JSON — ومش دايمًا كامل. اكتب كود بيتعامل مع الرد الحقيقي والرد الناقص.</p>
+
+    <div class="challenge" data-ch="u14-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — ملخّص الطقس <span class="lvl">⭐⭐</span></div>
+      <p>
+        <code class="inl">summarize(json_text)</code> بتاخد نص JSON شكله <code class="inl">{"name": "Cairo", "main": {"temp": 31.4}, "weather": [{"description": "clear sky"}]}</code>
+        وترجّع <code class="inl">"Cairo: 31°C — clear sky"</code> (الحرارة مقرّبة). لو فيه مفتاح ناقص ترجّع <code class="inl">"بيانات ناقصة"</code>، ولو النص مش JSON أصلًا ترجّع <code class="inl">"رد غير صالح"</code>.
+      </p>
+      @starter u14-ch1
+import json
+
+def summarize(json_text):
+    data = json.loads(json_text)
+    return f"{data['name']}: {data['main']['temp']}°C — {data['weather'][0]['description']}"
+      @end
+      @tests u14-ch1
+import json
+
+GOOD = json.dumps({"name": "Cairo", "main": {"temp": 31.4}, "weather": [{"description": "clear sky"}]})
+
+def test_good():
+    "رد كامل ← Cairo: 31°C — clear sky"
+    assert summarize(GOOD) == "Cairo: 31°C — clear sky", summarize(GOOD)
+
+def test_missing_key():
+    "مفتاح main ناقص ← بيانات ناقصة"
+    assert summarize(json.dumps({"name": "Giza", "weather": [{"description": "rain"}]})) == "بيانات ناقصة"
+
+def test_empty_weather():
+    "قائمة weather فاضية ← بيانات ناقصة"
+    assert summarize(json.dumps({"name": "X", "main": {"temp": 20}, "weather": []})) == "بيانات ناقصة"
+
+def test_not_json():
+    "نص مش JSON ← رد غير صالح"
+    assert summarize("<html>Error 500</html>") == "رد غير صالح"
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u14-ch1
+import json ¦¦ مكتبة JSON.
+ ¦¦
+def summarize(json_text): ¦¦ الدالة.
+    try: ¦¦ الخطوة 1: هل ده JSON أصلًا؟
+        data = json.loads(json_text) ¦¦ التحليل.
+    except json.JSONDecodeError: ¦¦ سيرفرات بترجّع صفحة HTML لما تقع — لازم نتوقّعها.
+        return "رد غير صالح" ¦¦ رسالة.
+    try: ¦¦ الخطوة 2: الوصول للبيانات المتداخلة (EAFP).
+        city = data["name"] ¦¦ المدينة.
+        temp = round(data["main"]["temp"]) ¦¦ الحرارة مقرّبة.
+        description = data["weather"][0]["description"] ¦¦ أول وصف — ممكن IndexError لو القائمة فاضية.
+    except (KeyError, IndexError, TypeError): ¦¦ أي شكل ناقص أو مختلف.
+        return "بيانات ناقصة" ¦¦ رسالة.
+    return f"{city}: {temp}°C — {description}" ¦¦ الملخّص.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u14-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — صيّاد الإيميلات <span class="lvl">⭐⭐</span></div>
+      <p><code class="inl">extract_emails(text)</code> بـ <code class="inl">re</code>: ترجّع كل الإيميلات في النص — بحروف صغيرة، من غير تكرار، ومرتّبة أبجديًا.</p>
+      @starter u14-ch2
+import re
+
+def extract_emails(text):
+    pass
+      @end
+      @tests u14-ch2
+def test_basic():
+    "إيميلين في نص عادي"
+    text = "كلّم sara@mail.com أو ahmed.ali@company.co.uk بكرة"
+    assert extract_emails(text) == ["ahmed.ali@company.co.uk", "sara@mail.com"], extract_emails(text)
+
+def test_dupes_and_case():
+    "تكرار بحروف مختلفة ← مرّة واحدة بحروف صغيرة"
+    assert extract_emails("Sara@Mail.com, sara@mail.com") == ["sara@mail.com"]
+
+def test_none():
+    "مفيش إيميلات ← قائمة فاضية"
+    assert extract_emails("مفيش حاجة هنا @ ولا هنا") == []
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u14-ch2
+import re ¦¦ التعبيرات النمطية.
+ ¦¦
+EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+") ¦¦ `compile` مرّة واحدة وتستخدمه كتير. اسم المستخدم (حروف ونقط و+ و-)، @، ودومين بنقطة واحدة على الأقل.
+ ¦¦
+def extract_emails(text): ¦¦ الدالة.
+    found = {match.lower() for match in EMAIL.findall(text)} ¦¦ `findall` بترجّع كل التطابقات، والـ set comprehension بتوحّد الحالة وتشيل التكرار.
+    return sorted(found) ¦¦ `sorted` بترجّع قائمة مرتّبة.
+      @end
+      </details>
+    </div>
+  </article>
+
+@@lesson u15-ch before="<!-- 15.EX -->"
+  <!-- 15.CH -->
+  <article class="lesson" id="u15-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة الخامسة عشرة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">الكلاسات: الاختبارات بتتأكّد من السلوك — ومن إن كل كائن مستقل عن التاني.</p>
+
+    <div class="challenge" data-ch="u15-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — الحساب البنكي <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        كلاس <code class="inl">BankAccount(owner, balance=0)</code>: <code class="inl">deposit(amount)</code> و <code class="inl">withdraw(amount)</code> بيرموا <code class="inl">ValueError</code> لأي مبلغ ≤ 0،
+        والسحب أكبر من الرصيد كمان <code class="inl">ValueError</code>. <code class="inl">balance</code> خاصية <strong>للقراءة بس</strong> (<code class="inl">@property</code>)،
+        و <code class="inl">str(acc)</code> ترجّع <code class="inl">"Account(sara: 150)"</code>.
+      </p>
+      @starter u15-ch1
+class BankAccount:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self.balance = balance
+      @end
+      @tests u15-ch1
+def test_deposit_withdraw():
+    "إيداع 100 وسحب 30 من 50 ← 120"
+    acc = BankAccount("sara", 50)
+    acc.deposit(100)
+    acc.withdraw(30)
+    assert acc.balance == 120
+
+def test_invalid_amounts():
+    "مبلغ صفر أو سالب ← ValueError"
+    acc = BankAccount("ali")
+    for action in (acc.deposit, acc.withdraw):
+        for bad in (0, -5):
+            try:
+                action(bad)
+            except ValueError:
+                continue
+            raise AssertionError(f"{action.__name__}({bad}) ما رمتش ValueError")
+
+def test_overdraw():
+    "سحب أكبر من الرصيد ← ValueError والرصيد ما يتغيّرش"
+    acc = BankAccount("mona", 40)
+    try:
+        acc.withdraw(100)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("السحب الزيادة ما رماش ValueError")
+    assert acc.balance == 40
+
+def test_read_only():
+    "balance للقراءة بس"
+    acc = BankAccount("omar", 10)
+    try:
+        acc.balance = 1_000_000
+    except AttributeError:
+        return
+    raise AssertionError("قدرنا نغيّر balance مباشرةً — استخدم @property")
+
+def test_str():
+    "str ← Account(sara: 150)"
+    assert str(BankAccount("sara", 150)) == "Account(sara: 150)"
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u15-ch1
+class BankAccount: ¦¦ الكلاس.
+    def __init__(self, owner, balance=0): ¦¦ المهيّئ.
+        self.owner = owner ¦¦ صاحب الحساب.
+        self._balance = balance ¦¦ الشرطة = «داخلي، ما تلمسوش من برّه».
+ ¦¦
+    @property ¦¦ خاصية محسوبة **من غير setter** = للقراءة بس (الإسناد بيرمي AttributeError).
+    def balance(self): ¦¦ الاسم العام.
+        return self._balance ¦¦ القيمة الداخلية.
+ ¦¦
+    @staticmethod ¦¦ دالة مساعدة ما بتحتاجش self.
+    def _check(amount): ¦¦ التحقّق المشترك — مكتوب مرّة واحدة.
+        if amount <= 0: ¦¦ الشرط.
+            raise ValueError("المبلغ لازم يكون موجب") ¦¦ الرمي.
+ ¦¦
+    def deposit(self, amount): ¦¦ الإيداع.
+        self._check(amount) ¦¦ التحقّق.
+        self._balance += amount ¦¦ التعديل الداخلي.
+ ¦¦
+    def withdraw(self, amount): ¦¦ السحب.
+        self._check(amount) ¦¦ التحقّق.
+        if amount > self._balance: ¦¦ **الفحص قبل الخصم** (LBYL لأن العملية مالية).
+            raise ValueError("الرصيد مش كفاية") ¦¦ الرمي — والرصيد ما اتلمسش.
+        self._balance -= amount ¦¦ الخصم.
+ ¦¦
+    def __str__(self): ¦¦ شكل الطباعة.
+        return f"Account({self.owner}: {self._balance})" ¦¦ النص المطلوب.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u15-ch2">
+      <div class="ch-head">🐞 التحدّي 2 — الطلاب اللي بيشاركوا نفس الكورسات <span class="lvl">⭐⭐</span></div>
+      <p>لما طالب يسجّل في كورس، الكورس بيظهر عند <strong>كل</strong> الطلاب! صلّح الكلاس.</p>
+      @starter u15-ch2
+class Student:
+    courses = []
+
+    def __init__(self, name):
+        self.name = name
+
+    def enroll(self, course):
+        self.courses.append(course)
+      @end
+      @tests u15-ch2
+def test_independent():
+    "كل طالب ليه كورساته"
+    a = Student("sara")
+    b = Student("ali")
+    a.enroll("Python")
+    assert a.courses == ["Python"], a.courses
+    assert b.courses == [], f"علي اتسجّل في {b.courses} من غير ما يطلب"
+
+def test_multiple():
+    "طالب يسجّل في كورسين"
+    s = Student("mona")
+    s.enroll("SQL")
+    s.enroll("Git")
+    assert s.courses == ["SQL", "Git"], s.courses
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u15-ch2
+class Student: ¦¦ الكلاس.
+    def __init__(self, name): ¦¦ المهيّئ.
+        self.name = name ¦¦ الاسم.
+        self.courses = [] ¦¦ **الغلطة**: `courses = []` على مستوى الكلاس = قائمة **واحدة** مشتركة بين كل الكائنات (درس خصائص الكلاس). مكانها الصح جوّه `__init__` عشان كل كائن ياخد قائمته.
+ ¦¦
+    def enroll(self, course): ¦¦ التسجيل.
+        self.courses.append(course) ¦¦ بيضيف لقائمة الكائن ده بس.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u15-ch3">
+      <div class="ch-head">🧪 التحدّي 3 — الأشكال <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        كلاس أب <code class="inl">Shape</code> دالته <code class="inl">area()</code> بترمي <code class="inl">NotImplementedError</code>، وكلاسين أبناء: <code class="inl">Rectangle(w, h)</code> و <code class="inl">Circle(r)</code>.
+        ودالة <code class="inl">total_area(shapes)</code> بتجمع مساحات أي أشكال (تعدّد الأشكال).
+      </p>
+      @starter u15-ch3
+import math
+
+class Shape:
+    pass
+
+def total_area(shapes):
+    pass
+      @end
+      @tests u15-ch3
+import math
+
+def test_rectangle():
+    "Rectangle(3, 4).area() ← 12"
+    assert Rectangle(3, 4).area() == 12
+
+def test_circle():
+    "Circle(1).area() ← π"
+    assert math.isclose(Circle(1).area(), math.pi)
+
+def test_inheritance():
+    "الاتنين أبناء Shape"
+    assert isinstance(Rectangle(1, 1), Shape) and isinstance(Circle(1), Shape)
+
+def test_base_not_implemented():
+    "Shape().area() ← NotImplementedError"
+    try:
+        Shape().area()
+    except NotImplementedError:
+        return
+    raise AssertionError("المفروض NotImplementedError")
+
+def test_total():
+    "total_area بتجمع أشكال مختلفة"
+    shapes = [Rectangle(2, 5), Circle(2), Rectangle(1, 1)]
+    assert math.isclose(total_area(shapes), 11 + 4 * math.pi)
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u15-ch3
+import math ¦¦ لـ π.
+ ¦¦
+class Shape: ¦¦ الأب: «عقد» بيقول إن أي شكل ليه مساحة.
+    def area(self): ¦¦ الدالة المطلوب من الأبناء يعيدوا تعريفها.
+        raise NotImplementedError("كل شكل لازم يعرّف area") ¦¦ لو ابن نسيها، الخطأ هيوضّح السبب.
+ ¦¦
+class Rectangle(Shape): ¦¦ ابن.
+    def __init__(self, w, h): ¦¦ الأبعاد.
+        self.w, self.h = w, h ¦¦ تخزين.
+ ¦¦
+    def area(self): ¦¦ إعادة تعريف.
+        return self.w * self.h ¦¦ الطول × العرض.
+ ¦¦
+class Circle(Shape): ¦¦ ابن تاني.
+    def __init__(self, r): ¦¦ نصف القطر.
+        self.r = r ¦¦ تخزين.
+ ¦¦
+    def area(self): ¦¦ إعادة تعريف.
+        return math.pi * self.r ** 2 ¦¦ ط نق².
+ ¦¦
+def total_area(shapes): ¦¦ **تعدّد الأشكال**: الدالة ما تعرفش ولا يهمّها نوع كل شكل.
+    return sum(shape.area() for shape in shapes) ¦¦ كل كائن بيحسب مساحته بطريقته.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u15-ch4">
+      <div class="ch-head">🧪 التحدّي 4 — الطلب ودورة حياته (dataclass + Enum) <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        كمّل <code class="inl">Order</code> كـ dataclass: <code class="inl">customer</code>، و <code class="inl">items</code> (قائمة <code class="inl">Item</code> فاضية افتراضيًا ومستقلّة لكل طلب)،
+        و <code class="inl">status</code> (افتراضيًا <code class="inl">OrderStatus.NEW</code>). وضيف:
+        <code class="inl">total</code> (property)، و <code class="inl">add(item)</code> (مسموحة في NEW بس)،
+        و <code class="inl">pay()</code> (من NEW لـ PAID)، و <code class="inl">ship()</code> (من PAID لـ SHIPPED). أي انتقال غلط ← <code class="inl">ValueError</code>.
+      </p>
+      @starter u15-ch4
+from dataclasses import dataclass, field
+from enum import Enum
+
+class OrderStatus(Enum):
+    NEW = "new"
+    PAID = "paid"
+    SHIPPED = "shipped"
+
+@dataclass
+class Item:
+    name: str
+    price: float
+    qty: int = 1
+
+@dataclass
+class Order:
+    customer: str
+    # كمّل الحقول والدوال
+      @end
+      @tests u15-ch4
+def test_defaults():
+    "طلب جديد: حالته NEW وقائمته فاضية ومستقلّة"
+    a, b = Order("sara"), Order("ali")
+    assert a.status is OrderStatus.NEW
+    a.add(Item("قلم", 5))
+    assert b.items == [], "كل طلب لازم قائمته مستقلّة (default_factory)"
+
+def test_total():
+    "total = مجموع السعر × الكمية"
+    o = Order("mona")
+    o.add(Item("قلم", 5, 3))
+    o.add(Item("كشكول", 25))
+    assert o.total == 40
+
+def test_happy_path():
+    "NEW ← pay ← PAID ← ship ← SHIPPED"
+    o = Order("omar")
+    o.add(Item("x", 10))
+    o.pay()
+    assert o.status is OrderStatus.PAID
+    o.ship()
+    assert o.status is OrderStatus.SHIPPED
+
+def test_invalid_transitions():
+    "ship قبل الدفع، والدفع مرّتين، والإضافة بعد الدفع ← ValueError"
+    def raises(fn):
+        try:
+            fn()
+        except ValueError:
+            return True
+        return False
+    o = Order("x")
+    assert raises(o.ship), "ship قبل pay لازم ترمي ValueError"
+    o.pay()
+    assert raises(o.pay), "pay مرّتين لازم ترمي ValueError"
+    assert raises(lambda: o.add(Item("y", 1))), "add بعد الدفع لازم ترمي ValueError"
+
+def test_equality():
+    "dataclass بتقارن بالقيم"
+    assert Order("z") == Order("z")
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u15-ch4
+from dataclasses import dataclass, field ¦¦ استيراد.
+from enum import Enum ¦¦ استيراد.
+ ¦¦
+class OrderStatus(Enum): ¦¦ الحالات المسموحة بس.
+    NEW = "new" ¦¦ جديد.
+    PAID = "paid" ¦¦ مدفوع.
+    SHIPPED = "shipped" ¦¦ اتشحن.
+ ¦¦
+@dataclass ¦¦ بند.
+class Item: ¦¦ الكلاس.
+    name: str ¦¦ الاسم.
+    price: float ¦¦ السعر.
+    qty: int = 1 ¦¦ الكمية.
+ ¦¦
+@dataclass ¦¦ الطلب.
+class Order: ¦¦ الكلاس.
+    customer: str ¦¦ العميل.
+    items: list[Item] = field(default_factory=list) ¦¦ قائمة جديدة لكل طلب.
+    status: OrderStatus = OrderStatus.NEW ¦¦ Enum كافتراضي (آمنة لأنها ثابتة).
+ ¦¦
+    @property ¦¦ قيمة محسوبة.
+    def total(self): ¦¦ الإجمالي.
+        return sum(i.price * i.qty for i in self.items) ¦¦ تعبير مولّد.
+ ¦¦
+    def _require(self, expected, action): ¦¦ دالة مساعدة داخلية بتمنع تكرار فحص الحالة.
+        if self.status is not expected: ¦¦ `is` مع أعضاء Enum.
+            raise ValueError(f"مينفعش {action} والطلب {self.status.value}") ¦¦ رسالة بتوضّح الحالة الحالية.
+ ¦¦
+    def add(self, item): ¦¦ إضافة بند.
+        self._require(OrderStatus.NEW, "تضيف بنود") ¦¦ مسموحة قبل الدفع بس.
+        self.items.append(item) ¦¦ الإضافة.
+ ¦¦
+    def pay(self): ¦¦ الدفع.
+        self._require(OrderStatus.NEW, "تدفع") ¦¦ من NEW بس.
+        self.status = OrderStatus.PAID ¦¦ الانتقال.
+ ¦¦
+    def ship(self): ¦¦ الشحن.
+        self._require(OrderStatus.PAID, "تشحن") ¦¦ من PAID بس.
+        self.status = OrderStatus.SHIPPED ¦¦ الانتقال.
+      @end
+      </details>
+    </div>
+  </article>
+
+@@lesson u16-ch before="<!-- 16.EX -->"
+  <!-- 16.CH -->
+  <article class="lesson" id="u16-ch">
+    <h3>تحدّيات بتصحيح آلي: اكتب اختباراتك <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">المرّة دي الأدوار بتتقلب: <strong>إنت</strong> اللي بتكتب الاختبارات، وإحنا بنختبرها بنسخ «بايظة» من الدالة — لو اختباراتك كويسة، لازم تكتشفها.</p>
+    <div class="box brain">
+      <div class="bt">🧠 اختبار الطفرات (Mutation Testing)</div>
+      <p>
+        إزاي تعرف إن اختباراتك قوية؟ <strong>بوّظ الكود عمدًا</strong> وشوف الاختبارات هتمسك البوظان ولّا لأ.
+        لو شِلت شرط من الدالة والاختبارات لسه ناجحة — يبقى الشرط ده مش متختبر. أدوات زي <code class="inl">mutmut</code> بتعمل ده أوتوماتيك على مشاريع كاملة.
+      </p>
+    </div>
+
+    <div class="challenge" data-ch="u16-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — اختبارات تمسك الطفرات <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        الدالة <code class="inl">is_strong</code> صحيحة: 8 حروف أو أكتر + رقم + حرف كبير. اكتب <strong>3 دوال اختبار على الأقل</strong> (<code class="inl">test_…</code> بـ <code class="inl">assert</code>)
+        بحيث تنجح على الدالة دي، <strong>وتفشل</strong> لو حد شال أي شرط منها — أو غيّر <code class="inl">&gt;=</code> لـ <code class="inl">&gt;</code>.
+      </p>
+      @starter u16-ch1
+def is_strong(password):
+    return len(password) >= 8 and any(c.isdigit() for c in password) and any(c.isupper() for c in password)
+
+
+def test_example():
+    assert is_strong("Secret123")
+      @end
+      @tests u16-ch1
+def _user_tests():
+    return [f for n, f in list(globals().items())
+            if n.startswith("test_") and callable(f)
+            and getattr(getattr(f, "__code__", None), "co_filename", "") == "main.py"]
+
+def _passes_with(impl):
+    for t in _user_tests():
+        g = t.__globals__
+        old = g.get("is_strong")
+        g["is_strong"] = impl
+        try:
+            t()
+        except Exception:
+            return False
+        finally:
+            g["is_strong"] = old
+    return True
+
+def _real(p):
+    return len(p) >= 8 and any(c.isdigit() for c in p) and any(c.isupper() for c in p)
+
+def test_enough_tests():
+    "كتبت 3 اختبارات أو أكتر"
+    n = len(_user_tests())
+    assert n >= 3, f"لقينا {n} اختبار بس"
+
+def test_green_on_real():
+    "اختباراتك بتنجح على الدالة الصحيحة"
+    assert _passes_with(_real), "فيه اختبار عندك بيفشل على الدالة الصحيحة — راجع توقّعاته"
+
+def test_catches_no_length():
+    "بتكتشف دالة ناسية شرط الطول"
+    assert not _passes_with(lambda p: any(c.isdigit() for c in p) and any(c.isupper() for c in p)), "جرّب كلمة قصيرة فيها رقم وحرف كبير"
+
+def test_catches_no_digit():
+    "بتكتشف دالة ناسية شرط الرقم"
+    assert not _passes_with(lambda p: len(p) >= 8 and any(c.isupper() for c in p)), "جرّب كلمة طويلة من غير أرقام"
+
+def test_catches_no_upper():
+    "بتكتشف دالة ناسية شرط الحرف الكبير"
+    assert not _passes_with(lambda p: len(p) >= 8 and any(c.isdigit() for c in p)), "جرّب كلمة طويلة بحروف صغيرة بس"
+
+def test_catches_boundary():
+    "بتكتشف لو >= بقت > (الحدّ: 8 حروف بالظبط)"
+    assert not _passes_with(lambda p: len(p) > 8 and any(c.isdigit() for c in p) and any(c.isupper() for c in p)), "اختبر كلمة سليمة طولها 8 بالظبط"
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u16-ch1
+def is_strong(password): ¦¦ الدالة كما هي.
+    return len(password) >= 8 and any(c.isdigit() for c in password) and any(c.isupper() for c in password) ¦¦ التلات شروط.
+ ¦¦
+ ¦¦
+def test_valid(): ¦¦ الحالة السعيدة.
+    assert is_strong("Secret123") ¦¦ كل الشروط متحقّقة.
+ ¦¦
+def test_too_short(): ¦¦ **كل اختبار بيكسر شرط واحد بس** والباقي سليم — عشان لو فشل نعرف السبب بالظبط.
+    assert not is_strong("Sec12") ¦¦ فيه رقم وحرف كبير، بس قصيرة.
+ ¦¦
+def test_no_digit(): ¦¦ شرط الرقم.
+    assert not is_strong("SecretWord") ¦¦ طويلة وفيها كبير، من غير رقم.
+ ¦¦
+def test_no_upper(): ¦¦ شرط الحرف الكبير.
+    assert not is_strong("secret123") ¦¦ طويلة وفيها رقم، من غير كبير.
+ ¦¦
+def test_exactly_eight(): ¦¦ **الحالة الحدّية**: أكتر مكان بيستخبّى فيه الغلط (off-by-one).
+    assert is_strong("Secret12") ¦¦ 8 حروف بالظبط لازم تتقبل.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u16-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — TDD: محلّل المُدد <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        الاختبارات مكتوبة قبل الكود (زي مشروع TDD). اكتب <code class="inl">parse_duration(text)</code> اللي بتحوّل <code class="inl">"1h30m"</code> لـ <code class="inl">90</code> دقيقة.
+        بتقبل ساعات بس، دقايق بس، أو الاتنين، وحروف كبيرة ومسافات. أي حاجة تانية (نص فاضي، رقم من غير وحدة، كلام) ← <code class="inl">ValueError</code>.
+      </p>
+      @starter u16-ch2
+def parse_duration(text):
+    """'1h30m' ← 90"""
+    pass
+      @end
+      @tests u16-ch2
+def test_both():
+    "1h30m ← 90"
+    assert parse_duration("1h30m") == 90
+
+def test_minutes_only():
+    "45m ← 45"
+    assert parse_duration("45m") == 45
+
+def test_hours_only():
+    "2h ← 120"
+    assert parse_duration("2h") == 120
+
+def test_messy():
+    "' 1H 5M ' ← 65"
+    assert parse_duration(" 1H 5M ") == 65
+
+def test_rejects():
+    "'' و 'abc' و '90' ← ValueError"
+    for bad in ["", "abc", "90", "m"]:
+        try:
+            parse_duration(bad)
+        except ValueError:
+            continue
+        raise AssertionError(f"parse_duration({bad!r}) ما رمتش ValueError")
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u16-ch2
+import re ¦¦ التعبيرات النمطية.
+ ¦¦
+def parse_duration(text): ¦¦ الدالة.
+    """'1h30m' ← 90""" ¦¦ docstring.
+    clean = text.replace(" ", "").lower() ¦¦ تنظيف: من غير مسافات وبحروف صغيرة.
+    match = re.fullmatch(r"(?:(\d+)h)?(?:(\d+)m)?", clean) ¦¦ `fullmatch` = النص **كله** لازم يطابق. جزئين اختياريين: أرقام بعدها h، وأرقام بعدها m.
+    if not clean or not match: ¦¦ النمط بيطابق النص الفاضي (الجزئين اختياريين) — فبنرفضه صراحةً.
+        raise ValueError(f"صيغة غير مفهومة: {text!r}") ¦¦ رسالة.
+    hours, minutes = match.groups() ¦¦ المجموعتين — `None` للجزء الغايب.
+    return int(hours or 0) * 60 + int(minutes or 0) ¦¦ `or 0` بتحوّل None لصفر.
+      @end
+      </details>
+    </div>
+  </article>
+
+@@lesson u17-ch before="<!-- 17.EX -->"
+  <!-- 17.CH -->
+  <article class="lesson" id="u17-ch">
+    <h3>تحدّيات بتصحيح آلي: الخوارزميات <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">مش بس «النتيجة صح» — الاختبارات هنا بتعدّ كمان إنت قريت كام عنصر، عشان تتأكّد إن الخوارزمية كفؤة فعلًا.</p>
+
+    <div class="challenge" data-ch="u17-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — بحث ثنائي حقيقي <span class="lvl">⭐⭐⭐</span></div>
+      <p>الكود اللي تحت <strong>صحيح لكنه بطيء</strong> (بحث خطّي). حوّله لبحث ثنائي يلاقي العنصر في مليون عنصر بـ 25 قراءة أو أقل. ارجع المكان أو <code class="inl">-1</code>.</p>
+      @starter u17-ch1
+def binary_search(items, target):
+    """مكان target في القائمة المرتّبة items، أو -1"""
+    for i, value in enumerate(items):
+        if value == target:
+            return i
+    return -1
+      @end
+      @tests u17-ch1
+class Counting(list):
+    def __init__(self, data):
+        super().__init__(data)
+        self.reads = 0
+
+    def __getitem__(self, i):
+        self.reads += 1
+        return super().__getitem__(i)
+
+def test_found():
+    "بيلاقي 35 في [0, 5, 10, …]"
+    assert binary_search(list(range(0, 100, 5)), 35) == 7
+
+def test_missing():
+    "العناصر المش موجودة ← -1"
+    items = list(range(0, 100, 5))
+    for t in (36, -5, 1000):
+        assert binary_search(items, t) == -1, f"البحث عن {t}"
+
+def test_edges():
+    "أول عنصر وآخر عنصر وقائمة فاضية"
+    items = [2, 4, 6, 8]
+    assert binary_search(items, 2) == 0
+    assert binary_search(items, 8) == 3
+    assert binary_search([], 3) == -1
+
+def test_efficient():
+    "مليون عنصر ← 25 قراءة بحدّ أقصى"
+    items = Counting(range(1_000_000))
+    assert binary_search(items, 765_432) == 765_432
+    assert 0 < items.reads <= 25, f"قريت {items.reads} عنصر — اقرا بالفهرس items[mid] وقسّم النطاق نصّين كل مرّة"
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u17-ch1
+def binary_search(items, target): ¦¦ الدالة.
+    """مكان target في القائمة المرتّبة items، أو -1""" ¦¦ docstring.
+    low, high = 0, len(items) - 1 ¦¦ حدود النطاق.
+    while low <= high: ¦¦ طول ما فيه نطاق.
+        mid = (low + high) // 2 ¦¦ المنتصف.
+        value = items[mid] ¦¦ **قراءة واحدة** بس في كل دورة.
+        if value == target: ¦¦ لقيناه.
+            return mid ¦¦ المكان.
+        if value < target: ¦¦ المطلوب يمين.
+            low = mid + 1 ¦¦ نشيل النص الشمال.
+        else: ¦¦ المطلوب شمال.
+            high = mid - 1 ¦¦ نشيل النص اليمين.
+    return -1 ¦¦ مش موجود. ~20 دورة لمليون عنصر (log₂).
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u17-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — الأقواس المتوازنة <span class="lvl">⭐⭐</span></div>
+      <p><code class="inl">is_balanced(text)</code> بترجّع <code class="inl">True</code> لو كل الأقواس <code class="inl">() [] {}</code> متقفلة صح وبالترتيب (الحروف التانية بتتجاهل).</p>
+      @starter u17-ch2
+def is_balanced(text):
+    return text.count("(") == text.count(")")
+      @end
+      @tests u17-ch2
+def test_good():
+    "(a[b]{c}) و '' ← True"
+    assert is_balanced("(a[b]{c})") is True
+    assert is_balanced("") is True
+
+def test_wrong_type():
+    "(] ← False"
+    assert is_balanced("(]") is False
+
+def test_order():
+    ")( ← False (العدد متساوي بس الترتيب غلط)"
+    assert is_balanced(")(") is False
+
+def test_unclosed():
+    "(( و [{ ← False"
+    assert is_balanced("((") is False
+    assert is_balanced("[{") is False
+
+def test_crossed():
+    "([)] ← False (متقاطعين)"
+    assert is_balanced("([)]") is False
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u17-ch2
+PAIRS = {")": "(", "]": "[", "}": "{"} ¦¦ القافل ← الفاتح بتاعه.
+ ¦¦
+def is_balanced(text): ¦¦ الدالة.
+    stack = [] ¦¦ **المكدّس**: آخر قوس اتفتح لازم يتقفل الأول.
+    for ch in text: ¦¦ حرف حرف.
+        if ch in "([{": ¦¦ فاتح.
+            stack.append(ch) ¦¦ push.
+        elif ch in PAIRS: ¦¦ قافل.
+            if not stack or stack.pop() != PAIRS[ch]: ¦¦ مفيش حاجة تتقفل، أو آخر فاتح مش من نفس النوع (بفضل short-circuit الـ pop ما بتحصلش على مكدّس فاضي).
+                return False ¦¦ مش متوازن.
+    return not stack ¦¦ لو فضل فواتح ما اتقفلتش ← False.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u17-ch3">
+      <div class="ch-head">🧪 التحدّي 3 — حجم الشجرة بالاسترجاع <span class="lvl">⭐⭐⭐</span></div>
+      <p>كل فولدر قاموس <code class="inl">{"name": …, "size": …, "children": [...]}</code>. اكتب <code class="inl">total_size(node)</code> بترجّع حجم الفولدر + كل اللي جوّاه بأي عمق.</p>
+      @starter u17-ch3
+def total_size(node):
+    return node["size"] + sum(child["size"] for child in node["children"])
+      @end
+      @tests u17-ch3
+def leaf(name, size):
+    return {"name": name, "size": size, "children": []}
+
+def test_leaf():
+    "فولدر من غير أبناء ← حجمه"
+    assert total_size(leaf("a", 7)) == 7
+
+def test_one_level():
+    "مستوى واحد"
+    root = {"name": "r", "size": 1, "children": [leaf("a", 2), leaf("b", 3)]}
+    assert total_size(root) == 6
+
+def test_nested():
+    "مستويات متداخلة"
+    root = {"name": "r", "size": 1, "children": [
+        {"name": "x", "size": 2, "children": [leaf("y", 3), {"name": "z", "size": 4, "children": [leaf("w", 5)]}]},
+        leaf("v", 6),
+    ]}
+    assert total_size(root) == 21, total_size(root)
+
+def test_deep():
+    "عمق 200 مستوى"
+    node = leaf("bottom", 1)
+    for i in range(200):
+        node = {"name": str(i), "size": 1, "children": [node]}
+    assert total_size(node) == 201
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u17-ch3
+def total_size(node): ¦¦ الدالة.
+    return node["size"] + sum(total_size(child) for child in node["children"]) ¦¦ **الاسترجاع**: حجم الفولدر = حجمه + مجموع أحجام أبنائه **بالكامل**. الحالة الأساسية ضمنية: فولدر من غير أبناء ← `sum` لقائمة فاضية = 0.
+      @end
+      </details>
+    </div>
+  </article>
+
+@@lesson u18-ch before="<!-- 15.EXAM -->"
+  <!-- 18.CH -->
+  <article class="lesson" id="u18-ch">
+    <h3>تحدّيات بتصحيح آلي: الأمان <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">الأمان مش «زيادة» — الاختبارات هنا بتلعب دور المهاجم.</p>
+
+    <div class="challenge" data-ch="u18-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — مولّد كلمات سر آمن <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        <code class="inl">generate_password(length=12)</code> بـ <code class="inl">secrets</code> (مش random): لازم فيها حرف صغير وحرف كبير ورقم ورمز من <code class="inl">!@#$%&amp;*</code> على الأقل،
+        ومفيش أي حرف غير الحروف والأرقام والرموز دي، والطول أقل من 8 ← <code class="inl">ValueError</code>.
+      </p>
+      @starter u18-ch1
+import secrets
+import string
+
+SYMBOLS = "!@#$%&*"
+
+def generate_password(length=12):
+    pass
+      @end
+      @tests u18-ch1
+import string
+
+ALLOWED = set(string.ascii_letters + string.digits + "!@#$%&*")
+
+def test_lengths():
+    "الطول الافتراضي 12، ولو طلبت 20 تبقى 20"
+    assert len(generate_password()) == 12
+    assert len(generate_password(20)) == 20
+
+def test_rules_many_times():
+    "200 كلمة سر: كلها فيها الأربع أنواع ومفيش حروف غريبة"
+    for _ in range(200):
+        pw = generate_password(8)
+        assert set(pw) <= ALLOWED, f"حروف مش مسموحة في {pw!r}"
+        assert any(c.islower() for c in pw), f"مفيش حرف صغير: {pw!r}"
+        assert any(c.isupper() for c in pw), f"مفيش حرف كبير: {pw!r}"
+        assert any(c.isdigit() for c in pw), f"مفيش رقم: {pw!r}"
+        assert any(c in "!@#$%&*" for c in pw), f"مفيش رمز: {pw!r}"
+
+def test_random_enough():
+    "50 كلمة سر مختلفة"
+    assert len({generate_password() for _ in range(50)}) == 50
+
+def test_too_short():
+    "طول 7 ← ValueError"
+    try:
+        generate_password(7)
+    except ValueError:
+        return
+    raise AssertionError("المفروض ValueError")
+
+def test_no_random_module():
+    "مفيش استخدام لمكتبة random"
+    code = USER_CODE
+    assert "import random" not in code and "from random" not in code, "random مش آمنة للأسرار — استخدم secrets"
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u18-ch1
+import secrets ¦¦ العشوائية الآمنة.
+import string ¦¦ مجموعات الحروف.
+ ¦¦
+SYMBOLS = "!@#$%&*" ¦¦ الرموز المسموحة.
+ALPHABET = string.ascii_letters + string.digits + SYMBOLS ¦¦ كل الحروف المسموحة.
+ ¦¦
+def generate_password(length=12): ¦¦ الدالة.
+    if length < 8: ¦¦ التحقّق.
+        raise ValueError("الطول لازم 8 على الأقل") ¦¦ رسالة.
+    required = [ ¦¦ **نضمن** نوع من كل مجموعة (زي مشروع الوحدة 7).
+        secrets.choice(string.ascii_lowercase), ¦¦ صغير.
+        secrets.choice(string.ascii_uppercase), ¦¦ كبير.
+        secrets.choice(string.digits), ¦¦ رقم.
+        secrets.choice(SYMBOLS), ¦¦ رمز.
+    ] ¦¦ قفل.
+    rest = [secrets.choice(ALPHABET) for _ in range(length - len(required))] ¦¦ الباقي من كل الحروف.
+    chars = required + rest ¦¦ الكل.
+    secrets.SystemRandom().shuffle(chars) ¦¦ **خلط آمن** — وإلا أول 4 حروف هيبقى نمطها متوقّع.
+    return "".join(chars) ¦¦ النتيجة.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u18-ch2">
+      <div class="ch-head">🐞 التحدّي 2 — سدّ ثغرة SQL Injection <span class="lvl">⭐⭐</span></div>
+      <p><code class="inl">find_user</code> ممكن تتخدع باسم زي <code class="inl">x' OR '1'='1</code> وترجّع كل المستخدمين — وبتقع مع أسماء فيها علامة تنصيص. صلّحها.</p>
+      @starter u18-ch2
+import sqlite3
+
+def find_user(conn, username):
+    query = f"SELECT id, username FROM users WHERE username = '{username}'"
+    return conn.execute(query).fetchall()
+      @end
+      @tests u18-ch2
+import sqlite3
+
+def db():
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT)")
+    conn.executemany("INSERT INTO users (username) VALUES (?)", [("sara",), ("ali",), ("o'neil",)])
+    return conn
+
+def test_normal():
+    "sara ← صف واحد"
+    assert find_user(db(), "sara") == [(1, "sara")]
+
+def test_injection():
+    "x' OR '1'='1 ← ولا صف"
+    rows = find_user(db(), "x' OR '1'='1")
+    assert rows == [], f"الثغرة لسه موجودة: رجّعت {rows}"
+
+def test_quote_name():
+    "o'neil ← بيتلاقي من غير خطأ"
+    assert find_user(db(), "o'neil") == [(3, "o'neil")]
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u18-ch2
+import sqlite3 ¦¦ المكتبة.
+ ¦¦
+def find_user(conn, username): ¦¦ الدالة.
+    query = "SELECT id, username FROM users WHERE username = ?" ¦¦ **الأمر ثابت** — مفيش أي مدخل جوّاه.
+    return conn.execute(query, (username,)).fetchall() ¦¦ القيمة بتتبعت منفصلة، والمكتبة بتتعامل معاها كنص بس — مهما كان فيه.
+      @end
+      </details>
+    </div>
+  </article>
+
+@@lesson u19-ch before="<!-- 19.EX -->"
+  <!-- 19.CH -->
+  <article class="lesson" id="u19-ch">
+    <h3>تحدّيات بتصحيح آلي: تعلّم الآلة من الصفر <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">ابني قطع الذكاء الاصطناعي بإيدك ببايثون عادية — عشان لما تستخدم المكتبات، تعرف هي بتعمل إيه.</p>
+
+    <div class="challenge" data-ch="u19-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — الميل الأمثل بالمعادلة <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        في الدرس الآلة «جرّبت» كل القيم بخطوة 0.1. الرياضيات بتدّينا الإجابة الدقيقة مباشرةً:
+        <strong>w = مجموع(x × y) ÷ مجموع(x²)</strong>. عدّل <code class="inl">fit_slope</code> تستخدم المعادلة، وترمي <code class="inl">ValueError</code> لو القائمتين مختلفين في الطول أو كل الـ x أصفار.
+      </p>
+      @starter u19-ch1
+def fit_slope(xs, ys):
+    best_w, best_error = 0, float("inf")
+    for step in range(0, 301):
+        w = step / 10
+        error = sum((w * x - y) ** 2 for x, y in zip(xs, ys))
+        if error < best_error:
+            best_w, best_error = w, error
+    return best_w
+
+def predict(w, x):
+    return w * x
+      @end
+      @tests u19-ch1
+import math
+
+def test_perfect_line():
+    "y = 2x بالظبط ← 2"
+    assert math.isclose(fit_slope([1, 2, 3], [2, 4, 6]), 2)
+
+def test_houses_exact():
+    "بيانات الشقق ← 10.0591… (مش 10.1 التقريبية)"
+    w = fit_slope([50, 80, 100, 120, 150], [520, 790, 1010, 1180, 1530])
+    assert math.isclose(w, 561300 / 55800), f"w = {w}"
+
+def test_negative():
+    "ميل سالب ← -3"
+    assert math.isclose(fit_slope([1, 2], [-3, -6]), -3)
+
+def test_predict():
+    "predict(2.5, 4) ← 10"
+    assert math.isclose(predict(2.5, 4), 10)
+
+def test_invalid():
+    "أطوال مختلفة أو x كلها أصفار ← ValueError"
+    for xs, ys in [([1, 2], [1]), ([0, 0], [1, 2])]:
+        try:
+            fit_slope(xs, ys)
+        except ValueError:
+            continue
+        raise AssertionError(f"fit_slope({xs}, {ys}) ما رمتش ValueError")
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u19-ch1
+def fit_slope(xs, ys): ¦¦ التدريب.
+    if len(xs) != len(ys): ¦¦ كل مدخل لازم له إجابة.
+        raise ValueError("xs و ys لازم نفس الطول") ¦¦ رسالة.
+    sum_xx = sum(x * x for x in xs) ¦¦ المقام.
+    if sum_xx == 0: ¦¦ القسمة على صفر = مفيش معلومة نتعلّم منها.
+        raise ValueError("كل قيم x أصفار") ¦¦ رسالة.
+    sum_xy = sum(x * y for x, y in zip(xs, ys)) ¦¦ البسط.
+    return sum_xy / sum_xx ¦¦ **الحل الدقيق** في خطوة واحدة — بدل 300 تجربة. ده اللي LinearRegression بتعمله (بصيغة أعمّ).
+ ¦¦
+def predict(w, x): ¦¦ التوقّع.
+    return w * x ¦¦ تطبيق القاعدة.
+      @end
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u19-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — مصنّف أقرب الجيران <span class="lvl">⭐⭐⭐</span></div>
+      <p><code class="inl">knn_predict(data, sample, k=3)</code>: <code class="inl">data</code> قائمة <code class="inl">(خصائص, تصنيف)</code>. ارجع التصنيف الأغلب بين أقرب k. لو <code class="inl">k</code> أقل من 1 أو أكبر من عدد البيانات ← <code class="inl">ValueError</code>. لازم تشتغل مع أي عدد خصائص.</p>
+      @starter u19-ch2
+import math
+from collections import Counter
+
+def knn_predict(data, sample, k=3):
+    pass
+      @end
+      @tests u19-ch2
+FRUITS = [((150, 9), "تفاحة"), ((170, 8), "تفاحة"), ((140, 9), "تفاحة"),
+          ((130, 3), "برتقالة"), ((120, 2), "برتقالة"), ((160, 4), "برتقالة")]
+
+def test_lesson_examples():
+    "(155, 7) ← تفاحة و (125, 3) ← برتقالة"
+    assert knn_predict(FRUITS, (155, 7)) == "تفاحة"
+    assert knn_predict(FRUITS, (125, 3)) == "برتقالة"
+
+def test_k1():
+    "k = 1 ← أقرب جار بس"
+    assert knn_predict(FRUITS, (158, 5), k=1) == "برتقالة"
+
+def test_three_features():
+    "3 خصائص"
+    data = [((0, 0, 0), "a"), ((0, 0, 1), "a"), ((9, 9, 9), "b"), ((9, 9, 8), "b"), ((8, 9, 9), "b")]
+    assert knn_predict(data, (1, 0, 0), k=3) == "a"
+    assert knn_predict(data, (9, 8, 9), k=3) == "b"
+
+def test_bad_k():
+    "k = 0 أو أكبر من البيانات ← ValueError"
+    for k in (0, 7):
+        try:
+            knn_predict(FRUITS, (1, 1), k=k)
+        except ValueError:
+            continue
+        raise AssertionError(f"k={k} ما رمتش ValueError")
+      @end
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      @code solution=u19-ch2
+import math ¦¦ `math.dist` بتحسب المسافة لأي عدد أبعاد.
+from collections import Counter ¦¦ التصويت.
+ ¦¦
+def knn_predict(data, sample, k=3): ¦¦ المصنّف.
+    if not 1 <= k <= len(data): ¦¦ التحقّق.
+        raise ValueError(f"k لازم يكون بين 1 و {len(data)}") ¦¦ رسالة.
+    nearest = sorted(data, key=lambda item: math.dist(sample, item[0]))[:k] ¦¦ رتّب بالمسافة وخُد أقرب k.
+    votes = Counter(label for _, label in nearest) ¦¦ عدّ التصنيفات.
+    return votes.most_common(1)[0][0] ¦¦ الأغلبية.
+      @end
+      </details>
+    </div>
+  </article>

@@ -1,0 +1,1790 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة الثامنة عشرة · الختام</div>
+    <h2>المراجع السريعة وخريطة طريقك الجاية</h2>
+    <p>
+      خلّصت الكورس. الوحدة دي مش دروس جديدة — دي <strong>صندوق أدوات</strong> ترجعله
+      وإنت بتشتغل، وخريطة تقول لك تروح فين بعد كده.
+    </p>
+  </div>
+
+  <!-- 15.1 -->
+  <article class="lesson" id="u18-l1">
+    <h3>المرجع السريع الشامل (Cheat Sheet) <span class="tag">مرجع</span></h3>
+    <p class="goal">صفحة واحدة فيها كل حاجة اتعلّمتها. اطبعها أو خليها مفتوحة وإنت بتكتب.</p>
+
+    <h4>1. أنواع البيانات</h4>
+    <div class="code" data-norun><pre>
+name = "farid"            # str    نص
+age = 32                  # int    عدد صحيح
+price = 19.99             # float  عدد عشري
+is_active = True          # bool   منطقي
+items = [1, 2, 3]         # list   قائمة قابلة للتعديل
+point = (10, 20)          # tuple  ثابتة
+person = {"a": 1}         # dict   مفتاح: قيمة
+unique = {1, 2, 3}        # set    بدون تكرار
+nothing = None            # NoneType
+</pre></div>
+
+    <h4>2. التحويل بين الأنواع</h4>
+    <div class="code" data-norun><pre>
+int("25")        # 25
+float("3.5")     # 3.5
+str(25)          # "25"
+bool(0)          # False
+list("abc")      # ['a','b','c']
+set([1,1,2])     # {1, 2}
+dict(zip(k, v))  # قاموس من قائمتين
+</pre></div>
+
+    <h4>3. النصوص</h4>
+    <div class="code" data-norun><pre>
+s = "  Farid Mohammed  "
+len(s)                    # الطول
+s.strip()                 # إزالة المسافات
+s.lower() / s.upper()     # الحالة
+s.title() / s.capitalize()
+s.replace("a", "b")
+s.split(",")              # نص → قائمة
+",".join(lst)             # قائمة → نص
+s.find("x")               # الفهرس أو -1
+s.count("a")
+s.startswith("F") / s.endswith("d")
+s.isdigit() / s.isalpha()
+s[0] / s[-1]              # فهرسة
+s[1:4] / s[::-1]          # تقطيع وعكس
+f"مرحبا {name}"           # f-string
+f"{price:.2f}"            # تنسيق
+</pre></div>
+
+    <h4>4. القوائم</h4>
+    <div class="code" data-norun><pre>
+lst.append(x)             # إضافة عنصر
+lst.extend([a, b])        # إضافة عدة عناصر
+lst.insert(i, x)          # إدراج في موقع
+lst.remove(x)             # حذف بالقيمة
+lst.pop(i)                # حذف بالفهرس وإرجاعه
+lst.clear()               # تفضية
+lst.index(x)              # فهرس العنصر
+lst.count(x)              # عدد التكرار
+lst.sort() / lst.reverse()   # في المكان
+sorted(lst) / lst[::-1]      # نسخة جديدة
+lst.copy()                # نسخة سطحية
+len / sum / min / max / any / all
+[x*2 for x in lst if x &gt; 0]   # list comprehension
+</pre></div>
+
+    <h4>5. القواميس</h4>
+    <div class="code" data-norun><pre>
+d["key"]                  # قراءة (خطر: KeyError)
+d.get("key", default)     # قراءة آمنة
+d["new"] = value          # إضافة/تعديل
+del d["key"]; d.pop("key")
+d.keys() / d.values() / d.items()
+d.update(other)
+"key" in d
+for k, v in d.items(): ...
+</pre></div>
+
+    <h4>6. التحكم في المسار</h4>
+    <div class="code" data-norun><pre>
+if condition:
+    ...
+elif other:
+    ...
+else:
+    ...
+x = "أ" if cond else "ب"          # شرط مختصر
+for item in items: ...
+for i in range(start, end, step): ...
+for i, x in enumerate(lst, start=1): ...
+for a, b in zip(l1, l2): ...
+while condition: ...
+while True:
+    ...
+    break
+break      # اخرج من الحلقة
+continue   # تخطَّ الدورة
+pass       # لا تفعل شيئًا (حشو)
+</pre></div>
+
+    <h4>7. الدوال</h4>
+    <div class="code" data-norun><pre>
+def name(param, optional="default", *args, **kwargs):
+    """docstring"""
+    return value
+result = name(arg)
+result = name(param=arg)          # وسيط مسمّى
+global counter                     # للتعديل على متغيّر عام
+lambda x: x * 2                    # دالة صغيرة بدون اسم
+</pre></div>
+
+    <h4>8. الأخطاء</h4>
+    <div class="code" data-norun><pre>
+try:
+    risky()
+except ValueError as e:
+    print(e)
+except (TypeError, KeyError):
+    ...
+except Exception as e:
+    ...
+else:
+    print("نجح")
+finally:
+    print("دايمًا")
+raise ValueError("رسالة")
+</pre></div>
+
+    <h4>9. الملفات</h4>
+    <div class="code" data-norun><pre>
+with open("f.txt", "r", encoding="utf-8") as f:
+    content = f.read()               # الملف كله
+    lines = f.readlines()            # قائمة أسطر
+    for line in f: ...               # سطر سطر (الأكفأ)
+with open("f.txt", "w", encoding="utf-8") as f:   # يمسح ويكتب
+    f.write("نص\n")
+with open("f.txt", "a", encoding="utf-8") as f:   # يضيف
+    f.write("نص\n")
+import json
+json.dump(data, f, ensure_ascii=False, indent=2)
+data = json.load(f)
+</pre></div>
+
+    <h4>10. المكتبات الشائعة</h4>
+    <div class="code" data-norun><pre>
+import random
+random.choice(lst) / random.choices(lst, k=3) / random.sample(lst, 3)
+random.randint(1, 10) / random.shuffle(lst)
+import string
+string.ascii_letters / string.digits / string.punctuation
+import math
+math.sqrt(x) / math.ceil(x) / math.floor(x) / math.pi
+import os
+os.path.exists(path) / os.remove(path) / os.listdir(".")
+from datetime import datetime
+datetime.now().strftime("%Y-%m-%d %H:%M")
+import requests
+requests.get(url, params={}, timeout=10).json()
+</pre></div>
+  <!-- APPEND:u18-l1 -->
+    <h4>11. البرمجة الكائنية</h4>
+    <div class="code" data-norun><pre>
+class Account:
+    rate = 0.05
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self._balance = balance
+    @property
+    def balance(self):
+        return self._balance
+    def __repr__(self):
+        return f"Account({self.owner!r})"
+class Savings(Account):
+    def __init__(self, owner):
+        super().__init__(owner)
+</pre></div>
+
+    <h4>12. dataclass و Enum</h4>
+    <div class="code" data-norun><pre>
+from dataclasses import dataclass, field
+from enum import Enum
+class Status(Enum):
+    TODO = "todo"
+@dataclass(order=True)
+class Task:
+    title: str
+    tags: list[str] = field(default_factory=list)
+    status: Status = Status.TODO
+</pre></div>
+
+    <h4>13. الـ comprehension والمولّدات</h4>
+    <div class="code" data-norun><pre>
+[x * 2 for x in nums if x &gt; 0]
+{k: v for k, v in d.items() if v}
+{x % 3 for x in nums}
+sum(x * x for x in nums)
+any(n &lt; 0 for n in nums)
+def gen():
+    yield 1
+next(iter(items), None)
+</pre></div>
+
+    <h4>14. collections و datetime</h4>
+    <div class="code" data-norun><pre>
+Counter(words).most_common(3)
+groups = defaultdict(list)
+last = deque(maxlen=3)
+datetime.strptime("15/03/2025", "%d/%m/%Y")
+date.today() + timedelta(days=7)
+f"{moment:%Y-%m-%d}"
+</pre></div>
+
+    <h4>15. الملفات الحديثة: pathlib و CSV و JSON</h4>
+    <div class="code" data-norun><pre>
+p = Path("data") / "file.txt"
+text = p.read_text(encoding="utf-8")
+files = list(Path(".").rglob("*.py"))
+rows = list(csv.DictReader(f))
+json.dump(obj, f, ensure_ascii=False, indent=2)
+data = json.loads(text)
+</pre></div>
+
+    <h4>16. التعبيرات النمطية</h4>
+    <div class="code" data-norun><pre>
+re.fullmatch(r"01[0125]\d{8}", phone)
+re.findall(r"#(\w+)", text)
+re.sub(r"\s+", " ", text)
+m = re.search(r"(?P&lt;year&gt;\d{4})", text)
+year = m["year"] if m else None
+re.escape(user_input)
+</pre></div>
+
+    <h4>17. SQLite</h4>
+    <div class="code" data-norun><pre>
+conn = sqlite3.connect("app.db")
+with conn:
+    conn.execute("INSERT INTO t (name) VALUES (?)", (name,))
+rows = conn.execute("SELECT * FROM t WHERE id = ?", (1,)).fetchall()
+conn.close()
+</pre></div>
+
+    <h4>18. الاختبارات</h4>
+    <div class="code" data-norun><pre>
+def test_add():
+    assert add(2, 3) == 5
+with pytest.raises(ValueError):
+    parse("x")
+@pytest.mark.parametrize("n, ok", [(2, True), (3, False)])
+@pytest.fixture
+</pre></div>
+    <div class="code" data-file="terminal"><pre>
+pytest -v
+pytest --cov=mypackage
+</pre></div>
+
+    <h4>19. Git</h4>
+    <div class="code" data-file="terminal"><pre>
+git status
+git switch -c feature/x
+git add .
+git commit -m "وصف واضح"
+git switch main
+git merge feature/x
+git push
+</pre></div>
+
+    <h4>20. الأمان</h4>
+    <div class="code" data-norun><pre>
+token = secrets.token_urlsafe(32)
+api_key = os.environ.get("API_KEY")
+digest = hashlib.pbkdf2_hmac("sha256", pw.encode(), salt, 600_000)
+secrets.compare_digest(a, b)
+</pre></div>
+    <!-- /APPEND:u18-l1 -->
+    </article>
+
+  <!-- 15.2 -->
+  <article class="lesson" id="u18-l2">
+    <h3>أخطاء شائعة وحلولها <span class="tag">مرجع</span></h3>
+    <p class="goal">لما تقابل خطأ، ابحث عنه هنا الأول.</p>
+
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>رسالة الخطأ</th><th>السبب الغالب</th><th>الحل</th></tr>
+        <tr>
+          <td><code class="inl">SyntaxError: invalid syntax</code></td>
+          <td>قوس مش مقفول، أو نسيت النقطتين، أو <code class="inl">=</code> بدل <code class="inl">==</code></td>
+          <td>بصّ على السطر <strong>اللي قبل</strong> السطر المذكور</td>
+        </tr>
+        <tr>
+          <td><code class="inl">IndentationError</code></td>
+          <td>مسافات بادئة ناقصة أو زايدة</td>
+          <td>4 مسافات لكل مستوى، وما تخلطش Tab بمسافات</td>
+        </tr>
+        <tr>
+          <td><code class="inl">NameError: name 'x' is not defined</code></td>
+          <td>غلطة إملائية، أو المتغيّر داخل دالة، أو استخدمته قبل تعريفه</td>
+          <td>راجع الإملاء وترتيب السطور</td>
+        </tr>
+        <tr>
+          <td><code class="inl">TypeError: can only concatenate str…</code></td>
+          <td>دمج نص مع رقم</td>
+          <td>استخدم f-string أو <code class="inl">str()</code></td>
+        </tr>
+        <tr>
+          <td><code class="inl">ValueError: invalid literal for int()</code></td>
+          <td><code class="inl">int()</code> على نص مش رقم</td>
+          <td><code class="inl">try/except</code> أو <code class="inl">.isdigit()</code></td>
+        </tr>
+        <tr>
+          <td><code class="inl">IndexError: list index out of range</code></td>
+          <td>فهرس أكبر من <code class="inl">len(lst)-1</code></td>
+          <td>افحص الطول، أو استخدم التقطيع</td>
+        </tr>
+        <tr>
+          <td><code class="inl">KeyError: 'x'</code></td>
+          <td>مفتاح مش موجود في القاموس</td>
+          <td>استخدم <code class="inl">.get()</code> أو <code class="inl">if k in d</code></td>
+        </tr>
+        <tr>
+          <td><code class="inl">AttributeError: 'str' has no attribute 'append'</code></td>
+          <td>بتستخدم دالة نوع على نوع تاني</td>
+          <td>اطبع <code class="inl">type(x)</code> واتأكّد من النوع</td>
+        </tr>
+        <tr>
+          <td><code class="inl">ZeroDivisionError</code></td>
+          <td>قسمة على صفر</td>
+          <td>افحص المقام قبل القسمة</td>
+        </tr>
+        <tr>
+          <td><code class="inl">FileNotFoundError</code></td>
+          <td>الملف مش موجود أو المسار غلط</td>
+          <td><code class="inl">os.path.exists()</code> أو <code class="inl">try/except</code></td>
+        </tr>
+        <tr>
+          <td><code class="inl">UnicodeDecodeError</code></td>
+          <td>ملف عربي اتفتح من غير encoding</td>
+          <td>ضيف <code class="inl">encoding="utf-8"</code></td>
+        </tr>
+        <tr>
+          <td><code class="inl">RecursionError</code></td>
+          <td>دالة بتنادي نفسها من غير شرط توقّف</td>
+          <td>ضيف حالة أساسية توقّف التكرار</td>
+        </tr>
+        <tr>
+          <td><code class="inl">'NoneType' object is not …</code></td>
+          <td>الدالة رجّعت None (نسيت <code class="inl">return</code>، أو أسندت ناتج <code class="inl">append</code>)</td>
+          <td>راجع الـ <code class="inl">return</code>، وما تسندش ناتج <code class="inl">sort/append</code></td>
+        </tr>
+        <tr>
+          <td>البرنامج ما بيقفش (حلقة لانهائية)</td>
+          <td>شرط <code class="inl">while</code> ما بيتحقّقش أبدًا</td>
+          <td>Ctrl+C، وراجع إن العدّاد بيتحدّث</td>
+        </tr>
+        <tr>
+          <td>مفيش خطأ لكن النتيجة غلط</td>
+          <td>خطأ منطقي</td>
+          <td>اطبع القيم في كل خطوة وتتبّعها</td>
+        </tr>
+      </table>
+    </div>
+
+    <h4>منهجية تصحيح الأخطاء (Debugging)</h4>
+    <ol>
+      <li><strong>اقرا رسالة الخطأ كاملة</strong> — من آخر سطر لفوق.</li>
+      <li><strong>حدّد السطر</strong> اللي فيه المشكلة.</li>
+      <li>
+        <strong>اطبع القيم:</strong> <code class="inl">print(f"DEBUG: x={x}, type={type(x)}")</code>
+        قبل السطر الغلط. دي أبسط وأقوى أداة تصحيح في الدنيا.
+      </li>
+      <li><strong>بسّط:</strong> شيل أجزاء من الكود لحد ما المشكلة تختفي — كده عرفت مين السبب.</li>
+      <li>
+        <strong>الاعتراف بالجهل:</strong> اسأل نفسك «أنا فاكر إن السطر ده بيعمل إيه؟»
+        وبعدين تأكّد بالطباعة. أغلب الباگات سببها افتراض غلط مش كود غلط.
+      </li>
+      <li><strong>ابحث:</strong> انسخ رسالة الخطأ في جوجل. حرفيًا كل خطأ هتقابله، حد قابله قبلك.</li>
+    </ol>
+  <!-- APPEND:u18-l2 -->
+    <h4>أخطاء من الوحدات المتقدّمة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>رسالة الخطأ</th><th>السبب الغالب</th><th>الحل</th></tr>
+        <tr><td><code class="inl">RecursionError: maximum recursion depth exceeded</code></td><td>دالة استرجاعية من غير حالة أساسية، أو الحالة مش بتتحقّق</td><td>راجع الحالة الأساسية وإن كل نداء بيصغّر المشكلة</td></tr>
+        <tr><td><code class="inl">UnboundLocalError</code></td><td>بتعدّل متغيّر من برّه الدالة جوّاها</td><td>مرّره كوسيط وارجّعه، أو <code class="inl">nonlocal</code> في الـ closures</td></tr>
+        <tr><td><code class="inl">RuntimeError: dictionary changed size during iteration</code></td><td>حذف أو إضافة للقاموس وإنت بتلف عليه</td><td>لف على <code class="inl">list(d)</code> أو اعمل قاموس جديد</td></tr>
+        <tr><td><code class="inl">TypeError: unhashable type: 'list'</code></td><td>قائمة كمفتاح قاموس أو عنصر في set</td><td>استخدم tuple أو frozenset</td></tr>
+        <tr><td><code class="inl">json.decoder.JSONDecodeError</code></td><td>الملف أو الرد مش JSON صحيح (فاصلة زيادة، علامات مفردة)</td><td>افتح الملف وراجع السطر والعمود في الرسالة، وامسك الخطأ</td></tr>
+        <tr><td><code class="inl">TypeError: Object of type … is not JSON serializable</code></td><td>تاريخ أو set أو كائن جوّه البيانات</td><td>حوّله لنص/قائمة، أو <code class="inl">default=</code> أو <code class="inl">asdict</code></td></tr>
+        <tr><td><code class="inl">sqlite3.OperationalError: no such table</code></td><td>الجدول ما اتعملش، أو فتحت ملف قاعدة بيانات تاني</td><td>شغّل <code class="inl">CREATE TABLE IF NOT EXISTS</code> وتأكّد من المسار</td></tr>
+        <tr><td><code class="inl">sqlite3.IntegrityError</code></td><td>قيمة بتكسر قاعدة (NOT NULL أو CHECK أو UNIQUE)</td><td>تحقّق من البيانات قبل الإضافة</td></tr>
+        <tr><td><code class="inl">re.error: …</code></td><td>نمط Regex غلط (قوس مش مقفول)، أو مدخل مستخدم فيه رموز خاصة</td><td>راجع الأقواس، و <code class="inl">re.escape</code> للمدخلات</td></tr>
+        <tr><td><code class="inl">dataclasses.FrozenInstanceError</code></td><td>تعديل حقل في dataclass مقفولة</td><td><code class="inl">replace(obj, field=value)</code></td></tr>
+        <tr><td><code class="inl">ValueError: 'x' is not a valid Status</code></td><td>قيمة مش من اختيارات الـ Enum</td><td>راجع مصدر القيمة أو ضيفها للـ Enum</td></tr>
+        <tr><td><code class="inl">requests.exceptions.ReadTimeout</code></td><td>الخادم اتأخّر أكتر من المهلة</td><td>أعد المحاولة بانتظار، أو زوّد المهلة</td></tr>
+        <tr><td><code class="inl">ModuleNotFoundError: No module named 'x'</code></td><td>المكتبة مش متسطّبة في البيئة الحالية</td><td>فعّل البيئة الافتراضية الصح و <code class="inl">pip install</code></td></tr>
+      </table>
+    </div>
+    <!-- /APPEND:u18-l2 -->
+    </article>
+
+  <!-- 15.3 -->
+  <article class="lesson" id="u18-l3">
+    <h3>عادات المبرمج المحترف <span class="tag">إرشادات</span></h3>
+    <p class="goal">الفرق بين كود يشتغل وكود محترم.</p>
+
+    <h4>1. أسلوب الكتابة (PEP 8)</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>العنصر</th><th>الاصطلاح</th><th>مثال</th></tr>
+        <tr><td>المتغيّرات والدوال</td><td>snake_case</td><td><code class="inl">user_name</code>, <code class="inl">get_total()</code></td></tr>
+        <tr><td>الثوابت</td><td>UPPER_CASE</td><td><code class="inl">MAX_ATTEMPTS = 5</code></td></tr>
+        <tr><td>الفئات (Classes)</td><td>PascalCase</td><td><code class="inl">class UserAccount:</code></td></tr>
+        <tr><td>المسافات البادئة</td><td>4 مسافات</td><td>مش Tab</td></tr>
+        <tr><td>حول العوامل</td><td>مسافة واحدة</td><td><code class="inl">x = a + b</code> مش <code class="inl">x=a+b</code></td></tr>
+        <tr><td>طول السطر</td><td>≤ 79 حرف</td><td>اقسم السطور الطويلة</td></tr>
+        <tr><td>بين الدوال</td><td>سطرين فاضيين</td><td></td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 أدوات تعمل ده أوتوماتيك</div>
+      <div class="code" data-file="terminal"><pre>
+pip install black flake8
+black main.py        # بينسّق الكود تلقائيًا
+flake8 main.py       # بيبلّغ عن المخالفات
+</pre></div>
+    </div>
+
+    <h4>2. القواعد الذهبية</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المبدأ</th><th>معناه</th></tr>
+        <tr><td><strong>DRY</strong><br>Don't Repeat Yourself</td><td>لو كتبت نفس الكود مرّتين، حوّله لدالة</td></tr>
+        <tr><td><strong>KISS</strong><br>Keep It Simple</td><td>الحل البسيط اللي أي حد يفهمه أحسن من الحل الذكي</td></tr>
+        <tr><td><strong>YAGNI</strong><br>You Aren't Gonna Need It</td><td>ما تكتبش مزايا «ممكن نحتاجها بعدين»</td></tr>
+        <tr><td><strong>مسؤولية واحدة</strong></td><td>كل دالة تعمل حاجة واحدة وتعملها كويس</td></tr>
+        <tr><td><strong>الأسماء المعبّرة</strong></td><td><code class="inl">total_price</code> مش <code class="inl">tp</code> ولا <code class="inl">x</code></td></tr>
+        <tr><td><strong>افشل بصوت عالي</strong></td><td>ارمِ خطأ واضح بدل ما تكمّل ببيانات فاسدة</td></tr>
+      </table>
+    </div>
+
+    <h4>3. قبل ما تقول «خلصت»</h4>
+    <ul>
+      <li>☐ جرّبت البرنامج بمدخلات <strong>غلط</strong> مش صح بس؟</li>
+      <li>☐ جرّبت بقائمة فاضية؟ بنص فاضي؟ بصفر؟</li>
+      <li>☐ كل الأسماء معبّرة؟</li>
+      <li>☐ مفيش كود مكرّر؟</li>
+      <li>☐ فيه تعليقات على الأجزاء المعقّدة؟</li>
+      <li>☐ لو رجعت للكود بعد شهر هفهمه؟</li>
+    </ul>
+
+    <h4>4. استخدم Git من أول يوم</h4>
+    <p>
+      Git بيحفظ تاريخ التعديلات على كودك — من غيره هتلاقي نفسك عامل <code class="inl">main_final_v2_last.py</code>.
+      دي الأوامر الخمسة الأساسية كتذكير سريع، والشرح الكامل (الفروع، التعارض، التراجع، GitHub) في درس <a href="#u18-l6">Git عملي</a>.
+    </p>
+    <div class="code" data-file="terminal"><pre>
+git init                      # ابدأ تتبّع المشروع
+git add .                     # جهّز التعديلات
+git commit -m "وصف التعديل"    # احفظ نسخة
+git log                       # شوف التاريخ
+git push                      # ارفع على GitHub
+</pre></div>
+    <p>حمّل <a href="https://desktop.github.com/" target="_blank" rel="noopener">GitHub Desktop</a> لو الأوامر صعبة في البداية.</p>
+  </article>
+
+  <!-- 15.4 -->
+  <article class="lesson" id="u18-l4">
+    <h3>خريطة الطريق: تروح فين بعد كده؟ <span class="tag">الخطوة الجاية</span></h3>
+    <p class="goal">دلوقتي عندك أساس قوي. الاختيار الجاي بيعتمد على إنت عايز تبني إيه.</p>
+
+    <h4>1. الخطوة الفورية: ثبّت الأساس بالأدوات الحديثة</h4>
+    <div class="box info">
+      <div class="bt">⭐ إنت خلّصت أكتر من «أساسيات»</div>
+      <p>
+        الكورس غطّى البرمجة الكائنية، والاختبارات، والمولّدات، وتلميحات النوع، والخوارزميات، وGit، والأمان.
+        الخطوة الجاية مش موضوع جديد — هي <strong>إنك تجمع الحاجات دي في مشروع واحد بأسلوب حديث</strong>.
+        مثال صغير بيجمع OOP + تلميحات النوع + التواريخ في أداة اسمها <code class="inl">dataclass</code>:
+      </p>
+    </div>
+    <div class="code"><pre>
+from dataclasses import dataclass, field
+from datetime import date
+@dataclass
+class Task:
+    name: str
+    due: date
+    tags: list[str] = field(default_factory=list)
+    done: bool = False
+    def complete(self) -&gt; None:
+        self.done = True
+t = Task("مراجعة الكورس", date(2025, 6, 1), ["python"])
+t.complete()
+print(t)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Task(name='مراجعة الكورس', due=datetime.date(2025, 6, 1), tags=['python'], done=True)</pre></div>
+    <p>
+      قارنه بكلاس <code class="inl">Task</code> في مشروع الوحدة 15: هنا <strong>مفيش <code class="inl">__init__</code> ولا <code class="inl">__repr__</code> ولا <code class="inl">__eq__</code></strong> —
+      الـ decorator كتبهم لوحده من تلميحات النوع. ده اللي هتقابله في الكود الحديث ومكتبات زي Pydantic وFastAPI.
+    </p>
+
+    <h4>2. اختر تراكك</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>التراك</th><th>هتبني إيه</th><th>تتعلّم إيه</th></tr>
+        <tr>
+          <td><strong>تطوير الويب<br>(Back-End)</strong></td>
+          <td>مواقع، APIs، أنظمة إدارة</td>
+          <td>Flask أو Django ← HTML/CSS ← SQL و قواعد البيانات ← REST APIs ← المصادقة ← النشر</td>
+        </tr>
+        <tr>
+          <td><strong>تحليل البيانات</strong></td>
+          <td>تقارير، لوحات بيانات، رؤى من الأرقام</td>
+          <td>pandas ← NumPy ← Matplotlib/Seaborn ← SQL ← Excel المتقدّم ← Power BI</td>
+        </tr>
+        <tr>
+          <td><strong>الذكاء الاصطناعي<br>وتعلّم الآلة</strong></td>
+          <td>نماذج تنبؤ، معالجة لغة، رؤية حاسوبية</td>
+          <td>الرياضيات (إحصاء + جبر خطي) ← NumPy ← scikit-learn ← TensorFlow/PyTorch</td>
+        </tr>
+        <tr>
+          <td><strong>الأتمتة<br>(Automation)</strong></td>
+          <td>سكريبتات توفّر ساعات من الشغل اليدوي</td>
+          <td>os و pathlib ← openpyxl ← Selenium ← BeautifulSoup ← APIs ← جدولة المهام</td>
+        </tr>
+        <tr>
+          <td><strong>تطوير الألعاب</strong></td>
+          <td>ألعاب 2D</td>
+          <td>Pygame ← OOP ← فيزياء بسيطة ← تصميم اللعبة</td>
+        </tr>
+        <tr>
+          <td><strong>سطح المكتب</strong></td>
+          <td>برامج بواجهة رسومية</td>
+          <td>Tkinter أو PyQt ← OOP ← تصميم الواجهات</td>
+        </tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 مش عارف تختار؟</div>
+      <p>
+        ابدأ بـ <strong>الأتمتة</strong>. هي أسرع تراك يوريك نتيجة ملموسة (سكريبت بيرتّب
+        ملفاتك، أو بيملى Excel أوتوماتيك)، وبتديك ثقة ومهارات بتنفع في كل التراكات التانية.
+      </p>
+      <p>
+        وقبل ما تختار، جرّب «طعم» كل مجال بأمثلة صغيرة شغّالة في
+        <a href="#unit-19">الوحدة 19: بايثون في العالم الحقيقي</a> — فيها مدخل للذكاء الاصطناعي، وتحليل البيانات، والويب، والأتمتة، ومجالات تانية.
+      </p>
+    </div>
+
+    <h4>3. مواضيع بايثون المتوسّطة: المرحلة اللي بعد الكورس</h4>
+    <p>كل اللي كان في القائمة دي زمان (comprehensions، المولّدات، الـ decorators، تلميحات النوع، collections، pytest، الوحدات) بقى جوّه الكورس. دي المرحلة الجاية:</p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الموضوع</th><th>ليه مهم</th></tr>
+        <tr><td><code class="inl">dataclasses</code> و Pydantic</td><td>نماذج بيانات نظيفة بتتحقّق من نفسها — أساس FastAPI</td></tr>
+        <tr><td>SQL و <code class="inl">sqlite3</code> ثم SQLAlchemy</td><td>تخزين بيانات حقيقية بدل ملفات JSON — مطلوبة في كل تراك تقريبًا</td></tr>
+        <tr><td><code class="inl">asyncio</code> و <code class="inl">async</code>/<code class="inl">await</code></td><td>آلاف الطلبات الشبكية في نفس الوقت (بوتات، سيرفرات، scraping)</td></tr>
+        <tr><td>threading و multiprocessing</td><td>تشغيل شغل متوازي والاستفادة من كل أنوية المعالج</td></tr>
+        <tr><td>التغليف: <code class="inl">pyproject.toml</code> و uv / poetry</td><td>تحويل مشروعك لحزمة تتسطّب بـ pip وإدارة المكتبات باحتراف</td></tr>
+        <tr><td>هياكل بيانات متقدّمة: heapq، الأشجار، الرسوم البيانية</td><td>امتداد وحدة الخوارزميات — مطلوبة في مقابلات العمل</td></tr>
+        <tr><td>CI: GitHub Actions + ruff + mypy</td><td>الاختبارات والفحص بيشتغلوا لوحدهم مع كل push</td></tr>
+        <tr><td>أنماط التصميم (Design Patterns)</td><td>حلول مجرّبة لمشاكل تنظيم الكود الكبير</td></tr>
+      </table>
+    </div>
+
+    <h4>4. خطة الـ 90 يوم الجاية</h4>
+    <div class="diagram">
+<pre>  الأسبوع 1-2   │ راجع الكورس ده، واكتب كل مشروع من الصفر بإيدك
+  الأسبوع 3-4   │ مشروع صغير بالكلاسات + اختبارات pytest + sqlite3 بدل JSON
+  الأسبوع 5-6   │ اختر تراكك وابدأ أساسياته
+  الأسبوع 7-10  │ ابنِ مشروع حقيقي من فكرتك إنت
+  الأسبوع 11-12 │ ارفعه على GitHub + اكتب README + شاركه</pre>
+      <div class="cap">خطة عملية</div>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 أهم نصيحة في الكورس كله</div>
+      <p>
+        <strong>ابنِ حاجات.</strong> مش هتتعلّم من الفيديوهات والمقالات — هتتعلّم من
+        القعدة قدّام شاشة فيها خطأ ومش عارف حلّه، ولما تحلّه المعلومة تبقى بتاعتك للأبد.
+      </p>
+      <p>
+        اختر مشكلة <em>إنت شخصيًا</em> عندك، واعمل ليها برنامج. حتى لو موجود ألف نسخة منه.
+        المشروع اللي بتحتاجه فعلًا هو المشروع اللي هتكمّله.
+      </p>
+    </div>
+  </article>
+
+  <!-- 15.5 -->
+  <article class="lesson" id="u18-l5">
+    <h3>مصادر ومراجع <span class="tag">مرجع</span></h3>
+    <p class="goal">لينكات تحتاجها في رحلتك.</p>
+
+    <h4>1. أدوات التحميل</h4>
+    <ul>
+      <li><strong>Python:</strong> <a href="https://www.python.org/downloads/" target="_blank" rel="noopener">python.org/downloads</a></li>
+      <li><strong>VS Code:</strong> <a href="https://code.visualstudio.com/download" target="_blank" rel="noopener">code.visualstudio.com/download</a></li>
+      <li><strong>Visual Studio Community:</strong> <a href="https://visualstudio.microsoft.com/vs/community/" target="_blank" rel="noopener">visualstudio.microsoft.com/vs/community</a></li>
+      <li><strong>GitHub Desktop:</strong> <a href="https://desktop.github.com/" target="_blank" rel="noopener">desktop.github.com</a></li>
+      <li><strong>Google Colab:</strong> <a href="https://colab.research.google.com/" target="_blank" rel="noopener">colab.research.google.com</a> — بايثون في المتصفّح، بدون تثبيت</li>
+    </ul>
+
+    <h4>2. التوثيق الرسمي</h4>
+    <ul>
+      <li><a href="https://docs.python.org/3/" target="_blank" rel="noopener">docs.python.org</a> — التوثيق الرسمي، المرجع النهائي لأي سؤال</li>
+      <li><a href="https://docs.python.org/3/library/index.html" target="_blank" rel="noopener">المكتبة القياسية</a> — كل الوحدات الجاية مع بايثون</li>
+      <li><a href="https://peps.python.org/pep-0008/" target="_blank" rel="noopener">PEP 8</a> — دليل أسلوب كتابة الكود</li>
+      <li><a href="https://pypi.org/" target="_blank" rel="noopener">PyPI</a> — مستودع كل المكتبات الخارجية</li>
+    </ul>
+
+    <h4>3. التمرّن</h4>
+    <ul>
+      <li><strong>HackerRank</strong> و<strong>LeetCode</strong> — تمارين خوارزميات متدرّجة</li>
+      <li><strong>Exercism</strong> — تمارين مع مراجعة من مبرمجين</li>
+      <li><strong>Codewars</strong> — تحدّيات بمستويات</li>
+      <li><strong>Project Euler</strong> — مسائل رياضية برمجية</li>
+    </ul>
+
+    <h4>4. لما تعلق</h4>
+    <ul>
+      <li><strong>Stack Overflow</strong> — انسخ رسالة الخطأ وابحث</li>
+      <li><strong>التوثيق الرسمي</strong> — أدق من أي شرح</li>
+      <li><strong>اقرا الكود</strong> — دوّر على مشاريع بايثون على GitHub واقرا كودها</li>
+    </ul>
+
+    <hr class="sep">
+
+    <h4>كلمة أخيرة</h4>
+    <div class="box brain">
+      <div class="bt">🎓 مبروك</div>
+      <p>
+        إنت بدأت الكورس ده وإنت مش عارف يعني إيه <code class="inl">print</code>،
+        ودلوقتي بتكتب برامج بتقرا ملفات، وبتتعامل مع أخطاء المستخدم،
+        وبتجيب بيانات من الإنترنت.
+      </p>
+      <p>
+        الأساسيات اللي معاك دلوقتي — <strong>المتغيّرات، الأنواع، الشروط، الحلقات،
+        هياكل البيانات، الدوال، الأخطاء، الملفات</strong> — دي مش «بايثون» بس.
+        دي <strong>البرمجة</strong>. لو قررت تتعلّم JavaScript أو Java أو C# بكرة،
+        هتلاقي نفس المفاهيم بصيغة مختلفة، وهتتعلّمها في أسبوع بدل سنة.
+      </p>
+      <p>
+        وأهم حاجة اتعلّمتها مش أمر ولا دالة — اتعلّمت <strong>إزاي تفكّك مشكلة كبيرة
+        لخطوات صغيرة</strong>. والمهارة دي هتنفعك في البرمجة وفي غيرها.
+      </p>
+      <p><strong>يلا، افتح المحرّر وابنِ حاجة. 🐍</strong></p>
+    </div>
+  </article>
+  <!-- ADD:u18-l6 -->
+  <!-- 18.6 -->
+  <article class="lesson" id="u18-l6">
+    <h3>Git عملي: الفروع وسير العمل والتراجع عن الأخطاء <span class="tag">درس 99 · مهارة احترافية</span></h3>
+    <p class="goal">الهدف: تستخدم Git يوميًا بثقة — تحفظ نسخ، تجرّب في فرع من غير ما تبوّظ الشغّال، تحلّ تعارض، تتراجع عن غلطة، وترفع مشروعك على GitHub.</p>
+
+    <h4>1. الدورة اليومية</h4>
+    <div class="diagram">
+<pre>  مجلّد العمل          منطقة التجهيز          المستودع (التاريخ)
+  Working Dir   ──add──►   Staging    ──commit──►   Repository
+      ▲                                                 │
+      └───────────────── restore / switch ──────────────┘</pre>
+      <div class="cap">add = «الملفات دي هتدخل الصورة الجاية» · commit = «التقط الصورة»</div>
+    </div>
+    <div class="code" data-file="terminal"><pre>
+git init
+git status
+git add calculator.py
+git add .
+git commit -m "أول نسخة: الآلة الحاسبة"
+git log --oneline
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>a1b2c3d (HEAD -&gt; main) أول نسخة: الآلة الحاسبة</pre></div>
+    <div class="code" data-file="terminal"><pre>
+git diff
+git diff --staged
+</pre></div>
+
+    <h4>2. الفروع: جرّب من غير خوف</h4>
+    <p>
+      <strong>الفرع</strong> = خط تاريخ موازي. عايز تضيف ميزة؟ اعمل فرع، اشتغل فيه براحتك، ولو نجحت ادمجها في <code class="inl">main</code>،
+      ولو فشلت امسح الفرع — و<code class="inl">main</code> فضلت سليمة طول الوقت.
+    </p>
+    <div class="diagram">
+<pre>  main:              A ─── B ───────────── E (merge)
+                            \             /
+  feature/history:           C ───── D ──
+
+  A, B: شغلك الأساسي · C, D: الميزة الجديدة في فرعها · E: الدمج</pre>
+      <div class="cap">كل حرف = commit</div>
+    </div>
+    <div class="code" data-file="terminal"><pre>
+git switch -c feature/history
+git add calculator.py
+git commit -m "إضافة سجل العمليات"
+git switch main
+git merge feature/history
+git branch -d feature/history
+git branch
+</pre></div>
+
+    <h4>3. التعارض (Conflict): مش كارثة</h4>
+    <p>لو فرعين عدّلوا <strong>نفس السطر</strong>، Git مش هيقرّر بدالك. هيحط العلامات دي في الملف ويستنّاك:</p>
+    <div class="code" data-file="calculator.py"><pre>
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD
+print("Welcome")
+=======
+print("أهلًا بيك")
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/arabic
+</pre></div>
+    <div class="code" data-file="terminal"><pre>
+git status
+git add calculator.py
+git commit -m "دمج الترحيب العربي"
+</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 VS Code بيسهّلها</div>
+      <p>لما تفتح ملف فيه تعارض، VS Code بيحط أزرار فوقه: <em>Accept Current</em> / <em>Accept Incoming</em> / <em>Accept Both</em>. التعارض بيحصل كتير في الفرق، ومفيش حاجة بتضيع.</p>
+    </div>
+
+    <h4>4. التراجع عن الأخطاء</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الموقف</th><th>الأمر</th></tr>
+        <tr><td>بوّظت ملف ومش عايز تعديلاتي اللي ما اتحفظتش</td><td><code class="inl">git restore calculator.py</code></td></tr>
+        <tr><td>عملت add لملف بالغلط</td><td><code class="inl">git restore --staged secrets.txt</code></td></tr>
+        <tr><td>نسيت ملف أو غلطت في رسالة آخر commit (ولسه ما رفعتش)</td><td><code class="inl">git commit --amend</code></td></tr>
+        <tr><td>commit قديم طلع فيه مشكلة واترفع خلاص</td><td><code class="inl">git revert a1b2c3d</code> (بيعمل commit جديد عكسه — آمن للفرق)</td></tr>
+        <tr><td>عايز تشوف الكود زي ما كان في commit قديم</td><td><code class="inl">git switch --detach a1b2c3d</code> ثم <code class="inl">git switch main</code></td></tr>
+      </table>
+    </div>
+    <div class="box err">
+      <div class="bt">❌ أوامر خطيرة</div>
+      <p>
+        <code class="inl">git reset --hard</code> و <code class="inl">git push --force</code> بيمسحوا تاريخ. في مشروع مشترك ممكن تمسح شغل زمايلك.
+        ما تستخدمهمش غير وإنت فاهم بالظبط هيعملوا إيه — و<code class="inl">git status</code> قبلهم دايمًا.
+      </p>
+    </div>
+
+    <h4>5. GitHub: نسخة على الإنترنت</h4>
+    <div class="code" data-file="terminal"><pre>
+git remote add origin https://github.com/USERNAME/calculator.git
+git push -u origin main
+git pull
+git clone https://github.com/USERNAME/calculator.git
+</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ رسايل commit كويسة</div>
+      <p>
+        ❌ «تعديلات» · «fix» · «asdf»<br>
+        ✅ «إصلاح القسمة على صفر في الآلة الحاسبة» · «إضافة تصدير التقرير لـ CSV»<br>
+        القاعدة: كمّل الجملة «الـ commit ده بيعمل…». ورسالة واحدة = تغيير منطقي واحد.
+        وافتكر <code class="inl">.gitignore</code> من وحدة الاختبارات: <code class="inl">.venv/</code> و <code class="inl">__pycache__/</code> و <strong><code class="inl">.env</code></strong> ما يترفعوش أبدًا.
+      </p>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. عايز تجرّب ميزة من غير ما تأثّر على الكود الشغّال…</p>
+        <label><input type="radio"> انسخ الفولدر يدويًا</label>
+        <label><input type="radio"> git reset --hard</label>
+        <label><input type="radio"> git switch -c feature/x</label>
+        <label><input type="radio"> git push --force</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. commit قديم فيه مشكلة والفريق كله سحبه. تتراجع عنه إزاي بأمان؟</p>
+        <label><input type="radio"> git revert &lt;hash&gt;</label>
+        <label><input type="radio"> git reset --hard ثم push --force</label>
+        <label><input type="radio"> تمسح المستودع وتعمله من جديد</label>
+        <label><input type="radio"> git commit --amend</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. ملف <code class="inl">.env</code> فيه مفاتيح API. تعمل إيه؟</p>
+        <label><input type="radio"> ترفعه عادي</label>
+        <label><input type="radio"> ترفعه في فرع منفصل</label>
+        <label><input type="radio"> تكتب المفاتيح في الكود بدل الملف</label>
+        <label><input type="radio"> تحطّه في .gitignore وما يترفعش أبدًا</label>
+      </div>
+    </div>
+        <!-- APPEND:u18-l6 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>سير عمل فرع كامل</div>
+      <p>اكتب الأوامر من أول فرع جديد لحد الدمج والرفع — ومعاها تراجع عن ملف بالغلط.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code" data-file="terminal" data-norun><pre>
+git switch -c feature/login
+git status
+git add login.py
+git commit -m "Add login form validation"
+git restore data.csv
+git restore --staged secrets.env
+git switch main
+git merge feature/login
+git push -u origin main
+git log --oneline -5
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>* 8f2c1ab (HEAD -&gt; main) Merge branch 'feature/login'
+* 5d91e77 Add login form validation
+* c3a7b10 Update README
+* 91be4d2 Add tests for cart
+* 47f0c99 Initial commit</pre></div>
+      </details>
+    </div>
+    <!-- /APPEND:u18-l6 -->
+            <!-- SUM:u18-l6 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">status</code> ← <code class="inl">add</code> ← <code class="inl">commit</code> الدورة اليومية.</li><li>الفروع للتجربة الآمنة، و <code class="inl">merge</code> للدمج، والتعارض بيتحل يدويًا.</li><li><code class="inl">revert</code> للتراجع الآمن، و <code class="inl">.env</code> عمره ما يترفع.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u18-l6 -->
+
+  <!-- ADD:u18-l7 -->
+  <!-- 18.7 -->
+  <article class="lesson" id="u18-l7">
+    <h3>اعتمد على نفسك: اقرا التوثيق واسأل سؤال يتجاوب <span class="tag">درس 100 · مهارة احترافية</span></h3>
+    <p class="goal">الهدف: تكتسب أهم مهارة بعد الكورس — إنك تلاقي الإجابة بنفسك من بايثون نفسها ومن التوثيق الرسمي، ولما تعلق تكتب سؤال يخلّي الناس تساعدك في دقايق.</p>
+
+    <h4>1. بايثون بتشرح نفسها: dir و __doc__ و inspect</h4>
+    <div class="code"><pre>
+print([name for name in dir(str) if not name.startswith("_")][:8])
+print(str.center.__doc__)
+import inspect
+print(inspect.signature(sorted))
+import random
+print(inspect.signature(random.randint))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['capitalize', 'casefold', 'center', 'count', 'encode', 'endswith', 'expandtabs', 'find']
+Return a centered string of length width.
+
+Padding is done using the specified fill character (default is a space).
+(iterable, /, *, key=None, reverse=False)
+(a, b)</pre></div>
+    <div class="code" data-file="terminal"><pre>
+python
+help(str.split)
+help("modules")
+python -m pydoc -b
+</pre></div>
+
+    <h4>2. التوثيق الرسمي: تقراه إزاي من غير ما تتوه؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>القسم في docs.python.org</th><th>ارجع له لما…</th></tr>
+        <tr><td><strong>Tutorial</strong></td><td>عايز شرح متسلسل لموضوع (زي الكورس ده بس رسمي)</td></tr>
+        <tr><td><strong>Library Reference</strong></td><td>عايز تعرف مكتبة أو دالة بتعمل إيه بالظبط — <em>أكتر قسم هتستخدمه</em></td></tr>
+        <tr><td><strong>Language Reference</strong></td><td>سؤال دقيق عن قواعد اللغة نفسها</td></tr>
+        <tr><td><strong>HOWTOs</strong></td><td>أدلة عملية مركّزة: logging، regex، sorting، Unicode</td></tr>
+        <tr><td><strong>What's New</strong></td><td>عايز تعرف الجديد في كل نسخة (زي match في 3.10)</td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 طريقة قراءة صفحة دالة</div>
+      <ol>
+        <li><strong>التوقيع</strong> الأول: <code class="inl">str.split(sep=None, maxsplit=-1)</code> — الوسائط والقيم الافتراضية.</li>
+        <li><strong>أول جملة</strong>: بتعمل إيه وبترجّع إيه.</li>
+        <li><strong>الأمثلة</strong> (لو فيه): جرّبها في الـ REPL فورًا.</li>
+        <li>دوّر على كلمات: <em>Changed in version</em> (اتغيّرت إمتى) و <em>Raises</em> (بترمي إيه).</li>
+        <li>لمكتبات pip: صفحة المشروع على <strong>PyPI</strong> فيها رابط التوثيق، وملف README على GitHub.</li>
+      </ol>
+    </div>
+
+    <h4>3. قبل ما تسأل: الـ 15 دقيقة الذهبية</h4>
+    <ol>
+      <li><strong>اقرا رسالة الخطأ من تحت لفوق</strong>: آخر سطر = نوع الخطأ ورسالته، واللي فوقه = فين بالظبط (درس الأخطاء).</li>
+      <li><strong>انسخ آخر سطر كما هو</strong> (من غير أسماء متغيّراتك) في محرّك البحث — غالبًا حد سأل قبلك.</li>
+      <li><strong>اطبع القيم</strong> قبل السطر اللي بيقع، أو استخدم الـ debugger (وحدة الاختبارات).</li>
+      <li><strong>صغّر المشكلة</strong>: امسح أي كود مش لازم لحد ما يفضل أقل كود بيطلّع نفس الخطأ. نص المرّات هتلاقي الحل وإنت بتصغّر.</li>
+      <li><strong>اشرح لبطّة</strong> (Rubber Duck Debugging): احكي الكود سطر سطر بصوت عالي لأي حاجة — هتلاقي نفسك بتقول «استنى…».</li>
+    </ol>
+
+    <h4>4. المثال الأدنى القابل للتكرار (MRE)</h4>
+    <p>❌ «الكود مش شغّال ساعدوني!!» + صورة شاشة بالموبايل لـ 300 سطر.<br>✅ أقل كود ينفع أي حد ينسخه ويشغّله ويشوف نفس المشكلة:</p>
+    <div class="code"><pre>
+# Python 3.12 — Windows 11
+data = {"a": 1}
+for key in data:
+    data["b"] = 2
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Traceback (most recent call last):
+  File "main.py", line 3, in &lt;module&gt;
+    for key in data:
+               ^^^^
+RuntimeError: dictionary changed size during iteration</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ قالب سؤال ممتاز</div>
+      <ol>
+        <li><strong>عنوان محدّد</strong>: «RuntimeError لما أضيف مفتاح لقاموس جوّه for» مش «مشكلة في بايثون».</li>
+        <li><strong>كنت عايز أعمل إيه</strong> (الهدف مش بس الكود — ممكن يكون فيه طريقة أحسن خالص).</li>
+        <li><strong>الكود الأدنى</strong> كنص في بلوك كود (مش صورة).</li>
+        <li><strong>رسالة الخطأ كاملة</strong> كنص.</li>
+        <li><strong>كنت متوقّع إيه وحصل إيه</strong>.</li>
+        <li><strong>جرّبت إيه</strong> وليه ما نفعش.</li>
+      </ol>
+      <p>وبعد ما تتحل: ارجع اكتب الحل — وبكده بتساعد اللي جاي بعدك.</p>
+    </div>
+
+    <h4>5. الذكاء الاصطناعي كمساعد — مش كبديل</h4>
+    <div class="box warn">
+      <div class="bt">⚠️ استخدمه صح</div>
+      <ul>
+        <li><strong>اطلب شرح مش حل</strong>: «اشرحلي ليه الخطأ ده بيحصل» أحسن من «صلّحلي الكود».</li>
+        <li><strong>ما تنسخش كود مش فاهمه</strong>: لو مش هتقدر تشرحه سطر سطر (زي جداول الكورس ده)، إنت لسه ما اتعلّمتش.</li>
+        <li><strong>اتحقّق دايمًا</strong>: الأدوات دي ممكن تخترع دوال مش موجودة أو تستخدم أسلوب قديم — التوثيق الرسمي والتشغيل الفعلي هم الحكم.</li>
+        <li><strong>نفس قالب السؤال الممتاز</strong> بيدّيك إجابات أحسن بكتير من أي أداة.</li>
+      </ul>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. أسرع طريقة تعرف وسائط دالة من غير إنترنت؟</p>
+        <label><input type="radio"> تخمّن</label>
+        <label><input type="radio"> help(func) أو inspect.signature(func)</label>
+        <label><input type="radio"> print(func)</label>
+        <label><input type="radio"> type(func)</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. في رسالة الخطأ، تبدأ تقرا منين؟</p>
+        <label><input type="radio"> أول سطر</label>
+        <label><input type="radio"> النص</label>
+        <label><input type="radio"> مش مهم</label>
+        <label><input type="radio"> آخر سطر (النوع والرسالة) ثم لفوق</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. أهم صفة في «المثال الأدنى القابل للتكرار»؟</p>
+        <label><input type="radio"> أقل كود ينفع حد ينسخه ويشغّله ويشوف نفس المشكلة</label>
+        <label><input type="radio"> المشروع كله عشان محدش يفوّت حاجة</label>
+        <label><input type="radio"> صورة شاشة واضحة</label>
+        <label><input type="radio"> وصف بالكلام من غير كود</label>
+      </div>
+    </div>
+        <!-- APPEND:u18-l7 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>اقرا التتبّع وحدّد السطر</div>
+      <p>شغّل الكود، وبعدين جاوب: الخطأ في أي دالة؟ وأي سطر؟ وإيه أول خطوة للإصلاح؟</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+def read_price(row):
+    return float(row["price"])
+def total(rows):
+    return sum(read_price(r) for r in rows)
+rows = [{"price": "10.5"}, {"price": "غير محدّد"}]
+print(total(rows))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>Traceback (most recent call last):
+  File "main.py", line 6, in &lt;module&gt;
+    print(total(rows))
+          ^^^^^^^^^^^
+  File "main.py", line 4, in total
+    return sum(read_price(r) for r in rows)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "main.py", line 4, in &lt;genexpr&gt;
+    return sum(read_price(r) for r in rows)
+               ^^^^^^^^^^^^^
+  File "main.py", line 2, in read_price
+    return float(row["price"])
+           ^^^^^^^^^^^^^^^^^^^
+ValueError: could not convert string to float: 'غير محدّد'</pre></div>
+      <p>
+        <strong>القراءة:</strong> آخر سطر = نوع الخطأ وسببه. اللي فوقه شوية = <code class="inl">read_price</code> سطر 2 (مكان الخطأ الفعلي).
+        واللي فوق = مين نادى مين (<code class="inl">&lt;module&gt;</code> ← <code class="inl">total</code> ← المولّد ← <code class="inl">read_price</code>).
+        <strong>الإصلاح:</strong> تحقّق من القيمة قبل التحويل، أو <code class="inl">try/except ValueError</code> وتجاهل الصفوف البايظة (الوحدة 9).
+      </p>
+      </details>
+    </div>
+    <!-- /APPEND:u18-l7 -->
+            <!-- SUM:u18-l7 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">dir</code> و <code class="inl">help</code> و <code class="inl">inspect.signature</code> بيشرحوا أي كائن.</li><li>التوثيق الرسمي: Library Reference أكتر قسم هتستخدمه.</li><li>اسأل بمثال أدنى قابل للتكرار + رسالة الخطأ كاملة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u18-l7 -->
+
+  <!-- ADD:u18-l8 -->
+  <!-- 18.8 -->
+  <article class="lesson" id="u18-l8">
+    <h3>أساسيات الأمان: الأسرار وكلمات السر والمفاتيح <span class="tag">درس 101 · مهارة احترافية</span></h3>
+    <p class="goal">الهدف: تتجنّب أشهر 4 أخطاء أمنية بيقع فيها المبتدئين — عشوائية ضعيفة، كلمات سر متخزّنة غلط، مفاتيح جوّه الكود، وثقة زيادة في المدخلات.</p>
+
+    <h4>1. random مش للأمان: استخدم secrets</h4>
+    <p>
+      <code class="inl">random</code> (الوحدة 7) <strong>متوقّعة رياضيًا</strong>: لو حد عرف كام رقم طلعوا منها يقدر يحسب اللي جاي. ممتازة للألعاب والمحاكاة،
+      <strong>كارثية</strong> لكلمات السر وروابط إعادة التعيين وأكواد التحقّق. <code class="inl">secrets</code> بتستخدم مصدر العشوائية الآمن في نظام التشغيل.
+    </p>
+    <div class="code"><pre>
+import secrets
+import string
+token = secrets.token_hex(16)
+print(len(token))
+link_token = secrets.token_urlsafe(32)
+print(len(link_token) &gt;= 43)
+alphabet = string.ascii_letters + string.digits
+password = "".join(secrets.choice(alphabet) for _ in range(12))
+print(len(password), password.isalnum())
+code = f"{secrets.randbelow(1_000_000):06d}"
+print(len(code))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>32
+True
+12 True
+6</pre></div>
+
+    <h4>2. ما تخزّنش كلمات السر… خزّن «بصمتها»</h4>
+    <p>
+      لو قاعدة بياناتك اتسرّبت وفيها كلمات السر زي ما هي — كل الحسابات راحت (والناس بتكرّر كلمة السر في مواقع تانية).
+      الحل: <strong>دالة تجزئة (Hash)</strong> بتحوّل كلمة السر لبصمة <strong>ما ينفعش ترجع منها</strong>.
+    </p>
+    <div class="code"><pre>
+import hashlib
+print(hashlib.sha256(b"password123").hexdigest())
+print(hashlib.sha256(b"password124").hexdigest())
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f
+33631376724e5d5480fa397dfcf03b66ad47b934ab495174d7058c38f2bb0087</pre></div>
+    <div class="box err">
+      <div class="bt">❌ بس SHA-256 لوحدها مش كفاية لكلمات السر</div>
+      <p>
+        <strong>1) سريعة جدًا</strong>: كارت شاشة بيجرّب مليارات كلمات سر في الثانية.
+        <strong>2) من غير ملح (salt)</strong>: كل اللي كلمة سرّهم <code class="inl">password123</code> ليهم نفس البصمة — والمهاجمين عندهم جداول جاهزة بملايين البصمات الشائعة
+        (البصمة اللي فوق دي موجودة في كل الجداول دي!).
+      </p>
+    </div>
+    <div class="code" data-file="passwords.py"><pre>
+import hashlib
+import secrets
+ITERATIONS = 600_000
+def hash_password(password: str) -&gt; str:
+    salt = secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, ITERATIONS)
+    return salt.hex() + ":" + digest.hex()
+def verify_password(password: str, stored: str) -&gt; bool:
+    salt_hex, digest_hex = stored.split(":")
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode(), bytes.fromhex(salt_hex), ITERATIONS)
+    return secrets.compare_digest(digest.hex(), digest_hex)
+stored = hash_password("Secret123")
+print(len(stored))
+print(verify_password("Secret123", stored))
+print(verify_password("secret123", stored))
+print(hash_password("Secret123") == stored)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>97
+True
+False
+False</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 في المشاريع الحقيقية</div>
+      <p>
+        الكود اللي فوق عشان تفهم الفكرة. في الإنتاج استخدم مكتبة متخصّصة زي <code class="inl">argon2-cffi</code> أو <code class="inl">bcrypt</code>،
+        أو خلّي إطار العمل يتولّاها (Django بيعملها افتراضيًا). <strong>القاعدة: عمرك ما تخترع تشفير بنفسك.</strong>
+      </p>
+    </div>
+
+    <h4>3. المفاتيح والأسرار برّه الكود: متغيّرات البيئة</h4>
+    <p>
+      <code class="inl">API_KEY = "sk-abc123..."</code> جوّه الكود + <code class="inl">git push</code> = المفتاح بقى على الإنترنت للأبد (حتى لو مسحته بعدين، التاريخ فاكره).
+      بوتات بتمسح GitHub كل دقيقة بتدوّر على مفاتيح.
+    </p>
+    <div class="code"><pre>
+import os
+api_key = os.environ.get("WEATHER_API_KEY")
+if api_key is None:
+    print("⚠️ متغيّر WEATHER_API_KEY مش متظبط")
+else:
+    print("المفتاح موجود:", api_key[:4] + "…")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>⚠️ متغيّر WEATHER_API_KEY مش متظبط</pre></div>
+    <div class="code" data-file="terminal"><pre>
+$env:WEATHER_API_KEY = "abc123xyz"
+export WEATHER_API_KEY=abc123xyz
+python weather.py
+</pre></div>
+    <p>للتطوير المحلّي، أسهل طريقة ملف <code class="inl">.env</code> مع مكتبة <code class="inl">python-dotenv</code>:</p>
+    <div class="code" data-file=".env"><pre>
+WEATHER_API_KEY=abc123xyz
+DEBUG=true
+</pre></div>
+    <div class="code" data-file="config.py"><pre>
+import os
+from dotenv import load_dotenv
+load_dotenv()
+API_KEY = os.getenv("WEATHER_API_KEY")
+DEBUG = os.getenv("DEBUG", "false").lower() == "true"
+</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ اعمل ملف .env.example</div>
+      <p>ارفع ملف <code class="inl">.env.example</code> فيه <strong>أسماء</strong> المتغيّرات بقيم وهمية (<code class="inl">WEATHER_API_KEY=your-key-here</code>) — عشان اللي بيحمّل مشروعك يعرف محتاج إيه.</p>
+    </div>
+
+    <h4>4. قواعد الأمان العشر للمبتدئ</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>#</th><th>القاعدة</th><th>اتعلّمناها فين</th></tr>
+        <tr><td>1</td><td><strong>ما تثقش في أي مدخل</strong>: من مستخدم، ملف، أو API — اتحقّق منه</td><td>الأخطاء، التحقّق</td></tr>
+        <tr><td>2</td><td>عمرك ما تستخدم <code class="inl">eval</code> / <code class="inl">exec</code> على مدخلات</td><td>مشروع حاسبة eval</td></tr>
+        <tr><td>3</td><td><code class="inl">secrets</code> مش <code class="inl">random</code> لأي حاجة أمنية</td><td>الدرس ده</td></tr>
+        <tr><td>4</td><td>كلمات السر: تجزئة بطيئة + ملح، أو مكتبة متخصّصة</td><td>الدرس ده</td></tr>
+        <tr><td>5</td><td>الأسرار في متغيّرات البيئة، و <code class="inl">.env</code> في <code class="inl">.gitignore</code></td><td>الدرس ده + Git</td></tr>
+        <tr><td>6</td><td>ما تفكّش <code class="inl">pickle</code> من مصدر مش موثوق (بينفّذ كود)</td><td>—</td></tr>
+        <tr><td>7</td><td>تحقّق من نوع الملف المرفوع بتوقيعه مش امتداده</td><td>البايتات</td></tr>
+        <tr><td>8</td><td>ما تكتبش الأسرار والبيانات الشخصية في الـ logs</td><td>logging</td></tr>
+        <tr><td>9</td><td>حدّث مكتباتك (<code class="inl">pip list --outdated</code>) — الثغرات بتتصلّح في النسخ الجديدة</td><td>pip</td></tr>
+        <tr><td>10</td><td>سطّب المكتبات بأسمائها الصح من PyPI — فيه مكتبات مزيّفة بأسماء قريبة (<code class="inl">reqeusts</code>)</td><td>pip</td></tr>
+      </table>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. توليد رابط «إعادة تعيين كلمة السر» — تستخدم…</p>
+        <label><input type="radio"> random.randint</label>
+        <label><input type="radio"> الوقت الحالي بالثواني</label>
+        <label><input type="radio"> secrets.token_urlsafe</label>
+        <label><input type="radio"> اسم المستخدم مشفّر بـ base64</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. فايدة «الملح» (salt) في تخزين كلمات السر؟</p>
+        <label><input type="radio"> نفس كلمة السر تطلع بصمات مختلفة فالجداول الجاهزة ما تنفعش</label>
+        <label><input type="radio"> بيخلّي البصمة ترجع لكلمة السر</label>
+        <label><input type="radio"> بيسرّع التسجيل</label>
+        <label><input type="radio"> لازم يتخزّن سرّي تمامًا</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">os.getenv("DEBUG")</code> والقيمة في البيئة <code class="inl">false</code>. <code class="inl">if os.getenv("DEBUG"):</code>؟</p>
+        <label><input type="radio"> False لأن القيمة false</label>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> True — لأنها النص "false" مش فاضي</label>
+      </div>
+    </div>
+        <!-- APPEND:u18-l8 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تخزين كلمة سر صح</div>
+      <p>ولّد كلمة سر عشوائية آمنة، خزّنها كـ hash مع ملح (salt)، وتحقّق من محاولة دخول صح وغلط.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import hashlib
+import secrets
+import string
+alphabet = string.ascii_letters + string.digits + "!@#$%"
+password = "".join(secrets.choice(alphabet) for _ in range(16))
+print(len(password), password != "".join(secrets.choice(alphabet) for _ in range(16)))
+def hash_password(plain, salt=None):
+    salt = salt or secrets.token_bytes(16)
+    digest = hashlib.pbkdf2_hmac("sha256", plain.encode(), salt, 200_000)
+    return salt, digest
+def verify(plain, salt, digest):
+    _, test = hash_password(plain, salt)
+    return secrets.compare_digest(test, digest)
+salt, digest = hash_password("s3cret-pass")
+print(len(digest))
+print(verify("s3cret-pass", salt, digest))
+print(verify("wrong-pass", salt, digest))
+print(hashlib.sha256(b"password123").hexdigest()[:16])
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>16 True
+32
+True
+False
+ef92b778bafe771e</pre></div>
+      </details>
+    </div>
+    <!-- /APPEND:u18-l8 -->
+            <!-- SUM:u18-l8 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">secrets</code> مش <code class="inl">random</code> لأي حاجة أمنية.</li><li>كلمات السر: تجزئة بطيئة بملح (أو مكتبة زي argon2)، ومقارنة بـ <code class="inl">compare_digest</code>.</li><li>الأسرار في متغيّرات البيئة، ومتغيّرات البيئة نصوص دايمًا.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u18-l8 -->
+
+  <!-- ADD:u18-ch -->
+  <!-- 18.CH -->
+  <article class="lesson" id="u18-ch">
+    <h3>تحدّيات بتصحيح آلي: الأمان <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">الأمان مش «زيادة» — الاختبارات هنا بتلعب دور المهاجم.</p>
+
+    <div class="challenge" data-ch="u18-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — مولّد كلمات سر آمن <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        <code class="inl">generate_password(length=12)</code> بـ <code class="inl">secrets</code> (مش random): لازم فيها حرف صغير وحرف كبير ورقم ورمز من <code class="inl">!@#$%&amp;*</code> على الأقل،
+        ومفيش أي حرف غير الحروف والأرقام والرموز دي، والطول أقل من 8 ← <code class="inl">ValueError</code>.
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+import secrets
+import string
+
+SYMBOLS = "!@#$%&amp;*"
+
+def generate_password(length=12):
+    pass
+</textarea>
+      <script type="text/plain" class="ch-tests">
+import string
+
+ALLOWED = set(string.ascii_letters + string.digits + "!@#$%&*")
+
+def test_lengths():
+    "الطول الافتراضي 12، ولو طلبت 20 تبقى 20"
+    assert len(generate_password()) == 12
+    assert len(generate_password(20)) == 20
+
+def test_rules_many_times():
+    "200 كلمة سر: كلها فيها الأربع أنواع ومفيش حروف غريبة"
+    for _ in range(200):
+        pw = generate_password(8)
+        assert set(pw) <= ALLOWED, f"حروف مش مسموحة في {pw!r}"
+        assert any(c.islower() for c in pw), f"مفيش حرف صغير: {pw!r}"
+        assert any(c.isupper() for c in pw), f"مفيش حرف كبير: {pw!r}"
+        assert any(c.isdigit() for c in pw), f"مفيش رقم: {pw!r}"
+        assert any(c in "!@#$%&*" for c in pw), f"مفيش رمز: {pw!r}"
+
+def test_random_enough():
+    "50 كلمة سر مختلفة"
+    assert len({generate_password() for _ in range(50)}) == 50
+
+def test_too_short():
+    "طول 7 ← ValueError"
+    try:
+        generate_password(7)
+    except ValueError:
+        return
+    raise AssertionError("المفروض ValueError")
+
+def test_no_random_module():
+    "مفيش استخدام لمكتبة random"
+    code = USER_CODE
+    assert "import random" not in code and "from random" not in code, "random مش آمنة للأسرار — استخدم secrets"
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+import secrets
+import string
+SYMBOLS = "!@#$%&amp;*"
+ALPHABET = string.ascii_letters + string.digits + SYMBOLS
+def generate_password(length=12):
+    if length &lt; 8:
+        raise ValueError("الطول لازم 8 على الأقل")
+    required = [
+        secrets.choice(string.ascii_lowercase),
+        secrets.choice(string.ascii_uppercase),
+        secrets.choice(string.digits),
+        secrets.choice(SYMBOLS),
+    ]
+    rest = [secrets.choice(ALPHABET) for _ in range(length - len(required))]
+    chars = required + rest
+    secrets.SystemRandom().shuffle(chars)
+    return "".join(chars)
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u18-ch2">
+      <div class="ch-head">🐞 التحدّي 2 — سدّ ثغرة SQL Injection <span class="lvl">⭐⭐</span></div>
+      <p><code class="inl">find_user</code> ممكن تتخدع باسم زي <code class="inl">x' OR '1'='1</code> وترجّع كل المستخدمين — وبتقع مع أسماء فيها علامة تنصيص. صلّحها.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+import sqlite3
+
+def find_user(conn, username):
+    query = f"SELECT id, username FROM users WHERE username = '{username}'"
+    return conn.execute(query).fetchall()
+</textarea>
+      <script type="text/plain" class="ch-tests">
+import sqlite3
+
+def db():
+    conn = sqlite3.connect(":memory:")
+    conn.execute("CREATE TABLE users (id INTEGER PRIMARY KEY, username TEXT)")
+    conn.executemany("INSERT INTO users (username) VALUES (?)", [("sara",), ("ali",), ("o'neil",)])
+    return conn
+
+def test_normal():
+    "sara ← صف واحد"
+    assert find_user(db(), "sara") == [(1, "sara")]
+
+def test_injection():
+    "x' OR '1'='1 ← ولا صف"
+    rows = find_user(db(), "x' OR '1'='1")
+    assert rows == [], f"الثغرة لسه موجودة: رجّعت {rows}"
+
+def test_quote_name():
+    "o'neil ← بيتلاقي من غير خطأ"
+    assert find_user(db(), "o'neil") == [(3, "o'neil")]
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+import sqlite3
+def find_user(conn, username):
+    query = "SELECT id, username FROM users WHERE username = ?"
+    return conn.execute(query, (username,)).fetchall()
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u18-ch -->
+
+  <!-- 15.EXAM -->
+  <article class="lesson" id="u18-exam">
+    <h3>الاختبار النهائي الشامل <span class="tag">🎓 تقييم</span></h3>
+    <p class="goal">
+      30 سؤال على الكورس كله. لو جبت 24 فأكتر، إنت جاهز تنتقل للتراك اللي بعده.
+      لو أقل، حدّد الوحدات اللي غلطت فيها وراجعها.
+    </p>
+
+    <h4>الجزء الأول: الأساسيات والأنواع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. بايثون بتترجم كودك لـ Bytecode وبعدين تنفّذه بالـ PVM. ده معناه إنها…</p>
+        <label><input type="radio"> لغة مترجمة بحتة زي C</label>
+        <label><input type="radio"> هجينة عمليًا لكنها بتُصنَّف كمفسّرة</label>
+        <label><input type="radio"> لغة منخفضة المستوى</label>
+        <label><input type="radio"> ما بتترجمش خالص</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. <code class="inl">print(type("5") == type(5))</code> بيطبع…</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> False</label>
+        <label><input type="radio"> None</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ناتج <code class="inl">print(7 // 2, 7 % 2, 7 / 2)</code> هو…</p>
+        <label><input type="radio"> 3 1 3.5</label>
+        <label><input type="radio"> 3.5 1 3</label>
+        <label><input type="radio"> 3 3.5 1</label>
+        <label><input type="radio"> 4 1 3.5</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. ليه رقم التليفون المفروض يتخزّن كـ <code class="inl">str</code> مش <code class="inl">int</code>؟</p>
+        <label><input type="radio"> عشان يبقى أسرع</label>
+        <label><input type="radio"> عشان ياخد مساحة أقل</label>
+        <label><input type="radio"> مفيش سبب، الاتنين زي بعض</label>
+        <label><input type="radio"> عشان الأصفار البادئة تتحفظ ومش هنعمل عليه عمليات حسابية</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">5. <code class="inl">0.1 + 0.2 == 0.3</code> بترجّع <code class="inl">False</code>. السبب…</p>
+        <label><input type="radio"> باگ في بايثون</label>
+        <label><input type="radio"> تمثيل الكسور العشرية في النظام الثنائي فيه تقريب</label>
+        <label><input type="radio"> لازم نستخدم int</label>
+        <label><input type="radio"> الترتيب غلط</label>
+      </div>
+    </div>
+
+    <h4>الجزء الثاني: النصوص والقوائم</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">6. <code class="inl">"programming"[3:7]</code> بترجّع…</p>
+        <label><input type="radio"> "gram"</label>
+        <label><input type="radio"> "ogra"</label>
+        <label><input type="radio"> "gram"[0:4] يعني "gram"</label>
+        <label><input type="radio"> "rammi"</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">7. <code class="inl">lst = [1,2,3]</code> ثم <code class="inl">other = lst</code> ثم <code class="inl">other.append(4)</code>. قيمة <code class="inl">lst</code>؟</p>
+        <label><input type="radio"> [1, 2, 3, 4]</label>
+        <label><input type="radio"> [1, 2, 3]</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">8. <code class="inl">x = [1,2]</code> ثم <code class="inl">x.append([3,4])</code> — طول <code class="inl">x</code>؟</p>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">9. <code class="inl">result = lst.sort()</code> — قيمة <code class="inl">result</code>؟</p>
+        <label><input type="radio"> القائمة مرتّبة</label>
+        <label><input type="radio"> نسخة من القائمة</label>
+        <label><input type="radio"> طول القائمة</label>
+        <label><input type="radio"> None</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">10. <code class="inl">"-".join(["a","b","c"])</code> بترجّع…</p>
+        <label><input type="radio"> "a-b-c"</label>
+        <label><input type="radio"> ["a-b-c"]</label>
+        <label><input type="radio"> "abc"</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+    </div>
+
+    <h4>الجزء الثالث: التحكّم والحلقات</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">11. <code class="inl">for i in range(2, 10, 3)</code> بتطبع…</p>
+        <label><input type="radio"> 2 3 4 5 6 7 8 9</label>
+        <label><input type="radio"> 2 5 8 10</label>
+        <label><input type="radio"> 2 5 8</label>
+        <label><input type="radio"> 3 6 9</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">12. في سلسلة <code class="inl">if/elif</code>، لو أول شرط صح…</p>
+        <label><input type="radio"> كل الشروط بتتفحص</label>
+        <label><input type="radio"> بايثون بتنفّذه وتتخطّى الباقي</label>
+        <label><input type="radio"> بتنفّذ آخر واحد</label>
+        <label><input type="radio"> بترمي خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">13. الكود ده بيطبع إيه؟<br><code class="inl">for i in range(5):</code><br>&nbsp;&nbsp;<code class="inl">if i == 2: continue</code><br>&nbsp;&nbsp;<code class="inl">if i == 4: break</code><br>&nbsp;&nbsp;<code class="inl">print(i)</code></p>
+        <label><input type="radio"> 0 1 2 3</label>
+        <label><input type="radio"> 0 1 2 3 4</label>
+        <label><input type="radio"> 0 1</label>
+        <label><input type="radio"> 0 1 3</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">14. لحساب حاصل ضرب عناصر قائمة، المتغيّر المجمّع يبدأ بـ…</p>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> أول عنصر ناقص 1</label>
+        <label><input type="radio"> None</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">15. <code class="inl">enumerate(zip(a, b), start=1)</code> بترجّع عناصر شكلها…</p>
+        <label><input type="radio"> (a_item, b_item)</label>
+        <label><input type="radio"> (1, a_item, b_item)</label>
+        <label><input type="radio"> (1, (a_item, b_item))</label>
+        <label><input type="radio"> [1, a_item, b_item]</label>
+      </div>
+    </div>
+
+    <h4>الجزء الرابع: الدوال والأخطاء والملفات</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">16. الفرق الجوهري بين <code class="inl">return</code> و <code class="inl">print</code>؟</p>
+        <label><input type="radio"> مفيش فرق، الاتنين بيعرضوا النتيجة</label>
+        <label><input type="radio"> return بتسلّم القيمة للكود المنادي، print بتعرضها للمستخدم بس</label>
+        <label><input type="radio"> print أسرع</label>
+        <label><input type="radio"> return بتشتغل جوّه الحلقات بس</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">17. تمرير قائمة لدالة وتعديلها جوّاها بـ <code class="inl">append</code>…</p>
+        <label><input type="radio"> ما بيأثّرش على الأصل</label>
+        <label><input type="radio"> بيرمي خطأ</label>
+        <label><input type="radio"> بيعمل نسخة تلقائيًا</label>
+        <label><input type="radio"> بيأثّر على الأصل لأن القوائم mutable</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">18. ترتيب كتل <code class="inl">except</code> الصحيح؟</p>
+        <label><input type="radio"> الأنواع المحدّدة الأول، و Exception آخر واحدة</label>
+        <label><input type="radio"> Exception الأول</label>
+        <label><input type="radio"> الترتيب مش مهم</label>
+        <label><input type="radio"> حسب الترتيب الأبجدي</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">19. في نمط «كرّر لحد ما ينجح»، فين مكان <code class="inl">break</code> الصح؟</p>
+        <label><input type="radio"> جوّه except</label>
+        <label><input type="radio"> بعد الحلقة</label>
+        <label><input type="radio"> جوّه try بعد السطر الخطر مباشرةً</label>
+        <label><input type="radio"> قبل try</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">20. <code class="inl">if __name__ == "__main__":</code> بتستخدم عشان…</p>
+        <label><input type="radio"> تسرّع البرنامج</label>
+        <label><input type="radio"> الكود ما يشتغلش تلقائيًا لو الملف اتستورد من ملف تاني</label>
+        <label><input type="radio"> تعرّف دالة اسمها main</label>
+        <label><input type="radio"> تمسك الأخطاء</label>
+      </div>
+    </div>
+
+    <h4>الجزء الخامس: البرمجة الكائنية والاختبارات والخوارزميات والأدوات المتقدّمة</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">21. جوّه دالة في كلاس، <code class="inl">self</code> بيشاور على…</p>
+        <label><input type="radio"> الكلاس نفسه</label>
+        <label><input type="radio"> الكائن اللي الدالة اتنادت عليه</label>
+        <label><input type="radio"> الكلاس الأب</label>
+        <label><input type="radio"> متغيّر عام</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">22. في كلاس ابن، <code class="inl">super().__init__(name)</code> بتعمل إيه؟</p>
+        <label><input type="radio"> بتنشئ كائن جديد من الأب</label>
+        <label><input type="radio"> بتمسح خصائص الأب</label>
+        <label><input type="radio"> بتنادي مهيّئ الكلاس الأب عشان يجهّز الجزء بتاعه</label>
+        <label><input type="radio"> بتحوّل الابن لأب</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">23. <code class="inl">@property</code> فوق دالة بتخلّيها…</p>
+        <label><input type="radio"> تتقري زي خاصية من غير أقواس، مع التحكّم في منطقها</label>
+        <label><input type="radio"> خاصة ومستحيل الوصول لها</label>
+        <label><input type="radio"> تتنفّذ مرّة واحدة بس</label>
+        <label><input type="radio"> static</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">24. pytest بيكتشف دوال الاختبار تلقائيًا لو اسمها…</p>
+        <label><input type="radio"> فيه كلمة check</label>
+        <label><input type="radio"> بحروف كبيرة</label>
+        <label><input type="radio"> بينتهي بـ _spec</label>
+        <label><input type="radio"> بيبدأ بـ test_</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">25. <code class="inl">with pytest.raises(ValueError):</code> بتستخدم عشان…</p>
+        <label><input type="radio"> تتجاهل الخطأ</label>
+        <label><input type="radio"> تتأكّد إن الكود بيرمي الخطأ المتوقّع فعلًا</label>
+        <label><input type="radio"> تحوّل الخطأ لـ ValueError</label>
+        <label><input type="radio"> توقف الاختبارات</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">26. شرط أساسي عشان تستخدم البحث الثنائي؟</p>
+        <label><input type="radio"> القائمة تكون صغيرة</label>
+        <label><input type="radio"> العناصر أرقام بس</label>
+        <label><input type="radio"> القائمة تكون مرتّبة</label>
+        <label><input type="radio"> مفيش عناصر مكرّرة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">27. تعقيد <code class="inl">x in my_set</code> في المتوسّط…</p>
+        <label><input type="radio"> O(1)</label>
+        <label><input type="radio"> O(n)</label>
+        <label><input type="radio"> O(log n)</label>
+        <label><input type="radio"> O(n²)</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">28. ميزة <code class="inl">sum(x * x for x in range(10**7))</code> على نسخة الأقواس المربعة؟</p>
+        <label><input type="radio"> ناتج أدق</label>
+        <label><input type="radio"> بتشتغل مع float بس</label>
+        <label><input type="radio"> مفيش فرق</label>
+        <label><input type="radio"> ما بتبنيش قائمة بعشرة مليون عنصر في الذاكرة</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">29. الطريقة الصح لتخزين كلمات سر المستخدمين؟</p>
+        <label><input type="radio"> نص عادي في ملف مخفي</label>
+        <label><input type="radio"> تجزئة بطيئة بملح عشوائي (أو مكتبة زي argon2)</label>
+        <label><input type="radio"> sha256 مرّة واحدة من غير ملح</label>
+        <label><input type="radio"> تشفيرها بـ random</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">30. <code class="inl">with open("f.txt") as f:</code> بتضمن إيه؟</p>
+        <label><input type="radio"> إن الملف موجود</label>
+        <label><input type="radio"> إن القراءة أسرع</label>
+        <label><input type="radio"> إن الملف يتقفل حتى لو حصل خطأ جوّه البلوك</label>
+        <label><input type="radio"> إن محدش تاني يقدر يفتحه</label>
+      </div>
+    </div>
+
+    <h4>تقييم نتيجتك</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>نتيجتك</th><th>التقييم</th><th>الخطوة الجاية</th></tr>
+        <tr><td>27 – 30</td><td>🏆 ممتاز</td><td>ادخل الوحدة 19 (آفاق بايثون) واختار تراكك — إنت جاهز</td></tr>
+        <tr><td>22 – 26</td><td>👍 جيد جدًا</td><td>راجع الأسئلة اللي غلطت فيها وكمّل</td></tr>
+        <tr><td>16 – 21</td><td>📖 مقبول</td><td>راجع وحدات: الذاكرة (0)، الحلقات (6)، الدوال (11)، البرمجة الكائنية (15)</td></tr>
+        <tr><td>أقل من 16</td><td>🔁 محتاج مراجعة</td><td>ارجع للوحدة 5 واقرا لحد 12 تاني مع حل كل التمارين، وبعدين الوحدات 15 و 16</td></tr>
+      </table>
+    </div>
+  </article>
+
+  <!-- 15.CAPSTONE -->
+  <article class="lesson project" id="u18-capstone">
+    <h3>مشاريع التخرّج: ابنِ حاجة بتاعتك <span class="tag">◆ تحدّي نهائي</span></h3>
+    <p class="goal">
+      اختار مشروع واحد وخلّصه بالكامل. المشروع اللي بتخلّصه لوحدك بيعلّمك أكتر من
+      10 كورسات بتتفرّج عليها.
+    </p>
+
+    <h4>1. اختَر مشروعك</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المشروع</th><th>الصعوبة</th><th>هيستخدم</th></tr>
+        <tr>
+          <td><strong>مدير المصروفات</strong><br>تسجّل مصروفاتك اليومية بفئات، وتطلّع تقرير شهري</td>
+          <td>⭐⭐</td>
+          <td>قواميس، ملفات، دوال، تواريخ</td>
+        </tr>
+        <tr>
+          <td><strong>بطاقات المذاكرة (Flashcards)</strong><br>تحفظ أسئلة وإجابات وتختبرك عشوائيًا وتتبّع اللي غلطت فيه</td>
+          <td>⭐⭐</td>
+          <td>ملفات JSON، random، حلقات</td>
+        </tr>
+        <tr>
+          <td><strong>منظّم الملفات</strong><br>سكريبت بيرتّب فولدر التنزيلات: صور في فولدر، مستندات في فولدر…</td>
+          <td>⭐⭐</td>
+          <td>os، shutil، شروط، حلقات</td>
+        </tr>
+        <tr>
+          <td><strong>مذكّرة يومية مشفّرة</strong><br>تكتب مذكّراتك وتتحفظ مشفّرة بكلمة سر</td>
+          <td>⭐⭐⭐</td>
+          <td>ملفات، تشفير، ord/chr، تواريخ</td>
+        </tr>
+        <tr>
+          <td><strong>لوحة الطقس</strong><br>يجيب طقس عدة مدن من API ويحفظ سجلّ يومي</td>
+          <td>⭐⭐⭐</td>
+          <td>requests، JSON، ملفات، معالجة أخطاء</td>
+        </tr>
+        <tr>
+          <td><strong>نظام إدارة مكتبة</strong><br>كتب، استعارة، إرجاع، بحث، متأخّرات</td>
+          <td>⭐⭐⭐</td>
+          <td>كل حاجة في الكورس</td>
+        </tr>
+        <tr>
+          <td><strong>لعبة نصّية بمستويات</strong><br>مغامرة فيها خريطة وعناصر ونقاط وحفظ التقدّم</td>
+          <td>⭐⭐⭐</td>
+          <td>قواميس متداخلة، دوال، ملفات</td>
+        </tr>
+      </table>
+    </div>
+
+    <h4>2. خطة العمل (اتّبعها بالترتيب)</h4>
+    <div class="diagram">
+<pre>  [1] اكتب على ورقة: البرنامج بيعمل إيه في جملة واحدة؟
+       │
+  [2] اكتب قائمة المزايا، ورتّبها: لازم / كويس / بعدين
+       │
+  [3] ابنِ "لازم" بس — نسخة قبيحة تشتغل
+       │
+  [4] جرّبها بنفسك. اكسرها عمدًا. صلّحها.
+       │
+  [5] قسّمها دوال، ونضّف الأسماء
+       │
+  [6] ضيف معالجة الأخطاء والحفظ في ملف
+       │
+  [7] ضيف مزايا "كويس" واحدة واحدة
+       │
+  [8] ارفعها على GitHub مع README</pre>
+      <div class="cap">الترتيب ده مهم — ما تبدأش بالتنظيم قبل ما تشتغل</div>
+    </div>
+    <div class="box err">
+      <div class="bt">💥 أكبر فخّ: الشلل التحضيري</div>
+      <p>
+        أغلب المبتدئين بيفضلوا يخطّطوا ويقروا ويدوّروا على «أحسن طريقة» وما بيبدأوش.
+        <strong>ابدأ بكود وحش يشتغل.</strong> الكود الوحش اللي شغّال أفضل مليون مرّة من
+        الكود المثالي اللي في دماغك.
+      </p>
+    </div>
+
+    <h4>3. قائمة تسليم المشروع</h4>
+    <ul>
+      <li>☐ البرنامج بيشتغل من غير ما يقع مهما دخل المستخدم إيه</li>
+      <li>☐ البيانات بتتحفظ وبترجع بعد ما يقفل</li>
+      <li>☐ الكود مقسّم دوال، كل دالة ليها مهمّة واحدة</li>
+      <li>☐ الأسماء معبّرة (مفيش <code class="inl">x</code> ولا <code class="inl">temp2</code>)</li>
+      <li>☐ مفيش كود مكرّر</li>
+      <li>☐ فيه رسايل واضحة للمستخدم لما يغلط</li>
+      <li>☐ فيه ملف <code class="inl">README.md</code> بيشرح البرنامج بيعمل إيه وإزاي يشتغل</li>
+      <li>☐ مرفوع على GitHub</li>
+    </ul>
+
+    <h4>4. نموذج README</h4>
+    <div class="code" data-file="README.md"><pre>
+# مدير المصروفات
+برنامج سطر أوامر بسيط لتسجيل المصروفات اليومية وعرض تقارير شهرية.
+## المزايا
+- إضافة مصروف بفئة وتاريخ
+- عرض كل المصروفات أو تصفيتها بالفئة
+- تقرير شهري بالإجمالي والنسب
+- حفظ البيانات في ملف JSON
+## التشغيل
+python expenses.py
+## المتطلّبات
+Python 3.8 أو أحدث — مفيش مكتبات خارجية
+## هيكل الملفات
+expenses.py     البرنامج الرئيسي
+data.json       ملف البيانات (بيتعمل تلقائيًا)
+</pre></div>
+
+    <div class="box brain">
+      <div class="bt">🧠 وأخيرًا</div>
+      <p>
+        لما تخلّص مشروعك، هتلاقي إن أصعب جزء فيه ما كانش الكود — كان إنك
+        <strong>تقرّر البرنامج يعمل إيه بالظبط</strong>. دي بالظبط شغلانة المبرمج الحقيقية.
+      </p>
+      <p>
+        الكورس ده انتهى، لكن التعلّم لسه في أوله. بالتوفيق 🐍
+      </p>
+    </div>
+  </article>
+<!-- ADD:u18-pilot -->
+  <!-- 18.PILOT -->
+  <article class="lesson" id="u18-pilot">
+    <h3>للمدرّسين: جرّب الكورس مع طلاب حقيقيين وقيس النتايج <span class="tag">📋 دليل المدرّس</span></h3>
+    <p class="goal">أي تقييم نظري لكورس محدود. الدليل ده بيوريك إزاي تعمل تجربة صغيرة (Pilot) مع طلاب حقيقيين، وتجمع بياناتهم من الصفحة نفسها، وتحلّلها بسكريبت بايثون — عشان تعرف الكورس بيوقّع الطلاب فين بالظبط.</p>
+
+    <h4>1. خطّة التجربة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المرحلة</th><th>إيه اللي بيحصل</th><th>المدّة</th></tr>
+        <tr><td>الاختيار</td><td>10–20 طالب مبتدئين فعلًا (مش مبرمجين متنكّرين)، وبخلفيات مختلفة</td><td>أسبوع</td></tr>
+        <tr><td>القياس القبلي</td><td>الجزء الأول والتاني من الاختبار النهائي — عشان تعرف نقطة البداية</td><td>ساعة</td></tr>
+        <tr><td>المذاكرة</td><td>وحدة أو اتنين في الأسبوع، ولقاء قصير أسبوعي للأسئلة</td><td>6–10 أسابيع</td></tr>
+        <tr><td>جمع البيانات</td><td>آخر كل أسبوع، كل طالب يضغط <strong>«📤 تصدير تقدّمي»</strong> من الشريط الجانبي ويبعتلك الملف</td><td>دقيقة</td></tr>
+        <tr><td>القياس البعدي</td><td>الاختبار النهائي كامل + مشروع تخرّج صغير</td><td>أسبوع</td></tr>
+        <tr><td>التحليل والتعديل</td><td>السكريبت اللي تحت + تعديل الدروس اللي فيها مشاكل</td><td>أسبوع</td></tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ الخصوصية</div>
+      <p>
+        ملف التصدير <strong>ما فيهوش أي اسم أو إيميل</strong> — فيه تقدّم الطالب ونتايجه وملاحظاته بس. سمّي الملفات بأرقام (<code class="inl">student-01.json</code>)،
+        واطلب موافقة الطلاب إن ملاحظاتهم هتستخدم لتحسين الكورس.
+      </p>
+    </div>
+
+    <h4>2. الصفحة بتسجّل إيه؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>البيان</th><th>مصدره في الصفحة</th><th>بيجاوب على سؤال</th></tr>
+        <tr><td><code class="inl">done</code></td><td>زرار «علّم كمكتمل»</td><td>الطلاب بيقفوا عند أنهي درس؟ (نسبة الإكمال)</td></tr>
+        <tr><td><code class="inl">timeSeconds</code></td><td>وقت القراءة الفعلي (والصفحة ظاهرة والطالب نشِط)</td><td>الوقت الحقيقي أكبر من التقدير بكتير؟</td></tr>
+        <tr><td><code class="inl">quiz</code></td><td>الاختبارات السريعة بعد التصحيح</td><td>أنهي مفهوم الناس بتغلط فيه؟</td></tr>
+        <tr><td><code class="inl">challenges</code></td><td>التحدّيات المُصحَّحة (اتحل؟ كام محاولة؟)</td><td>أنهي مهارة عملية صعبة؟</td></tr>
+        <tr><td><code class="inl">feedback</code></td><td>«الدرس كان واضح؟» 👍/👎 + ملاحظة</td><td>أنهي شرح محتاج إعادة كتابة؟</td></tr>
+        <tr><td><code class="inl">checkpoints</code></td><td>نقاط التفتيش آخر كل وحدة</td><td>الطالب واثق من إيه ومش واثق من إيه؟</td></tr>
+      </table>
+    </div>
+
+    <h4>3. سكريبت التحليل</h4>
+    <p>حط ملفات الطلاب في فولدر اسمه <code class="inl">pilot</code> وشغّل السكريبت ده — كل اللي فيه اتعلّمته في الكورس.</p>
+    <div class="code" data-file="analyze_pilot.py" data-norun><pre>
+import json
+from pathlib import Path
+from collections import Counter, defaultdict
+from statistics import mean
+files = sorted(Path("pilot").glob("*.json"))
+students = [json.loads(f.read_text(encoding="utf-8")) for f in files]
+print(f"عدد الطلاب: {len(students)}")
+thumbs_down = Counter()
+notes = defaultdict(list)
+minutes = defaultdict(list)
+solved = Counter()
+tries = defaultdict(list)
+for s in students:
+    for lesson, fb in s["feedback"].items():
+        if fb.get("v") == -1:
+            thumbs_down[lesson] += 1
+            if fb.get("note"):
+                notes[lesson].append(fb["note"])
+    for lesson, secs in s["timeSeconds"].items():
+        minutes[lesson].append(secs / 60)
+    for ch, info in s["challenges"].items():
+        tries[ch].append(info["tries"])
+        if info["solved"]:
+            solved[ch] += 1
+print("\nأكتر دروس اتقال عليها «مش واضح»:")
+for lesson, n in thumbs_down.most_common(3):
+    print(f"  {lesson}: {n} طالب — {' / '.join(notes[lesson][:2])}")
+print("\nأصعب التحدّيات (نسبة الحل):")
+for ch in sorted(tries, key=lambda c: solved[c] / len(tries[c]))[:3]:
+    rate = solved[ch] / len(tries[ch])
+    print(f"  {ch}: {rate:.0%} حلّوه — متوسّط المحاولات {mean(tries[ch]):.1f}")
+print("\nأطول دروس في الوقت الفعلي (دقايق):")
+for lesson in sorted(minutes, key=lambda l: -mean(minutes[l]))[:3]:
+    print(f"  {lesson}: {mean(minutes[lesson]):.0f}")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>عدد الطلاب: 3
+
+أكتر دروس اتقال عليها «مش واضح»:
+  u2-l2: 2 طالب — مثال التحويل محتاج توضيح / مش فاهم ليه int بتقع
+  u4-l2: 2 طالب — الـ elif ملخبطة
+
+أصعب التحدّيات (نسبة الحل):
+  u4-ch2: 33% حلّوه — متوسّط المحاولات 4.0
+  u2-ch1: 67% حلّوه — متوسّط المحاولات 2.0
+
+أطول دروس في الوقت الفعلي (دقايق):
+  u4-l2: 40
+  u2-l2: 28
+  u1-l1: 9</pre></div>
+
+    <h4>4. من الأرقام للقرارات</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الإشارة</th><th>المعنى المحتمل</th><th>التصرّف</th></tr>
+        <tr><td>👎 من 30% أو أكتر في درس</td><td>الشرح ناقص أو القفزة كبيرة</td><td>مثال إضافي أبسط، أو تقسيم الدرس</td></tr>
+        <tr><td>تحدّي نسبة حلّه أقل من 50%</td><td>المهارة ما اتدرّبتش كفاية قبله</td><td>تمرين وسيط قبله أو تلميح في النص</td></tr>
+        <tr><td>متوسّط محاولات فوق 5</td><td>رسايل الاختبارات مش موضّحة</td><td>راجع رسايل الفشل (<code class="inl">assert …, "رسالة"</code>)</td></tr>
+        <tr><td>الوقت الفعلي ضعف التقدير</td><td>الدرس مزدحم</td><td>قسّمه لدرسين</td></tr>
+        <tr><td>نسبة الإكمال بتقع فجأة عند وحدة</td><td>«حائط» صعوبة</td><td>وحدة تمهيدية أو مراجعة قبلها</td></tr>
+        <tr><td>نقطة تفتيش ما اتعلّمش عليها</td><td>الطالب مش واثق رغم إنه كمّل</td><td>اسأل في اللقاء الأسبوعي عن البند ده</td></tr>
+      </table>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 الدورة المستمرّة</div>
+      <p>
+        <strong>جرّب ← قيس ← عدّل ← جرّب تاني.</strong> أهم مقياس في الآخر: هل الطلاب بقوا يقدروا يبنوا مشروع التخرّج لوحدهم؟
+        قارن نتيجة الاختبار النهائي بالقياس القبلي، واقرا مشاريعهم بنفسك — الأرقام بتقولك «فين»، والمشاريع بتقولك «ليه».
+      </p>
+    </div>
+  </article>
+<!-- /ADD:u18-pilot -->
+
+  <!-- CP:18 -->
+  <div class="checkpoint" data-unit="18">
+    <h4>✅ نقطة تفتيش: الوحدة الثامنة عشرة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أستخدم Git بالفروع وأتراجع عن الأخطاء بأمان.</li><li>أعرف أقرا التوثيق وأسأل سؤال واضح.</li><li>أخزّن الأسرار وكلمات السر بطريقة آمنة.</li><li>خلّصت الاختبار النهائي وعارف نقط ضعفي.</li></ul>
+  </div>
+  <!-- /CP -->

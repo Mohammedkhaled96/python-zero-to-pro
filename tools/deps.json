@@ -1,0 +1,212 @@
+[
+ {
+  "lesson": "u1-l6",
+  "block": 3,
+  "name": "name1"
+ },
+ {
+  "lesson": "u1-l7",
+  "block": 2,
+  "name": "name"
+ },
+ {
+  "lesson": "u1-p1",
+  "block": 3,
+  "name": "age"
+ },
+ {
+  "lesson": "u2-p2",
+  "block": 3,
+  "name": "name"
+ },
+ {
+  "lesson": "u3-p1",
+  "block": 2,
+  "name": "separator"
+ },
+ {
+  "lesson": "u5-l3",
+  "block": 2,
+  "name": "names"
+ },
+ {
+  "lesson": "u5-l4",
+  "block": 2,
+  "name": "main_menu"
+ },
+ {
+  "lesson": "u5-l5",
+  "block": 2,
+  "name": "original"
+ },
+ {
+  "lesson": "u5-ex",
+  "block": 8,
+  "name": "matrix"
+ },
+ {
+  "lesson": "u6-l3",
+  "block": 4,
+  "name": "colors"
+ },
+ {
+  "lesson": "u6-l3",
+  "block": 5,
+  "name": "colors"
+ },
+ {
+  "lesson": "u6-l4",
+  "block": 2,
+  "name": "products"
+ },
+ {
+  "lesson": "u6-l4",
+  "block": 5,
+  "name": "names"
+ },
+ {
+  "lesson": "u6-l5",
+  "block": 2,
+  "name": "products"
+ },
+ {
+  "lesson": "u6-l5",
+  "block": 3,
+  "name": "products"
+ },
+ {
+  "lesson": "u6-l7",
+  "block": 2,
+  "name": "friends"
+ },
+ {
+  "lesson": "u6-l7",
+  "block": 6,
+  "name": "names"
+ },
+ {
+  "lesson": "u6-l8",
+  "block": 7,
+  "name": "nums"
+ },
+ {
+  "lesson": "u6-p1",
+  "block": 3,
+  "name": "message"
+ },
+ {
+  "lesson": "u7-l2",
+  "block": 3,
+  "name": "random"
+ },
+ {
+  "lesson": "u8-p3",
+  "block": 3,
+  "name": "user"
+ },
+ {
+  "lesson": "u10-l2",
+  "block": 4,
+  "name": "words"
+ },
+ {
+  "lesson": "u10-ex",
+  "block": 6,
+  "name": "students"
+ },
+ {
+  "lesson": "u11-l2",
+  "block": 3,
+  "name": "repeated"
+ },
+ {
+  "lesson": "u11-l3",
+  "block": 3,
+  "name": "say_hello"
+ },
+ {
+  "lesson": "u11-p1",
+  "block": 4,
+  "name": "telephone_number"
+ },
+ {
+  "lesson": "u12-l2",
+  "block": 6,
+  "name": "content"
+ },
+ {
+  "lesson": "u12-l7",
+  "block": 2,
+  "name": "cur"
+ },
+ {
+  "lesson": "u12-l7",
+  "block": 3,
+  "name": "cur"
+ },
+ {
+  "lesson": "u12-l7",
+  "block": 4,
+  "name": "cur"
+ },
+ {
+  "lesson": "u12-p2",
+  "block": 2,
+  "name": "english_word"
+ },
+ {
+  "lesson": "u12-p2",
+  "block": 3,
+  "name": "english_word"
+ },
+ {
+  "lesson": "u13-p1",
+  "block": 2,
+  "name": "word_random"
+ },
+ {
+  "lesson": "u15-l1",
+  "block": 3,
+  "name": "Task"
+ },
+ {
+  "lesson": "u15-l4",
+  "block": 2,
+  "name": "a"
+ },
+ {
+  "lesson": "u15-l5",
+  "block": 3,
+  "name": "Person"
+ },
+ {
+  "lesson": "u15-l5",
+  "block": 4,
+  "name": "Student"
+ },
+ {
+  "lesson": "u15-l6",
+  "block": 4,
+  "name": "Account"
+ },
+ {
+  "lesson": "u16-l3",
+  "block": 4,
+  "name": "divide"
+ },
+ {
+  "lesson": "u16-l9",
+  "block": 3,
+  "name": "logging"
+ },
+ {
+  "lesson": "u17-l2",
+  "block": 3,
+  "name": "has_duplicate_slow"
+ },
+ {
+  "lesson": "u17-l4",
+  "block": 4,
+  "name": "bubble_sort"
+ }
+]

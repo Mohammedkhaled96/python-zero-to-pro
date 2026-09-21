@@ -1,0 +1,875 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة الثالثة عشرة · المشاريع الكاملة</div>
+    <h2>مشاريع كبيرة: كل حاجة اتعلّمتها في مكان واحد</h2>
+    <p>
+      دلوقتي عندك كل الأدوات. الوحدة دي مش بتقدّم مفاهيم جديدة — هي بتوريك
+      <strong>إزاي المفاهيم دي بتشتغل مع بعض</strong> في برامج كاملة.
+      اقرا كل مشروع مرّتين: مرّة عشان تفهم، ومرّة وإنت بتكتبه بإيدك.
+    </p>
+  </div>
+
+  <!-- 13.P1 -->
+  <article class="lesson project" id="u13-p1">
+    <h3>مشروع 24: لعبة الكلمة المخفيّة (Hangman) <span class="tag">◆ مشروع كبير</span></h3>
+    <p class="goal">الهدف: أشهر مشروع تدريبي في البرمجة — قوائم + حلقات + شروط + عشوائية.</p>
+
+    <h4>1. المنطق قبل الكود</h4>
+    <div class="diagram">
+<pre>  1) اختار كلمة عشوائية من قائمة
+  2) اعمل قائمة عرض بعدد حروف الكلمة، كلها مخفيّة  ["_","_","_"]
+  3) كرّر:
+       اسأل المستخدم على حرف
+       لو الحرف في الكلمة → اكشفه في كل مواضعه
+       لو مش موجود      → انقص محاولة
+       اعرض حالة العرض
+       لو مفيش مخفي     → كسب، اخرج
+       لو المحاولات خلصت → خسر، اخرج</pre>
+      <div class="cap">خوارزمية اللعبة</div>
+    </div>
+
+    <h4>2. النسخة الأساسية</h4>
+    <div class="code" data-file="hangman_v1.py"><pre>
+import random
+words = ["python", "programming", "challenge", "life", "code", "man", "blind", "love", "hangman"]
+word_random = random.choice(words)
+display = [" " for _ in word_random]
+print("".join(display))
+attempts = 6
+while attempts &gt; 0:
+    user_letter = input("Enter your guessed letter: ").lower()
+    for letter in range(len(word_random)):
+        if word_random[letter] == user_letter:
+            display[letter] = user_letter
+    if user_letter not in word_random:
+        attempts -= 1
+        print(f"Letter {user_letter} not found. Remaining attempts: {attempts}")
+    print("".join(display))
+    if " " not in display:
+        print(f"Congratulations! You guessed the word: {''.join(display)}")
+        break
+    if attempts == 0:
+        print(f"Sorry, you ran out of attempts. The correct word was: {word_random}")
+        break
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>
+Enter your guessed letter: p
+p
+Enter your guessed letter: y
+py
+Enter your guessed letter: z
+Letter z not found. Remaining attempts: 5
+py
+...
+Congratulations! You guessed the word: python</pre></div>
+
+    <h4>3. تشريح الأجزاء الذكية</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>السطر</th><th>الشرح</th></tr>
+        <tr>
+          <td><code class="inl">display = [" " for _ in word_random]</code></td>
+          <td>
+            بتعمل قائمة مسافات بنفس طول الكلمة. الشرطة السفلية <code class="inl">_</code>
+            اصطلاح معناه «أنا مش محتاج المتغيّر ده» — إحنا عايزين نلف بعدد الحروف بس.
+          </td>
+        </tr>
+        <tr>
+          <td><code class="inl">for letter in range(len(word_random))</code></td>
+          <td>
+            بنمر بالفهارس مش بالقيم، لأننا محتاجين نعرف <em>مكان</em> الحرف عشان نعدّل
+            <code class="inl">display[letter]</code>. ده بالظبط اللي شرحناه في درس 29:
+            «التعديل محتاج الفهرس».
+          </td>
+        </tr>
+        <tr>
+          <td><code class="inl">if user_letter not in word_random</code></td>
+          <td>بيفحص لو الحرف مش موجود <strong>خالص</strong> في الكلمة، وقتها بنخصم محاولة.</td>
+        </tr>
+        <tr>
+          <td><code class="inl">if " " not in display</code></td>
+          <td>شرط الفوز: مفيش أي مكان لسه مخفي. ذكية وبسيطة.</td>
+        </tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ نسخة تانية من المحاضرة فيها فرق مهم</div>
+      <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">word_random</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+      <div class="code"><pre>
+for letter in range(len(word_random)):
+    if user_input == word_random[letter]:
+        display[letter] = user_input
+        print("Your guess is correct, your word is: " + ''.join(display))
+</pre></div>
+      <p>
+        هنا الـ <code class="inl">print</code> <strong>جوّه</strong> الحلقة والشرط.
+        يعني لو الحرف متكرّر في الكلمة (زي <code class="inl">m</code> في
+        <code class="inl">programming</code>)، الرسالة هتتطبع <strong>مرّتين</strong>.
+        <br><strong>الدرس:</strong> خلي بالك من مستوى المسافة البادئة —
+        بتحدّد كام مرّة السطر هيتنفّذ.
+      </p>
+    </div>
+    <div class="box err">
+      <div class="bt">💥 عيوب في النسخة الأساسية</div>
+      <ol>
+        <li>لو المستخدم كرّر نفس الحرف الغلط، بيخسر محاولة تانية.</li>
+        <li>لو دخل كلمة كاملة بدل حرف، البرنامج بيتصرّف بغرابة.</li>
+        <li>مفيش عرض للحروف اللي اتجرّبت.</li>
+        <li>المسافات في العرض صعبة القراية — الشرطة السفلية أوضح.</li>
+      </ol>
+    </div>
+
+    <h4>4. النسخة الاحترافية</h4>
+    <div class="code" data-file="hangman_pro.py"><pre>
+import random
+WORDS = ["python", "programming", "challenge", "developer", "function",
+         "variable", "algorithm", "computer", "keyboard", "internet"]
+MAX_ATTEMPTS = 6
+def choose_word():
+    return random.choice(WORDS)
+def get_display(word, guessed):
+    """بترجّع نص العرض: الحروف المكتشفة والباقي شرطات"""
+    return " ".join(c if c in guessed else "_" for c in word)
+def draw_hangman(wrong):
+    """بترسم حالة اللعبة"""
+    stages = [
+        "  +---+\n      |\n      |\n      |\n     ===",
+        "  +---+\n  O   |\n      |\n      |\n     ===",
+        "  +---+\n  O   |\n  |   |\n      |\n     ===",
+        "  +---+\n  O   |\n /|   |\n      |\n     ===",
+        "  +---+\n  O   |\n /|\\  |\n      |\n     ===",
+        "  +---+\n  O   |\n /|\\  |\n /    |\n     ===",
+        "  +---+\n  O   |\n /|\\  |\n / \\  |\n     ===",
+    ]
+    print(stages[wrong])
+def play_round():
+    word = choose_word()
+    guessed = set()
+    wrong = 0
+    print("\n" + "=" * 34)
+    print(f"الكلمة فيها {len(word)} حرف")
+    print("=" * 34)
+    while wrong &lt; MAX_ATTEMPTS:
+        draw_hangman(wrong)
+        print(f"\n  {get_display(word, guessed)}")
+        print(f"  حروف مجرّبة: {' '.join(sorted(guessed)) or '(لا شيء)'}")
+        print(f"  محاولات متبقية: {MAX_ATTEMPTS - wrong}")
+        letter = input("\n  خمّن حرف: ").strip().lower()
+        # التحقّق من المدخل
+        if len(letter) != 1 or not letter.isalpha():
+            print("  ⚠️ اكتب حرف واحد بس")
+            continue
+        if letter in guessed:
+            print("  ⚠️ جرّبت الحرف ده قبل كده")
+            continue
+        guessed.add(letter)
+        if letter in word:
+            print(f"  ✅ صح! الحرف '{letter}' موجود")
+            if all(c in guessed for c in word):
+                print(f"\n  🎉 مبروك! الكلمة هي: {word}")
+                return True
+        else:
+            wrong += 1
+            print(f"  ❌ الحرف '{letter}' مش موجود")
+    draw_hangman(wrong)
+    print(f"\n  💀 خسرت. الكلمة كانت: {word}")
+    return False
+# --- التشغيل ---
+print("لعبة الكلمة المخفيّة")
+wins = losses = 0
+while True:
+    if play_round():
+        wins += 1
+    else:
+        losses += 1
+    print(f"\n  النتيجة: {wins} فوز - {losses} خسارة")
+    if input("\n  تلعب تاني؟ (yes/no) ").strip().lower() == "no":
+        print("  شكرًا للعب!")
+        break
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>لعبة الكلمة المخفيّة
+
+==================================
+الكلمة فيها 6 حرف
+==================================
+  +---+
+      |
+      |
+      |
+     ===
+
+  _ _ _ _ _ _
+  حروف مجرّبة: (لا شيء)
+  محاولات متبقية: 6
+
+  خمّن حرف: p
+  ✅ صح! الحرف 'p' موجود
+
+  p _ _ _ _ _
+  ...
+  🎉 مبروك! الكلمة هي: python
+
+  النتيجة: 1 فوز - 0 خسارة</pre></div>
+
+    <h4>5. المفاهيم اللي اتجمعت هنا</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المفهوم</th><th>الوحدة</th><th>استخدامه هنا</th></tr>
+        <tr><td>القوائم والفهرسة</td><td>5</td><td>قائمة الكلمات والعرض</td></tr>
+        <tr><td>الحلقات و <code class="inl">continue</code></td><td>6</td><td>المرور على الحروف، تخطّي المدخلات الغلط</td></tr>
+        <tr><td>random.choice</td><td>7</td><td>اختيار كلمة</td></tr>
+        <tr><td>while و break</td><td>8</td><td>حلقة اللعبة وإعادة اللعب</td></tr>
+        <tr><td>set</td><td>10</td><td>الحروف المجرّبة (بدون تكرار)</td></tr>
+        <tr><td>الدوال و return</td><td>11</td><td>تقسيم اللعبة لدوال</td></tr>
+        <tr><td><code class="inl">all()</code> و generator</td><td>6+10</td><td>فحص الفوز</td></tr>
+      </table>
+    </div>
+  </article>
+
+  <!-- 13.P2 -->
+  <article class="lesson project" id="u13-p2">
+    <h3>مشروع 25: حجر ورقة مقص <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: منطق شروط مركّب + إدارة محاولات + قائمة مساعدة.</p>
+
+    <div class="code" data-file="rps_v1.py"><pre>
+import random
+greeting = input("مرحبا بك في لعبة: حجر ورقة مقص, اضغط إدخال للبدء, أو 'مساعدة' لعرض المساعدة\n")
+help_text = ("في هذه اللعبة يمكنك أن تختار بين ثلاثة عناصر: الحجر والورقة والمقص, "
+             "والكمبيوتر أيضا سيختار واحدة, وسيكون منكما فائز بحسب اختياركما, بالتوفيق")
+if greeting == "مساعدة" or greeting == "المساعدة":
+    print(help_text)
+choices = ["حجر", "ورقة", "مقص"]
+computer_choice = random.choice(choices)
+attempts = 4
+while attempts &gt; 0:
+    user_choice = input("من فضلك اختر بين العناصر: حجر, ورقة, مقص: ").strip()
+    if (user_choice == "حجر" and computer_choice == "مقص" or
+            user_choice == "مقص" and computer_choice == "ورقة" or
+            user_choice == "ورقة" and computer_choice == "حجر"):
+        print(f"أحسنت: أنت الفائز, اخترت {user_choice} والكمبيوتر اختار {computer_choice}")
+    elif user_choice == computer_choice:
+        print("لم يفز أحد, حاولا مرة أخرى")
+    else:
+        attempts -= 1
+        print(f"حظا أوفر: فاز الكمبيوتر, اختار {computer_choice} وإنت اخترت {user_choice}. "
+              f"محاولاتك المتبقية: {attempts}")
+    if attempts == 0:
+        print("لقد استنفدت جميع محاولاتك, لقد خسرت")
+        break
+    if user_choice == "إغلاق":
+        print("شكرا لاختيار هذه اللعبة, نراك قريبا")
+        break
+print("شكرا لك لاختيار لعبتنا, نرجو لك التوفيق دائما")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>مرحبا بك في لعبة: حجر ورقة مقص...
+مساعدة
+في هذه اللعبة يمكنك أن تختار بين ثلاثة عناصر...
+من فضلك اختر بين العناصر: حجر, ورقة, مقص: حجر
+أحسنت: أنت الفائز, اخترت حجر والكمبيوتر اختار مقص</pre></div>
+
+    <h4>تحليل منطق الفوز</h4>
+    <div class="diagram">
+<pre>       حجر  ──يكسر──►  مقص
+        ▲                │
+        │                │ يقص
+     يغلّف               ▼
+       ورقة ◄──────────────
+
+  حالات فوز اللاعب التلاتة:
+    حجر  و الكمبيوتر مقص
+    مقص  و الكمبيوتر ورقة
+    ورقة و الكمبيوتر حجر</pre>
+      <div class="cap">دورة اللعبة</div>
+    </div>
+    <div class="box err">
+      <div class="bt">💥 ثلاث مشاكل خطيرة في النسخة دي</div>
+      <ol>
+        <li>
+          <strong>اختيار الكمبيوتر بره الحلقة!</strong>
+          <code class="inl">computer_choice = random.choice(choices)</code> اتنفّذت مرّة واحدة،
+          فالكمبيوتر بيختار نفس الحاجة في كل الجولات. اللاعب هيكتشفها من تاني جولة
+          ويكسب دايمًا. <strong>لازم تكون جوّه الحلقة.</strong>
+        </li>
+        <li>
+          <strong>فحص «إغلاق» متأخّر:</strong> لو المستخدم كتب «إغلاق» هيتحسب اختيار غلط
+          الأول (وياخد خصم محاولة) وبعدين يخرج.
+        </li>
+        <li>
+          <strong>مفيش تحقّق من المدخل:</strong> أي كلمة غريبة بتتحسب خسارة.
+        </li>
+      </ol>
+    </div>
+
+    <h4>النسخة المصحّحة</h4>
+    <div class="code" data-file="rps_pro.py"><pre>
+import random
+CHOICES = ["حجر", "ورقة", "مقص"]
+BEATS = {"حجر": "مقص", "مقص": "ورقة", "ورقة": "حجر"}   # المفتاح يكسب القيمة
+HELP_TEXT = "اختر حجر أو ورقة أو مقص. الحجر يكسر المقص، المقص يقص الورقة، الورقة تغلّف الحجر."
+MAX_LOSSES = 4
+start = input("أهلًا بك في حجر ورقة مقص. اضغط Enter للبدء أو اكتب 'مساعدة': ").strip()
+if start in ["مساعدة", "المساعدة", "help"]:
+    print(HELP_TEXT)
+losses = 0
+wins = 0
+draws = 0
+while losses &lt; MAX_LOSSES:
+    user = input(f"\nاختيارك ({' / '.join(CHOICES)}) أو 'إغلاق': ").strip()
+    if user == "إغلاق":
+        print("شكرًا لك، نراك قريبًا")
+        break
+    if user not in CHOICES:
+        print("⚠️ اختيار غير صحيح، جرّب تاني")
+        continue
+    computer = random.choice(CHOICES)          # ✅ اختيار جديد كل جولة
+    print(f"الكمبيوتر اختار: {computer}")
+    if user == computer:
+        draws += 1
+        print("🤝 تعادل")
+    elif BEATS[user] == computer:
+        wins += 1
+        print(f"🎉 كسبت! {user} تغلب {computer}")
+    else:
+        losses += 1
+        print(f"❌ خسرت. {computer} تغلب {user}. متبقّي لك {MAX_LOSSES - losses}")
+if losses == MAX_LOSSES:
+    print("\n💀 استنفدت محاولاتك")
+print(f"\nالنتيجة النهائية: {wins} فوز — {losses} خسارة — {draws} تعادل")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>أهلًا بك في حجر ورقة مقص...
+
+اختيارك (حجر / ورقة / مقص) أو 'إغلاق': حجر
+الكمبيوتر اختار: مقص
+🎉 كسبت! حجر تغلب مقص
+
+اختيارك (حجر / ورقة / مقص) أو 'إغلاق': ورقة
+الكمبيوتر اختار: ورقة
+🤝 تعادل
+
+اختيارك (حجر / ورقة / مقص) أو 'إغلاق': إغلاق
+شكرًا لك، نراك قريبًا
+
+النتيجة النهائية: 1 فوز — 0 خسارة — 1 تعادل</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 الحيلة الذكية: قاموس <code>BEATS</code></div>
+      <p>
+        بدل 3 شروط بـ <code class="inl">or</code> و<code class="inl">and</code>، عملنا قاموس
+        <code class="inl">{"حجر": "مقص", ...}</code> معناه «المفتاح يكسب القيمة».
+        فالفحص كله بقى سطر واحد: <code class="inl">BEATS[user] == computer</code>.
+        <strong>ده مثال ممتاز إزاي هيكل بيانات مناسب بيبسّط المنطق كله.</strong>
+      </p>
+    </div>
+  </article>
+
+  <!-- 13.P3 -->
+  <article class="lesson project" id="u13-p3">
+    <h3>مشروع 26: مدير المهام الكامل (Task Manager) <span class="tag">◆ المشروع النهائي</span></h3>
+    <p class="goal">الهدف: أكبر مشروع في الكورس — كل حاجة اتعلّمتها في تطبيق واحد كامل.</p>
+
+    <h4>1. النسخة من المحاضرة</h4>
+    <div class="code" data-file="task_manager.py"><pre>
+def add_task(tasks):
+    name = input("Enter task name: ")
+    description = input("Enter task description: ")
+    status_input = input("Is the task completed? (true/false): ").lower()
+    status = True if status_input == "true" else False
+    tasks.append({"name": name, "description": description, "status": status})
+    print("Task added successfully!")
+def modify_task(tasks):
+    if not tasks:
+        print("No tasks available.")
+        return
+    task_name = input("Enter the name of the task to modify: ")
+    for task in tasks:
+        if task["name"].lower() == task_name.lower():
+            option = input("What do you want to modify? (status/description/both): ").lower()
+            if option == "status":
+                new_status = input("Enter new status (true/false): ").lower() == "true"
+                task["status"] = new_status
+            elif option == "description":
+                new_description = input("Enter new description: ")
+                task["description"] = new_description
+            elif option == "both":
+                new_status = input("Enter new status (true/false): ").lower() == "true"
+                new_description = input("Enter new description: ")
+                task["status"] = new_status
+                task["description"] = new_description
+            else:
+                print("Invalid option.")
+            print("Task modified successfully!")
+            return
+    print("Task not found.")
+def delete_task(tasks):
+    if not tasks:
+        print("No tasks available.")
+        return
+    task_name = input("Enter the name of the task to delete: ")
+    for i, task in enumerate(tasks):
+        if task["name"].lower() == task_name.lower():
+            confirm = input("Are you sure you want to delete this task? (yes/no): ").lower()
+            if confirm == "yes":
+                del tasks[i]
+                print("Task deleted successfully!")
+                return
+            else:
+                print("Deletion cancelled.")
+                return
+    print("Task not found.")
+def view_tasks(tasks):
+    if not tasks:
+        print("No tasks available.")
+        return
+    completed = [task for task in tasks if task["status"]]
+    not_completed = [task for task in tasks if not task["status"]]
+    print("Completed tasks:")
+    for task in completed:
+        print(f"{task['name']}: {task['description']}")
+    print("\nNot completed tasks:")
+    for task in not_completed:
+        print(f"{task['name']}: {task['description']}")
+def show_help():
+    print("Task Manager Help:")
+    print("1: Add new task")
+    print("2: Modify task")
+    print("3: Delete task")
+    print("4: View tasks")
+    print("5: Help")
+    print("6: Exit")
+def main():
+    tasks = []
+    print("Welcome to Task Manager!")
+    while True:
+        option = input("Choose an option (1-6): ")
+        if option == "1":
+            add_task(tasks)
+        elif option == "2":
+            modify_task(tasks)
+        elif option == "3":
+            delete_task(tasks)
+        elif option == "4":
+            view_tasks(tasks)
+        elif option == "5":
+            show_help()
+        elif option == "6":
+            print("Exiting Task Manager. Goodbye!")
+            break
+        else:
+            print("Invalid option. Please choose between 1 and 6.")
+if __name__ == "__main__":
+    main()
+</pre></div>
+
+    <h4>2. تحليل معماري</h4>
+    <div class="diagram">
+<pre>                    main()
+                      │
+      ┌───────┬───────┼───────┬────────┐
+      ▼       ▼       ▼       ▼        ▼
+  add_task modify  delete  view    show_help
+      │       │       │       │
+      └───────┴───────┴───────┘
+                  │
+                  ▼
+             tasks (list of dicts)
+             [{"name":…, "description":…, "status":…}, …]</pre>
+      <div class="cap">بنية البرنامج: دالة واحدة لكل مسؤولية</div>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 التقنيات المهمّة في الكود ده</div>
+      <ul>
+        <li>
+          <strong><code class="inl">tasks</code> بتتمرّر لكل دالة:</strong> بدل ما تكون
+          <code class="inl">global</code>. وبما إن القائمة <strong>mutable</strong>
+          (درس الذاكرة!)، أي تعديل جوّه الدالة بيأثّر على القائمة الأصلية.
+          <em>ده بالظبط اللي إحنا عايزينه هنا.</em>
+        </li>
+        <li>
+          <strong><code class="inl">return</code> المبكّر:</strong>
+          <code class="inl">if not tasks: return</code> — بتخرج من الدالة فورًا لو مفيش مهام،
+          فمش محتاجين <code class="inl">else</code> ولا مسافات بادئة زيادة.
+        </li>
+        <li>
+          <strong><code class="inl">status = True if x == "true" else False</code>:</strong>
+          الشرط المختصر. ملاحظة: ممكن تختصرها أكتر لـ
+          <code class="inl">status = (x == "true")</code> لأن المقارنة أصلًا بترجّع bool.
+        </li>
+        <li>
+          <strong>التصفية بـ list comprehension:</strong>
+          <code class="inl">[t for t in tasks if t["status"]]</code> بتقسم المهام لمجموعتين.
+        </li>
+        <li>
+          <strong><code class="inl">if __name__ == "__main__":</code></strong> — شوف الصندوق تحت.
+        </li>
+      </ul>
+    </div>
+    <div class="box info">
+      <div class="bt">ℹ️ إيه هي <code>if __name__ == "__main__":</code>؟</div>
+      <p>
+        بايثون بتحط في كل ملف متغيّر خفي اسمه <code class="inl">__name__</code>.
+        لو الملف اتشغّل مباشرةً، قيمته بتبقى <code class="inl">"__main__"</code>.
+        لو الملف <strong>اتستورد</strong> من ملف تاني، قيمته بتبقى اسم الملف.
+      </p>
+      <p>
+        فالسطر ده معناه: <strong>«شغّل main() بس لو الملف ده هو اللي اتشغّل مباشرة»</strong>.
+        الفايدة: لو حد عمل <code class="inl">import task_manager</code> عشان يستخدم
+        <code class="inl">add_task</code> بس، البرنامج مش هيبدأ يشتغل عنده تلقائيًا.
+        <strong>ده اصطلاح احترافي هتشوفه في كل مشروع بايثون.</strong>
+      </p>
+    </div>
+
+    <h4>3. عيوب النسخة دي</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>العيب</th><th>الأثر</th></tr>
+        <tr><td>المهام بتضيع لما البرنامج يقفل</td><td>مفيش فايدة عملية!</td></tr>
+        <tr><td>البحث بالاسم — لو اتنين بنفس الاسم بيعدّل الأول بس</td><td>لخبطة</td></tr>
+        <tr><td>مفيش أرقام للمهام</td><td>صعب تختار مهمّة</td></tr>
+        <tr><td>مفيش تحقّق من الأسماء الفاضية</td><td>مهام بأسماء فاضية</td></tr>
+        <tr><td>مفيش تاريخ إنشاء أو أولوية</td><td>وظائف ناقصة</td></tr>
+      </table>
+    </div>
+
+    <h4>4. النسخة النهائية مع الحفظ في ملف</h4>
+    <div class="code" data-file="task_manager_pro.py"><pre>
+import json
+import os
+from datetime import datetime
+DATA_FILE = "tasks.json"
+# ---------- طبقة التخزين ----------
+def load_tasks():
+    """بتقرا المهام من الملف، وترجّع قائمة فاضية لو الملف مش موجود"""
+    if not os.path.exists(DATA_FILE):
+        return []
+    try:
+        with open(DATA_FILE, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except (json.JSONDecodeError, OSError):
+        print("⚠️ الملف تالف، هنبدأ بقائمة فاضية")
+        return []
+def save_tasks(tasks):
+    """بتحفظ المهام في الملف"""
+    with open(DATA_FILE, "w", encoding="utf-8") as f:
+        json.dump(tasks, f, ensure_ascii=False, indent=2)
+# ---------- طبقة العمليات ----------
+def add_task(tasks):
+    name = input("اسم المهمّة: ").strip()
+    if not name:
+        print("❌ الاسم ما ينفعش يكون فاضي")
+        return
+    description = input("الوصف: ").strip()
+    priority = input("الأولوية (عالية/متوسطة/منخفضة) [متوسطة]: ").strip() or "متوسطة"
+    tasks.append({
+        "name": name,
+        "description": description,
+        "status": False,
+        "priority": priority,
+        "created": datetime.now().strftime("%Y-%m-%d %H:%M")
+    })
+    save_tasks(tasks)
+    print(f"✅ اتضافت المهمّة '{name}'")
+def pick_task(tasks):
+    """بتعرض المهام وترجّع فهرس المهمّة اللي اختارها المستخدم، أو None"""
+    if not tasks:
+        print("مفيش مهام")
+        return None
+    for i, t in enumerate(tasks, start=1):
+        mark = "✔" if t["status"] else "○"
+        print(f"  {i}. [{mark}] {t['name']}")
+    try:
+        index = int(input("رقم المهمّة: ")) - 1
+    except ValueError:
+        print("❌ اكتب رقم")
+        return None
+    if 0 &lt;= index &lt; len(tasks):
+        return index
+    print("❌ رقم خارج النطاق")
+    return None
+def modify_task(tasks):
+    index = pick_task(tasks)
+    if index is None:
+        return
+    task = tasks[index]
+    print("1) تبديل الحالة  2) تعديل الوصف  3) تعديل الأولوية")
+    option = input("اختيارك: ").strip()
+    if option == "1":
+        task["status"] = not task["status"]
+    elif option == "2":
+        task["description"] = input("الوصف الجديد: ").strip()
+    elif option == "3":
+        task["priority"] = input("الأولوية الجديدة: ").strip()
+    else:
+        print("❌ اختيار غير صحيح")
+        return
+    save_tasks(tasks)
+    print("✅ اتعدّلت")
+def delete_task(tasks):
+    index = pick_task(tasks)
+    if index is None:
+        return
+    name = tasks[index]["name"]
+    if input(f"متأكّد إنك عايز تمسح '{name}'؟ (yes/no) ").strip().lower() == "yes":
+        del tasks[index]
+        save_tasks(tasks)
+        print("🗑 اتمسحت")
+    else:
+        print("اتلغى")
+def view_tasks(tasks):
+    if not tasks:
+        print("مفيش مهام لسه")
+        return
+    done = [t for t in tasks if t["status"]]
+    pending = [t for t in tasks if not t["status"]]
+    print("\n" + "=" * 44)
+    print(f"  المهام المعلّقة ({len(pending)})")
+    print("=" * 44)
+    for t in pending:
+        print(f"  ○ {t['name']}  [{t['priority']}]")
+        if t["description"]:
+            print(f"      {t['description']}")
+    print("\n" + "=" * 44)
+    print(f"  المهام المكتملة ({len(done)})")
+    print("=" * 44)
+    for t in done:
+        print(f"  ✔ {t['name']}")
+    total = len(tasks)
+    percent = round(len(done) / total * 100) if total else 0
+    bar = "█" * (percent // 5) + "░" * (20 - percent // 5)
+    print(f"\n  التقدّم: [{bar}] {percent}%\n")
+def show_help():
+    print("""
+  1) إضافة مهمّة
+  2) تعديل مهمّة
+  3) حذف مهمّة
+  4) عرض المهام
+  5) المساعدة
+  6) خروج
+""")
+# ---------- الحلقة الرئيسية ----------
+def main():
+    tasks = load_tasks()
+    print("=" * 44)
+    print("        مدير المهام")
+    print("=" * 44)
+    print(f"  تم تحميل {len(tasks)} مهمّة")
+    show_help()
+    actions = {
+        "1": add_task,
+        "2": modify_task,
+        "3": delete_task,
+        "4": view_tasks,
+    }
+    while True:
+        choice = input("اختيارك (1-6): ").strip()
+        if choice in actions:
+            actions[choice](tasks)
+        elif choice == "5":
+            show_help()
+        elif choice == "6":
+            save_tasks(tasks)
+            print("اتحفظت المهام. مع السلامة!")
+            break
+        else:
+            print("❌ اختيار غير صحيح، من 1 لـ 6")
+if __name__ == "__main__":
+    main()
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>============================================
+        مدير المهام
+============================================
+  تم تحميل 3 مهمّة
+
+  1) إضافة مهمّة
+  2) تعديل مهمّة
+  3) حذف مهمّة
+  4) عرض المهام
+  5) المساعدة
+  6) خروج
+
+اختيارك (1-6): 4
+
+============================================
+  المهام المعلّقة (2)
+============================================
+  ○ مذاكرة بايثون  [عالية]
+      إنهاء الوحدة 13
+  ○ التسوّق  [منخفضة]
+
+============================================
+  المهام المكتملة (1)
+============================================
+  ✔ مراجعة الوحدة 12
+
+  التقدّم: [██████░░░░░░░░░░░░░░] 33%
+
+اختيارك (1-6): 6
+اتحفظت المهام. مع السلامة!</pre></div>
+
+    <h4>5. الحاجات الجديدة والمتقدّمة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>التقنية</th><th>الشرح</th></tr>
+        <tr>
+          <td><strong>مكتبة <code class="inl">json</code></strong></td>
+          <td>
+            بتحفظ القوائم والقواميس في ملف نصّي وترجّعها كما هي — أفضل بكتير من
+            الملفات النصّية العادية للبيانات المهيكلة.
+            <code class="inl">ensure_ascii=False</code> عشان العربي يتحفظ مقروء.
+          </td>
+        </tr>
+        <tr>
+          <td><strong>فصل الطبقات</strong></td>
+          <td>
+            <code class="inl">load/save</code> (تخزين) منفصلة عن
+            <code class="inl">add/modify/delete</code> (منطق) منفصلة عن
+            <code class="inl">main</code> (واجهة). ده مبدأ معماري أساسي اسمه
+            <em>Separation of Concerns</em>.
+          </td>
+        </tr>
+        <tr>
+          <td><strong>قاموس الدوال</strong></td>
+          <td>
+            <code class="inl">actions = {"1": add_task, ...}</code> — بنخزّن الدوال نفسها
+            كقيم! وبعدين <code class="inl">actions[choice](tasks)</code> بتناديها.
+            ده بديل أنيق لسلسلة <code class="inl">elif</code> طويلة.
+          </td>
+        </tr>
+        <tr>
+          <td><strong><code class="inl">os.path.exists</code></strong></td>
+          <td>بتفحص وجود الملف قبل ما نحاول نفتحه.</td>
+        </tr>
+        <tr>
+          <td><strong>شريط التقدّم</strong></td>
+          <td><code class="inl">"█" * n + "░" * (20-n)</code> — تكرار النصوص من الوحدة 1!</td>
+        </tr>
+      </table>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 الدوال ككائنات (First-Class Functions)</div>
+      <p>
+        <code class="inl">actions = {"1": add_task}</code> — لاحظ إن
+        <code class="inl">add_task</code> مكتوبة <strong>من غير أقواس</strong>.
+        يعني إحنا بنخزّن الدالة نفسها، مش نتيجتها. وبعدين
+        <code class="inl">actions["1"](tasks)</code> بتضيف الأقواس وتناديها.
+      </p>
+      <p>
+        في بايثون <strong>الدوال قيم زي أي قيمة</strong>: تقدر تخزّنها في متغيّر،
+        تحطّها في قائمة، تمرّرها لدالة تانية. ده أساس مفاهيم متقدّمة زي
+        الـ decorators و callbacks، وهيبقى نقطة انطلاقك في التراك الجاي.
+      </p>
+    </div>
+
+    <div class="ex">
+      <div class="bt">✍️ التحدّي النهائي</div>
+      <p>وسّع البرنامج بالمزايا دي:</p>
+      <ol>
+        <li>بحث في المهام بكلمة مفتاحية.</li>
+        <li>ترتيب العرض حسب الأولوية.</li>
+        <li>تاريخ استحقاق (deadline) وتنبيه للمهام المتأخّرة.</li>
+        <li>تصدير المهام لملف نصّي مقروء.</li>
+      </ol>
+      <p>لو عملت دول، إنت خلاص عندك أساس قوي جدًا وجاهز لأي تراك.</p>
+    </div>
+  </article>
+<!-- ADD:u13-ch -->
+  <!-- 13.CH -->
+  <article class="lesson" id="u13-ch">
+    <h3>تحدّيات بتصحيح آلي: منطق الألعاب <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">افصل «منطق اللعبة» في دوال صغيرة تتختبر لوحدها — ده اللي بيخلّي المشاريع الكبيرة قابلة للتطوير.</p>
+
+    <div class="challenge" data-ch="u13-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — قلب لعبة Hangman <span class="lvl">⭐⭐</span></div>
+      <p>
+        <code class="inl">mask(word, guessed)</code>: ترجّع الكلمة بحروفها المخمّنة وشرطة مكان الباقي، مفصولين بمسافة (<code class="inl">"p _ _ _ o _"</code>)،
+        والمقارنة من غير فرق بين الكبير والصغير (والحرف يظهر بشكله الأصلي).<br>
+        <code class="inl">is_won(word, guessed)</code>: <code class="inl">True</code> لو كل حروف الكلمة اتخمّنت.
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+def mask(word, guessed):
+    pass
+
+def is_won(word, guessed):
+    pass
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_mask_basic():
+    "mask('python', {'p', 'o'}) ← 'p _ _ _ o _'"
+    assert mask("python", {"p", "o"}) == "p _ _ _ o _", repr(mask("python", {"p", "o"}))
+
+def test_mask_case():
+    "mask('Python', {'p'}) ← 'P _ _ _ _ _' (الحرف بشكله الأصلي)"
+    assert mask("Python", {"p"}) == "P _ _ _ _ _"
+
+def test_mask_nothing():
+    "من غير تخمينات ← كله شرط"
+    assert mask("abc", set()) == "_ _ _"
+
+def test_won():
+    "is_won: كل الحروف ← True، ناقص حرف ← False"
+    assert is_won("level", {"l", "e", "v"}) is True
+    assert is_won("level", {"l", "e"}) is False
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+def mask(word, guessed):
+    lowered = {g.lower() for g in guessed}
+    return " ".join(ch if ch.lower() in lowered else "_" for ch in word)
+def is_won(word, guessed):
+    lowered = {g.lower() for g in guessed}
+    return set(word.lower()) &lt;= lowered
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u13-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — حَكَم حجر ورقة مقص <span class="lvl">⭐⭐</span></div>
+      <p><code class="inl">winner(p1, p2)</code> — الحركات <code class="inl">"rock"</code> و <code class="inl">"paper"</code> و <code class="inl">"scissors"</code>. ترجّع <code class="inl">"p1"</code> أو <code class="inl">"p2"</code> أو <code class="inl">"draw"</code>، وترمي <code class="inl">ValueError</code> لأي حركة تانية.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+def winner(p1, p2):
+    if p1 == p2:
+        return "draw"
+    if p1 == "rock" and p2 == "scissors":
+        return "p1"
+    return "p2"
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_all_combinations():
+    "كل التوافيق التسعة"
+    table = {
+        ("rock", "scissors"): "p1", ("scissors", "paper"): "p1", ("paper", "rock"): "p1",
+        ("scissors", "rock"): "p2", ("paper", "scissors"): "p2", ("rock", "paper"): "p2",
+        ("rock", "rock"): "draw", ("paper", "paper"): "draw", ("scissors", "scissors"): "draw",
+    }
+    for (a, b), expected in table.items():
+        got = winner(a, b)
+        assert got == expected, f"winner({a!r}, {b!r}) رجّعت {got!r} والمفروض {expected!r}"
+
+def test_invalid():
+    "حركة غلط ← ValueError"
+    for a, b in [("rock", "lizard"), ("stone", "paper")]:
+        try:
+            winner(a, b)
+        except ValueError:
+            continue
+        raise AssertionError(f"winner({a!r}, {b!r}) ما رمتش ValueError")
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+BEATS = {"rock": "scissors", "scissors": "paper", "paper": "rock"}
+def winner(p1, p2):
+    if p1 not in BEATS or p2 not in BEATS:
+        raise ValueError(f"حركة غير معروفة: {p1!r} / {p2!r}")
+    if p1 == p2:
+        return "draw"
+    return "p1" if BEATS[p1] == p2 else "p2"
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u13-ch -->
+
+  <!-- CP:13 -->
+  <div class="checkpoint" data-unit="13">
+    <h4>✅ نقطة تفتيش: الوحدة الثالثة عشرة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أقدر أقسّم مشروع كبير لخطوات ودوال.</li><li>أفهم مشروع Task Manager من أوله لآخره.</li><li>أقدر أضيف ميزة جديدة لمشروع موجود.</li><li>أفصل منطق اللعبة في دوال قابلة للاختبار.</li></ul>
+  </div>
+  <!-- /CP -->

@@ -1,0 +1,488 @@
+@@lesson u12-l8 before="<!-- ADD:u12-l7 -->"
+  <!-- 12.8 -->
+  <article class="lesson" id="u12-l8">
+    <h3>التعبيرات النمطية (Regular Expressions): البحث بالأنماط <span class="tag">درس ؟ · مهم</span></h3>
+    <p class="goal">الهدف: توصف «شكل» النص اللي بتدوّر عليه بدل النص نفسه — عشان تستخرج أرقام تليفونات وتواريخ وإيميلات من أي كلام، وتتحقّق من المدخلات، وتنظّف وتعيد ترتيب النصوص في سطر واحد.</p>
+
+    <h4>1. ليه محتاجين تعبيرات نمطية؟</h4>
+    <p>
+      دوال النصوص (<code class="inl">find</code> و <code class="inl">split</code> و <code class="inl">isdigit</code>) ممتازة لما تكون عارف <strong>النص نفسه</strong>.
+      لكن لو السؤال: «هات كل أرقام الموبايل من الرسالة دي» — إنت مش عارف الأرقام، إنت عارف <strong>شكلها</strong>: «0 وبعدها 1 وبعدها 0 أو 1 أو 2 أو 5، وبعدها 8 أرقام».
+      التعبير النمطي (Regex) هو <strong>لغة صغيرة لوصف الأشكال دي</strong>، ومكتبة <code class="inl">re</code> القياسية بتفهمها.
+    </p>
+    <div class="diagram">
+<pre>  النمط:     0   1   [0125]   \d{8}
+             │   │     │        └─ أي 8 أرقام
+             │   │     └─ رقم واحد من دول بس
+             │   └─ الرقم 1 بالظبط
+             └─ الرقم 0 بالظبط
+
+  بيطابق:   01012345678 ✓   01512345678 ✓
+  ما بيطابقش: 01312345678 ✗ (013)   0101234 ✗ (قصير)</pre>
+      <div class="cap">النمط = وصف لشكل النص، مش النص نفسه</div>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ متى ما تستخدمهاش</div>
+      <p>
+        لو المشكلة تتحل بدالة نصوص بسيطة (<code class="inl">startswith</code> و <code class="inl">in</code> و <code class="inl">split</code>) — استخدمها.
+        التعبيرات النمطية قوية لكن صعبة القراءة. ولملفات HTML استخدم BeautifulSoup، ولـ JSON استخدم <code class="inl">json</code>، ولـ CSV استخدم <code class="inl">csv</code>.
+      </p>
+    </div>
+
+    <h4>2. أول نمط، وليه بنكتب r قبل النص</h4>
+    @code run
+import re ¦¦ مكتبة قياسية — مش محتاجة تسطيب.
+ ¦¦
+text = "Order 66 costs 250 EGP, order 67 costs 1200 EGP" ¦¦ نص فيه أرقام بأطوال مختلفة.
+print(re.findall(r"\d+", text)) ¦¦ `\d` = أي رقم، و `+` = «مرّة أو أكتر». `findall` بترجّع **كل** التطابقات كقائمة نصوص.
+print(len("\b"), len(r"\b")) ¦¦ **ليه `r`؟** في النص العادي `\b` حرف هروب واحد (backspace). في الـ raw string هي حرفين: `\` و `b` — وده اللي الـ Regex محتاجه.
+    @end
+    @out
+['66', '250', '67', '1200']
+1 2
+    @end
+    <div class="box brain">
+      <div class="bt">🧠 القاعدة</div>
+      <p><strong>اكتب أي نمط دايمًا كـ <code class="inl">r"..."</code></strong> حتى لو مفيهوش شرطة مائلة. كده عمرك ما هتقع في فخ إن بايثون تفسّر الشرطة قبل ما <code class="inl">re</code> تشوفها.</p>
+    </div>
+
+    <h4>3. الدوال الأساسية وكائن المطابقة (Match)</h4>
+    @code run
+import re ¦¦ استيراد.
+ ¦¦
+text = "Order 66 shipped on 2025-03-15, order 67 on 2025-04-02." ¦¦ نص للتجربة.
+m = re.search(r"\d+", text) ¦¦ `search` بتدوّر على **أول** تطابق في أي مكان في النص، وبترجّع **كائن مطابقة** أو `None`.
+print(m.group(), m.start(), m.end()) ¦¦ `group()` النص المطابق، و `start`/`end` مكانه (النهاية مش مشمولة زي التقطيع).
+print(re.match(r"\d+", text)) ¦¦ `match` بتفحص **أول النص بس** — والنص بيبدأ بـ Order مش رقم ← `None`.
+print(re.match(r"Order", text).group()) ¦¦ هنا أول النص مطابق.
+print(re.fullmatch(r"\d+", "2025")) ¦¦ `fullmatch` = النص **كله** لازم يطابق — مثالية للتحقّق من المدخلات. طباعة الكائن بتوري مكانه ونصّه.
+print(re.fullmatch(r"\d+", "2025a")) ¦¦ حرف واحد زيادة ← `None`.
+print(re.findall(r"\d{4}-\d{2}-\d{2}", text)) ¦¦ `{4}` = بالظبط 4 مرّات — نمط التاريخ ISO.
+for m in re.finditer(r"order (\d+)", text, re.IGNORECASE): ¦¦ `finditer` زي `findall` بس بترجّع **كائنات مطابقة** واحد واحد (أكفأ مع النصوص الكبيرة وبتدّيك المكان). `re.IGNORECASE` = من غير فرق بين الكبير والصغير.
+    print(m.group(1), "at", m.span()) ¦¦ `group(1)` = اللي جوّه أول أقواس (فقرة 7)، و `span()` = (البداية، النهاية).
+    @end
+    @out
+66 6 8
+None
+Order
+&lt;re.Match object; span=(0, 4), match='2025'&gt;
+None
+['2025-03-15', '2025-04-02']
+66 at (0, 8)
+67 at (32, 40)
+    @end
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الدالة</th><th>بتدوّر فين؟</th><th>بترجّع</th><th>استخدمها لـ</th></tr>
+        <tr><td><code class="inl">re.search</code></td><td>أي مكان</td><td>أول Match أو None</td><td>«هل فيه…؟» وتجيب أول واحد</td></tr>
+        <tr><td><code class="inl">re.match</code></td><td>أول النص بس</td><td>Match أو None</td><td>النص <em>بيبدأ</em> بالشكل ده؟</td></tr>
+        <tr><td><code class="inl">re.fullmatch</code></td><td>النص كله</td><td>Match أو None</td><td><strong>التحقّق من المدخلات</strong></td></tr>
+        <tr><td><code class="inl">re.findall</code></td><td>كل النص</td><td>قائمة نصوص (أو tuples لو فيه مجموعات)</td><td>الاستخراج السريع</td></tr>
+        <tr><td><code class="inl">re.finditer</code></td><td>كل النص</td><td>مكرّر كائنات Match</td><td>الاستخراج مع الأماكن والمجموعات</td></tr>
+        <tr><td><code class="inl">re.sub</code></td><td>كل النص</td><td>نص جديد</td><td>الاستبدال والتنظيف</td></tr>
+        <tr><td><code class="inl">re.split</code></td><td>كل النص</td><td>قائمة</td><td>التقسيم بأكتر من فاصل</td></tr>
+      </table>
+    </div>
+
+    <h4>4. بناء الأنماط: فئات الحروف والتكرار والحدود</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الرمز</th><th>معناه</th><th>مثال</th><th>بيطابق</th></tr>
+        <tr><td><code class="inl">.</code></td><td>أي حرف (ما عدا سطر جديد)</td><td><code class="inl">c.t</code></td><td>cat, c9t, c t</td></tr>
+        <tr><td><code class="inl">\d</code> / <code class="inl">\D</code></td><td>رقم / أي حاجة غير رقم</td><td><code class="inl">\d\d</code></td><td>42</td></tr>
+        <tr><td><code class="inl">\w</code> / <code class="inl">\W</code></td><td>حرف أو رقم أو _ (بأي لغة) / عكسه</td><td><code class="inl">\w+</code></td><td>sara, بايثون, x_1</td></tr>
+        <tr><td><code class="inl">\s</code> / <code class="inl">\S</code></td><td>مسافة أو tab أو سطر جديد / عكسه</td><td><code class="inl">\s+</code></td><td>"   "</td></tr>
+        <tr><td><code class="inl">[abc]</code></td><td>حرف واحد من اللي جوّه</td><td><code class="inl">[aeiou]</code></td><td>حرف متحرّك</td></tr>
+        <tr><td><code class="inl">[a-z]</code></td><td>مدى</td><td><code class="inl">[A-Z][a-z]+</code></td><td>Cairo</td></tr>
+        <tr><td><code class="inl">[^0-9]</code></td><td><strong>^ جوّه الأقواس = «أي حاجة ما عدا»</strong></td><td><code class="inl">[^,]+</code></td><td>كل حاجة لحد الفاصلة</td></tr>
+        <tr><td><code class="inl">?</code></td><td>صفر أو مرّة (اختياري)</td><td><code class="inl">colou?r</code></td><td>color, colour</td></tr>
+        <tr><td><code class="inl">*</code> / <code class="inl">+</code></td><td>صفر أو أكتر / مرّة أو أكتر</td><td><code class="inl">\d+</code></td><td>7, 2025</td></tr>
+        <tr><td><code class="inl">{n}</code> / <code class="inl">{n,m}</code> / <code class="inl">{n,}</code></td><td>بالظبط n / من n لـ m / n أو أكتر</td><td><code class="inl">\d{2,3}</code></td><td>42, 123</td></tr>
+        <tr><td><code class="inl">^</code> / <code class="inl">$</code></td><td>بداية / نهاية النص (أو السطر مع MULTILINE)</td><td><code class="inl">^\d+$</code></td><td>نص كله أرقام</td></tr>
+        <tr><td><code class="inl">\b</code></td><td>حدّ كلمة (مكان مش حرف)</td><td><code class="inl">\bcat\b</code></td><td>cat لوحدها مش catalog</td></tr>
+        <tr><td><code class="inl">a|b</code></td><td>أو</td><td><code class="inl">jpg|png</code></td><td>jpg, png</td></tr>
+        <tr><td><code class="inl">\.</code> <code class="inl">\+</code> <code class="inl">\(</code></td><td>الرمز نفسه (هروب)</td><td><code class="inl">\d+\.\d+</code></td><td>3.14</td></tr>
+      </table>
+    </div>
+    @code run
+import re ¦¦ استيراد.
+ ¦¦
+print(re.findall(r"colou?r", "color colour colr")) ¦¦ `u?` = حرف u اختياري. «colr» ناقصها o فمش مطابقة.
+print(re.findall(r"\b\w{5}\b", "one three seven eleven")) ¦¦ كلمات من **5 حروف بالظبط**: `\b` من الناحيتين بتمنع أخذ 5 حروف من جوّه «eleven».
+print(re.findall(r"[A-Z][a-z]+", "Cairo and Giza, not alex")) ¦¦ حرف كبير وبعده صغيّرين — أسماء بتبدأ بحرف كبير.
+print(re.findall(r"\d{2,3}", "7 42 123 9999")) ¦¦ من 2 لـ 3 أرقام: الـ 7 أقصر، و 9999 بتتاخد منها أول 3 بس (والـ 9 الأخيرة لوحدها قصيرة).
+print(re.findall(r"\bcat\b", "cat catalog bobcat cat.")) ¦¦ «cat» ككلمة كاملة بس — النقطة بعدها حدّ كلمة.
+print(re.findall(r"[^\w\s]", "Hi! How's it going?")) ¦¦ أي حرف **مش** حرف/رقم **ومش** مسافة = علامات الترقيم.
+print(re.findall(r"(?<!\d)\d{3}(?!\d)", "12 345 6789")) ¦¦ «3 أرقام مش لازقين في أرقام تانية» — `(?<!\d)` و `(?!\d)` فحص للي قبل وبعد من غير ما ياخدوه (فقرة 10).
+    @end
+    @out
+['color', 'colour']
+['three', 'seven']
+['Cairo', 'Giza']
+['42', '123', '999']
+['cat', 'cat']
+['!', "'", '?']
+['345']
+    @end
+
+    <h4>5. التعبيرات النمطية والعربي</h4>
+    @code run
+import re ¦¦ استيراد.
+ ¦¦
+text = "رقمي ٠١٠١٢٣٤٥٦٧٨ وتليفون البيت 0223456789" ¦¦ نص فيه أرقام عربية وإنجليزية.
+print(re.findall(r"\d+", text)) ¦¦ ⚠️ `\d` في بايثون بيطابق **أي** رقم في Unicode — حتى الأرقام العربية!
+print(re.findall(r"[0-9]+", text)) ¦¦ لو عايز أرقام إنجليزية بس، اكتبها صريحة `[0-9]`.
+print(re.findall(r"[\u0621-\u064A]+", "Python بايثون 3.12 لغة")) ¦¦ الحروف العربية في Unicode من U+0621 لـ U+064A — نمط «كلمة عربية».
+harakat = re.compile(r"[\u064B-\u0652]") ¦¦ التشكيل (الفتحة والضمّة والكسرة والشدّة والسكون والتنوين) من U+064B لـ U+0652.
+print(harakat.sub("", "مُحَمَّدٌ يَكْتُبُ")) ¦¦ `sub` بـ نص فاضي = **مسح** التشكيل — ضروري قبل البحث أو المقارنة في النصوص العربية.
+print(re.sub(r"[إأآ]", "ا", "أحمد وإسلام وآمال")) ¦¦ توحيد أشكال الألف — خطوة أساسية في معالجة العربي (زي مشروع السبام في الوحدة 19).
+    @end
+    @out
+['٠١٠١٢٣٤٥٦٧٨', '0223456789']
+['0223456789']
+['بايثون', 'لغة']
+محمد يكتب
+احمد واسلام وامال
+    @end
+
+    <h4>6. الجشِع والكسول: .* مقابل .*?</h4>
+    @code run
+import re ¦¦ استيراد.
+ ¦¦
+html = "<b>مهم</b> و <b>عاجل</b>" ¦¦ نص فيه جزئين عريض.
+print(re.findall(r"<b>.*</b>", html)) ¦¦ `.*` **جشِع (greedy)**: بياخد أطول نص ممكن — من أول `<b>` لآخر `</b>` في السطر كله!
+print(re.findall(r"<b>.*?</b>", html)) ¦¦ `?` بعد التكرار = **كسول (lazy)**: بياخد أقصر نص ممكن — فكل جزء لوحده.
+print(re.findall(r"<b>(.*?)</b>", html)) ¦¦ مع أقواس، `findall` بترجّع **اللي جوّه الأقواس بس**.
+    @end
+    @out
+['&lt;b&gt;مهم&lt;/b&gt; و &lt;b&gt;عاجل&lt;/b&gt;']
+['&lt;b&gt;مهم&lt;/b&gt;', '&lt;b&gt;عاجل&lt;/b&gt;']
+['مهم', 'عاجل']
+    @end
+    <div class="box tip">
+      <div class="bt">💡 قاعدة سريعة</div>
+      <p>لو بتستخرج حاجة بين علامتين (أقواس، علامات تنصيص، وسوم) استخدم <code class="inl">.*?</code> — أو أحسن: <code class="inl">[^&lt;]*</code> «أي حاجة ما عدا العلامة». ولصفحات HTML الحقيقية استخدم BeautifulSoup.</p>
+    </div>
+
+    <h4>7. المجموعات: استخرج الأجزاء اللي تهمّك</h4>
+    @code run
+import re ¦¦ استيراد.
+ ¦¦
+line = "2025-03-15 14:02:11 ERROR [payments] Card declined for user 42" ¦¦ سطر من ملف سجلّ (log).
+m = re.match(r"(\d{4})-(\d{2})-(\d{2})", line) ¦¦ كل **أقواس** = مجموعة بتتحفظ لوحدها.
+print(m.group(0), m.group(1), m.groups()) ¦¦ `group(0)` التطابق كله، `group(1)` أول مجموعة، `groups()` كلهم كـ tuple.
+year, month, day = map(int, m.groups()) ¦¦ المجموعات نصوص — `map(int, …)` بتحوّلهم والتفكيك بيوزّعهم.
+print(year + 1, month, day) ¦¦ بقوا أرقام بجد.
+pattern = r"(?P<date>\S+) (?P<time>\S+) (?P<level>[A-Z]+) \[(?P<module>\w+)\] (?P<message>.*)" ¦¦ **مجموعات بأسماء** `(?P<name>…)` — أوضح بكتير من الأرقام. لاحظ `\[` عشان القوس المربع رمز خاص.
+m = re.match(pattern, line) ¦¦ تطبيق النمط.
+print(m["level"], m["module"]) ¦¦ الوصول بالاسم زي القاموس.
+print(m.groupdict()["message"]) ¦¦ `groupdict()` بترجّع **قاموس** بكل المجموعات — جاهز يتحط في CSV أو قاعدة بيانات.
+phones = "call 01012345678 or +201112345678, not 0101234567" ¦¦ نص فيه أرقام موبايل بصيغتين ورقم ناقص.
+print(re.findall(r"(\+20|0)1[0125]\d{8}", phones)) ¦¦ ⚠️ **فخ**: لما يكون فيه مجموعة، `findall` بترجّع المجموعة بس (`0` و `+20`) مش الرقم كله!
+print(re.findall(r"(?:\+20|0)1[0125]\d{8}", phones)) ¦¦ **الحل**: `(?:…)` مجموعة للتجميع بس **من غير حفظ** — فـ findall ترجّع التطابق كامل.
+    @end
+    @out
+2025-03-15 2025 ('2025', '03', '15')
+2026 3 15
+ERROR payments
+Card declined for user 42
+['0', '+20']
+['01012345678', '+201112345678']
+    @end
+
+    <h4>8. الاستبدال والتقسيم: sub و split</h4>
+    @code run
+import re ¦¦ استيراد.
+ ¦¦
+print(re.sub(r"\s+", " ", "كتير     من    المسافات   هنا")) ¦¦ أي مجموعة مسافات ← مسافة واحدة. تنظيف كلاسيكي لمدخلات المستخدمين.
+print(re.sub(r"(\d{2})/(\d{2})/(\d{4})", r"\3-\2-\1", "الميعاد 15/03/2025 و 01/04/2025")) ¦¦ **إعادة ترتيب**: `\3` و `\2` و `\1` في نص الاستبدال = المجموعات. يوم/شهر/سنة ← سنة-شهر-يوم.
+print(re.sub(r"\d(?=\d{4})", "*", "Card 4111111111111234")) ¦¦ «أي رقم وراه 4 أرقام» ← نجمة. النتيجة: كل الأرقام اتخفت ما عدا آخر 4 — زي إيصالات الفيزا.
+print(re.split(r"\s*[,;|]\s*", "sara, ali;mona |omar")) ¦¦ تقسيم بـ **أكتر من فاصل** مع المسافات حواليهم — `str.split` ما تقدرش.
+ ¦¦
+def mask_email(m): ¦¦ **الاستبدال بدالة**: `sub` بتنادي الدالة دي لكل تطابق وبتبعتلها كائن Match.
+    user = m.group(1) ¦¦ اسم المستخدم.
+    return user[0] + "***@" + m.group(2) ¦¦ اللي الدالة بترجّعه هو اللي بيتحط مكان التطابق.
+ ¦¦
+print(re.sub(r"([\w.]+)@([\w.]+)", mask_email, "contact sara.ahmed@mail.com now")) ¦¦ إخفاء الإيميلات قبل ما تنشر سجلّ أو تبعته لحد.
+    @end
+    @out
+كتير من المسافات هنا
+الميعاد 2025-03-15 و 2025-04-01
+Card ************1234
+['sara', 'ali', 'mona', 'omar']
+contact s***@mail.com now
+    @end
+
+    <h4>9. compile والخيارات (Flags) والأنماط المقروءة</h4>
+    @code run
+import re ¦¦ استيراد.
+ ¦¦
+PHONE = re.compile(r""" ¦¦ `compile` بتجهّز النمط مرّة واحدة وتستخدمه كتير (أسرع وأوضح). الاسم بحروف كبيرة لأنه ثابت.
+    (?:\+20|0)      # كود الدولة أو صفر ¦¦ مع `re.VERBOSE` المسافات بتتجاهل وتقدر تكتب **تعليقات** جوّه النمط.
+    1[0125]         # شبكة المحمول ¦¦ جزء تاني بتعليقه.
+    \d{8}           # باقي الرقم ¦¦ جزء تالت.
+""", re.VERBOSE) ¦¦ نهاية النص والخيار.
+print(PHONE.findall("01012345678 / +201212345678")) ¦¦ الكائن المُجهّز عنده نفس الدوال: `findall` و `search` و `sub`…
+print(re.findall(r"^\w+", "first line\nsecond line", re.MULTILINE)) ¦¦ `re.MULTILINE`: `^` و `$` بيطابقوا بداية ونهاية **كل سطر** مش النص كله بس.
+print(re.findall(r"python", "Python PYTHON python", re.I)) ¦¦ `re.I` اختصار `re.IGNORECASE`.
+print(re.findall(r"a.c", "abc\na\nc", re.DOTALL)) ¦¦ `re.DOTALL`: النقطة بتطابق السطر الجديد كمان. ممكن تجمع خيارات بـ `|`: `re.I | re.M`.
+    @end
+    @out
+['01012345678', '+201212345678']
+['first', 'second']
+['Python', 'PYTHON', 'python']
+['abc', 'a\nc']
+    @end
+
+    <h4>10. النظر للأمام والخلف (Lookaround)</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الصيغة</th><th>المعنى</th></tr>
+        <tr><td><code class="inl">(?=…)</code></td><td>اللي بعدي لازم يكون كده (من غير ما آخده)</td></tr>
+        <tr><td><code class="inl">(?!…)</code></td><td>اللي بعدي لازم <strong>ما يكونش</strong> كده</td></tr>
+        <tr><td><code class="inl">(?&lt;=…)</code></td><td>اللي قبلي لازم يكون كده</td></tr>
+        <tr><td><code class="inl">(?&lt;!…)</code></td><td>اللي قبلي لازم <strong>ما يكونش</strong> كده</td></tr>
+      </table>
+    </div>
+    @code run
+import re ¦¦ استيراد.
+ ¦¦
+STRONG = re.compile(r"^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).{8,}$") ¦¦ كل `(?=.*X)` بتسأل «فيه X في أي مكان؟» من غير ما تتحرّك — فبنقدر نحط 3 شروط مستقلّة، وبعدين `.{8,}` للطول.
+for pw in ["Secret123", "secret123", "Sec1", "SECRET123a"]: ¦¦ تجربة.
+    print(pw, bool(STRONG.match(pw))) ¦¦ الأولى والأخيرة بس فيهم الأربع شروط.
+print(re.findall(r"(?<=\$)\d+", "price $30, tax $5, total 35")) ¦¦ «أرقام قبلها علامة $» — العلامة نفسها مش جزء من الناتج.
+    @end
+    @out
+Secret123 True
+secret123 False
+Sec1 False
+SECRET123a True
+['30', '5']
+    @end
+    <div class="box info">
+      <div class="bt">ℹ️ نمط واحد ذكي ولّا كود واضح؟</div>
+      <p>نمط كلمة السر فوق شغّال، لكن دالة <code class="inl">is_strong</code> في وحدة الاختبارات (3 شروط بـ <code class="inl">any</code>) <strong>أوضح بكتير</strong> وبتقولك أنهي شرط ناقص. اختار الـ Regex لما يبسّط، مش لما يبهر.</p>
+    </div>
+
+    <h4>11. الفخاخ الشائعة</h4>
+    @code run
+import re ¦¦ استيراد.
+ ¦¦
+user_input = "3.5+" ¦¦ كلمة بحث كتبها مستخدم.
+print(re.findall(user_input, "version 3.5+ and 3x5")) ¦¦ ❌ النقطة و `+` رموز خاصة: النمط بقى «3 وأي حرف و5 مرّة أو أكتر» — فطابق 3x5 كمان!
+print(re.findall(re.escape(user_input), "version 3.5+ and 3x5")) ¦¦ ✅ `re.escape` بتهرّب كل الرموز الخاصة — **استخدمها دايمًا مع مدخلات المستخدم**.
+EMAIL = re.compile(r"[\w.+-]+@[\w-]+(?:\.[\w-]+)+") ¦¦ نمط إيميل عملي: اسم، @، ودومين فيه نقطة واحدة على الأقل ومفيش نقطتين ورا بعض.
+for e in ["farid@gmail.com", "a@b..com", "no-at.com", "x@site.co.uk"]: ¦¦ حالات مختلفة.
+    print(e, bool(EMAIL.fullmatch(e))) ¦¦ `fullmatch` للتحقّق — `search` كانت هتقبل «!!a@b.com!!».
+    @end
+    @out
+['3.5', '3x5']
+['3.5+']
+farid@gmail.com True
+a@b..com False
+no-at.com False
+x@site.co.uk True
+    @end
+    <div class="box err">
+      <div class="bt">❌ فخاخ لازم تعرفها</div>
+      <ul>
+        <li><strong>نسيان <code class="inl">r"…"</code></strong>: <code class="inl">"\bword\b"</code> من غير r بتدوّر على حرف backspace وما بتلاقيش حاجة — من غير أي خطأ.</li>
+        <li><strong>match بدل fullmatch في التحقّق</strong>: <code class="inl">re.match(r"\d+", "123abc")</code> بتنجح!</li>
+        <li><strong>المجموعات مع findall</strong>: بترجّع المجموعات مش التطابق — استخدم <code class="inl">(?:…)</code>.</li>
+        <li><strong>التكرار المتداخل</strong> زي <code class="inl">(a+)+$</code> على نص طويل ممكن ياخد <em>ساعات</em> (Catastrophic Backtracking) — وده نوع ثغرة بيوقّع سيرفرات (ReDoS). خلّي الأنماط بسيطة ومحدّدة.</li>
+        <li><strong>الإيميل «المثالي» مش موجود</strong>: أدق تحقّق هو إنك تبعت رسالة تأكيد.</li>
+      </ul>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 جرّب أنماطك بصريًا</div>
+      <p>مواقع زي <strong>regex101.com</strong> (اختار Python) بتلوّن كل جزء من النمط وتشرحه وتوريك التطابقات لحظيًا — أسرع طريقة تتعلّم وتصلّح بيها.</p>
+    </div>
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>الهاشتاجات</div>
+      <p>استخرج كل الهاشتاجات (عربي أو إنجليزي) من تغريدة، من غير علامة #، وبحروف صغيرة ومن غير تكرار.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import re ¦¦ استيراد.
+ ¦¦
+tweet = "بدأت أتعلّم #Python و #بايثون_للمبتدئين مع #python و#AI" ¦¦ تغريدة — لاحظ الهاشتاج الأخير لازق في «و».
+tags = re.findall(r"#(\w+)", tweet) ¦¦ `#` وبعدها حروف (`\w` بتشمل العربي والشرطة السفلية). المجموعة بترجّع الاسم من غير #.
+unique = list(dict.fromkeys(t.lower() for t in tags)) ¦¦ `dict.fromkeys` بتشيل التكرار **وتحافظ على الترتيب** (مفاتيح القاموس مرتّبة).
+print(unique) ¦¦ النتيجة.
+      @end
+      @out
+['python', 'بايثون_للمبتدئين', 'ai']
+      @end
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تحويل الأوقات</div>
+      <p>حوّل أي وقت بنظام 12 ساعة زي <code class="inl">9:05 PM</code> لنظام 24 ساعة <code class="inl">21:05</code> جوّه أي نص (باستخدام <code class="inl">sub</code> بدالة).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import re ¦¦ استيراد.
+ ¦¦
+TIME = re.compile(r"\b(\d{1,2}):(\d{2})\s*(AM|PM)\b", re.I) ¦¦ ساعة برقم أو اتنين، دقايق برقمين، مسافات اختيارية، و AM/PM بأي حالة.
+ ¦¦
+def to_24h(m): ¦¦ دالة الاستبدال.
+    hour, minute, period = int(m.group(1)), m.group(2), m.group(3).upper() ¦¦ تفكيك المجموعات.
+    if period == "PM" and hour != 12: ¦¦ بعد الضهر: زوّد 12 (ما عدا 12 الضهر نفسها).
+        hour += 12 ¦¦ التحويل.
+    if period == "AM" and hour == 12: ¦¦ 12 بالليل = 00.
+        hour = 0 ¦¦ التحويل.
+    return f"{hour:02d}:{minute}" ¦¦ الشكل النهائي بصفر على الشمال.
+ ¦¦
+print(TIME.sub(to_24h, "الاجتماع 9:05 PM والفطار 7:30am والسحور 12:15 AM")) ¦¦ كل الأوقات اتحوّلت، والكلام حواليها زي ما هو.
+      @end
+      @out
+الاجتماع 21:05 والفطار 07:30 والسحور 00:15
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. للتحقّق إن المستخدم كتب رقم بطاقة من 14 رقم بالظبط وبس، تستخدم…</p>
+        <label><input type="radio"> re.search(r"\d{14}", s)</label>
+        <label><input type="radio"> re.match(r"\d{14}", s)</label>
+        <label><input type="radio"> re.fullmatch(r"\d{14}", s)</label>
+        <label><input type="radio"> re.findall(r"\d", s)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">re.findall(r"&lt;(.*?)&gt;", "&lt;a&gt;&lt;b&gt;")</code>؟</p>
+        <label><input type="radio"> ['a', 'b']</label>
+        <label><input type="radio"> ['a&gt;&lt;b']</label>
+        <label><input type="radio"> ['&lt;a&gt;', '&lt;b&gt;']</label>
+        <label><input type="radio"> []</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">[^0-9]</code> معناها…</p>
+        <label><input type="radio"> نص بيبدأ برقم</label>
+        <label><input type="radio"> أي رقم</label>
+        <label><input type="radio"> الرمز ^ أو رقم</label>
+        <label><input type="radio"> أي حرف مش رقم</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">4. ليه <code class="inl">re.findall(r"(\+20|0)1\d{9}", s)</code> بترجّع ['0', '+20'] بدل الأرقام؟</p>
+        <label><input type="radio"> النمط غلط</label>
+        <label><input type="radio"> findall بترجّع المجموعات لو موجودة — والحل (?:…)</label>
+        <label><input type="radio"> لازم re.I</label>
+        <label><input type="radio"> لأن r ناقصة</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">5. بتدوّر على كلمة كتبها المستخدم وفيها رموز زي . و + — لازم…</p>
+        <label><input type="radio"> re.VERBOSE</label>
+        <label><input type="radio"> تحوّلها لحروف صغيرة</label>
+        <label><input type="radio"> re.escape(كلمة)</label>
+        <label><input type="radio"> re.compile بس</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u12-p5 before="<!-- 12.EX -->"
+  <!-- 12.P5 -->
+  <article class="lesson project" id="u12-p5">
+    <h3>مشروع ؟: محلّل ملفات السجلّ (Log Analyzer) <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: تقرا ملف سجلّ حقيقي الشكل بالتعبيرات النمطية، تتجاهل السطور البايظة، وتطلّع تقرير: الأخطاء لكل جزء، أكتر مشكلة متكرّرة، والمستخدمين المتأثّرين — وتصدّر الأخطاء لـ CSV.</p>
+
+    <h4>الفكرة</h4>
+    <p>
+      كل تطبيق حقيقي بيكتب سجلّ (الوحدة 16). لما حاجة تبوظ، أول حاجة المبرمج بيعملها إنه يحلّل السجلّ.
+      المشكلة: رسايل الأخطاء فيها أرقام متغيّرة («user 42» و «user 7»)، فمش هتعرف تعدّها كرسالة واحدة… إلا لو <strong>وحّدت</strong> الأرقام بـ <code class="inl">re.sub</code>.
+    </p>
+
+    <h4>الكود</h4>
+    @code run log_analyzer.py
+import re ¦¦ التعبيرات النمطية.
+import csv ¦¦ للتصدير (درس CSV).
+from collections import Counter ¦¦ للعدّ (الوحدة 10).
+from pathlib import Path ¦¦ للملفات.
+ ¦¦
+SAMPLE = """\ ¦¦ ملف سجلّ للتجربة. الـ `\` بعد علامات التنصيص بتمنع سطر فاضي في الأول.
+2025-03-15 09:00:01 INFO [auth] User 7 logged in ¦¦ سطر معلومات.
+2025-03-15 09:00:05 WARNING [payments] Slow response 2300ms ¦¦ تحذير فيه زمن.
+2025-03-15 09:01:10 ERROR [payments] Card declined for user 42 ¦¦ خطأ.
+2025-03-15 09:02:44 ERROR [auth] Invalid token for user 13 ¦¦ خطأ في جزء تاني.
+this line is corrupted ¦¦ **سطر بايظ** — بيحصل في الواقع (انقطاع كتابة، ترميز غلط).
+2025-03-15 09:03:00 INFO [orders] Order 1001 created ¦¦ معلومات.
+2025-03-15 09:04:12 ERROR [payments] Card declined for user 7 ¦¦ نفس المشكلة الأولى بمستخدم مختلف.
+2025-03-15 09:05:59 WARNING [orders] Slow response 1800ms ¦¦ تحذير.
+""" ¦¦ قفل النص.
+ ¦¦
+LINE = re.compile( ¦¦ نمط السطر الكامل بمجموعات بأسماء.
+    r"(?P<date>\d{4}-\d{2}-\d{2}) (?P<time>\d{2}:\d{2}:\d{2}) " ¦¦ التاريخ والوقت. النصين الـ raw المتجاورين بيتلزقوا تلقائيًا في نص واحد.
+    r"(?P<level>INFO|WARNING|ERROR) \[(?P<module>\w+)\] (?P<message>.+)" ¦¦ المستوى من 3 اختيارات بس، واسم الجزء بين قوسين مربعين، والرسالة.
+) ¦¦ قفل.
+SLOW = re.compile(r"Slow response (\d+)ms") ¦¦ نمط زمن الاستجابة.
+USER = re.compile(r"user (\d+)", re.IGNORECASE) ¦¦ نمط رقم المستخدم (User أو user).
+ ¦¦
+def parse(path): ¦¦ قراءة الملف وتحويله لقواميس.
+    records, bad = [], 0 ¦¦ السليم وعدّاد البايظ.
+    with open(path, encoding="utf-8") as f: ¦¦ الفتح.
+        for line in f: ¦¦ سطر سطر (مناسب للملفات الضخمة).
+            m = LINE.fullmatch(line.strip()) ¦¦ `fullmatch`: السطر **كله** لازم يكون بالشكل ده.
+            if m: ¦¦ سليم؟
+                records.append(m.groupdict()) ¦¦ قاموس جاهز بالأسماء.
+            else: ¦¦ بايظ…
+                bad += 1 ¦¦ …بنعدّه بدل ما البرنامج يقع (EAFP بروح مختلفة).
+    return records, bad ¦¦ الإرجاع.
+ ¦¦
+def normalize(message): ¦¦ توحيد الرسايل.
+    return re.sub(r"\d+", "N", message) ¦¦ أي رقم ← N، فـ «user 42» و «user 7» يبقوا رسالة واحدة.
+ ¦¦
+Path("app.log").write_text(SAMPLE, encoding="utf-8") ¦¦ كتابة ملف التجربة (في الحقيقة الملف موجود).
+records, bad = parse("app.log") ¦¦ التحليل.
+print(f"سطور سليمة: {len(records)} — سطور بايظة: {bad}") ¦¦ ملخّص الجودة.
+ ¦¦
+levels = Counter(r["level"] for r in records) ¦¦ العدّ حسب المستوى.
+print(dict(levels)) ¦¦ عرض.
+ ¦¦
+errors = [r for r in records if r["level"] == "ERROR"] ¦¦ الأخطاء بس.
+print("الأخطاء لكل جزء:", dict(Counter(r["module"] for r in errors))) ¦¦ أنهي جزء من التطبيق بيقع أكتر؟
+for msg, n in Counter(normalize(r["message"]) for r in errors).most_common(): ¦¦ الأخطاء **بعد التوحيد** مرتّبة بالتكرار.
+    print(f"  {n}× {msg}") ¦¦ كل مشكلة وعدد مرّاتها.
+ ¦¦
+slow = [int(m.group(1)) for r in records if (m := SLOW.search(r["message"]))] ¦¦ الأزمنة: الوالروس بيحفظ نتيجة البحث عشان ما نبحثش مرّتين.
+print("أبطأ استجابة:", max(slow), "ms") ¦¦ الأكبر.
+ ¦¦
+users = sorted({int(u) for r in errors for u in USER.findall(r["message"])}) ¦¦ كل أرقام المستخدمين في الأخطاء: set لشيل التكرار، وترتيب.
+print("مستخدمين اتأثّروا:", users) ¦¦ عرض — مفيد لخدمة العملاء.
+ ¦¦
+with open("errors.csv", "w", newline="", encoding="utf-8") as f: ¦¦ تصدير.
+    writer = csv.DictWriter(f, fieldnames=["date", "time", "module", "message"]) ¦¦ الأعمدة المطلوبة بس.
+    writer.writeheader() ¦¦ العناوين.
+    for r in errors: ¦¦ كل خطأ.
+        writer.writerow({k: r[k] for k in writer.fieldnames}) ¦¦ dict comprehension بيختار الأعمدة دي بس من القاموس.
+print(Path("errors.csv").read_text(encoding="utf-8").splitlines()[:2]) ¦¦ أول سطرين من الملف للتأكّد.
+    @end
+    @out
+سطور سليمة: 7 — سطور بايظة: 1
+{'INFO': 2, 'WARNING': 2, 'ERROR': 3}
+الأخطاء لكل جزء: {'payments': 2, 'auth': 1}
+  2× Card declined for user N
+  1× Invalid token for user N
+أبطأ استجابة: 2300 ms
+مستخدمين اتأثّروا: [7, 13, 42]
+['date,time,module,message', '2025-03-15,09:01:10,payments,Card declined for user 42']
+    @end
+
+    <h4>الأفكار المهمّة</h4>
+    <ul>
+      <li><strong>النمط المُجهّز بمجموعات بأسماء</strong> حوّل كل سطر لقاموس في خطوة — والباقي كله أدوات اتعلّمتها قبل كده.</li>
+      <li><strong>fullmatch + عدّاد للبايظ</strong>: البرنامج ما بيقعش من سطر غلط، وفي نفس الوقت بيبلّغك إن فيه مشكلة في البيانات.</li>
+      <li><strong>التوحيد بـ sub</strong> هو سرّ أدوات مراقبة الأخطاء الحقيقية: بتجمّع آلاف الأخطاء في عدد قليل من «الأنواع».</li>
+    </ul>
+
+    <h4>طوّره بنفسك</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تحسينات</div>
+      <ol>
+        <li>اقبل وسيط من سطر الأوامر بمسار الملف (argparse من الوحدة 11).</li>
+        <li>اطبع عدد الأخطاء في كل ساعة (مجموعة الوقت: أول رقمين).</li>
+        <li>خزّن السجلّات في SQLite واسأل عنها بـ SQL (الدرس اللي بعد ده).</li>
+        <li>اكتب اختبارات pytest لـ <code class="inl">parse</code> و <code class="inl">normalize</code> بملف مؤقّت (<code class="inl">tmp_path</code>).</li>
+      </ol>
+    </div>
+  </article>

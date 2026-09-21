@@ -1,0 +1,589 @@
+@@append u10-l4
+    <h4>4. دوال الـ set: الإضافة والحذف</h4>
+    @code run
+tags = {"python", "sql"} ¦¦ مجموعة مهارات.
+tags.add("git") ¦¦ `add` بتضيف عنصر واحد.
+tags.add("python") ¦¦ موجود أصلًا ← مفيش تكرار ولا خطأ.
+print(sorted(tags)) ¦¦ عرض مرتّب (ترتيب الـ set نفسه مش مضمون).
+tags.remove("sql") ¦¦ `remove` بتحذف عنصر موجود.
+tags.discard("java") ¦¦ `discard` بتحذف **لو موجود** — ولو مش موجود ما بتعملش حاجة.
+print(sorted(tags)) ¦¦ بعد الحذف.
+try: ¦¦ الفرق بينهم:
+    tags.remove("java") ¦¦ `remove` لعنصر مش موجود…
+except KeyError as e: ¦¦ …بترمي KeyError.
+    print("KeyError:", e) ¦¦ القاعدة: `discard` لما مش متأكّد، و `remove` لما الغياب نفسه غلطة.
+removed = tags.pop() ¦¦ `pop` بتشيل عنصر **عشوائي** (مفيش ترتيب) وترجّعه.
+print(len(tags)) ¦¦ فضل عنصر واحد.
+tags.clear() ¦¦ تفريغ.
+print(tags) ¦¦ المجموعة الفاضية بتتعرض `set()` مش `{}` (اللي معناها قاموس).
+    @end
+    @out
+['git', 'python', 'sql']
+['git', 'python']
+KeyError: 'java'
+1
+set()
+    @end
+
+    <h4>5. العلاقات بين المجموعات</h4>
+    @code run
+backend = {"python", "sql", "git", "docker"} ¦¦ مهارات وظيفة.
+student = {"python", "git"} ¦¦ مهارات طالب.
+print(student.issubset(backend), student <= backend) ¦¦ **مجموعة جزئية**: كل مهارات الطالب جوّه المطلوب؟ الدالة والعامل نفس المعنى.
+print(backend.issuperset(student), backend >= student) ¦¦ العكس: المطلوب **بيحتوي** مهارات الطالب.
+print(student < backend, backend < backend) ¦¦ `<` = جزئية **وأصغر فعلًا** (مش نفس المجموعة).
+print({"java"}.isdisjoint(backend)) ¦¦ `isdisjoint` = مفيش ولا عنصر مشترك.
+missing = backend - student ¦¦ الفرق = اللي ناقص الطالب.
+print(f"ناقصك: {sorted(missing)}") ¦¦ العرض.
+a = {1, 2} ¦¦ مجموعة.
+a |= {3} ¦¦ اتحاد **في المكان** (زي `update`).
+a &= {2, 3, 4} ¦¦ تقاطع في المكان (زي `intersection_update`).
+print(a) ¦¦ اللي فضل.
+    @end
+    @out
+True True
+True True
+True False
+True
+ناقصك: ['docker', 'sql']
+{2, 3}
+    @end
+
+    <h4>6. فخاخ الـ tuple</h4>
+    @code run
+not_tuple = (5) ¦¦ ⚠️ الأقواس هنا مجرّد أقواس حسابية — ده رقم!
+real_tuple = (5,) ¦¦ **الفاصلة** هي اللي بتعمل الـ tuple، مش الأقواس.
+print(type(not_tuple).__name__, type(real_tuple).__name__) ¦¦ int مقابل tuple.
+also_tuple = 1, 2, 3 ¦¦ من غير أقواس خالص = tuple برضه.
+print(also_tuple) ¦¦ العرض.
+print(len(())) ¦¦ `()` = tuple فاضية.
+box = ([1, 2], "x") ¦¦ tuple **جوّاها قائمة**.
+box[0].append(3) ¦¦ مسموح! الـ tuple ما اتغيّرتش (لسه بتشاور على نفس القائمة) — القائمة نفسها اللي اتغيّرت.
+print(box) ¦¦ «غير قابل للتعديل» معناها العناصر المباشرة بس (سطحي).
+try: ¦¦ بسبب كده…
+    hash(box) ¦¦ …ما ينفعش تبقى مفتاح قاموس أو عنصر في set.
+except TypeError as e: ¦¦ الخطأ.
+    print("TypeError:", e) ¦¦ الرسالة.
+print(hash((1, 2)) == hash((1, 2))) ¦¦ tuple كل عناصرها ثابتة ← ليها hash ثابت ← تنفع مفتاح.
+point = (3, 4, 3) ¦¦ tuple.
+print(point.count(3), point.index(4)) ¦¦ الدالتين الوحيدتين للـ tuple (لأنها مش بتتعدّل).
+    @end
+    @out
+int tuple
+(1, 2, 3)
+0
+([1, 2, 3], 'x')
+TypeError: unhashable type: 'list'
+True
+2 1
+    @end
+
+@@append u10-l2
+    <h4>4. القواميس المتداخلة</h4>
+    @code run
+school = { ¦¦ قاموس قيمه قواميس.
+    "class_a": {"teacher": "منى", "students": ["سارة", "علي"]}, ¦¦ فصل: مدرّسة وقائمة طلاب.
+    "class_b": {"teacher": "عمر", "students": ["خالد"]}, ¦¦ فصل تاني.
+} ¦¦ قفل.
+print(school["class_a"]["teacher"]) ¦¦ وصول على مستويين.
+school["class_b"]["students"].append("ليلى") ¦¦ تعديل قائمة جوّه قاموس جوّه قاموس.
+for name, info in school.items(): ¦¦ المرور على المستوى الأول.
+    count = len(info["students"]) ¦¦ الوصول للمستوى التاني.
+    print(f"{name}: {info['teacher']} — {count} طالب") ¦¦ علامات التنصيص المفردة جوّه f-string بالمزدوجة.
+print(school.get("class_c", {}).get("teacher", "مفيش فصل كده")) ¦¦ **وصول آمن متداخل**: `get` بقاموس فاضي كافتراضي، ثم `get` تاني.
+    @end
+    @out rtl
+منى
+class_a: منى — 2 طالب
+class_b: عمر — 2 طالب
+مفيش فصل كده
+    @end
+
+    <h4>5. ترتيب القاموس حسب القيمة</h4>
+    @code run
+scores = {"سارة": 91, "علي": 78, "منى": 85} ¦¦ درجات.
+by_score = sorted(scores.items(), key=lambda kv: kv[1], reverse=True) ¦¦ رتّب **الأزواج** بالعنصر التاني (القيمة) تنازليًا.
+print(by_score) ¦¦ قائمة tuples مرتّبة.
+ranked = dict(by_score) ¦¦ رجّعها قاموس — القواميس بتحافظ على ترتيب الإضافة.
+print(list(ranked)) ¦¦ المفاتيح بالترتيب الجديد.
+print(max(scores, key=scores.get)) ¦¦ صاحب أعلى درجة في سطر.
+print(sorted(scores)) ¦¦ `sorted` على قاموس بترتّب **المفاتيح** بس.
+    @end
+    @out
+[('سارة', 91), ('منى', 85), ('علي', 78)]
+['سارة', 'منى', 'علي']
+سارة
+['سارة', 'علي', 'منى']
+    @end
+
+    <h4>6. فخ: تعديل القاموس وإنت بتلف عليه</h4>
+    @code run
+stock = {"قلم": 0, "كشكول": 5, "مسطرة": 0} ¦¦ مخزون.
+try: ¦¦ نحاول نمسح الأصناف الخلصانة…
+    for item in stock: ¦¦ …وإحنا بنلف على القاموس نفسه.
+        if stock[item] == 0: ¦¦ خلصان؟
+            del stock[item] ¦¦ ❌ تغيير حجم القاموس أثناء المرور.
+except RuntimeError as e: ¦¦ بايثون بتوقفك.
+    print("RuntimeError:", e) ¦¦ الرسالة.
+stock = {"قلم": 0, "كشكول": 5, "مسطرة": 0} ¦¦ نفس البيانات.
+for item in list(stock): ¦¦ ✅ الحل 1: لف على **نسخة** من المفاتيح (`list`)، وامسح من الأصل.
+    if stock[item] == 0: ¦¦ الشرط.
+        del stock[item] ¦¦ آمن دلوقتي.
+print(stock) ¦¦ النتيجة.
+stock = {"قلم": 0, "كشكول": 5, "مسطرة": 0} ¦¦ نفس البيانات.
+available = {k: v for k, v in stock.items() if v > 0} ¦¦ ✅ الحل 2 (الأنضف): اعمل قاموس **جديد** باللي عايزه — dict comprehension (درس التفكيك المتقدّم).
+print(available) ¦¦ النتيجة.
+    @end
+    @out
+RuntimeError: dictionary changed size during iteration
+{'كشكول': 5}
+{'كشكول': 5}
+    @end
+
+    <h4>7. دوال زيادة وترتيب القاموس</h4>
+    @code run
+groups = {} ¦¦ تجميع.
+for name, city in [("سارة", "القاهرة"), ("علي", "طنطا"), ("منى", "القاهرة")]: ¦¦ أزواج.
+    groups.setdefault(city, []).append(name) ¦¦ `setdefault`: لو المفتاح مش موجود حطّ له القيمة دي، **ورجّع القيمة** في الحالتين — تجميع في سطر.
+print(groups) ¦¦ النتيجة.
+settings = {"theme": "dark", "lang": "ar"} ¦¦ إعدادات.
+print(settings.setdefault("theme", "light")) ¦¦ المفتاح موجود ← بترجّع قيمته ومش بتغيّرها.
+last = settings.popitem() ¦¦ `popitem` بتشيل **آخر** زوج اتضاف وترجّعه.
+print(last, settings) ¦¦ الزوج والقاموس بعده.
+d = {"b": 1, "a": 2} ¦¦ قاموس.
+d["c"] = 3 ¦¦ إضافة.
+print(list(d)) ¦¦ **الترتيب = ترتيب الإضافة** (مضمون من بايثون 3.7) — مش أبجدي.
+    @end
+    @out
+{'القاهرة': ['سارة', 'منى'], 'طنطا': ['علي']}
+dark
+('lang', 'ar') {'theme': 'dark'}
+['b', 'a', 'c']
+    @end
+
+@@append u14-l2
+    <h4>6. أكواد الحالة (Status Codes)</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الكود</th><th>المعنى</th><th>تعمل إيه؟</th></tr>
+        <tr><td><strong>200</strong> OK</td><td>تمام</td><td>اقرا البيانات</td></tr>
+        <tr><td><strong>201</strong> Created</td><td>اتعمل عنصر جديد (بعد POST)</td><td>اقرا العنصر الجديد</td></tr>
+        <tr><td><strong>400</strong> Bad Request</td><td>الطلب نفسه غلط</td><td>راجع المعاملات والبيانات اللي بعتّها</td></tr>
+        <tr><td><strong>401</strong> / <strong>403</strong></td><td>مش مسجّل / مش مسموح لك</td><td>راجع مفتاح الـ API أو الصلاحيات</td></tr>
+        <tr><td><strong>404</strong> Not Found</td><td>الرابط أو العنصر مش موجود</td><td>راجع الرابط</td></tr>
+        <tr><td><strong>429</strong> Too Many Requests</td><td>بعتّ طلبات كتير في وقت قصير</td><td>استنّى وجرّب تاني (فقرة 10)</td></tr>
+        <tr><td><strong>500</strong> / <strong>503</strong></td><td>مشكلة عند الخادم</td><td>جرّب تاني بعدين — مش ذنبك</td></tr>
+      </table>
+    </div>
+    <p>القاعدة: <strong>2xx نجاح، 4xx غلطتك، 5xx غلطة الخادم</strong>. و <code class="inl">response.ok</code> بتكون True لأي كود أقل من 400.</p>
+
+    <h4>7. طلب GET بمعاملات وفحص الرد</h4>
+    @code run params_demo.py
+import requests ¦¦ المكتبة.
+ ¦¦
+response = requests.get( ¦¦ طلب GET…
+    "https://httpbin.org/get", ¦¦ …لخدمة تجارب بترجّع اللي بعتّه (httpbin).
+    params={"q": "بايثون", "page": 2}, ¦¦ `params` = معاملات الرابط. requests بتركّبها وبترمّز العربي لوحدها — ما تلصقهاش في الرابط بإيدك.
+    timeout=10, ¦¦ مهلة.
+) ¦¦ قفل.
+print(response.status_code, response.ok) ¦¦ الكود، و `ok` = True لأي كود أقل من 400.
+print(response.url) ¦¦ الرابط النهائي — العربي اتحوّل لصيغة URL.
+print(response.headers["Content-Type"]) ¦¦ **الـ headers** = معلومات عن الرد. نوع المحتوى بيقولك تقراه إزاي.
+print(response.json()["args"]) ¦¦ الخدمة رجّعت المعاملات اللي وصلتها — كلها نصوص.
+    @end
+    @out
+200 True
+https://httpbin.org/get?q=%D8%A8%D8%A7%D9%8A%D8%AB%D9%88%D9%86&page=2
+application/json
+{'page': '2', 'q': 'بايثون'}
+    @end
+
+    <h4>8. POST: إرسال بيانات ومفتاح الـ API</h4>
+    @code run post_demo.py
+import os ¦¦ لمتغيّرات البيئة.
+import requests ¦¦ المكتبة.
+ ¦¦
+token = os.environ.get("API_TOKEN", "demo-token") ¦¦ **المفتاح من البيئة** مش مكتوب في الكود (درس الأمان في الوحدة 18). "demo-token" بس للتجربة.
+response = requests.post( ¦¦ POST = «ابعت بيانات» (إنشاء أو تنفيذ حاجة).
+    "https://httpbin.org/post", ¦¦ الرابط.
+    json={"name": "sara", "score": 91}, ¦¦ `json=` بتحوّل القاموس لـ JSON وبتظبط نوع المحتوى لوحدها.
+    headers={"Authorization": f"Bearer {token}"}, ¦¦ **headers الطلب**: أغلب الـ APIs بتستقبل المفتاح بالشكل ده.
+    timeout=10, ¦¦ مهلة.
+) ¦¦ قفل.
+response.raise_for_status() ¦¦ أي كود خطأ ← استثناء.
+echo = response.json() ¦¦ الخدمة بترجّع صورة من طلبنا.
+print(echo["json"]) ¦¦ البيانات وصلت زي ما هي.
+print(echo["headers"]["Authorization"]) ¦¦ والمفتاح وصل في الـ header.
+    @end
+    @out
+{'name': 'sara', 'score': 91}
+Bearer demo-token
+    @end
+
+    <h4>9. التعامل مع كل نوع خطأ لوحده</h4>
+    @code run fetch_safe.py
+import requests ¦¦ المكتبة.
+ ¦¦
+def fetch(url): ¦¦ دالة جلب «ما بتقعش».
+    try: ¦¦ الجزء الخطر.
+        response = requests.get(url, timeout=3) ¦¦ مهلة قصيرة للتجربة.
+        response.raise_for_status() ¦¦ أكواد الخطأ ← HTTPError.
+        return response.json() ¦¦ التحليل — ممكن يفشل لو الرد مش JSON.
+    except requests.Timeout: ¦¦ الخادم اتأخّر.
+        print("⏱ الخادم اتأخّر — جرّب تاني بعدين") ¦¦ رسالة مفهومة.
+    except requests.ConnectionError: ¦¦ مفيش اتصال أصلًا (نت مقطوع أو عنوان غلط).
+        print("🌐 مفيش اتصال بالخادم") ¦¦ رسالة.
+    except requests.HTTPError as e: ¦¦ الخادم ردّ بكود خطأ.
+        print(f"❌ الخادم رد بخطأ {e.response.status_code}") ¦¦ الكود نفسه جوّه الاستثناء.
+    except ValueError: ¦¦ خطأ JSON بتاع requests بيورث من ValueError.
+        print("📄 الرد مش JSON") ¦¦ رسالة.
+    return None ¦¦ في كل حالات الفشل.
+ ¦¦
+fetch("https://httpbin.org/status/404") ¦¦ خطأ 404.
+fetch("https://httpbin.org/delay/5") ¦¦ خادم بيتأخّر 5 ثواني والمهلة 3.
+fetch("https://no-such-host.invalid") ¦¦ عنوان مش موجود.
+fetch("https://httpbin.org/html") ¦¦ رد HTML مش JSON.
+print(fetch("https://httpbin.org/json")["slideshow"]["title"]) ¦¦ الحالة السليمة.
+    @end
+    @out
+❌ الخادم رد بخطأ 404
+⏱ الخادم اتأخّر — جرّب تاني بعدين
+🌐 مفيش اتصال بالخادم
+📄 الرد مش JSON
+Sample Slide Show
+    @end
+
+    <h4>10. إعادة المحاولة واحترام حدود الخدمة</h4>
+    @code run retry_demo.py
+import time ¦¦ للانتظار.
+import requests ¦¦ المكتبة.
+ ¦¦
+def get_with_retry(url, attempts=3, wait=1): ¦¦ جلب بإعادة محاولة.
+    for attempt in range(1, attempts + 1): ¦¦ محاولة ورا محاولة.
+        try: ¦¦ الجزء الخطر.
+            response = requests.get(url, timeout=5) ¦¦ الطلب.
+            response.raise_for_status() ¦¦ 429 و 5xx بتترمي هنا.
+            return response ¦¦ نجح ← نرجّع فورًا.
+        except (requests.Timeout, requests.ConnectionError, requests.HTTPError) as e: ¦¦ الأخطاء اللي ممكن تتحل لوحدها بعد شوية.
+            print(f"محاولة {attempt} فشلت: {type(e).__name__}") ¦¦ تسجيل.
+            if attempt == attempts: ¦¦ آخر محاولة؟
+                raise ¦¦ نرمي نفس الخطأ للي نادى (الوحدة 15).
+            time.sleep(wait * attempt) ¦¦ **انتظار متزايد** (1 ثم 2 ثم 3…) عشان ما نضغطش على الخادم.
+ ¦¦
+try: ¦¦ تجربة على خادم «واقع» دايمًا.
+    get_with_retry("https://httpbin.org/status/503", attempts=2, wait=0.5) ¦¦ محاولتين بس للتجربة.
+except requests.HTTPError: ¦¦ بعد ما كل المحاولات فشلت.
+    print("استسلمنا بعد كل المحاولات") ¦¦ القرار النهائي.
+    @end
+    @out
+محاولة 1 فشلت: HTTPError
+محاولة 2 فشلت: HTTPError
+استسلمنا بعد كل المحاولات
+    @end
+    <div class="box tip">
+      <div class="bt">💡 قبل ما تستخدم أي API</div>
+      <ul>
+        <li><strong>اقرا التوثيق بتاعه</strong>: الروابط، المعاملات، شكل الرد، وحدود الطلبات (rate limit).</li>
+        <li><strong>التقسيم لصفحات (pagination)</strong>: النتايج الكتير بتيجي على دفعات بمعامل زي <code class="inl">page</code> — لفّ لحد ما الرد يرجع فاضي.</li>
+        <li><strong>المفاتيح في متغيّرات البيئة</strong> أو <code class="inl">.env</code> — عمرها ما تترفع على GitHub.</li>
+        <li><strong>كل الأمثلة هنا متشغّلة على httpbin.org</strong> — خدمة مجانية للتجربة بترجّع اللي بتبعته.</li>
+      </ul>
+    </div>
+
+@@append u16-l5
+    <h4>4. subTest والتخطّي: حالات كتير في اختبار واحد</h4>
+    @code run
+import io ¦¦ عشان نجمع تقرير الاختبارات في الذاكرة بدل الشاشة.
+import unittest ¦¦ المكتبة.
+ ¦¦
+def is_even(n): ¦¦ الدالة المختبرة.
+    return n % 2 == 0 ¦¦ صحيحة.
+ ¦¦
+class TestEven(unittest.TestCase): ¦¦ كلاس الاختبارات.
+    def test_many(self): ¦¦ اختبار واحد بحالات كتير.
+        cases = [(2, True), (7, False), (0, True), (-4, True), (9, True)] ¦¦ آخر حالة **غلط عن قصد** (9 مش زوجي).
+        for number, expected in cases: ¦¦ على كل حالة.
+            with self.subTest(number=number): ¦¦ `subTest` بتخلّي كل حالة تتقيّم لوحدها — فشل واحدة ما يوقفش الباقي، والتقرير بيقول أنهي رقم وقع (زي parametrize في pytest).
+                self.assertEqual(is_even(number), expected) ¦¦ التحقّق.
+ ¦¦
+    @unittest.skip("مثال على التخطّي") ¦¦ تخطّي اختبار مؤقّتًا مع ذكر السبب.
+    def test_later(self): ¦¦ اختبار مش جاهز.
+        pass ¦¦ فاضي.
+ ¦¦
+suite = unittest.defaultTestLoader.loadTestsFromTestCase(TestEven) ¦¦ تجميع اختبارات الكلاس.
+result = unittest.TextTestRunner(stream=io.StringIO()).run(suite) ¦¦ تشغيل وحفظ التقرير في الذاكرة.
+print("اتشغّل:", result.testsRun) ¦¦ عدد الاختبارات.
+print("فشل:", len(result.failures)) ¦¦ الحالات الفاشلة.
+print("اتخطّى:", len(result.skipped)) ¦¦ المتخطّاة.
+print(result.failures[0][1].splitlines()[-1]) ¦¦ آخر سطر من تقرير الفشل.
+    @end
+    @out
+اتشغّل: 2
+فشل: 1
+اتخطّى: 1
+AssertionError: False != True
+    @end
+
+    <h4>5. المحاكاة (mock) مع unittest</h4>
+    @code run
+import io ¦¦ للتقرير.
+import random ¦¦ المكتبة اللي هنستبدلها.
+import unittest ¦¦ الاختبارات.
+from unittest.mock import patch ¦¦ أداة الاستبدال (درس المحاكاة).
+ ¦¦
+def roll_dice(): ¦¦ دالة نتيجتها عشوائية — صعب نختبرها كما هي.
+    return random.randint(1, 6) ¦¦ رقم عشوائي.
+ ¦¦
+class TestDice(unittest.TestCase): ¦¦ الاختبار.
+    @patch("random.randint", return_value=6) ¦¦ أثناء الاختبار ده بس، `random.randint` بترجّع 6 دايمًا. النسخة المزيّفة بتتبعت كوسيط.
+    def test_six(self, fake): ¦¦ `fake` = الكائن المزيّف.
+        self.assertEqual(roll_dice(), 6) ¦¦ النتيجة بقت متوقّعة.
+        fake.assert_called_once_with(1, 6) ¦¦ وبنتأكّد كمان إن الدالة اتنادت بالوسائط الصح.
+ ¦¦
+loader = unittest.defaultTestLoader ¦¦ المحمّل.
+result = unittest.TextTestRunner(stream=io.StringIO()).run(loader.loadTestsFromTestCase(TestDice)) ¦¦ تشغيل.
+print(result.wasSuccessful()) ¦¦ كله نجح؟
+    @end
+    @out
+True
+    @end
+
+@@append u16-l6
+    <h4>3. شكل الفشل وإزاي تقراه</h4>
+    @code run
+import doctest ¦¦ المكتبة.
+ ¦¦
+def average(numbers): ¦¦ دالة فيها مثال **غلط** عن قصد.
+    """متوسّط قائمة أرقام. ¦¦ السطر الأول من التوثيق.
+ ¦¦
+    >>> average([2, 4, 6]) ¦¦ مثال: `>>>` = اللي هيتنفّذ.
+    4 ¦¦ الناتج المتوقّع — لكن `/` بترجّع float دايمًا!
+    >>> average([1, 2]) ¦¦ مثال تاني.
+    1.5 ¦¦ ده صح.
+    """ ¦¦ نهاية التوثيق.
+    return sum(numbers) / len(numbers) ¦¦ الحساب.
+ ¦¦
+doctest.run_docstring_examples(average, {"average": average}, name="average") ¦¦ شغّل أمثلة دالة واحدة. بيطبع **الفشل بس** — ولو كله نجح مش بيطبع حاجة.
+    @end
+    @out
+**********************************************************************
+File "main.py", line 6, in average
+Failed example:
+    average([2, 4, 6])
+Expected:
+    4
+Got:
+    4.0
+    @end
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>جزء التقرير</th><th>معناه</th></tr>
+        <tr><td><code class="inl">File … line 6</code></td><td>مكان المثال اللي وقع في الملف</td></tr>
+        <tr><td><code class="inl">Failed example</code></td><td>الكود اللي اتنفّذ</td></tr>
+        <tr><td><code class="inl">Expected</code></td><td>اللي إنت كتبته في التوثيق</td></tr>
+        <tr><td><code class="inl">Got</code></td><td>اللي حصل فعلًا — المقارنة <strong>نصّية حرفيًا</strong>، فـ <code class="inl">4</code> ≠ <code class="inl">4.0</code></td></tr>
+      </table>
+    </div>
+    <p>التصليح: إمّا تكتب الناتج الحقيقي <code class="inl">4.0</code> في التوثيق، أو تغيّر الدالة لو <code class="inl">4</code> هو المطلوب فعلًا. في الحالتين الاختبار عمل شغله: كشف إن التوثيق والكود مش متّفقين.</p>
+    @code terminal
+python -m doctest mathutils.py ¦¦ من غير `-v`: ما بيطبعش حاجة لو كله نجح — وبيطبع تقرير زي اللي فوق لو فيه فشل.
+pytest --doctest-modules ¦¦ pytest بيشغّل أمثلة التوثيق **مع** اختباراتك العادية في أمر واحد.
+    @end
+
+@@append u19-l5
+    <h4>4. قراءة CSV وتحليله بـ pandas</h4>
+    @code run
+import pandas as pd ¦¦ المكتبة.
+from io import StringIO ¦¦ بتخلّي النص يتقري كأنه ملف (في الحقيقة: `pd.read_csv("sales.csv")`).
+ ¦¦
+csv_text = """date,branch,product,qty,price ¦¦ ملف مبيعات: صف العناوين…
+2025-03-01,Maadi,coffee,30,45 ¦¦ …والبيانات.
+2025-03-01,Zamalek,tea,12,20 ¦¦ صف.
+2025-03-02,Maadi,juice,18,35 ¦¦ صف.
+2025-03-02,Zamalek,coffee,25,45 ¦¦ صف.
+2025-03-03,Maadi,tea,20,20 ¦¦ صف.
+""" ¦¦ قفل.
+df = pd.read_csv(StringIO(csv_text), parse_dates=["date"]) ¦¦ **سطر واحد** بيقرا الملف كله لجدول — و `parse_dates` بتحوّل العمود لتواريخ حقيقية.
+print(df.shape) ¦¦ (عدد الصفوف، عدد الأعمدة).
+print(df["date"].dtype) ¦¦ نوع العمود بقى تاريخ.
+df["revenue"] = df["qty"] * df["price"] ¦¦ **عمود جديد محسوب** لكل الصفوف مرّة واحدة.
+print(df[df["revenue"] > 500][["branch", "product", "revenue"]]) ¦¦ **فلترة** بشرط ← واختيار أعمدة معيّنة.
+print(df["revenue"].describe()[["mean", "max"]]) ¦¦ `describe` بتحسب إحصائيات جاهزة، وبنختار منها اتنين.
+print(df.groupby(df["date"].dt.day)["revenue"].sum().to_dict()) ¦¦ الإيراد لكل يوم: `.dt.day` بتجيب رقم اليوم من التاريخ، و `to_dict` بترجّع قاموس بايثون عادي.
+    @end
+    @out
+(5, 5)
+datetime64[ns]
+    branch product  revenue
+0    Maadi  coffee     1350
+2    Maadi   juice      630
+3  Zamalek  coffee     1125
+mean     749.0
+max     1350.0
+Name: revenue, dtype: float64
+{1: 1590, 2: 1755, 3: 400}
+    @end
+
+@@append u0-l4
+    <h4>3. شوف الـ bytecode بعينك</h4>
+    <p>بايثون فيها مكتبة اسمها <code class="inl">dis</code> بتوريك «اللغة الوسيطة» اللي كودك اتحوّل لها قبل ما الـ PVM ينفّذه. مش مطلوب تفهم كل سطر — المهم تشوف إن الخطوة دي حقيقية.</p>
+    @code run
+import dis ¦¦ مكتبة «disassembler» القياسية.
+ ¦¦
+def add_tax(price): ¦¦ دالة صغيرة.
+    return price * 1.14 ¦¦ سطر واحد.
+ ¦¦
+dis.dis(add_tax) ¦¦ اطبع الـ bytecode بتاع الدالة: كل سطر تعليمة بسيطة للآلة الافتراضية.
+    @end
+    @out
+  3           0 RESUME                   0
+
+  4           2 LOAD_FAST                0 (price)
+              4 LOAD_CONST               1 (1.14)
+              6 BINARY_OP                5 (*)
+             10 RETURN_VALUE
+    @end
+    <div class="box info">
+      <div class="bt">ℹ️ إزاي تقراه؟</div>
+      <p>
+        <code class="inl">LOAD_FAST</code> = «حط قيمة المتغيّر price على المكدّس»، و <code class="inl">LOAD_CONST</code> = «حط الثابت 1.14»، و <code class="inl">BINARY_OP (*)</code> = «اضرب الاتنين»،
+        و <code class="inl">RETURN_VALUE</code> = «رجّع النتيجة». يعني الـ PVM آلة بسيطة بتشتغل بمكدّس — نفس فكرة الـ Stack من الدرس الجاي والوحدة 17.
+        الناتج ده من Python 3.12، والتعليمات بتتغيّر شوية بين الإصدارات.
+      </p>
+    </div>
+
+@@append u18-l1
+    <h4>11. البرمجة الكائنية</h4>
+    @code norun
+class Account: ¦¦ تعريف كلاس.
+    rate = 0.05 ¦¦ خاصية كلاس (مشتركة).
+    def __init__(self, owner, balance=0): ¦¦ المهيّئ.
+        self.owner = owner ¦¦ خاصية كائن.
+        self._balance = balance ¦¦ `_` = داخلي.
+    @property ¦¦ خاصية للقراءة.
+    def balance(self): ¦¦ الاسم العام.
+        return self._balance ¦¦ القيمة.
+    def __repr__(self): ¦¦ شكل العرض.
+        return f"Account({self.owner!r})" ¦¦ `!r` = repr.
+class Savings(Account): ¦¦ وراثة.
+    def __init__(self, owner): ¦¦ مهيّئ الابن.
+        super().__init__(owner) ¦¦ مهيّئ الأب.
+    @end
+
+    <h4>12. dataclass و Enum</h4>
+    @code norun
+from dataclasses import dataclass, field ¦¦ استيراد.
+from enum import Enum ¦¦ استيراد.
+class Status(Enum): ¦¦ قيم ثابتة.
+    TODO = "todo" ¦¦ عضو.
+@dataclass(order=True) ¦¦ كلاس بيانات قابل للترتيب.
+class Task: ¦¦ الاسم.
+    title: str ¦¦ حقل.
+    tags: list[str] = field(default_factory=list) ¦¦ قائمة افتراضية آمنة.
+    status: Status = Status.TODO ¦¦ حقل Enum.
+    @end
+
+    <h4>13. الـ comprehension والمولّدات</h4>
+    @code norun
+[x * 2 for x in nums if x > 0] ¦¦ قائمة بتحويل وفلتر.
+{k: v for k, v in d.items() if v} ¦¦ قاموس.
+{x % 3 for x in nums} ¦¦ مجموعة.
+sum(x * x for x in nums) ¦¦ تعبير مولّد (من غير قائمة وسيطة).
+any(n < 0 for n in nums) ¦¦ فيه واحد على الأقل؟
+def gen(): ¦¦ دالة مولّد…
+    yield 1 ¦¦ …بسبب yield.
+next(iter(items), None) ¦¦ أول عنصر أو None.
+    @end
+
+    <h4>14. collections و datetime</h4>
+    @code norun
+Counter(words).most_common(3) ¦¦ أكتر 3 تكرارًا.
+groups = defaultdict(list) ¦¦ تجميع من غير if.
+last = deque(maxlen=3) ¦¦ آخر 3 عناصر.
+datetime.strptime("15/03/2025", "%d/%m/%Y") ¦¦ نص ← تاريخ.
+date.today() + timedelta(days=7) ¦¦ بعد أسبوع.
+f"{moment:%Y-%m-%d}" ¦¦ تاريخ ← نص.
+    @end
+
+    <h4>15. الملفات الحديثة: pathlib و CSV و JSON</h4>
+    @code norun
+p = Path("data") / "file.txt" ¦¦ بناء مسار.
+text = p.read_text(encoding="utf-8") ¦¦ قراءة سريعة.
+files = list(Path(".").rglob("*.py")) ¦¦ بحث في كل الفولدرات.
+rows = list(csv.DictReader(f)) ¦¦ CSV ← قواميس.
+json.dump(obj, f, ensure_ascii=False, indent=2) ¦¦ كائن ← ملف JSON.
+data = json.loads(text) ¦¦ نص JSON ← كائن.
+    @end
+
+    <h4>16. التعبيرات النمطية</h4>
+    @code norun
+re.fullmatch(r"01[0125]\d{8}", phone) ¦¦ تحقّق من الشكل كله.
+re.findall(r"#(\w+)", text) ¦¦ كل التطابقات (المجموعة بس).
+re.sub(r"\s+", " ", text) ¦¦ استبدال.
+m = re.search(r"(?P<year>\d{4})", text) ¦¦ أول تطابق بمجموعة مسمّاة.
+year = m["year"] if m else None ¦¦ افحص None قبل الاستخدام.
+re.escape(user_input) ¦¦ مع مدخلات المستخدم دايمًا.
+    @end
+
+    <h4>17. SQLite</h4>
+    @code norun
+conn = sqlite3.connect("app.db") ¦¦ اتصال (ملف).
+with conn: ¦¦ commit تلقائي أو rollback.
+    conn.execute("INSERT INTO t (name) VALUES (?)", (name,)) ¦¦ **دايمًا `?`**.
+rows = conn.execute("SELECT * FROM t WHERE id = ?", (1,)).fetchall() ¦¦ قراءة.
+conn.close() ¦¦ قفل الاتصال.
+    @end
+
+    <h4>18. الاختبارات</h4>
+    @code norun
+def test_add(): ¦¦ اسم بيبدأ بـ test_.
+    assert add(2, 3) == 5 ¦¦ التحقّق.
+with pytest.raises(ValueError): ¦¦ اختبار إن الخطأ بيحصل.
+    parse("x") ¦¦ الكود المتوقّع يقع.
+@pytest.mark.parametrize("n, ok", [(2, True), (3, False)]) ¦¦ حالات كتير.
+@pytest.fixture ¦¦ تجهيز مشترك.
+    @end
+    @code terminal
+pytest -v ¦¦ تشغيل كل الاختبارات بالتفصيل.
+pytest --cov=mypackage ¦¦ نسبة التغطية.
+    @end
+
+    <h4>19. Git</h4>
+    @code terminal
+git status ¦¦ إيه اللي اتغيّر؟
+git switch -c feature/x ¦¦ فرع جديد.
+git add . ¦¦ تجهيز.
+git commit -m "وصف واضح" ¦¦ حفظ نسخة.
+git switch main ¦¦ رجوع للرئيسي.
+git merge feature/x ¦¦ دمج.
+git push ¦¦ رفع.
+    @end
+
+    <h4>20. الأمان</h4>
+    @code norun
+token = secrets.token_urlsafe(32) ¦¦ رمز آمن (مش random).
+api_key = os.environ.get("API_KEY") ¦¦ السر من البيئة.
+digest = hashlib.pbkdf2_hmac("sha256", pw.encode(), salt, 600_000) ¦¦ بصمة كلمة سر بطيئة بملح.
+secrets.compare_digest(a, b) ¦¦ مقارنة بزمن ثابت.
+    @end
+
+@@append u18-l2
+    <h4>أخطاء من الوحدات المتقدّمة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>رسالة الخطأ</th><th>السبب الغالب</th><th>الحل</th></tr>
+        <tr><td><code class="inl">RecursionError: maximum recursion depth exceeded</code></td><td>دالة استرجاعية من غير حالة أساسية، أو الحالة مش بتتحقّق</td><td>راجع الحالة الأساسية وإن كل نداء بيصغّر المشكلة</td></tr>
+        <tr><td><code class="inl">UnboundLocalError</code></td><td>بتعدّل متغيّر من برّه الدالة جوّاها</td><td>مرّره كوسيط وارجّعه، أو <code class="inl">nonlocal</code> في الـ closures</td></tr>
+        <tr><td><code class="inl">RuntimeError: dictionary changed size during iteration</code></td><td>حذف أو إضافة للقاموس وإنت بتلف عليه</td><td>لف على <code class="inl">list(d)</code> أو اعمل قاموس جديد</td></tr>
+        <tr><td><code class="inl">TypeError: unhashable type: 'list'</code></td><td>قائمة كمفتاح قاموس أو عنصر في set</td><td>استخدم tuple أو frozenset</td></tr>
+        <tr><td><code class="inl">json.decoder.JSONDecodeError</code></td><td>الملف أو الرد مش JSON صحيح (فاصلة زيادة، علامات مفردة)</td><td>افتح الملف وراجع السطر والعمود في الرسالة، وامسك الخطأ</td></tr>
+        <tr><td><code class="inl">TypeError: Object of type … is not JSON serializable</code></td><td>تاريخ أو set أو كائن جوّه البيانات</td><td>حوّله لنص/قائمة، أو <code class="inl">default=</code> أو <code class="inl">asdict</code></td></tr>
+        <tr><td><code class="inl">sqlite3.OperationalError: no such table</code></td><td>الجدول ما اتعملش، أو فتحت ملف قاعدة بيانات تاني</td><td>شغّل <code class="inl">CREATE TABLE IF NOT EXISTS</code> وتأكّد من المسار</td></tr>
+        <tr><td><code class="inl">sqlite3.IntegrityError</code></td><td>قيمة بتكسر قاعدة (NOT NULL أو CHECK أو UNIQUE)</td><td>تحقّق من البيانات قبل الإضافة</td></tr>
+        <tr><td><code class="inl">re.error: …</code></td><td>نمط Regex غلط (قوس مش مقفول)، أو مدخل مستخدم فيه رموز خاصة</td><td>راجع الأقواس، و <code class="inl">re.escape</code> للمدخلات</td></tr>
+        <tr><td><code class="inl">dataclasses.FrozenInstanceError</code></td><td>تعديل حقل في dataclass مقفولة</td><td><code class="inl">replace(obj, field=value)</code></td></tr>
+        <tr><td><code class="inl">ValueError: 'x' is not a valid Status</code></td><td>قيمة مش من اختيارات الـ Enum</td><td>راجع مصدر القيمة أو ضيفها للـ Enum</td></tr>
+        <tr><td><code class="inl">requests.exceptions.ReadTimeout</code></td><td>الخادم اتأخّر أكتر من المهلة</td><td>أعد المحاولة بانتظار، أو زوّد المهلة</td></tr>
+        <tr><td><code class="inl">ModuleNotFoundError: No module named 'x'</code></td><td>المكتبة مش متسطّبة في البيئة الحالية</td><td>فعّل البيئة الافتراضية الصح و <code class="inl">pip install</code></td></tr>
+      </table>
+    </div>

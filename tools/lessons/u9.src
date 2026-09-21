@@ -1,0 +1,190 @@
+@@lesson u9-l6 before="<!-- 9.P1 -->"
+  <!-- 9.6 -->
+  <article class="lesson" id="u9-l6">
+    <h3>EAFP مقابل LBYL: تسأل قبل ما تعمل ولّا تعتذر بعدها؟ <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تفهم الفلسفتين اللي بيتعامل بيهم المبرمجين مع الحالات الغلط، وتعرف ليه مجتمع بايثون بيفضّل «اعمل وامسك الخطأ» — وإمتى العكس أصح.</p>
+
+    <h4>1. الفلسفتين</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th></th><th>LBYL</th><th>EAFP</th></tr>
+        <tr><td>الاسم</td><td>Look Before You Leap<br>«بُص قبل ما تنط»</td><td>Easier to Ask Forgiveness than Permission<br>«الاعتذار أسهل من الاستئذان»</td></tr>
+        <tr><td>الأسلوب</td><td><code class="inl">if</code> تتأكّد إن كل حاجة تمام، وبعدين تنفّذ</td><td><code class="inl">try</code> تنفّذ على طول، و <code class="inl">except</code> لو حصلت مشكلة</td></tr>
+        <tr><td>منتشر في</td><td>C، Java</td><td>بايثون (الأسلوب «البايثوني»)</td></tr>
+      </table>
+    </div>
+
+    <h4>2. مثال: تحويل قائمة نصوص لأرقام</h4>
+    @code run
+values = ["10", "-3", "4.5", "abc", "", " 7 "] ¦¦ مدخلات مختلطة: صحيح موجب، سالب، عشري، حروف، فاضي، ومسافات.
+numbers = [] ¦¦ هنجمع الأرقام الصحيحة الصالحة.
+for v in values: ¦¦ المرور.
+    s = v.strip() ¦¦ **LBYL**: لازم نفكّر في كل حالة بنفسنا — أولًا المسافات.
+    if s.lstrip("-").isdecimal(): ¦¦ ثانيًا الإشارة السالبة (`isdecimal` بترفضها). بنشيلها ونفحص الباقي.
+        numbers.append(int(s)) ¦¦ لو عدّى الفحص، نحوّل.
+print(numbers) ¦¦ اشتغل… ظاهريًا.
+    @end
+    @out
+[10, -3, 7]
+    @end
+    @code run
+s = "--3" ¦¦ مدخل ما فكّرناش فيه: شرطتين.
+print(s.lstrip("-").isdecimal()) ¦¦ `lstrip` شالت **كل** الشرط، فالفحص قال «تمام»!
+print(int(s)) ¦¦ 💥 والتحويل وقع. **الفحص المسبق ما غطّاش كل الحالات** — ودي المشكلة الأساسية في LBYL: إنت بتحاول تعيد كتابة قواعد `int` بنفسك.
+    @end
+    @out
+True
+Traceback (most recent call last):
+  File "main.py", line 3, in &lt;module&gt;
+    print(int(s))
+          ^^^^^^
+ValueError: invalid literal for int() with base 10: '--3'
+    @end
+    @code run
+values = ["10", "-3", "4.5", "abc", "", " 7 ", "--3"] ¦¦ نفس المدخلات + الحالة الصعبة.
+numbers = [] ¦¦ النتيجة.
+for v in values: ¦¦ المرور.
+    try: ¦¦ **EAFP**: جرّب على طول.
+        numbers.append(int(v)) ¦¦ `int` نفسها **هي المرجع** لإيه اللي يتحوّل — وبتتعامل مع المسافات والإشارة لوحدها.
+    except ValueError: ¦¦ أي حاجة ما تتحوّلش.
+        pass ¦¦ نتجاهلها (هنا ده المطلوب، لكن شوف التحذير تحت).
+print(numbers) ¦¦ نفس النتيجة الصح، بكود أقصر، ومن غير ما ننسى حالات.
+    @end
+    @out
+[10, -3, 7]
+    @end
+
+    <h4>3. مثال: الملفات و«حالة السباق»</h4>
+    @code run
+import os ¦¦ مكتبة التعامل مع نظام التشغيل.
+path = "settings.txt" ¦¦ ملف إعدادات ممكن يكون موجود أو لأ.
+if os.path.exists(path): ¦¦ **LBYL**: اسأل «الملف موجود؟»
+    with open(path, encoding="utf-8") as f: ¦¦ ⚠️ بين السطر اللي فوق والسطر ده، برنامج تاني ممكن يمسح الملف! (جزء من الثانية، بس بيحصل في السيرفرات).
+        print(f.read()) ¦¦ القراءة.
+else: ¦¦ لو مش موجود.
+    print("مفيش إعدادات — هنستخدم الافتراضي") ¦¦ رسالة.
+    @end
+    @out rtl
+مفيش إعدادات — هنستخدم الافتراضي
+    @end
+    @code run
+try: ¦¦ **EAFP**: عملية واحدة «ذرّية» — مفيش فجوة بين الفحص والتنفيذ.
+    with open("settings.txt", encoding="utf-8") as f: ¦¦ حاول تفتح على طول.
+        print(f.read()) ¦¦ القراءة.
+except FileNotFoundError: ¦¦ نظام التشغيل نفسه قال إنه مش موجود **لحظة الفتح** — ده الرد الأكيد.
+    print("مفيش إعدادات — هنستخدم الافتراضي") ¦¦ نفس الرسالة.
+    @end
+    @out rtl
+مفيش إعدادات — هنستخدم الافتراضي
+    @end
+    <div class="box brain">
+      <div class="bt">🧠 حالة السباق (Race Condition)</div>
+      <p>
+        لما يكون فيه <strong>وقت بين الفحص والتنفيذ</strong>، الدنيا ممكن تتغيّر في النص. ده نوع كامل من الثغرات الأمنية اسمه
+        <em>TOCTOU</em> (Time Of Check to Time Of Use). EAFP بيقفل الباب ده لأن «الفحص» هو نفسه «التنفيذ».
+      </p>
+    </div>
+
+    <h4>4. الفخ: try واسعة بتخبّي بيانات</h4>
+    @code run
+prices = ["10", "20", "x", "30"] ¦¦ سعر واحد بايظ.
+total = 0 ¦¦ المجموع.
+try: ¦¦ ❌ الـ try **حوالين الحلقة كلها**.
+    for p in prices: ¦¦ المرور.
+        total += int(p) ¦¦ عند "x" بيحصل خطأ…
+except ValueError: ¦¦ …فبنخرج من الحلقة **كلها**.
+    print("فيه سعر غلط") ¦¦ رسالة.
+print(total) ¦¦ 30 بس! الـ 30 الأخيرة ضاعت بصمت.
+    @end
+    @out rtl
+فيه سعر غلط
+30
+    @end
+    @code run
+prices = ["10", "20", "x", "30"] ¦¦ نفس البيانات.
+total = 0 ¦¦ المجموع.
+bad = [] ¦¦ نسجّل الغلط بدل ما نتجاهله.
+for p in prices: ¦¦ ✅ الحلقة برّه…
+    try: ¦¦ …والـ try جوّه حوالين **السطر اللي ممكن يقع بس** (القاعدة الذهبية من درس try).
+        total += int(p) ¦¦ التحويل والجمع.
+    except ValueError: ¦¦ لو فشل…
+        bad.append(p) ¦¦ …نسجّله ونكمّل للعنصر اللي بعده.
+print(total, bad) ¦¦ المجموع الصح + قائمة المرفوض للمراجعة.
+    @end
+    @out
+60 ['x']
+    @end
+    <div class="box err">
+      <div class="bt">❌ الخطيئة الكبرى: except Exception: pass</div>
+      <p>
+        EAFP مش معناها «ابلع كل الأخطاء». <code class="inl">except Exception: pass</code> بتخبّي الأخطاء المنطقية والـ typos وكل حاجة —
+        البرنامج يبان شغّال وهو بيطلّع نتايج غلط. <strong>امسك النوع المحدّد اللي متوقّعه بس</strong>، وسجّله أو تعامل معاه.
+      </p>
+    </div>
+
+    <h4>5. إمتى LBYL أصح؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الموقف</th><th>الأنسب</th><th>ليه</th></tr>
+        <tr><td>الخطأ نادر والعملية نفسها بتفحص</td><td>EAFP</td><td>أسرع في الحالة العادية وأقل كود</td></tr>
+        <tr><td>الخطأ <strong>متكرّر جدًا</strong> (نص الحالات غلط)</td><td>LBYL</td><td>رمي الاستثناء ومسكه أبطأ من if بسيطة</td></tr>
+        <tr><td>العملية ليها <strong>أثر ما يترجعش</strong> (خصم فلوس، إرسال إيميل)</td><td>LBYL</td><td>لازم تتأكّد من الرصيد <em>قبل</em> الخصم، مش بعده</td></tr>
+        <tr><td>التحقّق من <strong>قواعد عمل</strong> (العمر من 18 لـ 60)</td><td>LBYL</td><td>ده مش خطأ برمجي — ده شرط منطقي</td></tr>
+        <tr><td>ملفات، شبكة، تحويل أنواع</td><td>EAFP</td><td>العالم الخارجي بيتغيّر، والدالة هي المرجع</td></tr>
+      </table>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>الأسلوبين مع بعض</div>
+      <p>عندك أعمار كنصوص. حوّلها بـ EAFP، وبعدين اقبل بس اللي من 18 لـ 60 بـ LBYL. اطبع المقبول والمرفوض.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+raw = ["25", "17", "abc", "45", "70", " 33"] ¦¦ المدخلات.
+accepted = [] ¦¦ المقبول.
+rejected = [] ¦¦ المرفوض.
+for r in raw: ¦¦ المرور.
+    try: ¦¦ EAFP للتحويل (خطأ تقني).
+        age = int(r) ¦¦ محاولة.
+    except ValueError: ¦¦ مش رقم.
+        rejected.append(r) ¦¦ رفض.
+        continue ¦¦ مفيش داعي نكمّل الفحص.
+    if 18 <= age <= 60: ¦¦ LBYL لقاعدة العمل (شرط منطقي مش خطأ). المقارنة المتسلسلة من الوحدة 4.
+        accepted.append(age) ¦¦ قبول.
+    else: ¦¦ خارج النطاق.
+        rejected.append(r) ¦¦ رفض.
+print("مقبول:", accepted) ¦¦ 25 و 45 و 33.
+print("مرفوض:", rejected) ¦¦ الباقي.
+      @end
+      @out rtl
+مقبول: [25, 45, 33]
+مرفوض: ['17', 'abc', '70']
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. الأسلوب «البايثوني» المفضّل لتحويل نص لرقم؟</p>
+        <label><input type="radio"> if text.isdigit() ثم int</label>
+        <label><input type="radio"> try: int(text) / except ValueError</label>
+        <label><input type="radio"> except Exception: pass</label>
+        <label><input type="radio"> eval(text)</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. في تطبيق بنك، قبل خصم مبلغ من الرصيد…</p>
+        <label><input type="radio"> اخصم وامسك الخطأ لو الرصيد سالب</label>
+        <label><input type="radio"> مش مهم الترتيب</label>
+        <label><input type="radio"> افحص الرصيد الأول (LBYL) لأن الخصم أثره ما يترجعش</label>
+        <label><input type="radio"> استخدم except Exception</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. مشكلة <code class="inl">if os.path.exists(p): open(p)</code>؟</p>
+        <label><input type="radio"> الملف ممكن يتمسح بين الفحص والفتح</label>
+        <label><input type="radio"> exists مش موجودة</label>
+        <label><input type="radio"> open ما بتقراش ملفات</label>
+        <label><input type="radio"> مفيش أي مشكلة نظريًا</label>
+      </div>
+    </div>
+  </article>

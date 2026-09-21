@@ -1,0 +1,3 @@
+[{"title": "مذاكرة", "done": false}, {"title": "رياضة", "done": true}]
+[Task(title='مذاكرة', done=False), Task(title='رياضة', done=True)]
+True

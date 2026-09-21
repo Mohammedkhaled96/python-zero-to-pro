@@ -1,0 +1,432 @@
+@@lesson u18-l6 before="<!-- 15.EXAM -->"
+  <!-- 18.6 -->
+  <article class="lesson" id="u18-l6">
+    <h3>Git عملي: الفروع وسير العمل والتراجع عن الأخطاء <span class="tag">درس ؟ · مهارة احترافية</span></h3>
+    <p class="goal">الهدف: تستخدم Git يوميًا بثقة — تحفظ نسخ، تجرّب في فرع من غير ما تبوّظ الشغّال، تحلّ تعارض، تتراجع عن غلطة، وترفع مشروعك على GitHub.</p>
+
+    <h4>1. الدورة اليومية</h4>
+    <div class="diagram">
+<pre>  مجلّد العمل          منطقة التجهيز          المستودع (التاريخ)
+  Working Dir   ──add──►   Staging    ──commit──►   Repository
+      ▲                                                 │
+      └───────────────── restore / switch ──────────────┘</pre>
+      <div class="cap">add = «الملفات دي هتدخل الصورة الجاية» · commit = «التقط الصورة»</div>
+    </div>
+    @code terminal
+git init ¦¦ تحويل الفولدر الحالي لمستودع Git (بيعمل فولدر مخفي `.git` فيه كل التاريخ). مرّة واحدة لكل مشروع.
+git status ¦¦ **أهم أمر**: إيه اللي اتغيّر؟ إيه اللي متجهّز؟ إنت على أنهي فرع؟ اكتبه قبل وبعد أي حاجة.
+git add calculator.py ¦¦ جهّز ملف معيّن للـ commit الجاي.
+git add . ¦¦ أو جهّز كل التغييرات في الفولدر (بيحترم `.gitignore`).
+git commit -m "أول نسخة: الآلة الحاسبة" ¦¦ حفظ «صورة» دائمة برسالة بتوصف **إيه اللي اتعمل**.
+git log --oneline ¦¦ التاريخ المختصر: كل commit في سطر بكود مختصر ورسالته.
+    @end
+    @out
+a1b2c3d (HEAD -&gt; main) أول نسخة: الآلة الحاسبة
+    @end
+    @code terminal
+git diff ¦¦ التغييرات اللي **لسه ما اتجهّزتش** سطر بسطر (`+` اتضاف، `-` اتشال).
+git diff --staged ¦¦ التغييرات اللي **اتجهّزت** وهتدخل الـ commit الجاي — راجعها قبل ما تعمل commit.
+    @end
+
+    <h4>2. الفروع: جرّب من غير خوف</h4>
+    <p>
+      <strong>الفرع</strong> = خط تاريخ موازي. عايز تضيف ميزة؟ اعمل فرع، اشتغل فيه براحتك، ولو نجحت ادمجها في <code class="inl">main</code>،
+      ولو فشلت امسح الفرع — و<code class="inl">main</code> فضلت سليمة طول الوقت.
+    </p>
+    <div class="diagram">
+<pre>  main:              A ─── B ───────────── E (merge)
+                            \             /
+  feature/history:           C ───── D ──
+
+  A, B: شغلك الأساسي · C, D: الميزة الجديدة في فرعها · E: الدمج</pre>
+      <div class="cap">كل حرف = commit</div>
+    </div>
+    @code terminal
+git switch -c feature/history ¦¦ `-c` = اعمل فرع جديد وانتقل له. اسم الفرع بيوصف الشغل.
+git add calculator.py ¦¦ (بعد ما عدّلت الكود) تجهيز.
+git commit -m "إضافة سجل العمليات" ¦¦ الـ commit ده في الفرع الجديد بس.
+git switch main ¦¦ الرجوع للفرع الرئيسي — **ملفاتك بتتغيّر قدّام عينك** لنسخة main.
+git merge feature/history ¦¦ دمج شغل الفرع في main.
+git branch -d feature/history ¦¦ مسح الفرع بعد الدمج (`-d` بترفض لو ما اتدمجش — حماية).
+git branch ¦¦ عرض الفروع، والنجمة على الفرع الحالي.
+    @end
+
+    <h4>3. التعارض (Conflict): مش كارثة</h4>
+    <p>لو فرعين عدّلوا <strong>نفس السطر</strong>، Git مش هيقرّر بدالك. هيحط العلامات دي في الملف ويستنّاك:</p>
+    @code calculator.py
+&lt;&lt;&lt;&lt;&lt;&lt;&lt; HEAD ¦¦ بداية النسخة اللي في فرعك الحالي (main).
+print("Welcome") ¦¦ السطر في main.
+======= ¦¦ الفاصل بين النسختين.
+print("أهلًا بيك") ¦¦ السطر في الفرع اللي بتدمجه.
+&gt;&gt;&gt;&gt;&gt;&gt;&gt; feature/arabic ¦¦ نهاية نسخة الفرع التاني.
+    @end
+    @code terminal
+git status ¦¦ هيقولك «both modified: calculator.py».
+git add calculator.py ¦¦ بعد ما تفتح الملف، **تختار أو تدمج** السطرين وتمسح العلامات التلاتة — تجهّزه.
+git commit -m "دمج الترحيب العربي" ¦¦ إنهاء الدمج.
+    @end
+    <div class="box tip">
+      <div class="bt">💡 VS Code بيسهّلها</div>
+      <p>لما تفتح ملف فيه تعارض، VS Code بيحط أزرار فوقه: <em>Accept Current</em> / <em>Accept Incoming</em> / <em>Accept Both</em>. التعارض بيحصل كتير في الفرق، ومفيش حاجة بتضيع.</p>
+    </div>
+
+    <h4>4. التراجع عن الأخطاء</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الموقف</th><th>الأمر</th></tr>
+        <tr><td>بوّظت ملف ومش عايز تعديلاتي اللي ما اتحفظتش</td><td><code class="inl">git restore calculator.py</code></td></tr>
+        <tr><td>عملت add لملف بالغلط</td><td><code class="inl">git restore --staged secrets.txt</code></td></tr>
+        <tr><td>نسيت ملف أو غلطت في رسالة آخر commit (ولسه ما رفعتش)</td><td><code class="inl">git commit --amend</code></td></tr>
+        <tr><td>commit قديم طلع فيه مشكلة واترفع خلاص</td><td><code class="inl">git revert a1b2c3d</code> (بيعمل commit جديد عكسه — آمن للفرق)</td></tr>
+        <tr><td>عايز تشوف الكود زي ما كان في commit قديم</td><td><code class="inl">git switch --detach a1b2c3d</code> ثم <code class="inl">git switch main</code></td></tr>
+      </table>
+    </div>
+    <div class="box err">
+      <div class="bt">❌ أوامر خطيرة</div>
+      <p>
+        <code class="inl">git reset --hard</code> و <code class="inl">git push --force</code> بيمسحوا تاريخ. في مشروع مشترك ممكن تمسح شغل زمايلك.
+        ما تستخدمهمش غير وإنت فاهم بالظبط هيعملوا إيه — و<code class="inl">git status</code> قبلهم دايمًا.
+      </p>
+    </div>
+
+    <h4>5. GitHub: نسخة على الإنترنت</h4>
+    @code terminal
+git remote add origin https://github.com/USERNAME/calculator.git ¦¦ ربط المستودع المحلّي بمستودع فاضي عملته على GitHub. `origin` = الاسم المتعارف عليه للنسخة البعيدة.
+git push -u origin main ¦¦ رفع فرع main. `-u` بتفتكر الربط، فبعد كده `git push` لوحدها كفاية.
+git pull ¦¦ جلب تغييرات الآخرين ودمجها — **اعملها قبل ما تبدأ شغل كل يوم** في مشروع مشترك.
+git clone https://github.com/USERNAME/calculator.git ¦¦ تنزيل مستودع موجود بكل تاريخه على جهاز جديد.
+    @end
+    <div class="box info">
+      <div class="bt">ℹ️ رسايل commit كويسة</div>
+      <p>
+        ❌ «تعديلات» · «fix» · «asdf»<br>
+        ✅ «إصلاح القسمة على صفر في الآلة الحاسبة» · «إضافة تصدير التقرير لـ CSV»<br>
+        القاعدة: كمّل الجملة «الـ commit ده بيعمل…». ورسالة واحدة = تغيير منطقي واحد.
+        وافتكر <code class="inl">.gitignore</code> من وحدة الاختبارات: <code class="inl">.venv/</code> و <code class="inl">__pycache__/</code> و <strong><code class="inl">.env</code></strong> ما يترفعوش أبدًا.
+      </p>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. عايز تجرّب ميزة من غير ما تأثّر على الكود الشغّال…</p>
+        <label><input type="radio"> انسخ الفولدر يدويًا</label>
+        <label><input type="radio"> git reset --hard</label>
+        <label><input type="radio"> git switch -c feature/x</label>
+        <label><input type="radio"> git push --force</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. commit قديم فيه مشكلة والفريق كله سحبه. تتراجع عنه إزاي بأمان؟</p>
+        <label><input type="radio"> git revert &lt;hash&gt;</label>
+        <label><input type="radio"> git reset --hard ثم push --force</label>
+        <label><input type="radio"> تمسح المستودع وتعمله من جديد</label>
+        <label><input type="radio"> git commit --amend</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. ملف <code class="inl">.env</code> فيه مفاتيح API. تعمل إيه؟</p>
+        <label><input type="radio"> ترفعه عادي</label>
+        <label><input type="radio"> ترفعه في فرع منفصل</label>
+        <label><input type="radio"> تكتب المفاتيح في الكود بدل الملف</label>
+        <label><input type="radio"> تحطّه في .gitignore وما يترفعش أبدًا</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u18-l7 before="<!-- 15.EXAM -->"
+  <!-- 18.7 -->
+  <article class="lesson" id="u18-l7">
+    <h3>اعتمد على نفسك: اقرا التوثيق واسأل سؤال يتجاوب <span class="tag">درس ؟ · مهارة احترافية</span></h3>
+    <p class="goal">الهدف: تكتسب أهم مهارة بعد الكورس — إنك تلاقي الإجابة بنفسك من بايثون نفسها ومن التوثيق الرسمي، ولما تعلق تكتب سؤال يخلّي الناس تساعدك في دقايق.</p>
+
+    <h4>1. بايثون بتشرح نفسها: dir و __doc__ و inspect</h4>
+    @code run
+print([name for name in dir(str) if not name.startswith("_")][:8]) ¦¦ `dir` بترجّع كل أسماء الدوال والخصائص في أي كائن. شلنا اللي بتبدأ بـ `_` (داخلية) وعرضنا أول 8.
+print(str.center.__doc__) ¦¦ `__doc__` = الـ docstring اللي كتبه مطوّرين بايثون — شرح الدالة من غير إنترنت.
+import inspect ¦¦ مكتبة لفحص الكائنات.
+print(inspect.signature(sorted)) ¦¦ **توقيع الدالة**: وسائطها بالظبط. لاحظ `/` و `*` من درس الدوال بعمق: `iterable` موضعي بس، و `key` و `reverse` بالاسم بس.
+import random ¦¦ مكتبة.
+print(inspect.signature(random.randint)) ¦¦ توقيع أي دالة في أي مكتبة.
+    @end
+    @out
+['capitalize', 'casefold', 'center', 'count', 'encode', 'endswith', 'expandtabs', 'find']
+Return a centered string of length width.
+
+Padding is done using the specified fill character (default is a space).
+(iterable, /, *, key=None, reverse=False)
+(a, b)
+    @end
+    @code terminal
+python ¦¦ فتح الوضع التفاعلي (REPL) — مكان التجارب السريعة.
+help(str.split) ¦¦ (جوّه الـ REPL) صفحة مساعدة كاملة ومنسّقة. اخرج منها بحرف `q`.
+help("modules") ¦¦ قائمة بكل المكتبات المتاحة عندك.
+python -m pydoc -b ¦¦ (من الـ Terminal) بيفتح **موقع توثيق محلّي** في المتصفّح لكل مكتبة عندك — حتى اللي سطّبتها بـ pip.
+    @end
+
+    <h4>2. التوثيق الرسمي: تقراه إزاي من غير ما تتوه؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>القسم في docs.python.org</th><th>ارجع له لما…</th></tr>
+        <tr><td><strong>Tutorial</strong></td><td>عايز شرح متسلسل لموضوع (زي الكورس ده بس رسمي)</td></tr>
+        <tr><td><strong>Library Reference</strong></td><td>عايز تعرف مكتبة أو دالة بتعمل إيه بالظبط — <em>أكتر قسم هتستخدمه</em></td></tr>
+        <tr><td><strong>Language Reference</strong></td><td>سؤال دقيق عن قواعد اللغة نفسها</td></tr>
+        <tr><td><strong>HOWTOs</strong></td><td>أدلة عملية مركّزة: logging، regex، sorting، Unicode</td></tr>
+        <tr><td><strong>What's New</strong></td><td>عايز تعرف الجديد في كل نسخة (زي match في 3.10)</td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 طريقة قراءة صفحة دالة</div>
+      <ol>
+        <li><strong>التوقيع</strong> الأول: <code class="inl">str.split(sep=None, maxsplit=-1)</code> — الوسائط والقيم الافتراضية.</li>
+        <li><strong>أول جملة</strong>: بتعمل إيه وبترجّع إيه.</li>
+        <li><strong>الأمثلة</strong> (لو فيه): جرّبها في الـ REPL فورًا.</li>
+        <li>دوّر على كلمات: <em>Changed in version</em> (اتغيّرت إمتى) و <em>Raises</em> (بترمي إيه).</li>
+        <li>لمكتبات pip: صفحة المشروع على <strong>PyPI</strong> فيها رابط التوثيق، وملف README على GitHub.</li>
+      </ol>
+    </div>
+
+    <h4>3. قبل ما تسأل: الـ 15 دقيقة الذهبية</h4>
+    <ol>
+      <li><strong>اقرا رسالة الخطأ من تحت لفوق</strong>: آخر سطر = نوع الخطأ ورسالته، واللي فوقه = فين بالظبط (درس الأخطاء).</li>
+      <li><strong>انسخ آخر سطر كما هو</strong> (من غير أسماء متغيّراتك) في محرّك البحث — غالبًا حد سأل قبلك.</li>
+      <li><strong>اطبع القيم</strong> قبل السطر اللي بيقع، أو استخدم الـ debugger (وحدة الاختبارات).</li>
+      <li><strong>صغّر المشكلة</strong>: امسح أي كود مش لازم لحد ما يفضل أقل كود بيطلّع نفس الخطأ. نص المرّات هتلاقي الحل وإنت بتصغّر.</li>
+      <li><strong>اشرح لبطّة</strong> (Rubber Duck Debugging): احكي الكود سطر سطر بصوت عالي لأي حاجة — هتلاقي نفسك بتقول «استنى…».</li>
+    </ol>
+
+    <h4>4. المثال الأدنى القابل للتكرار (MRE)</h4>
+    <p>❌ «الكود مش شغّال ساعدوني!!» + صورة شاشة بالموبايل لـ 300 سطر.<br>✅ أقل كود ينفع أي حد ينسخه ويشغّله ويشوف نفس المشكلة:</p>
+    @code run
+# Python 3.12 — Windows 11 ¦¦ **النسخة ونظام التشغيل**: فيه مشاكل بتظهر في نسخ معيّنة بس.
+data = {"a": 1} ¦¦ أقل بيانات بتسبّب المشكلة — مش ملف JSON بـ 5000 سطر.
+for key in data: ¦¦ الحلقة.
+    data["b"] = 2 ¦¦ السطر المسبّب: تعديل حجم القاموس أثناء المرور عليه.
+    @end
+    @out
+Traceback (most recent call last):
+  File "main.py", line 3, in &lt;module&gt;
+    for key in data:
+               ^^^^
+RuntimeError: dictionary changed size during iteration
+    @end
+    <div class="box info">
+      <div class="bt">ℹ️ قالب سؤال ممتاز</div>
+      <ol>
+        <li><strong>عنوان محدّد</strong>: «RuntimeError لما أضيف مفتاح لقاموس جوّه for» مش «مشكلة في بايثون».</li>
+        <li><strong>كنت عايز أعمل إيه</strong> (الهدف مش بس الكود — ممكن يكون فيه طريقة أحسن خالص).</li>
+        <li><strong>الكود الأدنى</strong> كنص في بلوك كود (مش صورة).</li>
+        <li><strong>رسالة الخطأ كاملة</strong> كنص.</li>
+        <li><strong>كنت متوقّع إيه وحصل إيه</strong>.</li>
+        <li><strong>جرّبت إيه</strong> وليه ما نفعش.</li>
+      </ol>
+      <p>وبعد ما تتحل: ارجع اكتب الحل — وبكده بتساعد اللي جاي بعدك.</p>
+    </div>
+
+    <h4>5. الذكاء الاصطناعي كمساعد — مش كبديل</h4>
+    <div class="box warn">
+      <div class="bt">⚠️ استخدمه صح</div>
+      <ul>
+        <li><strong>اطلب شرح مش حل</strong>: «اشرحلي ليه الخطأ ده بيحصل» أحسن من «صلّحلي الكود».</li>
+        <li><strong>ما تنسخش كود مش فاهمه</strong>: لو مش هتقدر تشرحه سطر سطر (زي جداول الكورس ده)، إنت لسه ما اتعلّمتش.</li>
+        <li><strong>اتحقّق دايمًا</strong>: الأدوات دي ممكن تخترع دوال مش موجودة أو تستخدم أسلوب قديم — التوثيق الرسمي والتشغيل الفعلي هم الحكم.</li>
+        <li><strong>نفس قالب السؤال الممتاز</strong> بيدّيك إجابات أحسن بكتير من أي أداة.</li>
+      </ul>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. أسرع طريقة تعرف وسائط دالة من غير إنترنت؟</p>
+        <label><input type="radio"> تخمّن</label>
+        <label><input type="radio"> help(func) أو inspect.signature(func)</label>
+        <label><input type="radio"> print(func)</label>
+        <label><input type="radio"> type(func)</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. في رسالة الخطأ، تبدأ تقرا منين؟</p>
+        <label><input type="radio"> أول سطر</label>
+        <label><input type="radio"> النص</label>
+        <label><input type="radio"> مش مهم</label>
+        <label><input type="radio"> آخر سطر (النوع والرسالة) ثم لفوق</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. أهم صفة في «المثال الأدنى القابل للتكرار»؟</p>
+        <label><input type="radio"> أقل كود ينفع حد ينسخه ويشغّله ويشوف نفس المشكلة</label>
+        <label><input type="radio"> المشروع كله عشان محدش يفوّت حاجة</label>
+        <label><input type="radio"> صورة شاشة واضحة</label>
+        <label><input type="radio"> وصف بالكلام من غير كود</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u18-l8 before="<!-- 15.EXAM -->"
+  <!-- 18.8 -->
+  <article class="lesson" id="u18-l8">
+    <h3>أساسيات الأمان: الأسرار وكلمات السر والمفاتيح <span class="tag">درس ؟ · مهارة احترافية</span></h3>
+    <p class="goal">الهدف: تتجنّب أشهر 4 أخطاء أمنية بيقع فيها المبتدئين — عشوائية ضعيفة، كلمات سر متخزّنة غلط، مفاتيح جوّه الكود، وثقة زيادة في المدخلات.</p>
+
+    <h4>1. random مش للأمان: استخدم secrets</h4>
+    <p>
+      <code class="inl">random</code> (الوحدة 7) <strong>متوقّعة رياضيًا</strong>: لو حد عرف كام رقم طلعوا منها يقدر يحسب اللي جاي. ممتازة للألعاب والمحاكاة،
+      <strong>كارثية</strong> لكلمات السر وروابط إعادة التعيين وأكواد التحقّق. <code class="inl">secrets</code> بتستخدم مصدر العشوائية الآمن في نظام التشغيل.
+    </p>
+    @code run
+import secrets ¦¦ مكتبة قياسية مخصّصة للأمان.
+import string ¦¦ مجموعات الحروف.
+ ¦¦
+token = secrets.token_hex(16) ¦¦ 16 بايت عشوائي آمن كنص سادس عشر — مناسب لمفاتيح API والجلسات.
+print(len(token)) ¦¦ كل بايت = خانتين سادس عشر ← 32 حرف.
+link_token = secrets.token_urlsafe(32) ¦¦ نسخة آمنة للاستخدام في الروابط (رابط «نسيت كلمة السر»).
+print(len(link_token) >= 43) ¦¦ مش هنطبعه لأنه بيتغيّر كل مرّة — بس طوله ثابت تقريبًا.
+alphabet = string.ascii_letters + string.digits ¦¦ الحروف المسموحة.
+password = "".join(secrets.choice(alphabet) for _ in range(12)) ¦¦ **نفس مولّد كلمات السر من مشروع الوحدة 7** — بس `secrets.choice` بدل `random.choice`.
+print(len(password), password.isalnum()) ¦¦ 12 حرف من الحروف والأرقام.
+code = f"{secrets.randbelow(1_000_000):06d}" ¦¦ كود تحقّق من 6 أرقام (OTP) — `randbelow(n)` رقم آمن من 0 لـ n−1.
+print(len(code)) ¦¦ دايمًا 6 بفضل الأصفار على الشمال.
+    @end
+    @out
+32
+True
+12 True
+6
+    @end
+
+    <h4>2. ما تخزّنش كلمات السر… خزّن «بصمتها»</h4>
+    <p>
+      لو قاعدة بياناتك اتسرّبت وفيها كلمات السر زي ما هي — كل الحسابات راحت (والناس بتكرّر كلمة السر في مواقع تانية).
+      الحل: <strong>دالة تجزئة (Hash)</strong> بتحوّل كلمة السر لبصمة <strong>ما ينفعش ترجع منها</strong>.
+    </p>
+    @code run
+import hashlib ¦¦ دوال التجزئة.
+print(hashlib.sha256(b"password123").hexdigest()) ¦¦ SHA-256: أي مدخل ← 64 حرف سادس عشر ثابتين. نفس المدخل = نفس البصمة دايمًا. (بتاخد bytes — الدرس اللي فات.)
+print(hashlib.sha256(b"password124").hexdigest()) ¦¦ تغيير حرف واحد ← بصمة **مختلفة تمامًا** (Avalanche effect).
+    @end
+    @out
+ef92b778bafe771e89245b89ecbc08a44a4e166c06659911881f383d4473e94f
+33631376724e5d5480fa397dfcf03b66ad47b934ab495174d7058c38f2bb0087
+    @end
+    <div class="box err">
+      <div class="bt">❌ بس SHA-256 لوحدها مش كفاية لكلمات السر</div>
+      <p>
+        <strong>1) سريعة جدًا</strong>: كارت شاشة بيجرّب مليارات كلمات سر في الثانية.
+        <strong>2) من غير ملح (salt)</strong>: كل اللي كلمة سرّهم <code class="inl">password123</code> ليهم نفس البصمة — والمهاجمين عندهم جداول جاهزة بملايين البصمات الشائعة
+        (البصمة اللي فوق دي موجودة في كل الجداول دي!).
+      </p>
+    </div>
+    @code run passwords.py
+import hashlib ¦¦ التجزئة.
+import secrets ¦¦ الملح العشوائي والمقارنة الآمنة.
+ ¦¦
+ITERATIONS = 600_000 ¦¦ عدد مرّات التكرار: **البطء مقصود** — ثانية تقريبًا للمستخدم مش ملحوظة، لكن بتخلّي تجربة المليارات مستحيلة.
+ ¦¦
+def hash_password(password: str) -> str: ¦¦ عند التسجيل.
+    salt = secrets.token_bytes(16) ¦¦ **ملح عشوائي مختلف لكل مستخدم** — فنفس كلمة السر بتطلع بصمات مختلفة.
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode(), salt, ITERATIONS) ¦¦ PBKDF2: دالة «بطيئة عمدًا» مصمّمة لكلمات السر.
+    return salt.hex() + ":" + digest.hex() ¦¦ نخزّن الملح مع البصمة (الملح مش سرّ — دوره يمنع الجداول الجاهزة).
+ ¦¦
+def verify_password(password: str, stored: str) -> bool: ¦¦ عند تسجيل الدخول.
+    salt_hex, digest_hex = stored.split(":") ¦¦ فصل الملح عن البصمة.
+    digest = hashlib.pbkdf2_hmac("sha256", password.encode(), bytes.fromhex(salt_hex), ITERATIONS) ¦¦ نحسب بصمة كلمة السر المكتوبة **بنفس الملح**.
+    return secrets.compare_digest(digest.hex(), digest_hex) ¦¦ مقارنة **بزمن ثابت**: `==` بتقف عند أول حرف مختلف، والفرق في الوقت ممكن يسرّب معلومات (timing attack).
+ ¦¦
+stored = hash_password("Secret123") ¦¦ اللي هيتخزّن في قاعدة البيانات.
+print(len(stored)) ¦¦ 32 (ملح) + 1 + 64 (بصمة).
+print(verify_password("Secret123", stored)) ¦¦ كلمة السر الصح.
+print(verify_password("secret123", stored)) ¦¦ حرف صغير بدل كبير ← مرفوض.
+print(hash_password("Secret123") == stored) ¦¦ نفس كلمة السر مرّة تانية ← بصمة مختلفة بسبب الملح الجديد.
+    @end
+    @out
+97
+True
+False
+False
+    @end
+    <div class="box tip">
+      <div class="bt">💡 في المشاريع الحقيقية</div>
+      <p>
+        الكود اللي فوق عشان تفهم الفكرة. في الإنتاج استخدم مكتبة متخصّصة زي <code class="inl">argon2-cffi</code> أو <code class="inl">bcrypt</code>،
+        أو خلّي إطار العمل يتولّاها (Django بيعملها افتراضيًا). <strong>القاعدة: عمرك ما تخترع تشفير بنفسك.</strong>
+      </p>
+    </div>
+
+    <h4>3. المفاتيح والأسرار برّه الكود: متغيّرات البيئة</h4>
+    <p>
+      <code class="inl">API_KEY = "sk-abc123..."</code> جوّه الكود + <code class="inl">git push</code> = المفتاح بقى على الإنترنت للأبد (حتى لو مسحته بعدين، التاريخ فاكره).
+      بوتات بتمسح GitHub كل دقيقة بتدوّر على مفاتيح.
+    </p>
+    @code run
+import os ¦¦ مكتبة نظام التشغيل.
+ ¦¦
+api_key = os.environ.get("WEATHER_API_KEY") ¦¦ `os.environ` قاموس فيه متغيّرات البيئة. `get` بترجّع None لو مش موجود.
+if api_key is None: ¦¦ المفتاح مش متظبط.
+    print("⚠️ متغيّر WEATHER_API_KEY مش متظبط") ¦¦ رسالة واضحة بدل ما البرنامج يقع بعدين في مكان غريب.
+else: ¦¦ موجود.
+    print("المفتاح موجود:", api_key[:4] + "…") ¦¦ **ما تطبعش السرّ كامل** حتى في الـ logs — أول 4 حروف كفاية للتأكّد.
+    @end
+    @out rtl
+⚠️ متغيّر WEATHER_API_KEY مش متظبط
+    @end
+    @code terminal
+$env:WEATHER_API_KEY = "abc123xyz" ¦¦ ويندوز (PowerShell): تعيين للجلسة الحالية.
+export WEATHER_API_KEY=abc123xyz ¦¦ لينكس وماك: نفس الفكرة.
+python weather.py ¦¦ البرنامج دلوقتي هيلاقي المفتاح.
+    @end
+    <p>للتطوير المحلّي، أسهل طريقة ملف <code class="inl">.env</code> مع مكتبة <code class="inl">python-dotenv</code>:</p>
+    @code .env
+WEATHER_API_KEY=abc123xyz ¦¦ كل سطر: اسم=قيمة. **الملف ده في .gitignore**.
+DEBUG=true ¦¦ إعداد تاني.
+    @end
+    @code config.py
+import os ¦¦ استيراد.
+from dotenv import load_dotenv ¦¦ بعد `pip install python-dotenv`.
+ ¦¦
+load_dotenv() ¦¦ بتقرا `.env` وتحط القيم في `os.environ` (من غير ما تغطّي على متغيّرات متظبطة فعلًا).
+API_KEY = os.getenv("WEATHER_API_KEY") ¦¦ `os.getenv` اختصار لـ `os.environ.get`.
+DEBUG = os.getenv("DEBUG", "false").lower() == "true" ¦¦ ⚠️ متغيّرات البيئة **نصوص دايمًا** — `"false"` نص مش فاضي يعني Truthy! لازم تحوّل صراحةً.
+    @end
+    <div class="box info">
+      <div class="bt">ℹ️ اعمل ملف .env.example</div>
+      <p>ارفع ملف <code class="inl">.env.example</code> فيه <strong>أسماء</strong> المتغيّرات بقيم وهمية (<code class="inl">WEATHER_API_KEY=your-key-here</code>) — عشان اللي بيحمّل مشروعك يعرف محتاج إيه.</p>
+    </div>
+
+    <h4>4. قواعد الأمان العشر للمبتدئ</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>#</th><th>القاعدة</th><th>اتعلّمناها فين</th></tr>
+        <tr><td>1</td><td><strong>ما تثقش في أي مدخل</strong>: من مستخدم، ملف، أو API — اتحقّق منه</td><td>الأخطاء، التحقّق</td></tr>
+        <tr><td>2</td><td>عمرك ما تستخدم <code class="inl">eval</code> / <code class="inl">exec</code> على مدخلات</td><td>مشروع حاسبة eval</td></tr>
+        <tr><td>3</td><td><code class="inl">secrets</code> مش <code class="inl">random</code> لأي حاجة أمنية</td><td>الدرس ده</td></tr>
+        <tr><td>4</td><td>كلمات السر: تجزئة بطيئة + ملح، أو مكتبة متخصّصة</td><td>الدرس ده</td></tr>
+        <tr><td>5</td><td>الأسرار في متغيّرات البيئة، و <code class="inl">.env</code> في <code class="inl">.gitignore</code></td><td>الدرس ده + Git</td></tr>
+        <tr><td>6</td><td>ما تفكّش <code class="inl">pickle</code> من مصدر مش موثوق (بينفّذ كود)</td><td>—</td></tr>
+        <tr><td>7</td><td>تحقّق من نوع الملف المرفوع بتوقيعه مش امتداده</td><td>البايتات</td></tr>
+        <tr><td>8</td><td>ما تكتبش الأسرار والبيانات الشخصية في الـ logs</td><td>logging</td></tr>
+        <tr><td>9</td><td>حدّث مكتباتك (<code class="inl">pip list --outdated</code>) — الثغرات بتتصلّح في النسخ الجديدة</td><td>pip</td></tr>
+        <tr><td>10</td><td>سطّب المكتبات بأسمائها الصح من PyPI — فيه مكتبات مزيّفة بأسماء قريبة (<code class="inl">reqeusts</code>)</td><td>pip</td></tr>
+      </table>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. توليد رابط «إعادة تعيين كلمة السر» — تستخدم…</p>
+        <label><input type="radio"> random.randint</label>
+        <label><input type="radio"> الوقت الحالي بالثواني</label>
+        <label><input type="radio"> secrets.token_urlsafe</label>
+        <label><input type="radio"> اسم المستخدم مشفّر بـ base64</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. فايدة «الملح» (salt) في تخزين كلمات السر؟</p>
+        <label><input type="radio"> نفس كلمة السر تطلع بصمات مختلفة فالجداول الجاهزة ما تنفعش</label>
+        <label><input type="radio"> بيخلّي البصمة ترجع لكلمة السر</label>
+        <label><input type="radio"> بيسرّع التسجيل</label>
+        <label><input type="radio"> لازم يتخزّن سرّي تمامًا</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">os.getenv("DEBUG")</code> والقيمة في البيئة <code class="inl">false</code>. <code class="inl">if os.getenv("DEBUG"):</code>؟</p>
+        <label><input type="radio"> False لأن القيمة false</label>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> True — لأنها النص "false" مش فاضي</label>
+      </div>
+    </div>
+  </article>

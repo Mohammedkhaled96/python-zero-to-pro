@@ -1,0 +1,2632 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة الخامسة عشرة · البرمجة الكائنية</div>
+    <h2>البرمجة الكائنية (OOP): اعمل أنواعك بنفسك</h2>
+    <p>
+      من الوحدة الأولى وإنت شايف كلمة <code class="inl">class</code> في ناتج
+      <code class="inl">type()</code>، ومن درس دوال القوائم وإنت شايف
+      <code class="inl">__len__</code> و<code class="inl">__iter__</code>.
+      الوحدة دي بتفكّ اللغز: <strong>كل حاجة في بايثون كائن</strong>، ودلوقتي هتعرف
+      تعمل كائناتك إنت.
+    </p>
+  </div>
+
+  <!-- 15.1 -->
+  <article class="lesson" id="u15-l1">
+    <h3>ليه الكائنات؟ من القاموس إلى الكلاس <span class="tag">درس 76</span></h3>
+    <p class="goal">الهدف: تفهم المشكلة اللي الـ OOP بتحلّها — قبل ما تشوف أي صيغة جديدة.</p>
+
+    <h4>1. المشكلة: بيانات مبعزقة عن السلوك</h4>
+    <p>في مشروع Task Manager استخدمنا قواميس. تعالى نبصّ على المشكلة بعين ناقدة:</p>
+    <div class="code"><pre>
+task = {"name": "مذاكرة", "description": "الوحدة 15", "status": False}
+# السلوك في دوال منفصلة، والبيانات في مكان تاني
+def complete(t):
+    t["status"] = True
+def describe(t):
+    mark = "✔" if t["status"] else "○"
+    return f"[{mark}] {t['name']}"
+complete(task)
+print(describe(task))
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>[✔] مذاكرة</pre></div>
+
+    <h4>2. إيه اللي غلط في ده؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المشكلة</th><th>الشرح</th></tr>
+        <tr>
+          <td><strong>مفيش عقد</strong></td>
+          <td>
+            مفيش حاجة تضمن إن القاموس فيه <code class="inl">status</code>.
+            <code class="inl">describe({"name": "x"})</code> هترمي <code class="inl">KeyError</code>
+            ومحدّش نبّهك.
+          </td>
+        </tr>
+        <tr>
+          <td><strong>السلوك بعيد عن البيانات</strong></td>
+          <td>
+            <code class="inl">complete</code> و<code class="inl">describe</code> بتخصّ المهمّة،
+            لكنها مرمية وسط 50 دالة تانية في الملف.
+          </td>
+        </tr>
+        <tr>
+          <td><strong>أي حد يعدّل أي حاجة</strong></td>
+          <td><code class="inl">task["status"] = "خلاص"</code> — نص مكان قيمة منطقية، والبرنامج هيقبلها.</td>
+        </tr>
+        <tr>
+          <td><strong>التكرار</strong></td>
+          <td>لو عندك مهمّة ومشروع وملاحظة، هتكرّر نفس دوال العرض لكل نوع.</td>
+        </tr>
+      </table>
+    </div>
+
+    <h4>3. الحل: اربط البيانات بسلوكها</h4>
+    <div class="code"><pre>
+class Task:
+    def __init__(self, name, description):
+        self.name = name
+        self.description = description
+        self.status = False
+    def complete(self):
+        self.status = True
+    def describe(self):
+        mark = "✔" if self.status else "○"
+        return f"[{mark}] {self.name}"
+task = Task("مذاكرة", "الوحدة 15")
+task.complete()
+print(task.describe())
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>[✔] مذاكرة</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 الفكرة في جملة</div>
+      <p>
+        <strong>الكلاس = قالب بيجمع البيانات والسلوك اللي بيخصّها في حاجة واحدة.</strong>
+        بدل «قاموس + دوال متفرّقة»، بقى عندنا <em>نوع</em> جديد اسمه
+        <code class="inl">Task</code> عارف بياناته وعارف يعمل إيه بيها.
+      </p>
+    </div>
+
+    <h4>4. المصطلحات الأربعة</h4>
+    <div class="diagram">
+<pre>  class Task:          ← الكلاس (Class): القالب / التصميم
+      ...
+
+  t1 = Task("أ", "…")  ← الكائن (Object / Instance): نسخة فعلية من القالب
+  t2 = Task("ب", "…")  ← كائن تاني مستقلّ تمامًا
+
+  t1.name              ← خاصية (Attribute): بيانات الكائن
+  t1.complete()        ← دالة عضو (Method): سلوك الكائن</pre>
+      <div class="cap">قالب واحد، كائنات كتير</div>
+    </div>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">Task</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+t1 = Task("مذاكرة", "بايثون")
+t2 = Task("رياضة", "الجيم")
+t1.complete()                 # عدّلنا t1 بس
+print(t1.describe())          # [✔] مذاكرة
+print(t2.describe())          # [○] رياضة
+print(type(t1))               # &lt;class '__main__.Task'&gt;
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>[✔] مذاكرة
+[○] رياضة
+&lt;class '__main__.Task'&gt;</pre></div>
+    <p>
+      لاحظ <code class="inl">type(t1)</code> — نفس الشكل اللي شوفناه في الوحدة الأولى مع
+      <code class="inl">&lt;class 'str'&gt;</code>. <strong>يعني <code class="inl">str</code> نفسها كلاس،
+      وإنت دلوقتي عملت واحد زيها.</strong>
+    </p>
+
+    <h4>5. إمتى تستخدم كلاس وإمتى قاموس؟</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>استخدم قاموس لما</th><th>استخدم كلاس لما</th></tr>
+        <tr><td>البيانات مؤقّتة وبسيطة</td><td>فيه <strong>سلوك</strong> مربوط بالبيانات</td></tr>
+        <tr><td>المفاتيح بتتغيّر وقت التشغيل</td><td>البنية ثابتة ومعروفة</td></tr>
+        <tr><td>جاية من JSON أو API مباشرةً</td><td>هتنشئ منها كائنات كتير بنفس الشكل</td></tr>
+        <tr><td>عايز تحفظها في ملف على طول</td><td>محتاج قواعد وتحقّق على القيم</td></tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ ما تحوّلش كل حاجة لكلاس</div>
+      <p>
+        الـ OOP أداة مش دين. لو محتاج تخزّن نقطة <code class="inl">(x, y)</code> بس،
+        <code class="inl">tuple</code> كفاية. الكلاس بيبدأ يستحقّ تعبه لما يكون فيه
+        <strong>سلوك</strong> أو <strong>قواعد</strong>.
+      </p>
+    </div>
+    <!-- APPEND:u15-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>من القاموس للكلاس</div>
+      <p>حوّل «كتاب» مكتوب كقاموس لكلاس بسيط، ولاحظ الفرق لما تغلط في اسم خاصية.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+book_dict = {"title": "بايثون", "pages": 300}
+print(book_dict.get("titel"))
+class Book:
+    def __init__(self, title, pages):
+        self.title = title
+        self.pages = pages
+b = Book("بايثون", 300)
+print(b.title, b.pages)
+try:
+    print(b.titel)
+except AttributeError:
+    print("الكلاس كشف الغلطة")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>None
+بايثون 300
+الكلاس كشف الغلطة</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. العلاقة بين الكلاس والكائن…</p>
+        <label><input type="radio"> نفس الحاجة</label>
+        <label><input type="radio"> الكلاس قالب، والكائن نسخة معمولة منه</label>
+        <label><input type="radio"> الكائن بيعمل كلاسات</label>
+        <label><input type="radio"> الكلاس دالة عادية</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. ميزة الكلاس على القاموس…</p>
+        <label><input type="radio"> أسرع دايمًا</label>
+        <label><input type="radio"> أصغر في الذاكرة دايمًا</label>
+        <label><input type="radio"> مفيش</label>
+        <label><input type="radio"> البيانات والسلوك مع بعض بشكل ثابت</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. في بايثون، <code class="inl">5</code> و <code class="inl">"hi"</code>…</p>
+        <label><input type="radio"> كائنات من كلاسات int و str</label>
+        <label><input type="radio"> مش كائنات</label>
+        <label><input type="radio"> كلاسات</label>
+        <label><input type="radio"> دوال</label>
+      </div>
+    </div>
+    <!-- /APPEND:u15-l1 -->
+              <!-- SUM:u15-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الكلاس بيربط البيانات بسلوكها في مكان واحد.</li><li>الكلاس = القالب، والكائن = نسخة منه.</li><li>القاموس كفاية للبيانات البسيطة، والكلاس لما يكون فيه سلوك وقواعد.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 15.2 -->
+  <article class="lesson" id="u15-l2">
+    <h3>أول كلاس: __init__ و self <span class="tag">درس 77 · جوهري</span></h3>
+    <p class="goal">الهدف: تفهم السطرين اللي بيلخبطوا كل المبتدئين — <code>__init__</code> و <code>self</code>.</p>
+
+    <h4>1. أبسط كلاس ممكن</h4>
+    <div class="code"><pre>
+class Dog:
+    pass
+d = Dog()
+print(d)
+print(type(d))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>&lt;__main__.Dog object at 0x000001F2A4B3C8E0&gt;
+&lt;class '__main__.Dog'&gt;</pre></div>
+    <p>
+      <code class="inl">Dog()</code> بالأقواس معناها «اعمل كائن جديد من القالب ده».
+      والرقم السادس عشري ده عنوان الكائن في الـ Heap — نفس فكرة <code class="inl">id()</code>
+      من الوحدة 5.
+    </p>
+
+    <h4>2. البنّاء: <code>__init__</code></h4>
+    <div class="code"><pre>
+class Dog:
+    def __init__(self, name, age):
+        print("بيتنفّذ تلقائيًا وقت الإنشاء!")
+        self.name = name
+        self.age = age
+d = Dog("ريكس", 3)
+print(d.name)
+print(d.age)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>بيتنفّذ تلقائيًا وقت الإنشاء!
+ريكس
+3</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 <code>__init__</code> مش «بتعمل الكائن»</div>
+      <p>
+        بايثون بتعمل الكائن الفاضي الأول، وبعدين بتنادي <code class="inl">__init__</code>
+        عليه <strong>عشان تجهّزه</strong>. عشان كده اسمها «المهيّئ» (initializer).
+        وهي مش بترجّع حاجة — لو كتبت فيها <code class="inl">return 5</code> هتاخد خطأ.
+      </p>
+    </div>
+
+    <h4>3. <code>self</code>: الكائن نفسه</h4>
+    <div class="diagram">
+<pre>  d = Dog("ريكس", 3)
+       │
+       └─► بايثون بتترجمها لـ:  Dog.__init__(d, "ريكس", 3)
+                                            ▲
+                                            └── ده هو self
+
+  d.bark()  ──►  Dog.bark(d)</pre>
+      <div class="cap">self هو الكائن اللي بتتنادى عليه الدالة</div>
+    </div>
+    <div class="code"><pre>
+class Dog:
+    def __init__(self, name):
+        self.name = name          # خزّن في الكائن ده
+    def bark(self):
+        print(f"{self.name}: هوووف!")
+a = Dog("ريكس")
+b = Dog("بيلا")
+a.bark()                          # ريكس: هوووف!
+b.bark()                          # بيلا: هوووف!
+Dog.bark(a)                       # نفس الحاجة بالشكل الصريح
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>ريكس: هوووف!
+بيلا: هوووف!
+ريكس: هوووف!</pre></div>
+    <div class="box err">
+      <div class="bt">💥 أشهر 3 أخطاء مع self</div>
+      <div class="code"><pre>
+class Dog:
+    def __init__(name):          # ❌ نسينا self
+        self.name = name
+    def bark():                  # ❌ نسينا self
+        print("هوف")
+    def rename(self, new):
+        name = new               # ❌ متغيّر محلّي! الصح self.name = new
+</pre></div>
+      <p>
+        نسيان <code class="inl">self</code> في التعريف بيرمي
+        <code class="inl">TypeError: takes 1 positional argument but 2 were given</code>.
+        ونسيان <code class="inl">self.</code> جوّه الدالة بيعمل متغيّر محلّي بيموت فورًا —
+        <strong>ومفيش أي رسالة خطأ</strong>، وده الأخطر.
+      </p>
+    </div>
+
+    <h4>4. الكائنات مستقلّة تمامًا</h4>
+    <div class="code"><pre>
+class Dog:
+    def __init__(self, name):
+        self.name = name
+a = Dog("ريكس")
+b = Dog("بيلا")
+a.name = "ماكس"                   # عدّلنا a بس
+print(a.name)                     # ماكس
+print(b.name)                     # بيلا
+print(a is b)                     # False — كائنين مختلفين في الـ Heap
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>ماكس
+بيلا
+False</pre></div>
+
+    <h4>5. الوسائط الافتراضية بتشتغل زي أي دالة</h4>
+    <div class="code"><pre>
+class Dog:
+    def __init__(self, name, age=1, breed="غير معروف"):
+        self.name = name
+        self.age = age
+        self.breed = breed
+    def info(self):
+        return f"{self.name} — {self.age} سنة — {self.breed}"
+print(Dog("ريكس").info())
+print(Dog("بيلا", 5).info())
+print(Dog("ماكس", 2, "جيرمن").info())
+print(Dog("لولو", breed="بودل").info())
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>ريكس — 1 سنة — غير معروف
+بيلا — 5 سنة — غير معروف
+ماكس — 2 سنة — جيرمن
+لولو — 1 سنة — بودل</pre></div>
+    <p>كل اللي اتعلّمناه في وحدة الدوال (وسائط افتراضية، مسمّاة، ترتيب) بيشتغل هنا بالظبط.</p>
+    <!-- APPEND:u15-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>عدّاد خطوات</div>
+      <p>كلاس <code class="inl">StepCounter</code> فيه هدف يومي، ودالة بتزوّد خطوات، ودالة بترجّع النسبة المئوية.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+class StepCounter:
+    def __init__(self, goal=8000):
+        self.goal = goal
+        self.steps = 0
+    def walk(self, n):
+        self.steps += n
+    def progress(self):
+        return round(self.steps / self.goal * 100)
+me = StepCounter()
+friend = StepCounter(4000)
+me.walk(2000)
+me.walk(1000)
+friend.walk(3000)
+print(me.steps, me.progress())
+print(friend.steps, friend.progress())
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>3000 38
+3000 75</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">__init__</code> بتتنادى إمتى؟</p>
+        <label><input type="radio"> لازم تناديها بنفسك</label>
+        <label><input type="radio"> لما البرنامج يخلص</label>
+        <label><input type="radio"> أوتوماتيك لما تعمل كائن جديد</label>
+        <label><input type="radio"> مرّة واحدة للكلاس كله</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. نسيت <code class="inl">self</code> في <code class="inl">def walk(n):</code> ثم <code class="inl">me.walk(5)</code>…</p>
+        <label><input type="radio"> TypeError: takes 1 positional argument but 2 were given</label>
+        <label><input type="radio"> بتشتغل عادي</label>
+        <label><input type="radio"> n = self</label>
+        <label><input type="radio"> SyntaxError</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">steps = 0</code> من غير <code class="inl">self.</code> جوّه __init__…</p>
+        <label><input type="radio"> خاصية عادية</label>
+        <label><input type="radio"> متغيّر محلّي بيختفي بعد __init__</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> خاصية كلاس</label>
+      </div>
+    </div>
+    <!-- /APPEND:u15-l2 -->
+              <!-- SUM:u15-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">__init__</code> بيجهّز الكائن وقت إنشائه.</li><li><code class="inl">self</code> هو الكائن نفسه — أول وسيط في كل method.</li><li>كل كائن ليه بياناته المستقلّة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 15.3 -->
+  <article class="lesson" id="u15-l3">
+    <h3>الدوال السحرية (Dunder Methods) <span class="tag">درس 78</span></h3>
+    <p class="goal">الهدف: تخلّي كائناتك تشتغل مع <code>print</code> و <code>len</code> و <code>==</code> و <code>+</code> زي الأنواع الجاهزة.</p>
+
+    <h4>1. المشكلة</h4>
+    <div class="code"><pre>
+class Money:
+    def __init__(self, amount):
+        self.amount = amount
+m = Money(50)
+print(m)              # &lt;__main__.Money object at 0x...&gt;  ← غير مفيد
+print(len(m))         # ❌ TypeError: object of type 'Money' has no len()
+print(m == Money(50)) # False!  ← رغم إن القيمة واحدة
+</pre></div>
+
+    <h4>2. <code>__str__</code> و <code>__repr__</code></h4>
+    <div class="code"><pre>
+class Money:
+    def __init__(self, amount, currency="EGP"):
+        self.amount = amount
+        self.currency = currency
+    def __str__(self):
+        """للمستخدم النهائي — بتتنادى من print() و str()"""
+        return f"{self.amount:,.2f} {self.currency}"
+    def __repr__(self):
+        """للمبرمج — بتتنادى في الـ Terminal وجوّه القوائم"""
+        return f"Money({self.amount!r}, {self.currency!r})"
+m = Money(1500.5)
+print(m)              # 1,500.50 EGP      ← استخدم __str__
+print(str(m))         # 1,500.50 EGP
+print(repr(m))        # Money(1500.5, 'EGP')
+print([m])            # [Money(1500.5, 'EGP')]  ← القوائم بتستخدم __repr__
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1,500.50 EGP
+1,500.50 EGP
+Money(1500.5, 'EGP')
+[Money(1500.5, 'EGP')]</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 القاعدة</div>
+      <p>
+        <code class="inl">__str__</code> = «إزاي أعرضه للمستخدم».
+        <code class="inl">__repr__</code> = «إزاي أوصفه للمبرمج» — والمفروض لو نسخته
+        ولصقته يعمل نفس الكائن. لو هتكتب واحدة بس، اكتب <code class="inl">__repr__</code>
+        لأن بايثون بتستخدمها كبديل لو <code class="inl">__str__</code> مش موجودة.
+      </p>
+    </div>
+
+    <h4>3. <code>__eq__</code>: المقارنة بالقيمة</h4>
+    <div class="code"><pre>
+class Money:
+    def __init__(self, amount, currency="EGP"):
+        self.amount = amount
+        self.currency = currency
+    def __eq__(self, other):
+        if not isinstance(other, Money):
+            return NotImplemented
+        return self.amount == other.amount and self.currency == other.currency
+a = Money(50)
+b = Money(50)
+c = Money(70)
+print(a == b)      # True   ← دلوقتي بيقارن القيم
+print(a == c)      # False
+print(a is b)      # False  ← لسه كائنين مختلفين
+print(a == "50")   # False  ← NotImplemented بتخلّي بايثون ترجّع False بأمان
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+False
+False
+False</pre></div>
+    <p>
+      دلوقتي بقى واضح الفرق اللي شرحناه في الوحدة 5: <code class="inl">==</code> بتسأل
+      «نفس القيمة؟» و<code class="inl">is</code> بتسأل «نفس الكائن؟» — و<code class="inl">__eq__</code>
+      هي اللي بتحدّد معنى «نفس القيمة» لنوعك.
+    </p>
+
+    <h4>4. <code>__len__</code> و <code>__contains__</code> و <code>__getitem__</code></h4>
+    <div class="code"><pre>
+class Playlist:
+    def __init__(self, name):
+        self.name = name
+        self.songs = []
+    def add(self, song):
+        self.songs.append(song)
+        return self                      # يسمح بالتسلسل
+    def __len__(self):
+        return len(self.songs)
+    def __contains__(self, song):
+        return song in self.songs
+    def __getitem__(self, index):
+        return self.songs[index]
+    def __str__(self):
+        return f"{self.name} ({len(self)} أغنية)"
+p = Playlist("المفضّلة")
+p.add("أغنية 1").add("أغنية 2").add("أغنية 3")
+print(p)                    # المفضّلة (3 أغنية)
+print(len(p))               # 3           ← __len__
+print("أغنية 2" in p)       # True        ← __contains__
+print(p[0])                 # أغنية 1     ← __getitem__
+print(p[-1])                # أغنية 3
+for song in p:              # __getitem__ بتخلّي الكائن قابل للتكرار!
+    print(" -", song)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>المفضّلة (3 أغنية)
+3
+True
+أغنية 1
+أغنية 3
+ - أغنية 1
+ - أغنية 2
+ - أغنية 3</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 دلوقتي افتكر مرجع دوال القوائم في الوحدة 5</div>
+      <p>
+        قلنا هناك إن <code class="inl">my_list[i]</code> بتنادي
+        <code class="inl">__getitem__</code>، و<code class="inl">len(lst)</code> بتنادي
+        <code class="inl">__len__</code>، و<code class="inl">x in lst</code> بتنادي
+        <code class="inl">__contains__</code>. <strong>دلوقتي إنت عملت نوع بيستخدم نفس
+        البروتوكول ده — فبقى «قابل للتكرار» زي القوائم بالظبط.</strong>
+      </p>
+    </div>
+
+    <h4>5. العمليات الحسابية: <code>__add__</code> و إخواتها</h4>
+    <div class="code"><pre>
+class Money:
+    def __init__(self, amount):
+        self.amount = amount
+    def __add__(self, other):
+        return Money(self.amount + other.amount)
+    def __sub__(self, other):
+        return Money(self.amount - other.amount)
+    def __mul__(self, factor):
+        return Money(self.amount * factor)
+    def __lt__(self, other):
+        return self.amount &lt; other.amount
+    def __str__(self):
+        return f"{self.amount} EGP"
+a = Money(100)
+b = Money(30)
+print(a + b)                     # 130 EGP
+print(a - b)                     # 70 EGP
+print(a * 3)                     # 300 EGP
+print(a &lt; b)                     # False
+print([str(m) for m in sorted([a, b])])   # sorted بتستخدم __lt__
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>130 EGP
+70 EGP
+300 EGP
+False
+['30 EGP', '100 EGP']</pre></div>
+
+    <h4>6. جدول أشهر الدوال السحرية</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الدالة</th><th>بتتنادى لما تكتب</th></tr>
+        <tr><td><code class="inl">__init__</code></td><td><code class="inl">Obj(...)</code></td></tr>
+        <tr><td><code class="inl">__str__</code></td><td><code class="inl">print(o)</code> / <code class="inl">str(o)</code></td></tr>
+        <tr><td><code class="inl">__repr__</code></td><td><code class="inl">repr(o)</code> / عرضه في قائمة</td></tr>
+        <tr><td><code class="inl">__len__</code></td><td><code class="inl">len(o)</code></td></tr>
+        <tr><td><code class="inl">__eq__</code></td><td><code class="inl">o1 == o2</code></td></tr>
+        <tr><td><code class="inl">__lt__</code> / <code class="inl">__gt__</code></td><td><code class="inl">o1 &lt; o2</code> / <code class="inl">o1 &gt; o2</code></td></tr>
+        <tr><td><code class="inl">__contains__</code></td><td><code class="inl">x in o</code></td></tr>
+        <tr><td><code class="inl">__getitem__</code></td><td><code class="inl">o[i]</code> و <code class="inl">for x in o</code></td></tr>
+        <tr><td><code class="inl">__add__</code> / <code class="inl">__sub__</code></td><td><code class="inl">o1 + o2</code> / <code class="inl">o1 - o2</code></td></tr>
+        <tr><td><code class="inl">__bool__</code></td><td><code class="inl">if o:</code></td></tr>
+        <tr><td><code class="inl">__call__</code></td><td><code class="inl">o()</code> — الكائن يتنادى كدالة</td></tr>
+    </table>
+    </div>
+    <!-- APPEND:u15-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>سلة مشتريات بتتصرّف زي القائمة</div>
+      <p>اعمل كلاس <code class="inl">Cart</code> يدعم <code class="inl">len</code> و <code class="inl">in</code> و <code class="inl">print</code> و <code class="inl">+</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+class Cart:
+    def __init__(self, items=None):
+        self.items = list(items or [])
+    def __len__(self):
+        return len(self.items)
+    def __contains__(self, item):
+        return item in self.items
+    def __add__(self, other):
+        return Cart(self.items + other.items)
+    def __str__(self):
+        return "سلة: " + "، ".join(self.items)
+a = Cart(["عيش", "لبن"])
+b = Cart(["شاي"])
+both = a + b
+print(both)
+print(len(both), "شاي" in both, "بن" in both)
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>سلة: عيش، لبن، شاي
+3 True False</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">a == b</code> بتنادي…</p>
+        <label><input type="radio"> __cmp__</label>
+        <label><input type="radio"> __is__</label>
+        <label><input type="radio"> __equal__</label>
+        <label><input type="radio"> __eq__</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. الفرق بين <code class="inl">__str__</code> و <code class="inl">__repr__</code>؟</p>
+        <label><input type="radio"> str للمستخدم، repr للمبرمج (ويظهر جوّه القوائم)</label>
+        <label><input type="radio"> مفيش فرق</label>
+        <label><input type="radio"> repr أسرع</label>
+        <label><input type="radio"> str للأرقام بس</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. لو الكلاس مفيهوش <code class="inl">__len__</code> و ناديت <code class="inl">len(obj)</code>…</p>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> 1</label>
+      </div>
+    </div>
+    <!-- /APPEND:u15-l3 -->
+              <!-- SUM:u15-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">__str__</code> للطباعة و <code class="inl">__repr__</code> للمطوّرين.</li><li><code class="inl">__eq__</code> للمقارنة بالقيمة، و <code class="inl">__len__</code> و <code class="inl">__getitem__</code> و <code class="inl">__contains__</code> لسلوك المجموعات.</li><li><code class="inl">__add__</code> وإخواتها لتعريف العمليات الحسابية.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 15.4 -->
+  <article class="lesson" id="u15-l4">
+    <h3>خصائص الكلاس مقابل خصائص الكائن <span class="tag">درس 79</span></h3>
+    <p class="goal">الهدف: تفهم الفرق اللي بيسبّب أغرب الأخطاء في OOP.</p>
+
+    <h4>1. الفرق</h4>
+    <div class="code"><pre>
+class Student:
+    school = "مدرسة النيل"        # خاصية كلاس — مشتركة بين الكل
+    count = 0
+    def __init__(self, name):
+        self.name = name           # خاصية كائن — خاصة بكل واحد
+        Student.count += 1         # نعدّل على الكلاس مش على self
+a = Student("أحمد")
+b = Student("سارة")
+print(a.name, b.name)              # أحمد سارة     ← مختلفة
+print(a.school, b.school)          # مدرسة النيل ×2 ← مشتركة
+print(Student.count)               # 2             ← عدّاد الكائنات
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>أحمد سارة
+مدرسة النيل مدرسة النيل
+2</pre></div>
+    <div class="diagram">
+<pre>              ┌──────────────────────────┐
+              │   class Student          │
+              │   school = "مدرسة النيل"  │ ← نسخة واحدة
+              │   count  = 2             │
+              └────────┬─────────────────┘
+                       │ (كل الكائنات بتشوفها)
+          ┌────────────┴────────────┐
+          ▼                         ▼
+   ┌──────────────┐          ┌──────────────┐
+   │ a            │          │ b            │
+   │ name="أحمد"  │          │ name="سارة"  │
+   └──────────────┘          └──────────────┘</pre>
+      <div class="cap">خاصية الكلاس مشتركة، وخاصية الكائن مستقلّة</div>
+    </div>
+
+    <h4>2. الفخّ: الإسناد بيعمل خاصية كائن جديدة</h4>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">a</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+a.school = "مدرسة الأمل"           # مش بيعدّل الكلاس! بيعمل خاصية خاصة بـ a
+print(a.school)                    # مدرسة الأمل
+print(b.school)                    # مدرسة النيل   ← ما اتغيّرتش
+print(Student.school)              # مدرسة النيل   ← الأصل سليم
+Student.school = "مدرسة المستقبل"   # ده اللي بيعدّل للكل
+print(b.school)                    # مدرسة المستقبل
+print(a.school)                    # مدرسة الأمل   ← a ليها نسختها الخاصة دلوقتي
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>مدرسة الأمل
+مدرسة النيل
+مدرسة النيل
+مدرسة المستقبل
+مدرسة الأمل</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 قاعدة البحث عن الخاصية</div>
+      <p>
+        لما تكتب <code class="inl">a.school</code>، بايثون بتدوّر في الكائن الأول،
+        وإذا ما لقيتش بتدوّر في الكلاس. <strong>نفس منطق LEGB في الدوال.</strong>
+        والإسناد <code class="inl">a.school = ...</code> بيكتب في الكائن <em>دايمًا</em>.
+      </p>
+    </div>
+
+    <h4>3. الفخّ القاتل: خاصية كلاس قابلة للتعديل</h4>
+    <div class="code"><pre>
+class Team:
+    members = []                   # ❌ قائمة مشتركة بين كل الفرق!
+    def add(self, name):
+        self.members.append(name)
+t1 = Team()
+t2 = Team()
+t1.add("أحمد")
+print(t1.members)                  # ['أحمد']
+print(t2.members)                  # ['أحمد']  😱 الفريق التاني كمان!
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['أحمد']
+['أحمد']</pre></div>
+    <p>الحل: خلّي القائمة خاصية <strong>كائن</strong> جوّه <code class="inl">__init__</code>:</p>
+    <div class="code"><pre>
+class Team:
+    def __init__(self):
+        self.members = []          # ✅ قائمة جديدة لكل فريق
+    def add(self, name):
+        self.members.append(name)
+t1 = Team()
+t2 = Team()
+t1.add("أحمد")
+print(t1.members)                  # ['أحمد']
+print(t2.members)                  # []        ✅
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['أحمد']
+[]</pre></div>
+    <div class="box err">
+      <div class="bt">💥 نفس الفخّ بشكل تالت</div>
+      <p>
+        ده بالظبط نفس فخّ <code class="inl">def f(lst=[])</code> من وحدة الدوال، ونفس فخّ
+        <code class="inl">copy = original</code> من وحدة القوائم. <strong>ثلاثتهم نفس
+        السبب الواحد: كائن mutable واحد بيتشارك بين حاجات كتير.</strong>
+        لو فهمت السبب مرّة، اتحصّنت من التلاتة.
+      </p>
+    </div>
+
+    <h4>4. دوال الكلاس والدوال الساكنة</h4>
+    <div class="code"><pre>
+class Temperature:
+    def __init__(self, celsius):
+        self.celsius = celsius
+    def to_fahrenheit(self):                 # دالة كائن — محتاجة self
+        return self.celsius * 9 / 5 + 32
+    @classmethod
+    def from_fahrenheit(cls, f):             # دالة كلاس — بتاخد cls وبترجّع كائن
+        return cls((f - 32) * 5 / 9)
+    @staticmethod
+    def is_freezing(celsius):                # دالة ساكنة — مالهاش علاقة بكائن معيّن
+        return celsius &lt;= 0
+t = Temperature(25)
+print(t.to_fahrenheit())                     # 77.0
+t2 = Temperature.from_fahrenheit(212)        # منشئ بديل
+print(t2.celsius)                            # 100.0
+print(Temperature.is_freezing(-5))           # True
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>77.0
+100.0
+True</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>النوع</th><th>أول وسيط</th><th>بتستخدمها لما</th></tr>
+        <tr><td>دالة كائن</td><td><code class="inl">self</code></td><td>محتاجة بيانات الكائن</td></tr>
+        <tr><td><code class="inl">@classmethod</code></td><td><code class="inl">cls</code></td><td>عايز «منشئ بديل» أو بتشتغل على الكلاس</td></tr>
+        <tr><td><code class="inl">@staticmethod</code></td><td>مفيش</td><td>دالة مساعدة منطقيًا بتخصّ الكلاس بس</td></tr>
+      </table>
+    </div>
+    <p>
+      علامة <code class="inl">@</code> دي <strong>مزخرف (decorator)</strong> — هنشرحها
+      بالتفصيل في وحدة الدوال المتقدّمة، ودلوقتي اعرف إنها بتغيّر سلوك الدالة اللي تحتها.
+    </p>
+    <!-- APPEND:u15-l4 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>عدّاد الكائنات</div>
+      <p>خاصية كلاس بتعدّ الكائنات المعمولة — وشوف الفخ لما تكتب عليها من الكائن.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+class Player:
+    count = 0
+    def __init__(self, name):
+        self.name = name
+        Player.count += 1
+p1 = Player("علي")
+p2 = Player("منى")
+print(Player.count, p1.count)
+p1.count = 100
+print(Player.count, p1.count, p2.count)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>2 2
+2 100 2</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. خاصية معرّفة جوّه الكلاس برّه أي دالة…</p>
+        <label><input type="radio"> خاصية كائن</label>
+        <label><input type="radio"> خاصية كلاس مشتركة بين كل الكائنات</label>
+        <label><input type="radio"> متغيّر محلّي</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">class A: items = []</code> وكل كائن بيعمل <code class="inl">self.items.append(x)</code>…</p>
+        <label><input type="radio"> كل الكائنات بتشارك نفس القائمة — غالبًا bug</label>
+        <label><input type="radio"> كل كائن ليه قائمته</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> القائمة بتتمسح</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">@staticmethod</code>…</p>
+        <label><input type="radio"> بتاخد self</label>
+        <label><input type="radio"> بتاخد cls</label>
+        <label><input type="radio"> بتتنادى مرّة واحدة بس</label>
+        <label><input type="radio"> مش بتاخد self ولا cls — دالة عادية جوّه الكلاس</label>
+      </div>
+    </div>
+    <!-- /APPEND:u15-l4 -->
+              <!-- SUM:u15-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>خصائص الكلاس مشتركة، وخصائص الكائن لكل كائن.</li><li>خاصية كلاس قابلة للتعديل (قائمة) = فخّ مشاركة.</li><li><code class="inl">@classmethod</code> بتاخد الكلاس و <code class="inl">@staticmethod</code> ما بتاخدش حاجة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 15.5 -->
+  <article class="lesson" id="u15-l5">
+    <h3>الوراثة (Inheritance) و super() <span class="tag">درس 80</span></h3>
+    <p class="goal">الهدف: تبني كلاس على كلاس تاني بدل ما تكرّر الكود.</p>
+
+    <h4>1. المشكلة: تكرار</h4>
+    <div class="code"><pre>
+class Student:
+    def __init__(self, name, age, grade):
+        self.name = name
+        self.age = age
+        self.grade = grade
+    def greet(self):
+        return f"أنا {self.name}، عندي {self.age} سنة"
+class Teacher:
+    def __init__(self, name, age, subject):
+        self.name = name              # مكرّر
+        self.age = age                # مكرّر
+        self.subject = subject
+    def greet(self):                  # مكرّرة بالكامل
+        return f"أنا {self.name}، عندي {self.age} سنة"
+</pre></div>
+
+    <h4>2. الحل: كلاس أب</h4>
+    <div class="code"><pre>
+class Person:
+    def __init__(self, name, age):
+        self.name = name
+        self.age = age
+    def greet(self):
+        return f"أنا {self.name}، عندي {self.age} سنة"
+class Student(Person):                       # Student بيورث من Person
+    def __init__(self, name, age, grade):
+        super().__init__(name, age)          # نادي بنّاء الأب
+        self.grade = grade
+    def study(self):
+        return f"{self.name} بيذاكر"
+class Teacher(Person):
+    def __init__(self, name, age, subject):
+        super().__init__(name, age)
+        self.subject = subject
+    def teach(self):
+        return f"{self.name} بيشرح {self.subject}"
+s = Student("أحمد", 15, "تالتة")
+t = Teacher("سارة", 35, "رياضيات")
+print(s.greet())        # ورثها من Person
+print(s.study())        # بتاعته لوحده
+print(t.greet())        # ورثها كمان
+print(t.teach())
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>أنا أحمد، عندي 15 سنة
+أحمد بيذاكر
+أنا سارة، عندي 35 سنة
+سارة بيشرح رياضيات</pre></div>
+    <div class="diagram">
+<pre>            ┌─────────────────┐
+            │     Person      │   الأب (Base / Parent)
+            │  name, age      │
+            │  greet()        │
+            └────────┬────────┘
+                     │ يورث
+            ┌────────┴────────┐
+            ▼                 ▼
+      ┌───────────┐     ┌───────────┐
+      │  Student  │     │  Teacher  │   الأبناء (Subclasses)
+      │  grade    │     │  subject  │
+      │  study()  │     │  teach()  │
+      └───────────┘     └───────────┘</pre>
+      <div class="cap">شجرة الوراثة</div>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 <code>super()</code> بتعمل إيه؟</div>
+      <p>
+        بترجّع «نسخة من الكائن بتبصّ للكلاس الأب». فـ
+        <code class="inl">super().__init__(name, age)</code> معناها «شغّل بنّاء الأب على
+        الكائن ده». من غيرها <code class="inl">self.name</code> مش هتتعرّف أصلًا.
+      </p>
+      <p>
+        <strong>نسيان <code class="inl">super().__init__()</code> أشهر خطأ في الوراثة</strong> —
+        الكائن يتعمل ناقص وتاخد <code class="inl">AttributeError</code> بعدين في مكان بعيد.
+      </p>
+    </div>
+
+    <h4>3. إعادة التعريف (Overriding)</h4>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">Person</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+class Student(Person):
+    def __init__(self, name, age, grade):
+        super().__init__(name, age)
+        self.grade = grade
+    def greet(self):                                  # نعيد تعريف دالة الأب
+        return f"{super().greet()} وأنا في {self.grade}"
+s = Student("أحمد", 15, "تالتة")
+print(s.greet())
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>أنا أحمد، عندي 15 سنة وأنا في تالتة</pre></div>
+    <p>
+      <code class="inl">super().greet()</code> بتنادي نسخة الأب، وإحنا بنضيف عليها —
+      ده أنضف من إعادة كتابة الجملة كلها.
+    </p>
+
+    <h4>4. <code>isinstance</code> و <code>issubclass</code></h4>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">Student</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+s = Student("أحمد", 15, "تالتة")
+print(isinstance(s, Student))        # True
+print(isinstance(s, Person))         # True   ← الابن هو نوع من الأب كمان
+print(isinstance(s, Teacher))        # False
+print(issubclass(Student, Person))   # True
+print(type(s) == Person)             # False  ← type بتقارن بدقّة
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+True
+False
+True
+False</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 استخدم <code>isinstance</code> مش <code>type() ==</code></div>
+      <p>
+        <code class="inl">isinstance</code> بتحترم الوراثة، فكودك يشتغل مع أي ابن جديد.
+        <code class="inl">type(x) == Person</code> بترفض الأبناء وبتكسر التوسّع.
+      </p>
+    </div>
+
+    <h4>5. متى <em>لا</em> تستخدم الوراثة</h4>
+    <div class="box warn">
+      <div class="bt">⚠️ الوراثة علاقة «هو نوع من»، مش «عنده»</div>
+      <p>
+        <code class="inl">Student</code> <em>هو نوع من</em> <code class="inl">Person</code> ✅<br>
+        <code class="inl">Car</code> <em>عنده</em> <code class="inl">Engine</code> — مش
+        «هو نوع من» محرّك ❌
+      </p>
+      <p>
+        في الحالة التانية استخدم <strong>التركيب (Composition)</strong>: خلّي المحرّك
+        خاصية جوّه العربية. القاعدة المعروفة:
+        <em>«فضّل التركيب على الوراثة»</em>، لأن الوراثة بتربط الكلاسات بقوة وبتصعّب التعديل.
+      </p>
+      <div class="code"><pre>
+class Engine:
+    def start(self):
+        return "المحرّك اشتغل"
+class Car:
+    def __init__(self, model):
+        self.model = model
+        self.engine = Engine()       # تركيب: العربية «عندها» محرّك
+    def start(self):
+        return f"{self.model}: {self.engine.start()}"
+print(Car("تويوتا").start())
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>تويوتا: المحرّك اشتغل</pre></div>
+    </div>
+    <!-- APPEND:u15-l5 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>موظفين</div>
+      <p>كلاس <code class="inl">Employee</code> بمرتّب، و <code class="inl">Manager</code> بيورث منه وبيضيف مكافأة باستخدام <code class="inl">super()</code>.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+class Employee:
+    def __init__(self, name, salary):
+        self.name = name
+        self.salary = salary
+    def pay(self):
+        return self.salary
+class Manager(Employee):
+    def __init__(self, name, salary, bonus):
+        super().__init__(name, salary)
+        self.bonus = bonus
+    def pay(self):
+        return super().pay() + self.bonus
+staff = [Employee("علي", 8000), Manager("سارة", 12000, 3000)]
+for person in staff:
+    print(person.name, person.pay())
+print(isinstance(staff[1], Employee))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>علي 8000
+سارة 15000
+True</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. الابن عرّف <code class="inl">__init__</code> ونسي <code class="inl">super().__init__</code>…</p>
+        <label><input type="radio"> بايثون بتناديها أوتوماتيك</label>
+        <label><input type="radio"> SyntaxError</label>
+        <label><input type="radio"> خصائص الأب ما اتعملتش — AttributeError بعدين</label>
+        <label><input type="radio"> مفيش مشكلة</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. «يورث» مناسبة لما العلاقة…</p>
+        <label><input type="radio"> «عنده» (has-a)</label>
+        <label><input type="radio"> «هو نوع من» (is-a)</label>
+        <label><input type="radio"> أي علاقة</label>
+        <label><input type="radio"> مفيش علاقة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">issubclass(Manager, Employee)</code>؟</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> False</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> None</label>
+      </div>
+    </div>
+    <!-- /APPEND:u15-l5 -->
+              <!-- SUM:u15-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">class Child(Parent)</code> بيورث كل حاجة من الأب.</li><li><code class="inl">super().__init__()</code> بتنادي تجهيز الأب.</li><li><code class="inl">isinstance</code> للفحص، والتركيب (has-a) أحيانًا أحسن من الوراثة (is-a).</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 15.6 -->
+  <article class="lesson" id="u15-l6">
+    <h3>التغليف و @property <span class="tag">درس 81</span></h3>
+    <p class="goal">الهدف: تحمي بيانات كائنك من القيم الغلط.</p>
+
+    <h4>1. المشكلة: أي حد يكتب أي حاجة</h4>
+    <div class="code"><pre>
+class Account:
+    def __init__(self, balance):
+        self.balance = balance
+a = Account(1000)
+a.balance = -5000            # 😱 رصيد سالب، والبرنامج قبلها
+a.balance = "كتير"           # 😱 نص مكان رقم
+print(a.balance)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>كتير</pre></div>
+
+    <h4>2. الاصطلاح: الشرطة السفلية</h4>
+    <div class="code"><pre>
+class Account:
+    def __init__(self, balance):
+        self._balance = balance          # شرطة واحدة: "داخلي، ما تلمسهوش"
+        self.__secret = "PIN-1234"       # شرطتين: بايثون بتشوّه الاسم
+a = Account(1000)
+print(a._balance)                        # 1000 — شغّال، بس الاصطلاح يقول لا تلمسه
+print(a.__secret)                        # ❌ AttributeError
+print(a._Account__secret)                # PIN-1234 — التشويه مش تشفير!
+</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 بايثون مافيهاش private حقيقي</div>
+      <p>
+        <strong>شرطة واحدة <code class="inl">_x</code>:</strong> اتفاق بين المبرمجين
+        معناه «ده تفصيل داخلي، ما تعتمدش عليه». بايثون ما بتمنعكش.
+      </p>
+      <p>
+        <strong>شرطتين <code class="inl">__x</code>:</strong> بايثون بتغيّر الاسم لـ
+        <code class="inl">_ClassName__x</code> (اسمه name mangling). الغرض منها منع
+        التعارض في الوراثة، <em>مش الأمان</em>.
+      </p>
+      <p>فلسفة بايثون: «كلنا بالغين ومسؤولين» — بتعتمد على الثقة مش على الأقفال.</p>
+    </div>
+
+    <h4>3. <code>@property</code>: خاصية محسوبة ومحميّة</h4>
+    <div class="code"><pre>
+class Account:
+    def __init__(self, balance=0):
+        self._balance = 0
+        self.balance = balance           # بيمرّ على الـ setter فيتحقّق
+    @property
+    def balance(self):
+        """القراءة: a.balance"""
+        return self._balance
+    @balance.setter
+    def balance(self, value):
+        """الكتابة: a.balance = x"""
+        if not isinstance(value, (int, float)):
+            raise TypeError("الرصيد لازم يكون رقم")
+        if value &lt; 0:
+            raise ValueError("الرصيد ما ينفعش يكون سالب")
+        self._balance = value
+    @property
+    def balance_usd(self):
+        """خاصية محسوبة — مفيش setter فهي للقراءة بس"""
+        return round(self._balance / 48.5, 2)
+a = Account(1000)
+print(a.balance)          # 1000     ← زي الخاصية العادية
+print(a.balance_usd)      # 20.62    ← محسوبة لحظيًا
+a.balance = 2000          # بيمرّ على التحقّق
+print(a.balance)          # 2000
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1000
+20.62
+2000</pre></div>
+    <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">Account</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+    <div class="code"><pre>
+a = Account(1000)
+a.balance = -50                  # ❌ ValueError: الرصيد ما ينفعش يكون سالب
+a.balance = "كتير"               # ❌ TypeError: الرصيد لازم يكون رقم
+a.balance_usd = 100              # ❌ AttributeError: property has no setter
+</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 الميزة الكبيرة في <code>@property</code></div>
+      <p>
+        الواجهة ما اتغيّرتش! الكود القديم <code class="inl">a.balance</code> و
+        <code class="inl">a.balance = 5</code> لسه شغّال بالظبط — بس دلوقتي فيه تحقّق
+        من تحت. <strong>يعني تقدر تضيف حماية لكلاس قديم من غير ما تكسر أي كود بيستخدمه.</strong>
+        في لغات تانية كان لازم تكتب <code class="inl">getBalance()</code> و
+        <code class="inl">setBalance()</code> من أول يوم.
+      </p>
+    </div>
+
+    <h4>4. الشكل الكامل: كلاس بواجهة محترمة</h4>
+    <div class="code" data-file="account.py"><pre>
+class Account:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self._balance = 0
+        self._history = []
+        if balance:
+            self.deposit(balance)
+    @property
+    def balance(self):
+        return self._balance
+    def deposit(self, amount):
+        if amount &lt;= 0:
+            raise ValueError("مبلغ الإيداع لازم يكون موجب")
+        self._balance += amount
+        self._history.append(("إيداع", amount))
+        return self._balance
+    def withdraw(self, amount):
+        if amount &lt;= 0:
+            raise ValueError("مبلغ السحب لازم يكون موجب")
+        if amount &gt; self._balance:
+            raise ValueError(f"الرصيد غير كافي (المتاح {self._balance})")
+        self._balance -= amount
+        self._history.append(("سحب", amount))
+        return self._balance
+    @property
+    def history(self):
+        return list(self._history)        # نسخة! عشان محدّش يعدّل السجل
+    def __str__(self):
+        return f"حساب {self.owner}: {self._balance} جنيه"
+a = Account("أحمد", 1000)
+a.deposit(500)
+a.withdraw(200)
+print(a)
+print(a.history)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>حساب أحمد: 1300 جنيه
+[('إيداع', 1000), ('إيداع', 500), ('سحب', 200)]</pre></div>
+    <p>
+      لاحظ <code class="inl">return list(self._history)</code> — بنرجّع <strong>نسخة</strong>
+      عشان اللي بره ما يقدرش يعدّل السجل الداخلي. ده تطبيق مباشر لدرس النسخ في الوحدة 5.
+    </p>
+    <!-- APPEND:u15-l6 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>درجة حرارة بحماية</div>
+      <p>كلاس بخاصية <code class="inl">celsius</code> محمية (مينفعش تقل عن -273.15)، وخاصية <code class="inl">fahrenheit</code> محسوبة للقراءة بس.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+class Temperature:
+    def __init__(self, celsius):
+        self.celsius = celsius
+    @property
+    def celsius(self):
+        return self._celsius
+    @celsius.setter
+    def celsius(self, value):
+        if value &lt; -273.15:
+            raise ValueError("أقل من الصفر المطلق")
+        self._celsius = value
+    @property
+    def fahrenheit(self):
+        return self._celsius * 9 / 5 + 32
+t = Temperature(25)
+print(t.celsius, t.fahrenheit)
+try:
+    t.celsius = -300
+except ValueError as e:
+    print("مرفوض:", e)
+try:
+    t.fahrenheit = 100
+except AttributeError:
+    print("fahrenheit للقراءة بس")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>25 77.0
+مرفوض: أقل من الصفر المطلق
+fahrenheit للقراءة بس</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">_balance</code> (شرطة واحدة) معناها…</p>
+        <label><input type="radio"> ممنوع الوصول ليها نهائيًا</label>
+        <label><input type="radio"> ثابت</label>
+        <label><input type="radio"> خاصية كلاس</label>
+        <label><input type="radio"> اتفاق: «داخلية، ما تلمسهاش من برّه»</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. property من غير setter وحاولت تكتب عليها…</p>
+        <label><input type="radio"> بتتكتب عادي</label>
+        <label><input type="radio"> AttributeError</label>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> بتتجاهل بصمت</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. بتقرا property إزاي؟</p>
+        <label><input type="radio"> t.celsius()</label>
+        <label><input type="radio"> t.get_celsius()</label>
+        <label><input type="radio"> t.celsius</label>
+        <label><input type="radio"> Temperature.celsius(t)()</label>
+      </div>
+    </div>
+    <!-- /APPEND:u15-l6 -->
+              <!-- SUM:u15-l6 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">_name</code> اصطلاح لـ «داخلي».</li><li><code class="inl">@property</code> خاصية محسوبة أو محميّة، و <code class="inl">@x.setter</code> للتحقّق عند التعديل.</li><li>الواجهة العامة بسيطة والتفاصيل مخفية.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 15.7 -->
+  <article class="lesson" id="u15-l7">
+    <h3>تعدّد الأشكال و Duck Typing <span class="tag">درس 82</span></h3>
+    <p class="goal">الهدف: تكتب كود بيشتغل مع أنواع مختلفة من غير <code>if</code> على النوع.</p>
+
+    <h4>1. تعدّد الأشكال (Polymorphism)</h4>
+    <div class="code"><pre>
+class Shape:
+    def area(self):
+        raise NotImplementedError("كل شكل لازم يعرّف مساحته")
+class Rectangle(Shape):
+    def __init__(self, w, h):
+        self.w = w
+        self.h = h
+    def area(self):
+        return self.w * self.h
+class Circle(Shape):
+    def __init__(self, r):
+        self.r = r
+    def area(self):
+        return 3.14159 * self.r ** 2
+class Triangle(Shape):
+    def __init__(self, base, height):
+        self.base = base
+        self.height = height
+    def area(self):
+        return self.base * self.height / 2
+shapes = [Rectangle(3, 4), Circle(2), Triangle(6, 5)]
+for s in shapes:
+    print(f"{type(s).__name__:10} {s.area():.2f}")
+print(f"الإجمالي: {sum(s.area() for s in shapes):.2f}")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>Rectangle  12.00
+Circle     12.57
+Triangle   15.00
+الإجمالي: 39.57</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 قارن بالبديل من غير OOP</div>
+      <div class="code"><pre>
+def area(shape):
+    if shape["type"] == "rectangle":
+        return shape["w"] * shape["h"]
+    elif shape["type"] == "circle":
+        return 3.14159 * shape["r"] ** 2
+    elif shape["type"] == "triangle":
+        return shape["base"] * shape["height"] / 2
+    # ولكل شكل جديد: تعدّل الدالة دي 😖
+</pre></div>
+      <p>
+        <strong>مع تعدّد الأشكال:</strong> لإضافة شكل جديد تعمل كلاس جديد وخلاص — ما
+        تلمسش أي كود موجود. دي أقوى فايدة في الـ OOP، واسمها الرسمي
+        <em>Open/Closed Principle</em>: مفتوح للإضافة، مقفول على التعديل.
+      </p>
+    </div>
+
+    <h4>2. Duck Typing: «لو بتبطبط زي البطة…»</h4>
+    <div class="code"><pre>
+class Dog:
+    def speak(self):
+        return "هوف"
+class Cat:
+    def speak(self):
+        return "مياو"
+class Robot:                       # مش وارث من أي حاجة!
+    def speak(self):
+        return "بيب بوب"
+for thing in [Dog(), Cat(), Robot()]:
+    print(thing.speak())           # بايثون ما بتسألش عن النوع
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>هوف
+مياو
+بيب بوب</pre></div>
+    <p>
+      بايثون ما بتطلبش وراثة مشتركة. كل اللي يهمّها إن الكائن <strong>عنده الدالة
+      المطلوبة</strong>. المبدأ ده اسمه <em>Duck Typing</em>: «لو بيمشي زي البطة
+      وبيبطبط زي البطة، يبقى بطة».
+    </p>
+    <p>
+      ده اللي بيفسّر ليه <code class="inl">len()</code> بتشتغل على النصوص والقوائم
+      والقواميس وكلاس <code class="inl">Playlist</code> بتاعنا: كلهم عندهم
+      <code class="inl">__len__</code>، وبايثون ما بتسألش عن أنسابهم.
+    </p>
+
+    <h4>3. الكلاس المجرّد (Abstract Base Class)</h4>
+    <div class="code"><pre>
+from abc import ABC, abstractmethod
+class PaymentMethod(ABC):
+    @abstractmethod
+    def pay(self, amount):
+        """كل وسيلة دفع لازم تعرّف دي"""
+    def receipt(self, amount):
+        return f"تم دفع {amount} عن طريق {type(self).__name__}"
+class CreditCard(PaymentMethod):
+    def pay(self, amount):
+        return f"خصم {amount} من الكارت"
+class Wallet(PaymentMethod):
+    def pay(self, amount):
+        return f"خصم {amount} من المحفظة"
+class Broken(PaymentMethod):
+    pass                                     # ما عرّفناش pay
+print(CreditCard().pay(100))
+print(Wallet().receipt(50))
+b = Broken()                                 # ❌ TypeError عند الإنشاء
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>خصم 100 من الكارت
+تم دفع 50 عن طريق Wallet
+Traceback (most recent call last):
+  File "main.py", line 18, in &lt;module&gt;
+    b = Broken()                                 # ❌ TypeError عند الإنشاء
+        ^^^^^^^^
+TypeError: Can't instantiate abstract class Broken without an implementation for abstract method 'pay'</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 الفايدة</div>
+      <p>
+        الكلاس المجرّد بيمنعك تنشئ كائن ناقص. الخطأ بيظهر <strong>وقت الإنشاء</strong>
+        مش بعد ساعتين لما حد ينادي <code class="inl">pay()</code> المفقودة.
+        <em>افشل بصوت عالي وبسرعة</em> — نفس المبدأ من وحدة الأخطاء.
+      </p>
+    </div>
+    <!-- APPEND:u15-l7 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>طرق دفع</div>
+      <p>تلات كلاسات مالهمش أب مشترك، بس كلهم فيهم <code class="inl">pay(amount)</code> — دالة واحدة تتعامل معاهم كلهم (Duck Typing).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+class Cash:
+    def pay(self, amount):
+        return f"كاش: {amount}"
+class Card:
+    def pay(self, amount):
+        return f"فيزا: {amount} + رسوم {amount * 0.02}"
+class Wallet:
+    def pay(self, amount):
+        return f"محفظة: {amount}"
+def checkout(method, amount):
+    print(method.pay(amount))
+for m in [Cash(), Card(), Wallet()]:
+    checkout(m, 500)
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>كاش: 500
+فيزا: 500 + رسوم 10.0
+محفظة: 500</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="0">
+        <p class="qt">1. Duck Typing معناه…</p>
+        <label><input type="radio"> المهم الكائن يعرف يعمل المطلوب، مش نوعه</label>
+        <label><input type="radio"> لازم كل الكلاسات تورث من أب واحد</label>
+        <label><input type="radio"> لازم تفحص النوع بـ type</label>
+        <label><input type="radio"> نوع بيانات جديد</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. <code class="inl">len("abc")</code> و <code class="inl">len([1, 2])</code> مثال على…</p>
+        <label><input type="radio"> الوراثة</label>
+        <label><input type="radio"> التغليف</label>
+        <label><input type="radio"> تعدّد الأشكال</label>
+        <label><input type="radio"> الاسترجاع</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. كلاس بيورث من ABC ومش معرّف الدالة المجرّدة، وحاولت تعمل منه كائن…</p>
+        <label><input type="radio"> بيشتغل عادي</label>
+        <label><input type="radio"> الدالة بترجّع None</label>
+        <label><input type="radio"> تحذير</label>
+        <label><input type="radio"> TypeError</label>
+      </div>
+    </div>
+    <!-- /APPEND:u15-l7 -->
+              <!-- SUM:u15-l7 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>نفس اسم الدالة بسلوك مختلف لكل نوع = تعدّد الأشكال.</li><li>Duck Typing: المهم الكائن يقدر يعمل إيه، مش نوعه.</li><li><code class="inl">ABC</code> و <code class="inl">@abstractmethod</code> بيجبروا الأبناء يعرّفوا دوال معيّنة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ADD:u15-l9 -->
+  <!-- 15.9 -->
+  <article class="lesson" id="u15-l9">
+    <h3>dataclasses و Enum: كلاسات البيانات الحديثة <span class="tag">درس 83 · مهم</span></h3>
+    <p class="goal">الهدف: تكتب كلاسات بيانات في سطور قليلة من غير تكرار <code class="inl">__init__</code> و <code class="inl">__repr__</code> و <code class="inl">__eq__</code>، وتستخدم <code class="inl">Enum</code> بدل النصوص السحرية زي <code class="inl">"done"</code> و <code class="inl">"todo"</code>.</p>
+
+    <h4>1. المشكلة: كود متكرّر في كل كلاس بيانات</h4>
+    <div class="code"><pre>
+class PointOld:
+    def __init__(self, x, y):
+        self.x = x
+        self.y = y
+print(PointOld(1, 2) == PointOld(1, 2))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>False</pre></div>
+    <p>عشان يبقى الكلاس ده «محترم» محتاج <code class="inl">__init__</code> و <code class="inl">__repr__</code> و <code class="inl">__eq__</code> — عشرات السطور المتكرّرة. <code class="inl">@dataclass</code> بتكتبهم بدالك.</p>
+
+    <h4>2. أول dataclass</h4>
+    <div class="code"><pre>
+from dataclasses import dataclass
+@dataclass
+class Point:
+    x: float
+    y: float
+p = Point(1, 2)
+print(p)
+print(p == Point(1, 2))
+p.x = 10
+print(p.x)
+print(Point(y=5, x=3))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Point(x=1, y=2)
+True
+10
+Point(x=3, y=5)</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ التلميحات لسه مش بتتفرض</div>
+      <p><code class="inl">Point("a", "b")</code> هتشتغل عادي — dataclass بتستخدم التلميحات عشان تعرف الحقول، مش عشان تتحقّق منها. التحقّق بتعمله إنت (الفقرة الجاية)، أو بمكتبة زي <strong>Pydantic</strong>.</p>
+    </div>
+
+    <h4>3. قيم افتراضية، تحقّق، ودوال</h4>
+    <div class="code"><pre>
+from dataclasses import dataclass, field
+@dataclass
+class Product:
+    name: str
+    price: float
+    tags: list[str] = field(default_factory=list)
+    qty: int = 0
+    def __post_init__(self):
+        if self.price &lt; 0:
+            raise ValueError("السعر ما ينفعش يكون سالب")
+        self.name = self.name.strip().title()
+    @property
+    def total(self):
+        return self.price * self.qty
+p = Product("  laptop ", 25000, qty=2)
+print(p)
+print(p.total)
+p.tags.append("tech")
+print(Product("mouse", 300).tags)
+try:
+    Product("x", -1)
+except ValueError as e:
+    print(e)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Product(name='Laptop', price=25000, tags=[], qty=2)
+50000
+[]
+السعر ما ينفعش يكون سالب</pre></div>
+
+    <h4>4. frozen و order وأدوات المكتبة</h4>
+    <div class="code"><pre>
+from dataclasses import dataclass, asdict, astuple, replace
+@dataclass(frozen=True, order=True)
+class Version:
+    major: int
+    minor: int
+    patch: int = 0
+v1 = Version(3, 12, 1)
+v2 = Version(3, 9)
+print(v1 &gt; v2)
+print(sorted([v1, v2, Version(3, 12)]))
+print(asdict(v1))
+print(astuple(v1))
+print(replace(v1, patch=2))
+try:
+    v1.major = 4
+except Exception as e:
+    print(type(e).__name__)
+print({v1: "current"}[Version(3, 12, 1)])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+[Version(major=3, minor=9, patch=0), Version(major=3, minor=12, patch=0), Version(major=3, minor=12, patch=1)]
+{'major': 3, 'minor': 12, 'patch': 1}
+(3, 12, 1)
+Version(major=3, minor=12, patch=2)
+FrozenInstanceError
+current</pre></div>
+
+    <h4>5. dataclass و JSON</h4>
+    <div class="code"><pre>
+import json
+from dataclasses import dataclass, asdict
+@dataclass
+class Task:
+    title: str
+    done: bool = False
+tasks = [Task("مذاكرة"), Task("رياضة", True)]
+text = json.dumps([asdict(t) for t in tasks], ensure_ascii=False)
+print(text)
+loaded = [Task(**d) for d in json.loads(text)]
+print(loaded)
+print(loaded == tasks)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[{"title": "مذاكرة", "done": false}, {"title": "رياضة", "done": true}]
+[Task(title='مذاكرة', done=False), Task(title='رياضة', done=True)]
+True</pre></div>
+
+    <h4>6. Enum: قيم ثابتة بأسماء</h4>
+    <p>
+      لو حالة المهمّة نص <code class="inl">"done"</code>، أي غلطة كتابة (<code class="inl">"Done"</code> أو <code class="inl">"dnoe"</code>) هتعدّي من غير ما حد يلاحظ.
+      <code class="inl">Enum</code> بتعرّف <strong>مجموعة مقفولة من القيم المسموحة</strong>، وأي قيمة تانية بترمي خطأ فورًا.
+    </p>
+    <div class="code"><pre>
+from enum import Enum, auto
+class Status(Enum):
+    TODO = "todo"
+    DOING = "doing"
+    DONE = "done"
+s = Status.DOING
+print(s, s.name, s.value)
+print(s is Status.DOING)
+print(Status("done"))
+print([m.value for m in Status])
+try:
+    Status("finished")
+except ValueError as e:
+    print(e)
+class Priority(Enum):
+    LOW = auto()
+    HIGH = auto()
+print(Priority.HIGH.value)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Status.DOING DOING doing
+True
+Status.DONE
+['todo', 'doing', 'done']
+'finished' is not a valid Status
+2</pre></div>
+
+    <h4>7. الاتنين مع بعض</h4>
+    <div class="code"><pre>
+from dataclasses import dataclass
+from enum import Enum
+class Status(Enum):
+    TODO = "todo"
+    DOING = "doing"
+    DONE = "done"
+@dataclass
+class Ticket:
+    title: str
+    status: Status = Status.TODO
+    def advance(self):
+        order = list(Status)
+        i = order.index(self.status)
+        if i &lt; len(order) - 1:
+            self.status = order[i + 1]
+t = Ticket("تصليح الباج")
+t.advance()
+print(t)
+t.advance()
+t.advance()
+match t.status:
+    case Status.DONE:
+        print("✅ خلصت")
+    case _:
+        print("لسه")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Ticket(title='تصليح الباج', status=&lt;Status.DOING: 'doing'&gt;)
+✅ خلصت</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الأداة</th><th>استخدمها لما…</th></tr>
+        <tr><td><code class="inl">dict</code></td><td>بيانات مؤقّتة أو شكلها متغيّر (زي رد API)</td></tr>
+        <tr><td><code class="inl">namedtuple</code></td><td>سجل صغير ثابت خفيف</td></tr>
+        <tr><td><code class="inl">@dataclass</code></td><td><strong>أغلب كلاسات البيانات</strong>: حقول معروفة + شوية سلوك</td></tr>
+        <tr><td>كلاس عادي</td><td>السلوك هو الأساس والبيانات تفاصيل داخلية (زي BankAccount)</td></tr>
+        <tr><td><code class="inl">Enum</code></td><td>قيمة لازم تكون من اختيارات محدّدة (حالة، دور، مستوى)</td></tr>
+      </table>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>كتالوج الكتب</div>
+      <p>اعمل dataclass اسمها <code class="inl">Book</code> (عنوان، مؤلّف، سنة) قابلة للترتيب بالسنة بس، ورتّب قائمة كتب.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+from dataclasses import dataclass, field
+@dataclass(order=True)
+class Book:
+    year: int
+    title: str = field(compare=False)
+    author: str = field(compare=False)
+books = [Book(2008, "Clean Code", "Martin"), Book(1994, "Design Patterns", "GoF"), Book(2019, "Fluent Python", "Ramalho")]
+for b in sorted(books):
+    print(b.year, b.title)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>1994 Design Patterns
+2008 Clean Code
+2019 Fluent Python</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">@dataclass</code> بتولّد تلقائيًا…</p>
+        <label><input type="radio"> قاعدة بيانات</label>
+        <label><input type="radio"> ملف JSON</label>
+        <label><input type="radio"> __init__ و __repr__ و __eq__</label>
+        <label><input type="radio"> تحقّق من الأنواع</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. حقل قائمة بقيمة افتراضية فاضية يتكتب…</p>
+        <label><input type="radio"> items: list = field(default_factory=list)</label>
+        <label><input type="radio"> items: list = []</label>
+        <label><input type="radio"> items = list</label>
+        <label><input type="radio"> items: list = None فقط</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">frozen=True</code> معناها…</p>
+        <label><input type="radio"> الكائن بيتحفظ في ملف</label>
+        <label><input type="radio"> ما ينفعش تعمل منه كائنات</label>
+        <label><input type="radio"> أسرع في الحساب</label>
+        <label><input type="radio"> الحقول ما تتعدّلش والكائن ينفع مفتاح قاموس</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">4. <code class="inl">Status("finished")</code> والقيمة مش من الاختيارات؟</p>
+        <label><input type="radio"> بترجّع None</label>
+        <label><input type="radio"> ValueError</label>
+        <label><input type="radio"> بتضيفها للـ Enum</label>
+        <label><input type="radio"> بترجّع أول عضو</label>
+      </div>
+    </div>
+      <!-- SUM:u15-l9 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">@dataclass</code> بتكتب لك <code class="inl">__init__</code> و <code class="inl">__repr__</code> و <code class="inl">__eq__</code> — كود أقل وأوضح لكلاسات البيانات.</li><li><code class="inl">field(default_factory=list)</code> للقيم المتغيّرة، و <code class="inl">__post_init__</code> للتحقّق، و <code class="inl">frozen=True</code> لكائن ثابت، و <code class="inl">order=True</code> للمقارنة والترتيب.</li><li><code class="inl">Enum</code> بتحوّل القيم الثابتة (حالات، أنواع) لأسماء واضحة بدل نصوص سايبة — والاتنين مع <code class="inl">asdict</code> بيروحوا لـ JSON بسهولة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u15-l9 -->
+
+  <!-- ADD:u15-l8 -->
+  <!-- 15.8 -->
+  <article class="lesson" id="u15-l8">
+    <h3>الاستثناءات المخصّصة: أخطاء بلغة مشروعك <span class="tag">درس 84</span></h3>
+    <p class="goal">الهدف: تفهم إن الاستثناءات كلاسات بينها وراثة، تصمّم عيلة أخطاء خاصة بمشروعك تحمل بيانات مفيدة، وتربط الأخطاء ببعض بـ <code class="inl">raise ... from</code>.</p>
+
+    <h4>1. الاستثناءات كلاسات… وبينها وراثة</h4>
+    <div class="diagram">
+<pre>  BaseException
+   ├── KeyboardInterrupt        ← Ctrl+C (ما تمسكهاش!)
+   ├── SystemExit               ← sys.exit()
+   └── Exception                ← أبو كل الأخطاء «العادية»
+        ├── ArithmeticError
+        │    └── ZeroDivisionError
+        ├── LookupError
+        │    ├── IndexError
+        │    └── KeyError
+        ├── OSError
+        │    ├── FileNotFoundError
+        │    └── PermissionError
+        ├── ValueError
+        └── TypeError</pre>
+      <div class="cap">except بتمسك النوع وكل أبنائه — زي isinstance</div>
+    </div>
+    <div class="code"><pre>
+print(ZeroDivisionError.__mro__)
+print(issubclass(FileNotFoundError, OSError))
+try:
+    1 / 0
+except ArithmeticError as e:
+    print("اتمسك بالأب:", type(e).__name__)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>(&lt;class 'ZeroDivisionError'&gt;, &lt;class 'ArithmeticError'&gt;, &lt;class 'Exception'&gt;, &lt;class 'BaseException'&gt;, &lt;class 'object'&gt;)
+True
+اتمسك بالأب: ZeroDivisionError</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ ليه except Exception أحسن من except لوحدها؟</div>
+      <p>
+        <code class="inl">except:</code> من غير نوع (أو <code class="inl">except BaseException</code>) بتمسك <code class="inl">KeyboardInterrupt</code> كمان —
+        فالمستخدم يدوس Ctrl+C والبرنامج ما يقفش! <code class="inl">Exception</code> مصمّمة عشان تستثني الحالات دي.
+      </p>
+    </div>
+
+    <h4>2. عيلة أخطاء لمشروعك</h4>
+    <p>
+      <code class="inl">raise ValueError("رصيد مش كفاية")</code> شغّالة، لكن اللي بيستخدم الكود مش هيقدر يفرّق بينها وبين أي ValueError تانية،
+      ومش هيعرف الرصيد كام. الحل: <strong>كلاسات أخطاء بأسماء من عالم مشروعك</strong>.
+    </p>
+    <div class="code" data-file="bank.py"><pre>
+class BankError(Exception):
+    """الأب لكل أخطاء البنك"""
+class InsufficientFundsError(BankError):
+    def __init__(self, balance, amount):
+        self.balance = balance
+        self.amount = amount
+        super().__init__(f"الرصيد {balance} مش كفاية لسحب {amount}")
+class AccountLockedError(BankError):
+    pass
+class Account:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self.balance = balance
+        self.locked = False
+    def withdraw(self, amount):
+        if self.locked:
+            raise AccountLockedError(f"حساب {self.owner} مقفول")
+        if amount &gt; self.balance:
+            raise InsufficientFundsError(self.balance, amount)
+        self.balance -= amount
+        return self.balance
+acc = Account("سارة", 500)
+try:
+    acc.withdraw(800)
+except InsufficientFundsError as e:
+    print(e)
+    print("ناقص:", e.amount - e.balance)
+acc.locked = True
+try:
+    acc.withdraw(10)
+except BankError as e:
+    print(type(e).__name__, "→", e)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الرصيد 500 مش كفاية لسحب 800
+ناقص: 300
+AccountLockedError → حساب سارة مقفول</pre></div>
+
+    <h4>3. ربط الأخطاء: raise ... from</h4>
+    <p>لما تمسك خطأ «تقني» وترمي بداله خطأ «بلغة مشروعك»، ما تضيّعش الأصلي — اربطهم عشان اللي بيصلّح يشوف الحكاية كاملة.</p>
+    <div class="code"><pre>
+import json
+class ConfigError(Exception):
+    pass
+def load_config(text):
+    try:
+        return json.loads(text)
+    except json.JSONDecodeError as e:
+        raise ConfigError("ملف الإعدادات بايظ") from e
+try:
+    load_config("{port: 80}")
+except ConfigError as e:
+    print(e)
+    print("السبب الأصلي:", type(e.__cause__).__name__)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>ملف الإعدادات بايظ
+السبب الأصلي: JSONDecodeError</pre></div>
+    <p>ولو ما اتمسكش خالص، الـ Traceback بيحكي الحكايتين بالترتيب:</p>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Traceback (most recent call last):
+  ...
+json.decoder.JSONDecodeError: Expecting property name enclosed in double quotes: line 1 column 2 (char 1)
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  ...
+__main__.ConfigError: ملف الإعدادات بايظ</pre></div>
+
+    <h4>4. سجّل وارمي تاني: raise لوحدها</h4>
+    <div class="code"><pre>
+def parse_age(text):
+    try:
+        return int(text)
+    except ValueError:
+        print(f"[log] مدخل غلط: {text!r}")
+        raise
+try:
+    parse_age("abc")
+except ValueError as e:
+    print("الطبقة الأعلى:", e)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>[log] مدخل غلط: 'abc'
+الطبقة الأعلى: invalid literal for int() with base 10: 'abc'</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 إرشادات تصميم الأخطاء</div>
+      <ul>
+        <li>ورّث من <code class="inl">Exception</code> (أو من خطأ جاهز قريب في المعنى زي <code class="inl">ValueError</code>)، <strong>مش</strong> <code class="inl">BaseException</code>.</li>
+        <li>اعمل <strong>أب واحد لمكتبتك</strong> عشان المستخدم يقدر يمسك كل أخطاءك مرّة واحدة — زي <code class="inl">requests.RequestException</code>.</li>
+        <li>الاسم ينتهي بـ <code class="inl">Error</code> ويوصف <em>إيه اللي حصل</em>.</li>
+        <li>حمّل البيانات اللي تساعد في الحل كخصائص، مش جوّه الرسالة بس.</li>
+        <li>ما تعملش خطأ جديد لكل حاجة — لو <code class="inl">ValueError</code> كفاية، استخدمها.</li>
+        <li>في وحدة الاختبارات: <code class="inl">pytest.raises(InsufficientFundsError)</code> بتتأكّد إن الكود بيرمي الخطأ الصح.</li>
+      </ul>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>خطأ تحقّق بحقل</div>
+      <p>اعمل <code class="inl">ValidationError</code> بتحمل اسم الحقل، ودالة <code class="inl">validate_user(data)</code> بترميها. اجمع كل الأخطاء بدل ما تقف عند أول واحد.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+class ValidationError(ValueError):
+    def __init__(self, field, message):
+        self.field = field
+        super().__init__(f"{field}: {message}")
+def validate_user(data):
+    if len(data.get("name", "")) &lt; 2:
+        raise ValidationError("name", "قصير جدًا")
+    if not 18 &lt;= data.get("age", 0) &lt;= 100:
+        raise ValidationError("age", "خارج النطاق")
+users = [{"name": "سارة", "age": 30}, {"name": "م", "age": 30}, {"name": "علي", "age": 12}]
+errors = []
+for u in users:
+    try:
+        validate_user(u)
+    except ValidationError as e:
+        errors.append(e.field)
+print(errors)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>['name', 'age']</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">except LookupError</code> هتمسك…</p>
+        <label><input type="radio"> KeyError بس</label>
+        <label><input type="radio"> KeyError و IndexError</label>
+        <label><input type="radio"> كل الأخطاء</label>
+        <label><input type="radio"> ولا حاجة — لازم النوع بالظبط</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. الكلاس الأنسب لتوريث خطأ مخصّص؟</p>
+        <label><input type="radio"> BaseException</label>
+        <label><input type="radio"> object</label>
+        <label><input type="radio"> KeyboardInterrupt</label>
+        <label><input type="radio"> Exception</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">raise NewError() from e</code> بتعمل إيه زيادة؟</p>
+        <label><input type="radio"> بتحفظ الخطأ الأصلي كسبب في __cause__</label>
+        <label><input type="radio"> بتمسح الخطأ الأصلي</label>
+        <label><input type="radio"> بترمي الخطأين مع بعض</label>
+        <label><input type="radio"> مفيش فرق عن raise العادية</label>
+      </div>
+    </div>
+                <!-- SUM:u15-l8 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الاستثناءات كلاسات بينها وراثة — و except بتمسك الأبناء.</li><li>اعمل أب لأخطاء مشروعك يورث من <code class="inl">Exception</code> وحمّل الأخطاء بيانات مفيدة.</li><li><code class="inl">raise … from e</code> بتحفظ السبب، و <code class="inl">raise</code> لوحدها بترمي نفس الخطأ تاني.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u15-l8 -->
+
+  <!-- 15.P1 -->
+  <article class="lesson project" id="u15-p1">
+    <h3>مشروع 27: إعادة بناء مدير المهام بالكلاسات <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: مقارنة مباشرة بين نسخة القواميس ونسخة الكلاسات — نفس البرنامج بمعمارية مختلفة.</p>
+
+    <div class="code" data-file="task_manager_oop.py"><pre>
+import json
+import os
+from datetime import datetime
+DATA_FILE = "tasks_oop.json"
+class Task:
+    def __init__(self, name, description="", priority="متوسطة", done=False, created=None):
+        self.name = name
+        self.description = description
+        self.priority = priority
+        self.done = done
+        self.created = created or datetime.now().strftime("%Y-%m-%d %H:%M")
+    def complete(self):
+        self.done = True
+    def toggle(self):
+        self.done = not self.done
+    def to_dict(self):
+        """للحفظ في JSON — القواميس هي اللي JSON بيفهمها"""
+        return {
+            "name": self.name,
+            "description": self.description,
+            "priority": self.priority,
+            "done": self.done,
+            "created": self.created,
+        }
+    @classmethod
+    def from_dict(cls, data):
+        """منشئ بديل: بيبني كائن من قاموس"""
+        return cls(**data)
+    def __str__(self):
+        mark = "✔" if self.done else "○"
+        return f"[{mark}] {self.name}  ({self.priority})"
+class TaskList:
+    def __init__(self, path=DATA_FILE):
+        self.path = path
+        self.tasks = []
+        self.load()
+    # ---------- التخزين ----------
+    def load(self):
+        if not os.path.exists(self.path):
+            return
+        try:
+            with open(self.path, "r", encoding="utf-8") as f:
+                self.tasks = [Task.from_dict(d) for d in json.load(f)]
+        except (json.JSONDecodeError, OSError, TypeError):
+            print("⚠️ الملف تالف، هنبدأ من جديد")
+            self.tasks = []
+    def save(self):
+        with open(self.path, "w", encoding="utf-8") as f:
+            json.dump([t.to_dict() for t in self.tasks], f,
+                      ensure_ascii=False, indent=2)
+    # ---------- العمليات ----------
+    def add(self, task):
+        self.tasks.append(task)
+        self.save()
+        return task
+    def remove(self, index):
+        task = self.tasks.pop(index)
+        self.save()
+        return task
+    @property
+    def done(self):
+        return [t for t in self.tasks if t.done]
+    @property
+    def pending(self):
+        return [t for t in self.tasks if not t.done]
+    @property
+    def progress(self):
+        if not self.tasks:
+            return 0
+        return round(len(self.done) / len(self.tasks) * 100)
+    # ---------- البروتوكولات ----------
+    def __len__(self):
+        return len(self.tasks)
+    def __getitem__(self, i):
+        return self.tasks[i]
+    def __str__(self):
+        bar = "█" * (self.progress // 5) + "░" * (20 - self.progress // 5)
+        return f"[{bar}] {self.progress}%  ({len(self.done)}/{len(self)})"
+# ---------- التشغيل ----------
+tasks = TaskList()
+print(f"تم تحميل {len(tasks)} مهمّة")
+tasks.add(Task("مذاكرة OOP", "الوحدة 15", "عالية"))
+tasks.add(Task("رياضة", priority="منخفضة"))
+tasks[0].complete()
+tasks.save()
+for i, t in enumerate(tasks, start=1):
+    print(f"{i}. {t}")
+print(tasks)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>تم تحميل 0 مهمّة
+1. [✔] مذاكرة OOP  (عالية)
+2. [○] رياضة  (منخفضة)
+[██████████░░░░░░░░░░] 50%  (1/2)</pre></div>
+
+    <h4>المقارنة: قواميس مقابل كلاسات</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الجانب</th><th>نسخة القواميس (الوحدة 13)</th><th>نسخة الكلاسات</th></tr>
+        <tr><td>الوصول للبيانات</td><td><code class="inl">t["name"]</code> — خطأ مطبعي = KeyError</td><td><code class="inl">t.name</code> — المحرّر بيكمّلها ويكشف الغلط</td></tr>
+        <tr><td>السلوك</td><td>دوال حرّة بتاخد <code class="inl">tasks</code> كوسيط</td><td>دوال عضو جوّه الكلاس</td></tr>
+        <tr><td>العرض</td><td>تبني النص في كل مكان</td><td><code class="inl">__str__</code> مرّة واحدة</td></tr>
+        <tr><td>الإحصائيات</td><td>تحسبها كل مرّة يدويًا</td><td><code class="inl">@property</code> بتحسبها لحظيًا</td></tr>
+        <tr><td>التكرار</td><td><code class="inl">for t in tasks</code> (قائمة عادية)</td><td><code class="inl">for t in tasks</code> — بفضل <code class="inl">__getitem__</code></td></tr>
+        <tr><td>عدد السطور</td><td>162</td><td>~120 مع مزايا أكتر</td></tr>
+        <tr><td>الأنسب لـ</td><td>سكريبت سريع، بيانات جاية من API</td><td>مشروع بينمو، فيه قواعد وسلوك</td></tr>
+      </table>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 الحاجة اللي تطلع منها من المشروع ده</div>
+      <p>
+        <code class="inl">to_dict()</code> و<code class="inl">from_dict()</code> هما الجسر
+        بين عالم الكائنات وعالم التخزين. JSON بيفهم القواميس والقوائم بس، فأي برنامج
+        كائني بيحتاج طبقة الترجمة دي. <strong>النمط ده اسمه Serialization، وهتقابله في
+        كل مشروع ويب أو قاعدة بيانات.</strong>
+      </p>
+    </div>
+  </article>
+
+  <!-- 15.P2 -->
+  <article class="lesson project" id="u15-p2">
+    <h3>مشروع 28: نظام مكتبة بالوراثة <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: تطبيق الوراثة وتعدّد الأشكال والتغليف في نظام واحد.</p>
+
+    <div class="code" data-file="library.py"><pre>
+from datetime import datetime, timedelta
+class LibraryItem:
+    """الأب: أي حاجة بتتستعار من المكتبة"""
+    loan_days = 14                                   # خاصية كلاس
+    def __init__(self, item_id, title, author):
+        self.item_id = item_id
+        self.title = title
+        self.author = author
+        self._borrower = None
+        self._due = None
+    @property
+    def is_available(self):
+        return self._borrower is None
+    def borrow(self, member):
+        if not self.is_available:
+            raise ValueError(f"'{self.title}' مستعارة بالفعل")
+        self._borrower = member
+        self._due = datetime.now() + timedelta(days=self.loan_days)
+        return self._due
+    def give_back(self):
+        if self.is_available:
+            raise ValueError("العنصر مش مستعار أصلًا")
+        late = max(0, (datetime.now() - self._due).days)
+        self._borrower = None
+        self._due = None
+        return late * self.late_fee_per_day
+    @property
+    def late_fee_per_day(self):
+        return 2
+    def __str__(self):
+        state = "متاح" if self.is_available else f"مع {self._borrower}"
+        return f"[{self.item_id}] {self.title} — {self.author} ({state})"
+class Book(LibraryItem):
+    loan_days = 21                                   # الكتب مدّتها أطول
+    def __init__(self, item_id, title, author, pages):
+        super().__init__(item_id, title, author)
+        self.pages = pages
+    def __str__(self):
+        return f"📗 {super().__str__()} — {self.pages} صفحة"
+class DVD(LibraryItem):
+    loan_days = 3                                    # الأفلام مدّتها أقصر
+    def __init__(self, item_id, title, author, minutes):
+        super().__init__(item_id, title, author)
+        self.minutes = minutes
+    @property
+    def late_fee_per_day(self):
+        return 10                                    # غرامة أعلى
+    def __str__(self):
+        return f"📀 {super().__str__()} — {self.minutes} دقيقة"
+class Library:
+    def __init__(self, name):
+        self.name = name
+        self.items = {}
+    def add(self, item):
+        if item.item_id in self.items:
+            raise ValueError(f"الرقم {item.item_id} مستخدم")
+        self.items[item.item_id] = item
+        return item
+    def find(self, keyword):
+        k = keyword.lower()
+        return [i for i in self.items.values()
+                if k in i.title.lower() or k in i.author.lower()]
+    @property
+    def available(self):
+        return [i for i in self.items.values() if i.is_available]
+    def __len__(self):
+        return len(self.items)
+    def __str__(self):
+        return f"{self.name}: {len(self.available)} متاح من {len(self)}"
+lib = Library("مكتبة النيل")
+lib.add(Book("B1", "بايثون للمبتدئين", "أحمد علي", 320))
+lib.add(Book("B2", "الخوارزميات", "سارة محمود", 480))
+lib.add(DVD("D1", "رحلة في الفضاء", "مروة خالد", 128))
+print(lib)
+for item in lib.items.values():
+    print(" ", item)
+print("\nاستعارة:")
+due = lib.items["B1"].borrow("محمد")
+print(f"  موعد الإرجاع: {due.strftime('%Y-%m-%d')}")
+print(" ", lib.items["B1"])
+print(lib)
+print("\nبحث عن 'بايثون':")
+for r in lib.find("بايثون"):
+    print(" ", r)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>مكتبة النيل: 3 متاح من 3
+  📗 [B1] بايثون للمبتدئين — أحمد علي (متاح) — 320 صفحة
+  📗 [B2] الخوارزميات — سارة محمود (متاح) — 480 صفحة
+  📀 [D1] رحلة في الفضاء — مروة خالد (متاح) — 128 دقيقة
+
+استعارة:
+  موعد الإرجاع: 2026-10-03
+  📗 [B1] بايثون للمبتدئين — أحمد علي (مع محمد) — 320 صفحة
+مكتبة النيل: 2 متاح من 3
+
+بحث عن 'بايثون':
+  📗 [B1] بايثون للمبتدئين — أحمد علي (مع محمد) — 320 صفحة</pre></div>
+
+    <h4>المفاهيم المستخدمة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المفهوم</th><th>فين في المشروع</th></tr>
+        <tr><td>الوراثة</td><td><code class="inl">Book</code> و<code class="inl">DVD</code> بيورثوا من <code class="inl">LibraryItem</code></td></tr>
+        <tr><td>خاصية كلاس</td><td><code class="inl">loan_days</code> — قيمة مختلفة لكل نوع</td></tr>
+        <tr><td>إعادة التعريف + <code class="inl">super()</code></td><td><code class="inl">__str__</code> بتبني على نسخة الأب</td></tr>
+        <tr><td>تعدّد الأشكال</td><td><code class="inl">late_fee_per_day</code> بترجّع 2 للكتاب و10 للـ DVD</td></tr>
+        <tr><td>التغليف</td><td><code class="inl">_borrower</code> و<code class="inl">_due</code> داخليين، والوصول بـ <code class="inl">@property</code></td></tr>
+        <tr><td>التركيب</td><td><code class="inl">Library</code> «عندها» عناصر — مش وارثة منهم</td></tr>
+        <tr><td>البروتوكولات</td><td><code class="inl">__len__</code> و<code class="inl">__str__</code></td></tr>
+        <tr><td>الأخطاء</td><td><code class="inl">raise ValueError</code> عند الاستعارة المزدوجة</td></tr>
+      </table>
+    </div>
+  </article>
+
+  <!-- ADD:u15-ch -->
+  <!-- 15.CH -->
+  <article class="lesson" id="u15-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة الخامسة عشرة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">الكلاسات: الاختبارات بتتأكّد من السلوك — ومن إن كل كائن مستقل عن التاني.</p>
+
+    <div class="challenge" data-ch="u15-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — الحساب البنكي <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        كلاس <code class="inl">BankAccount(owner, balance=0)</code>: <code class="inl">deposit(amount)</code> و <code class="inl">withdraw(amount)</code> بيرموا <code class="inl">ValueError</code> لأي مبلغ ≤ 0،
+        والسحب أكبر من الرصيد كمان <code class="inl">ValueError</code>. <code class="inl">balance</code> خاصية <strong>للقراءة بس</strong> (<code class="inl">@property</code>)،
+        و <code class="inl">str(acc)</code> ترجّع <code class="inl">"Account(sara: 150)"</code>.
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+class BankAccount:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self.balance = balance
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_deposit_withdraw():
+    "إيداع 100 وسحب 30 من 50 ← 120"
+    acc = BankAccount("sara", 50)
+    acc.deposit(100)
+    acc.withdraw(30)
+    assert acc.balance == 120
+
+def test_invalid_amounts():
+    "مبلغ صفر أو سالب ← ValueError"
+    acc = BankAccount("ali")
+    for action in (acc.deposit, acc.withdraw):
+        for bad in (0, -5):
+            try:
+                action(bad)
+            except ValueError:
+                continue
+            raise AssertionError(f"{action.__name__}({bad}) ما رمتش ValueError")
+
+def test_overdraw():
+    "سحب أكبر من الرصيد ← ValueError والرصيد ما يتغيّرش"
+    acc = BankAccount("mona", 40)
+    try:
+        acc.withdraw(100)
+    except ValueError:
+        pass
+    else:
+        raise AssertionError("السحب الزيادة ما رماش ValueError")
+    assert acc.balance == 40
+
+def test_read_only():
+    "balance للقراءة بس"
+    acc = BankAccount("omar", 10)
+    try:
+        acc.balance = 1_000_000
+    except AttributeError:
+        return
+    raise AssertionError("قدرنا نغيّر balance مباشرةً — استخدم @property")
+
+def test_str():
+    "str ← Account(sara: 150)"
+    assert str(BankAccount("sara", 150)) == "Account(sara: 150)"
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+class BankAccount:
+    def __init__(self, owner, balance=0):
+        self.owner = owner
+        self._balance = balance
+    @property
+    def balance(self):
+        return self._balance
+    @staticmethod
+    def _check(amount):
+        if amount &lt;= 0:
+            raise ValueError("المبلغ لازم يكون موجب")
+    def deposit(self, amount):
+        self._check(amount)
+        self._balance += amount
+    def withdraw(self, amount):
+        self._check(amount)
+        if amount &gt; self._balance:
+            raise ValueError("الرصيد مش كفاية")
+        self._balance -= amount
+    def __str__(self):
+        return f"Account({self.owner}: {self._balance})"
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u15-ch2">
+      <div class="ch-head">🐞 التحدّي 2 — الطلاب اللي بيشاركوا نفس الكورسات <span class="lvl">⭐⭐</span></div>
+      <p>لما طالب يسجّل في كورس، الكورس بيظهر عند <strong>كل</strong> الطلاب! صلّح الكلاس.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+class Student:
+    courses = []
+
+    def __init__(self, name):
+        self.name = name
+
+    def enroll(self, course):
+        self.courses.append(course)
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_independent():
+    "كل طالب ليه كورساته"
+    a = Student("sara")
+    b = Student("ali")
+    a.enroll("Python")
+    assert a.courses == ["Python"], a.courses
+    assert b.courses == [], f"علي اتسجّل في {b.courses} من غير ما يطلب"
+
+def test_multiple():
+    "طالب يسجّل في كورسين"
+    s = Student("mona")
+    s.enroll("SQL")
+    s.enroll("Git")
+    assert s.courses == ["SQL", "Git"], s.courses
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+class Student:
+    def __init__(self, name):
+        self.name = name
+        self.courses = []
+    def enroll(self, course):
+        self.courses.append(course)
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u15-ch3">
+      <div class="ch-head">🧪 التحدّي 3 — الأشكال <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        كلاس أب <code class="inl">Shape</code> دالته <code class="inl">area()</code> بترمي <code class="inl">NotImplementedError</code>، وكلاسين أبناء: <code class="inl">Rectangle(w, h)</code> و <code class="inl">Circle(r)</code>.
+        ودالة <code class="inl">total_area(shapes)</code> بتجمع مساحات أي أشكال (تعدّد الأشكال).
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+import math
+
+class Shape:
+    pass
+
+def total_area(shapes):
+    pass
+</textarea>
+      <script type="text/plain" class="ch-tests">
+import math
+
+def test_rectangle():
+    "Rectangle(3, 4).area() ← 12"
+    assert Rectangle(3, 4).area() == 12
+
+def test_circle():
+    "Circle(1).area() ← π"
+    assert math.isclose(Circle(1).area(), math.pi)
+
+def test_inheritance():
+    "الاتنين أبناء Shape"
+    assert isinstance(Rectangle(1, 1), Shape) and isinstance(Circle(1), Shape)
+
+def test_base_not_implemented():
+    "Shape().area() ← NotImplementedError"
+    try:
+        Shape().area()
+    except NotImplementedError:
+        return
+    raise AssertionError("المفروض NotImplementedError")
+
+def test_total():
+    "total_area بتجمع أشكال مختلفة"
+    shapes = [Rectangle(2, 5), Circle(2), Rectangle(1, 1)]
+    assert math.isclose(total_area(shapes), 11 + 4 * math.pi)
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+import math
+class Shape:
+    def area(self):
+        raise NotImplementedError("كل شكل لازم يعرّف area")
+class Rectangle(Shape):
+    def __init__(self, w, h):
+        self.w, self.h = w, h
+    def area(self):
+        return self.w * self.h
+class Circle(Shape):
+    def __init__(self, r):
+        self.r = r
+    def area(self):
+        return math.pi * self.r ** 2
+def total_area(shapes):
+    return sum(shape.area() for shape in shapes)
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u15-ch4">
+      <div class="ch-head">🧪 التحدّي 4 — الطلب ودورة حياته (dataclass + Enum) <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        كمّل <code class="inl">Order</code> كـ dataclass: <code class="inl">customer</code>، و <code class="inl">items</code> (قائمة <code class="inl">Item</code> فاضية افتراضيًا ومستقلّة لكل طلب)،
+        و <code class="inl">status</code> (افتراضيًا <code class="inl">OrderStatus.NEW</code>). وضيف:
+        <code class="inl">total</code> (property)، و <code class="inl">add(item)</code> (مسموحة في NEW بس)،
+        و <code class="inl">pay()</code> (من NEW لـ PAID)، و <code class="inl">ship()</code> (من PAID لـ SHIPPED). أي انتقال غلط ← <code class="inl">ValueError</code>.
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+from dataclasses import dataclass, field
+from enum import Enum
+
+class OrderStatus(Enum):
+    NEW = "new"
+    PAID = "paid"
+    SHIPPED = "shipped"
+
+@dataclass
+class Item:
+    name: str
+    price: float
+    qty: int = 1
+
+@dataclass
+class Order:
+    customer: str
+    # كمّل الحقول والدوال
+</textarea>
+      <script type="text/plain" class="ch-tests">
+def test_defaults():
+    "طلب جديد: حالته NEW وقائمته فاضية ومستقلّة"
+    a, b = Order("sara"), Order("ali")
+    assert a.status is OrderStatus.NEW
+    a.add(Item("قلم", 5))
+    assert b.items == [], "كل طلب لازم قائمته مستقلّة (default_factory)"
+
+def test_total():
+    "total = مجموع السعر × الكمية"
+    o = Order("mona")
+    o.add(Item("قلم", 5, 3))
+    o.add(Item("كشكول", 25))
+    assert o.total == 40
+
+def test_happy_path():
+    "NEW ← pay ← PAID ← ship ← SHIPPED"
+    o = Order("omar")
+    o.add(Item("x", 10))
+    o.pay()
+    assert o.status is OrderStatus.PAID
+    o.ship()
+    assert o.status is OrderStatus.SHIPPED
+
+def test_invalid_transitions():
+    "ship قبل الدفع، والدفع مرّتين، والإضافة بعد الدفع ← ValueError"
+    def raises(fn):
+        try:
+            fn()
+        except ValueError:
+            return True
+        return False
+    o = Order("x")
+    assert raises(o.ship), "ship قبل pay لازم ترمي ValueError"
+    o.pay()
+    assert raises(o.pay), "pay مرّتين لازم ترمي ValueError"
+    assert raises(lambda: o.add(Item("y", 1))), "add بعد الدفع لازم ترمي ValueError"
+
+def test_equality():
+    "dataclass بتقارن بالقيم"
+    assert Order("z") == Order("z")
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+from dataclasses import dataclass, field
+from enum import Enum
+class OrderStatus(Enum):
+    NEW = "new"
+    PAID = "paid"
+    SHIPPED = "shipped"
+@dataclass
+class Item:
+    name: str
+    price: float
+    qty: int = 1
+@dataclass
+class Order:
+    customer: str
+    items: list[Item] = field(default_factory=list)
+    status: OrderStatus = OrderStatus.NEW
+    @property
+    def total(self):
+        return sum(i.price * i.qty for i in self.items)
+    def _require(self, expected, action):
+        if self.status is not expected:
+            raise ValueError(f"مينفعش {action} والطلب {self.status.value}")
+    def add(self, item):
+        self._require(OrderStatus.NEW, "تضيف بنود")
+        self.items.append(item)
+    def pay(self):
+        self._require(OrderStatus.NEW, "تدفع")
+        self.status = OrderStatus.PAID
+    def ship(self):
+        self._require(OrderStatus.PAID, "تشحن")
+        self.status = OrderStatus.SHIPPED
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u15-ch -->
+
+  <!-- 15.EX -->
+  <article class="lesson" id="u15-ex">
+    <h3>تمارين الوحدة الخامسة عشرة <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">اكتب كل كلاس بإيدك — الـ OOP ما بتتعلّمش بالقراية.</p>
+
+    <h4>المستوى الأول</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — كلاس طالب</div>
+      <p>اعمل كلاس <code class="inl">Student</code> فيه الاسم والدرجات (قائمة)، ودوال: إضافة درجة، المتوسط، وهل ناجح (60+).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+class Student:
+    def __init__(self, name):
+        self.name = name
+        self.scores = []
+    def add_score(self, score):
+        self.scores.append(score)
+    def average(self):
+        if not self.scores:
+            return 0
+        return sum(self.scores) / len(self.scores)
+    def passed(self):
+        return self.average() &gt;= 60
+    def __str__(self):
+        return f"{self.name}: {self.average():.1f} ({'ناجح' if self.passed() else 'راسب'})"
+s = Student("أحمد")
+s.add_score(80)
+s.add_score(55)
+print(s)
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — عدّاد الكائنات</div>
+      <p>اعمل كلاس بيعدّ كام كائن اتعمل منه، واطبع العدد بعد إنشاء 3 كائنات.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+class Widget:
+    count = 0
+    def __init__(self, name):
+        self.name = name
+        Widget.count += 1        # لاحظ: Widget مش self
+a, b, c = Widget("أ"), Widget("ب"), Widget("ج")
+print(Widget.count)              # 3
+</pre></div>
+      <p>لو كتبت <code class="inl">self.count += 1</code> هتعمل خاصية كائن جديدة قيمتها 1 لكل واحد، والعدّاد العام يفضل صفر.</p>
+      </details>
+    </div>
+
+    <h4>المستوى الثاني</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 3 — كسر عادي بالدوال السحرية</div>
+      <p>اعمل كلاس <code class="inl">Fraction</code> يدعم الجمع والضرب والمقارنة والعرض المختصر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+from math import gcd
+class Fraction:
+    def __init__(self, num, den):
+        if den == 0:
+            raise ValueError("المقام ما ينفعش يكون صفر")
+        g = gcd(num, den)
+        self.num = num // g
+        self.den = den // g
+    def __add__(self, other):
+        return Fraction(self.num * other.den + other.num * self.den,
+                        self.den * other.den)
+    def __mul__(self, other):
+        return Fraction(self.num * other.num, self.den * other.den)
+    def __eq__(self, other):
+        return self.num == other.num and self.den == other.den
+    def __str__(self):
+        return f"{self.num}/{self.den}"
+print(Fraction(1, 2) + Fraction(1, 3))      # 5/6
+print(Fraction(2, 4) == Fraction(1, 2))     # True — الاختصار خلّاهم متساويين
+print(Fraction(2, 3) * Fraction(3, 4))      # 1/2
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — لقّط الفخّ</div>
+      <p>توقّع الناتج وفسّر:</p>
+      <div class="code"><pre>
+class Cart:
+    items = []
+    def add(self, item):
+        self.items.append(item)
+c1 = Cart()
+c2 = Cart()
+c1.add("تفاح")
+print(c2.items)
+</pre></div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>['تفاح']</pre></div>
+      <p>
+        <code class="inl">items</code> خاصية <strong>كلاس</strong>، فالقائمة كائن واحد
+        بيتشارك بين كل العربات. الحل: نقلها لـ <code class="inl">__init__</code> كـ
+        <code class="inl">self.items = []</code>.
+      </p>
+      </details>
+    </div>
+
+    <h4>المستوى الثالث</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 5 — نظام موظفين بالوراثة</div>
+      <p>
+        <code class="inl">Employee</code> فيه الاسم والراتب الأساسي ودالة <code class="inl">salary()</code>.
+        <code class="inl">Manager</code> بياخد بدل 20%، و<code class="inl">Salesperson</code>
+        بياخد عمولة على المبيعات. اطبع رواتب الكل في حلقة واحدة.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+class Employee:
+    def __init__(self, name, base):
+        self.name = name
+        self.base = base
+    def salary(self):
+        return self.base
+    def __str__(self):
+        return f"{self.name:12} {self.salary():>10,.2f}"
+class Manager(Employee):
+    def salary(self):
+        return self.base * 1.20
+class Salesperson(Employee):
+    def __init__(self, name, base, sales, rate=0.05):
+        super().__init__(name, base)
+        self.sales = sales
+        self.rate = rate
+    def salary(self):
+        return self.base + self.sales * self.rate
+staff = [
+    Employee("أحمد", 8000),
+    Manager("سارة", 15000),
+    Salesperson("علي", 6000, 50000),
+]
+for e in staff:
+    print(e)
+print(f"{'الإجمالي':12} {sum(e.salary() for e in staff):>10,.2f}")
+</pre></div>
+      <p>لاحظ إن الحلقة ما بتسألش عن النوع — كل كلاس عارف يحسب راتبه. ده تعدّد الأشكال.</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 6 — @property مع تحقّق</div>
+      <p>
+        اعمل كلاس <code class="inl">Rectangle</code> بخاصيتين <code class="inl">width</code>
+        و<code class="inl">height</code> ما بيقبلوش قيم سالبة، وخاصية محسوبة
+        <code class="inl">area</code> للقراءة بس.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+class Rectangle:
+    def __init__(self, width, height):
+        self.width = width
+        self.height = height
+    @property
+    def width(self):
+        return self._width
+    @width.setter
+    def width(self, value):
+        if value &lt;= 0:
+            raise ValueError("العرض لازم يكون موجب")
+        self._width = value
+    @property
+    def height(self):
+        return self._height
+    @height.setter
+    def height(self, value):
+        if value &lt;= 0:
+            raise ValueError("الطول لازم يكون موجب")
+        self._height = value
+    @property
+    def area(self):
+        return self._width * self._height
+r = Rectangle(3, 4)
+print(r.area)            # 12
+r.width = 10
+print(r.area)            # 40
+r.width = -5             # ❌ ValueError
+</pre></div>
+      <p>لاحظ إن <code class="inl">__init__</code> بيستخدم <code class="inl">self.width = width</code> فبيمرّ على الـ setter — فالتحقّق بيشتغل من أول لحظة.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">self</code> بتمثّل…</p>
+        <label><input type="radio"> الكلاس نفسه</label>
+        <label><input type="radio"> كلمة محجوزة في بايثون</label>
+        <label><input type="radio"> الكائن اللي الدالة بتتنادى عليه</label>
+        <label><input type="radio"> الكلاس الأب</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">__init__</code> بتتنادى إمتى؟</p>
+        <label><input type="radio"> لما نطبع الكائن</label>
+        <label><input type="radio"> تلقائيًا وقت إنشاء الكائن</label>
+        <label><input type="radio"> لازم نناديها بإيدنا</label>
+        <label><input type="radio"> عند حذف الكائن</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">print(obj)</code> بتنادي أنهي دالة سحرية؟</p>
+        <label><input type="radio"> __repr__ دايمًا</label>
+        <label><input type="radio"> __print__</label>
+        <label><input type="radio"> __len__</label>
+        <label><input type="radio"> __str__ (وبديلها __repr__)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">4. <code class="inl">items = []</code> مكتوبة تحت <code class="inl">class</code> مباشرةً بتبقى…</p>
+        <label><input type="radio"> خاصية كلاس مشتركة بين كل الكائنات</label>
+        <label><input type="radio"> خاصية كائن مستقلّة</label>
+        <label><input type="radio"> متغيّر محلّي</label>
+        <label><input type="radio"> خطأ نحوي</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">5. <code class="inl">super().__init__(...)</code> بتعمل إيه؟</p>
+        <label><input type="radio"> بتعمل كائن جديد من الأب</label>
+        <label><input type="radio"> بتحذف خصائص الابن</label>
+        <label><input type="radio"> بتشغّل بنّاء الأب على نفس الكائن</label>
+        <label><input type="radio"> بتنسخ الكلاس الأب</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">6. ليه <code class="inl">isinstance</code> أفضل من <code class="inl">type(x) ==</code>؟</p>
+        <label><input type="radio"> لأنها أسرع</label>
+        <label><input type="radio"> لأنها بتحترم الوراثة فتقبل الأبناء</label>
+        <label><input type="radio"> لأنها بترجّع نص</label>
+        <label><input type="radio"> مفيش فرق</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">7. Duck Typing معناها…</p>
+        <label><input type="radio"> لازم كل الكلاسات تورث من أب واحد</label>
+        <label><input type="radio"> بايثون بتفحص الأنواع قبل التشغيل</label>
+        <label><input type="radio"> استخدام @abstractmethod إلزامي</label>
+        <label><input type="radio"> المهم إن الكائن عنده الدالة المطلوبة، مش نوعه</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">8. <code class="inl">@property</code> فايدتها الأساسية…</p>
+        <label><input type="radio"> تضيف تحقّقًا وحسابًا من غير ما تكسر الكود اللي بيستخدم الخاصية</label>
+        <label><input type="radio"> تخلّي الخاصية private فعلًا</label>
+        <label><input type="radio"> تسرّع الوصول للخاصية</label>
+        <label><input type="radio"> تحوّل الخاصية لدالة لازم تنادى بأقواس</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:15 -->
+  <div class="checkpoint" data-unit="15">
+    <h4>✅ نقطة تفتيش: الوحدة الخامسة عشرة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أكتب كلاس بـ __init__ و self ودوال.</li><li>أستخدم الدوال السحرية زي __str__ و __eq__.</li><li>أستخدم الوراثة و super و @property.</li><li>أصمّم أخطاء مخصّصة لمشروعي.</li></ul>
+  </div>
+  <!-- /CP -->

@@ -1,0 +1,437 @@
+@@lesson u2-l4 before="<!-- 2.P1 -->"
+  <!-- 2.4 -->
+  <article class="lesson" id="u2-l4">
+    <h3>الأعداد بعمق: الأنظمة العددية والعوامل الثنائية <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تشوف الرقم بعيون الكمبيوتر — ثنائي وثماني وسادس عشر — وتتعامل مع البتّات مباشرةً، وتعرف ليه أعداد بايثون الصحيحة «مالهاش سقف».</p>
+
+    <h4>1. ليه نرجع للنظام الثنائي تاني؟</h4>
+    <p>
+      في الوحدة صفر عرفنا إن الكمبيوتر ما بيفهمش غير <strong>0 و 1</strong>. الرقم <code class="inl">13</code> اللي بتكتبه
+      بيتخزّن فعليًا كده: <code class="inl">1101</code>. في الدرس ده هنخلّي بايثون تورّينا الشكل ده، وهنتعامل معاه بإيدينا.
+      هتقابل الكلام ده في: <strong>ألوان الويب</strong> (<code class="inl">#FF8800</code> ده سادس عشر)،
+      <strong>صلاحيات الملفات في Linux</strong> (<code class="inl">chmod 755</code> ده ثماني)، <strong>عناوين الذاكرة</strong>،
+      <strong>الشبكات</strong> (عناوين IP والـ subnet)، والتشفير.
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>النظام</th><th>الأساس</th><th>الأرقام المستخدمة</th><th>البادئة في بايثون</th><th>مثال = 255</th></tr>
+        <tr><td>عشري (Decimal)</td><td>10</td><td>0–9</td><td>—</td><td><code class="inl">255</code></td></tr>
+        <tr><td>ثنائي (Binary)</td><td>2</td><td>0 و 1</td><td><code class="inl">0b</code></td><td><code class="inl">0b11111111</code></td></tr>
+        <tr><td>ثماني (Octal)</td><td>8</td><td>0–7</td><td><code class="inl">0o</code></td><td><code class="inl">0o377</code></td></tr>
+        <tr><td>سادس عشر (Hexadecimal)</td><td>16</td><td>0–9 و A–F</td><td><code class="inl">0x</code></td><td><code class="inl">0xFF</code></td></tr>
+      </table>
+    </div>
+    <div class="diagram">
+<pre>  الرقم 13 بالنظام الثنائي = 1101
+
+  الخانة:     1      1      0      1
+  قيمتها:   2³=8   2²=4   2¹=2   2⁰=1
+  الحساب:    8   +  4   +  0   +  1   = 13</pre>
+      <div class="cap">كل خانة في النظام الثنائي قيمتها ضعف اللي على يمينها</div>
+    </div>
+
+    <h4>2. كتابة الأرقام بأنظمة مختلفة جوّه الكود</h4>
+    @code run
+a = 0b1010 ¦¦ `0b` قبل الرقم معناها «الرقم ده مكتوب بالثنائي». القيمة الحقيقية المخزّنة: 8 + 2 = **10**.
+b = 0o17 ¦¦ `0o` (صفر وحرف o) = ثماني. 1×8 + 7 = **15**.
+c = 0xFF ¦¦ `0x` = سادس عشر. F = 15، فالقيمة 15×16 + 15 = **255**. الحروف ممكن تكون كبيرة أو صغيرة.
+big = 1_000_000 ¦¦ الشرطة السفلية `_` بتتجاهل تمامًا — بس بتخلّي الأرقام الكبيرة مقروءة زي الفواصل في الكتابة العادية.
+print(a, b, c, big) ¦¦ `print` بتعرض دايمًا بالعشري — لأن **الرقم رقم**، والنظام مجرّد طريقة كتابة.
+    @end
+    @out
+10 15 255 1000000
+    @end
+    <div class="box brain">
+      <div class="bt">🧠 الفكرة الجوهرية</div>
+      <p>
+        <code class="inl">0xFF</code> و <code class="inl">255</code> و <code class="inl">0b11111111</code> <strong>نفس الرقم بالظبط</strong> —
+        نفس النوع <code class="inl">int</code> ونفس القيمة في الذاكرة. الفرق بس في <em>إزاي إنت كتبته</em>.
+        زي ما «خمسة» و «5» و «V» نفس العدد.
+      </p>
+    </div>
+
+    <h4>3. من عشري لأي نظام: bin و oct و hex</h4>
+    @code run
+n = 255 ¦¦ رقم عادي.
+print(bin(n)) ¦¦ `bin` بترجّع التمثيل الثنائي **كنص** ومعاه البادئة `0b`.
+print(oct(n)) ¦¦ `oct` للثماني.
+print(hex(n)) ¦¦ `hex` للسادس عشر — الحروف بتطلع صغيرة.
+print(type(bin(n))) ¦¦ تأكيد مهم: الناتج **`str` مش `int`** — يعني ما ينفعش تعمل عليه حسابات مباشرةً.
+print(bin(n)[2:]) ¦¦ التقطيع (الوحدة 3) بيشيل أول حرفين `0b` لو عايز الأرقام بس.
+print(f"{n:b} {n:o} {n:x} {n:X}") ¦¦ طريقة أنظف: جوّه f-string، `:b` ثنائي، `:o` ثماني، `:x` سادس عشر صغير، `:X` كبير — **من غير بادئة**.
+print(f"{5:08b}") ¦¦ `08b` = ثنائي بعرض 8 خانات وكمّل بأصفار على الشمال. مفيدة لعرض «بايت» كامل.
+    @end
+    @out
+0b11111111
+0o377
+0xff
+&lt;class 'str'&gt;
+11111111
+11111111 377 ff FF
+00000101
+    @end
+
+    <h4>4. من أي نظام لعشري: int(نص, الأساس)</h4>
+    <p>
+      دالة <code class="inl">int</code> اللي عرفناها في درس التحويل ليها <strong>وسيط تاني اختياري</strong>: الأساس اللي النص مكتوب بيه.
+    </p>
+    @code run
+print(int("1010", 2)) ¦¦ «النص ده مكتوب بالثنائي، حوّله لرقم» ← 10.
+print(int("ff", 16)) ¦¦ سادس عشر ← 255.
+print(int("0xff", 16)) ¦¦ مسموح تسيب البادئة لو بتطابق الأساس.
+print(int("777", 8)) ¦¦ ثماني ← 7×64 + 7×8 + 7 = 511.
+print(int("z", 36)) ¦¦ الأساس ممكن يوصل لـ 36 (0–9 ثم a–z). `z` = 35. بيُستخدم في توليد روابط مختصرة.
+    @end
+    @out
+10
+255
+255
+511
+35
+    @end
+    <div class="box err">
+      <div class="bt">❌ خطأ متوقّع</div>
+      <p>
+        <code class="inl">int("102", 2)</code> ← <code class="inl">ValueError: invalid literal for int() with base 2: '102'</code>
+        — لأن الرقم <code class="inl">2</code> مش موجود أصلًا في النظام الثنائي. نفس الخطأ اللي شفناه لما حاولنا نحوّل <code class="inl">"abc"</code> لرقم.
+      </p>
+    </div>
+
+    <h4>5. العوامل الثنائية (Bitwise Operators)</h4>
+    <p>
+      العوامل دي بتشتغل على الرقم <strong>بت بت</strong> — كأنك حطّيت الرقمين فوق بعض بالثنائي وقارنت كل خانة بالخانة اللي تحتها.
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>العامل</th><th>الاسم</th><th>القاعدة لكل بت</th></tr>
+        <tr><td><code class="inl">&amp;</code></td><td>AND</td><td>1 لو <strong>الاتنين</strong> 1</td></tr>
+        <tr><td><code class="inl">|</code></td><td>OR</td><td>1 لو <strong>واحد على الأقل</strong> 1</td></tr>
+        <tr><td><code class="inl">^</code></td><td>XOR</td><td>1 لو <strong>مختلفين</strong></td></tr>
+        <tr><td><code class="inl">~</code></td><td>NOT</td><td>بيقلب كل البتّات (والنتيجة في بايثون = <code class="inl">-(n+1)</code>)</td></tr>
+        <tr><td><code class="inl">&lt;&lt;</code></td><td>إزاحة شمال</td><td>بيزوّد أصفار على اليمين = ضرب في 2 لكل خطوة</td></tr>
+        <tr><td><code class="inl">&gt;&gt;</code></td><td>إزاحة يمين</td><td>بيشيل خانات من اليمين = قسمة صحيحة على 2 لكل خطوة</td></tr>
+      </table>
+    </div>
+    <div class="diagram">
+<pre>      12  =  1 1 0 0
+      10  =  1 0 1 0
+     ─────────────────
+  &amp;  AND  =  1 0 0 0   = 8
+  |  OR   =  1 1 1 0   = 14
+  ^  XOR  =  0 1 1 0   = 6</pre>
+      <div class="cap">كل عمود بيتحسب لوحده</div>
+    </div>
+    @code run
+a = 0b1100 ¦¦ 12 — كتبناه بالثنائي عشان نشوف البتّات بعينينا.
+b = 0b1010 ¦¦ 10.
+print(a &amp; b, bin(a &amp; b)) ¦¦ AND: الخانة الوحيدة اللي فيها 1 في الاتنين هي خانة الـ 8 ← `8`.
+print(a | b, bin(a | b)) ¦¦ OR: أي خانة فيها 1 في أي واحد ← 8+4+2 = `14`.
+print(a ^ b, bin(a ^ b)) ¦¦ XOR: الخانات المختلفة بس ← 4+2 = `6`. لاحظ إن `bin` ما بتعرضش الأصفار اللي على الشمال.
+print(~a) ¦¦ NOT: بايثون بتمثّل السالب بطريقة اسمها «المكمّل الثنائي» (Two's complement)، فالنتيجة دايمًا `-(a+1)` = -13.
+print(a &lt;&lt; 1, a &lt;&lt; 3) ¦¦ إزاحة شمال خطوة = ×2 = 24، وتلات خطوات = ×8 = 96.
+print(a &gt;&gt; 2) ¦¦ إزاحة يمين خطوتين = ÷4 (قسمة صحيحة) = 3.
+    @end
+    @out
+8 0b1000
+14 0b1110
+6 0b110
+-13
+24 96
+3
+    @end
+    <div class="box warn">
+      <div class="bt">⚠️ ما تخلطش بين &amp; و and</div>
+      <p>
+        في الوحدة الجاية هتتعلّم <code class="inl">and</code> و <code class="inl">or</code> — دول عوامل <strong>منطقية</strong> بتشتغل على
+        «الحقيقة» كلها. أما <code class="inl">&amp;</code> و <code class="inl">|</code> فبتشتغل على <strong>كل بت لوحده</strong>.
+        <code class="inl">5 and 3</code> ناتجها <code class="inl">3</code>، لكن <code class="inl">5 &amp; 3</code> ناتجها <code class="inl">1</code>. شكلهم قريب ومعناهم مختلف تمامًا.
+      </p>
+    </div>
+
+    <h4>6. استخدام حقيقي: الصلاحيات بالبتّات (Flags)</h4>
+    <p>
+      نظام Linux بيخزّن صلاحيات الملف (قراءة/كتابة/تنفيذ) في <strong>3 بتّات</strong>. ده اللي بيخلّي <code class="inl">chmod 7</code> تعني «كل الصلاحيات».
+      الفكرة دي بتتكرّر في كل مكان: إعدادات الألعاب، صلاحيات المستخدمين، خيارات الدوال.
+    </p>
+    @code run
+READ = 4 ¦¦ `100` بالثنائي — بت القراءة. **الأسماء بالحروف الكبيرة** = اصطلاح للثوابت.
+WRITE = 2 ¦¦ `010` — بت الكتابة.
+EXECUTE = 1 ¦¦ `001` — بت التنفيذ. كل صلاحية واخدة بت منفصل، فمستحيل يتداخلوا.
+
+perms = READ | WRITE ¦¦ OR بيجمع الصلاحيات: `100 | 010 = 110` = 6.
+print(perms) ¦¦ 6.
+print(bool(perms &amp; WRITE)) ¦¦ **الفحص**: AND مع البت المطلوب. لو الناتج مش صفر يبقى الصلاحية موجودة ← True.
+print(bool(perms &amp; EXECUTE)) ¦¦ `110 &amp; 001 = 000` ← صفر ← False.
+
+perms = perms | EXECUTE ¦¦ **الإضافة**: OR بيشغّل البت من غير ما يلمس الباقي ← `111`.
+print(perms, bin(perms)) ¦¦ 7 = كل الصلاحيات. ده بالظبط الـ 7 في `chmod 755`.
+perms = perms &amp; ~WRITE ¦¦ **الإزالة**: `~WRITE` بيقلب البت فيبقى «كل حاجة ما عدا الكتابة»، وAND بيطفّيه بس.
+print(perms, bin(perms)) ¦¦ `101` = قراءة + تنفيذ = 5.
+    @end
+    @out
+6
+True
+False
+7 0b111
+5 0b101
+    @end
+
+    <h4>7. الأعداد الصحيحة في بايثون مالهاش سقف</h4>
+    <p>
+      في لغات زي C وJava، الـ <code class="inl">int</code> ليه حجم ثابت (غالبًا 32 أو 64 بت). لو عدّيت أكبر رقم يحصل
+      <strong>Overflow</strong>: الرقم «يلف» ويبقى سالب! ده سبّب كوارث حقيقية (زي انفجار صاروخ Ariane 5 سنة 1996).
+      في بايثون، الـ <code class="inl">int</code> <strong>بيكبر على قدّ ما محتاج</strong> — لأنه كائن في الـ Heap (افتكر الوحدة صفر) بياخد مساحة زيادة كل ما الرقم يكبر.
+    </p>
+    @code run
+print(2 ** 63 - 1) ¦¦ أكبر رقم يتخزّن في `int` بـ 64 بت في لغات زي C وJava. بعده بواحد يحصل Overflow هناك.
+print(2 ** 100) ¦¦ في بايثون عادي جدًا — 31 خانة من غير أي مشكلة.
+print(len(str(2 ** 1000))) ¦¦ حوّلنا الرقم لنص وعدّينا حروفه: 2 أس 1000 فيه **302 خانة**، وبايثون حسبته فورًا.
+x = 9_999_999_999_999_999 ¦¦ رقم كبير بالشرطات للقراءة.
+print(x + 1) ¦¦ الحساب دقيق حتى آخر خانة — **ودي ميزة الـ `int` بس**. الـ `float` مش كده (الدرس الجاي).
+    @end
+    @out
+9223372036854775807
+1267650600228229401496703205376
+302
+10000000000000000
+    @end
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>محوّل الأنظمة</div>
+      <p>اطلب من المستخدم رقم عشري، واعرضه بالثنائي (بعرض 8 خانات) والثماني والسادس عشر (بحروف كبيرة).</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code
+n = int(input("اكتب رقم: ")) ¦¦ تحويل المدخل لرقم — `input` بترجّع نص دايمًا.
+print(f"ثنائي : {n:08b}") ¦¦ `08b` ثنائي بـ 8 خانات بأصفار على الشمال.
+print(f"ثماني : {n:o}") ¦¦ `o` ثماني.
+print(f"سادس عشر: {n:X}") ¦¦ `X` كبيرة = حروف كبيرة.
+      @end
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>هل الرقم زوجي؟ بالبتّات</div>
+      <p>من غير <code class="inl">%</code>: اعرف هل الرقم زوجي. (تلميح: الرقم الفردي آخر بت فيه دايمًا 1.)</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code
+n = int(input("اكتب رقم: ")) ¦¦ قراءة الرقم.
+print((n & 1) == 0) ¦¦ `n & 1` بتعزل آخر بت: صفر للزوجي و 1 للفردي. في بايثون `&` أولويّتها أعلى من `==` فالأقواس مش إلزامية (عكس لغة C) — لكن **حطّها**: بتوضّح نيّتك وبتحميك لو نقلت الكود للغة تانية.
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. ناتج <code class="inl">type(hex(255))</code>؟</p>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> hex</label>
+        <label><input type="radio"> str</label>
+        <label><input type="radio"> float</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">int("11", 2)</code> بترجّع…</p>
+        <label><input type="radio"> 11</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> ValueError</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">6 ^ 3</code> ناتجها؟ (6 = 110 و 3 = 011)</p>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> 216</label>
+        <label><input type="radio"> 7</label>
+        <label><input type="radio"> 2</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. <code class="inl">7 &lt;&lt; 2</code> ناتجها؟</p>
+        <label><input type="radio"> 49</label>
+        <label><input type="radio"> 14</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> 28</label>
+      </div>
+    </div>
+  </article>
+
+@@lesson u2-l5 before="<!-- 2.P1 -->"
+  <!-- 2.5 -->
+  <article class="lesson" id="u2-l5">
+    <h3>أسرار الحسابات: القسمة السالبة، round البنكي، وحدود float <span class="tag">درس ؟</span></h3>
+    <p class="goal">الهدف: تعرف السلوكيات «الغريبة» اللي بتوقّع المحترفين قبل المبتدئين — وتفهم ليه بتحصل بدل ما تحفظها.</p>
+
+    <h4>1. القسمة الصحيحة والباقي مع الأرقام السالبة</h4>
+    <p>
+      <code class="inl">//</code> في بايثون مش «بتشيل الكسر» — هي بتقرّب <strong>لتحت</strong> (ناحية سالب ما لا نهاية)، واسمها <em>floor division</em>.
+      مع الموجب مش هتفرق، لكن مع السالب النتيجة بتفاجئ.
+    </p>
+    @code run
+print(7 // 2) ¦¦ 3.5 تقريبها لتحت = 3. مفيش مفاجأة.
+print(-7 // 2) ¦¦ -3.5 تقريبها **لتحت** = -4 (مش -3)! لأن -4 أصغر من -3.5.
+print(int(-7 / 2)) ¦¦ `int()` بتعمل حاجة مختلفة: بتقطع الكسر (ناحية الصفر) ← -3.
+print(-7 % 3) ¦¦ الباقي في بايثون **بياخد إشارة المقسوم عليه** (3 موجب) ← 2. لأن -7 = 3×(-3) + 2.
+print(7 % -3) ¦¦ المقسوم عليه سالب فالباقي سالب ← -2.
+print(divmod(17, 5)) ¦¦ `divmod` بترجّع الناتج والباقي مع بعض في خطوة واحدة: `(17 // 5, 17 % 5)`. الأقواس دي اسمها tuple (هنعرفه في الوحدة 10).
+    @end
+    @out
+3
+-4
+-3
+2
+-2
+(3, 2)
+    @end
+    <div class="box tip">
+      <div class="bt">💡 ليه بايثون اختارت كده؟</div>
+      <p>
+        عشان القاعدة دي تفضل صحيحة <strong>دايمًا</strong>: <code class="inl">(a // b) * b + (a % b) == a</code>.
+        وعشان <code class="inl">% 7</code> مثلًا يرجّع رقم من 0 لـ 6 حتى لو الرقم سالب — مفيد جدًا في حساب أيام الأسبوع
+        والتشفير (زي مشروع قيصر الجاي) لما تلف لورا.
+      </p>
+    </div>
+
+    <h4>2. round مش زي ما اتعلّمت في المدرسة</h4>
+    @code run
+print(round(2.5)) ¦¦ متوقّع 3؟ الناتج **2**! بايثون بتستخدم «التقريب البنكي»: الـ .5 بالظبط بيروح لأقرب رقم **زوجي**.
+print(round(3.5)) ¦¦ 4 (زوجي). ليه؟ عشان في الحسابات الكبيرة التقريب لفوق دايمًا بيعمل انحياز يزوّد المجموع.
+print(round(0.5), round(1.5)) ¦¦ 0 و 2 — نفس القاعدة: أقرب زوجي.
+print(round(2.675, 2)) ¦¦ متوقّع 2.68؟ الناتج 2.67! مش بسبب التقريب البنكي — بسبب إن 2.675 **متخزّنة فعليًا** 2.67499999… (الثنائي تاني).
+print(round(1234.5678, 1)) ¦¦ الوسيط التاني = عدد الخانات بعد العلامة.
+print(round(1234, -2)) ¦¦ وسيط **سالب** بيقرّب للمئات: 1200. مفيد في التقارير («حوالي 1200 عميل»).
+    @end
+    @out
+2
+4
+0 2
+2.67
+1234.6
+1200
+    @end
+
+    <h4>3. الترميز العلمي وحدود float</h4>
+    @code run
+print(1e3) ¦¦ `e` معناها «×10 أس». `1e3` = 1×10³ = 1000.0 — **دايمًا float**.
+print(2.5e-4) ¦¦ أس سالب = كسر صغير: 0.00025.
+print(0.00001) ¦¦ بايثون بتعرض الأرقام الصغيرة جدًا بالترميز العلمي تلقائيًا ← `1e-05`.
+print(10 ** 20 // 3) ¦¦ بالـ int: الناتج دقيق لآخر خانة.
+print(10 ** 20 / 3) ¦¦ بالـ float: `/` رجّعت float، والـ float دقّته **حوالي 15–17 خانة بس** — فالباقي اتقرّب.
+print(int(1e23)) ¦¦ `1e23` مكتوب كـ float، فهو أصلًا مش متخزّن بدقة. التحويل لـ int بيكشف الحقيقة: الرقم مش 1 وجنبه 23 صفر!
+    @end
+    @out
+1000.0
+0.00025
+1e-05
+33333333333333333333
+3.333333333333333e+19
+99999999999999991611392
+    @end
+    <div class="box brain">
+      <div class="bt">🧠 القاعدة الذهبية</div>
+      <p>
+        <strong>int = دقيق وبلا حدود. float = سريع وتقريبي.</strong>
+        الفلوس؟ عمرك ما تخزّنها float. خزّنها كقروش بـ int (<code class="inl">1999</code> بدل <code class="inl">19.99</code>)
+        أو استخدم <code class="inl">Decimal</code> اللي هنتعلّمها في وحدة المكتبات.
+      </p>
+    </div>
+
+    <h4>4. ما لا نهاية و «مش رقم»: inf و nan</h4>
+    @code run
+big = float("inf") ¦¦ `inf` = ما لا نهاية موجبة. قيمة حقيقية جوّه نوع float، مش خطأ.
+print(big, -big) ¦¦ وفيه كمان سالب ما لا نهاية.
+print(big &gt; 10 ** 300) ¦¦ أكبر من أي رقم. مفيدة كقيمة ابتدائية لما تدوّر على «أصغر رقم» (أي رقم هيبقى أصغر منها).
+print(1e308 * 10) ¦¦ float أكبر من الحدّ (حوالي 1.8×10³⁰⁸) بيبقى `inf` — ده الـ Overflow في عالم float.
+nan = float("nan") ¦¦ `nan` = Not a Number: نتيجة عملية مالهاش معنى رياضي.
+print(big - big) ¦¦ ما لا نهاية ناقص ما لا نهاية = مش معرّف ← `nan`.
+print(nan == nan) ¦¦ **الغرابة الأشهر**: `nan` مش بيساوي نفسه! ده جزء من معيار IEEE 754 عشان تكتشف القيم البايظة. (في pandas هتقابل `NaN` كتير = بيانات ناقصة.)
+    @end
+    @out
+inf -inf
+True
+inf
+nan
+False
+    @end
+
+    <h4>5. المقارنة الآمنة للأرقام العشرية + دوال رياضية جاهزة</h4>
+    @code run
+a = 0.1 + 0.2 ¦¦ 0.30000000000000004 (من الدرس اللي فات).
+print(a == 0.3) ¦¦ False — المقارنة المباشرة خطيرة.
+print(abs(a - 0.3) &lt; 1e-9) ¦¦ **الطريقة الصح**: هل الفرق أصغر من رقم صغير جدًا نتفق عليه؟ `abs` بترجّع القيمة المطلقة (من غير إشارة).
+print(abs(-7.5)) ¦¦ `abs` لأي رقم ← 7.5.
+print(pow(2, 10)) ¦¦ `pow(a, b)` زي `a ** b`.
+print(pow(2, 10, 1000)) ¦¦ وسيط تالت = باقي القسمة: `2**10 % 1000` = 24، لكن **أسرع بكتير** مع الأرقام الضخمة (أساس التشفير RSA).
+print(max(3, 9, 4), min(3, 9, 4)) ¦¦ `max` و `min` بياخدوا أي عدد من القيم.
+    @end
+    @out
+False
+True
+7.5
+1024
+24
+9 3
+    @end
+
+    <h4>6. الأعداد العقدية: complex</h4>
+    <p>
+      بايثون فيها نوع رقمي تالث مدمج غير int و float: <strong>العدد العقدي</strong> (مركّب من جزء حقيقي وجزء تخيّلي).
+      مش هتحتاجه في البرامج اليومية، لكنه أساسي في الهندسة الكهربية، معالجة الإشارات والصوت، والفيزياء — ووجوده جاهز من غير مكتبات من أسباب انتشار بايثون في العلوم.
+    </p>
+    @code run
+z = 3 + 4j ¦¦ `j` بعد الرقم = الجزء التخيّلي (المهندسين بيستخدموا j بدل i الرياضية). مفيش علامة ضرب: `4j` مكتوبة لازقة.
+print(type(z)) ¦¦ نوع مستقل اسمه `complex`.
+print(z.real, z.imag) ¦¦ الجزء الحقيقي والتخيّلي — دايمًا float.
+print(abs(z)) ¦¦ `abs` لعدد عقدي = **طوله** (المسافة من الصفر): √(3² + 4²) = 5 — نفس `math.hypot(3, 4)`.
+print(z * (1 - 2j)) ¦¦ العمليات الحسابية العادية شغّالة: (3+4j)(1−2j) = 3 − 6j + 4j − 8j² = 11 − 2j (لأن j² = −1).
+print(complex(2, -1)) ¦¦ إنشاء من جزئين. الأقواس في العرض بتفصل العدد العقدي عن اللي حواليه.
+    @end
+    @out
+&lt;class 'complex'&gt;
+3.0 4.0
+5.0
+(11-2j)
+(2-1j)
+    @end
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>يوم الأسبوع</div>
+      <p>النهارده السبت (رقم 0). اطلب من المستخدم عدد أيام (ممكن يكون سالب يعني «من كام يوم») واطبع رقم اليوم من 0 لـ 6.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code
+days = int(input("بعد كام يوم؟ ")) ¦¦ ممكن يكون موجب أو سالب.
+print((0 + days) % 7) ¦¦ بفضل إن `%` في بايثون بتاخد إشارة المقسوم عليه، `-1 % 7` = 6 (الجمعة) — **من غير أي if**. في لغات تانية كان هيطلع -1.
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">-9 // 4</code> ناتجها؟</p>
+        <label><input type="radio"> -2</label>
+        <label><input type="radio"> -3</label>
+        <label><input type="radio"> -2.25</label>
+        <label><input type="radio"> 2</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. <code class="inl">round(4.5)</code> ناتجها؟</p>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> 4.5</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. أنسب طريقة لتخزين سعر 19.99 جنيه في برنامج محاسبة؟</p>
+        <label><input type="radio"> int بالقروش: 1999</label>
+        <label><input type="radio"> float: 19.99</label>
+        <label><input type="radio"> نص: "19.99"</label>
+        <label><input type="radio"> round(19.99)</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. <code class="inl">float("nan") == float("nan")</code>؟</p>
+        <label><input type="radio"> True</label>
+        <label><input type="radio"> nan</label>
+        <label><input type="radio"> TypeError</label>
+        <label><input type="radio"> False</label>
+      </div>
+    </div>
+  </article>

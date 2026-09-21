@@ -1,0 +1,102 @@
+/* هيكل الصفحة: الشريط الجانبي، الرأس، المحتوى، التذييل */
+#shell{display:flex; min-height:100vh}
+#sidebar{
+  width:var(--sidebar); flex:0 0 var(--sidebar); background:var(--bg2);
+  border-inline-start:1px solid var(--line); height:100vh; position:sticky; top:0;
+  display:flex; flex-direction:column; z-index:40;
+}
+#side-head{padding:16px 16px 10px; border-bottom:1px solid var(--line)}
+#side-head .brand{display:flex; align-items:center; gap:10px; font-weight:800; font-size:17px}
+#side-head .brand .logo{
+  width:34px;height:34px;border-radius:9px;display:grid;place-items:center;
+  background:linear-gradient(135deg,var(--acc),var(--acc2)); color:#fff; font-size:18px
+}
+#search{
+  width:100%; margin-top:12px; padding:9px 12px; border-radius:9px;
+  border:1px solid var(--line); background:var(--bg3); color:var(--tx); font-family:inherit; font-size:14px;
+}
+#search:focus{outline:2px solid var(--acc); outline-offset:1px}
+#progress-wrap{margin-top:10px; font-size:12px; color:var(--tx2)}
+#progress-bar{height:6px;background:var(--bg3);border-radius:99px;overflow:hidden;margin-top:5px}
+#progress-fill{height:100%;width:0;background:linear-gradient(90deg,var(--acc),var(--ok));transition:width .3s}
+#toc{overflow-y:auto; padding:10px 8px 40px; flex:1; font-size:14.2px}
+#toc::-webkit-scrollbar{width:9px}
+#toc::-webkit-scrollbar-thumb{background:var(--line);border-radius:9px}
+#toc .unit-block{margin-bottom:4px}
+#toc .unit-btn{
+  width:100%; text-align:start; background:transparent; border:0; color:var(--tx);
+  font:inherit; font-weight:700; padding:9px 10px; border-radius:8px; cursor:pointer;
+  display:flex; gap:8px; align-items:flex-start; line-height:1.6;
+}
+#toc .unit-btn:hover{background:var(--bg3)}
+#toc .unit-btn .caret{transition:transform .2s; color:var(--tx3); flex:0 0 auto}
+#toc .unit-block.open .unit-btn .caret{transform:rotate(-90deg)}
+#toc .unit-btn .num{
+  flex:0 0 auto; font-size:11px; background:var(--bg3); color:var(--acc);
+  border-radius:6px; padding:1px 6px; font-weight:800; margin-top:5px;
+}
+#toc ul{list-style:none; margin:2px 0 8px; padding:0 14px 0 0; display:none}
+#toc .unit-block.open ul{display:block}
+#toc li a{
+  display:block; color:var(--tx2); text-decoration:none; padding:5px 10px;
+  border-radius:7px; border-inline-start:2px solid transparent; font-size:13.6px; line-height:1.6;
+}
+#toc li a:hover{background:var(--bg3); color:var(--tx)}
+#toc li a.active{color:var(--acc); background:var(--bg3); border-inline-start-color:var(--acc); font-weight:700}
+#toc li a.done::after{content:" ✓"; color:var(--ok); font-weight:800}
+#toc li a .pj{color:var(--acc2); font-weight:800}
+#main{flex:1; min-width:0; max-width:100%}
+#topbar{
+  position:sticky; top:0; z-index:30; background:var(--bg);
+  border-bottom:1px solid var(--line);
+  display:flex; align-items:center; gap:10px; padding:9px 18px;
+}
+#topbar .crumb{color:var(--tx2); font-size:13.5px; flex:1; overflow:hidden; text-overflow:ellipsis; white-space:nowrap}
+.iconbtn{
+  background:var(--bg3); border:1px solid var(--line); color:var(--tx); cursor:pointer;
+  border-radius:9px; padding:6px 11px; font:inherit; font-size:14px; white-space:nowrap;
+}
+.iconbtn:hover{border-color:var(--acc); color:var(--acc)}
+#menu-btn{display:none}
+#content{padding:0 clamp(14px,4vw,54px) 120px; max-width:1080px; margin:0 auto}
+#hero{padding:56px 0 30px; text-align:center; border-bottom:1px solid var(--line); margin-bottom:34px}
+#hero h1{
+  font-size:clamp(28px,5vw,46px); margin:0 0 12px; line-height:1.4;
+  background:linear-gradient(120deg,var(--acc),var(--acc2)); -webkit-background-clip:text;
+  background-clip:text; color:transparent;
+}
+#hero p.sub{color:var(--tx2); max-width:780px; margin:0 auto 22px; font-size:17px}
+#hero .stats{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:24px}
+#hero .stat{background:var(--bg2); border:1px solid var(--line); border-radius:12px; padding:12px 20px; min-width:120px}
+#hero .stat b{display:block; font-size:24px; color:var(--acc); line-height:1.4}
+#hero .stat span{font-size:12.5px; color:var(--tx2)}
+#hero .badge{
+  display:inline-block; margin-bottom:14px; padding:4px 14px; border-radius:99px; font-size:13px; font-weight:700;
+  color:var(--acc); background:var(--bg3); border:1px solid var(--line);
+}
+#hero p.tagline{margin:4px auto 16px; font-weight:700; color:var(--acc2); font-size:15.5px; letter-spacing:.2px}
+#site-footer{
+  margin:70px 0 0; padding:26px 0 8px; border-top:1px solid var(--line);
+  text-align:center; color:var(--tx3); font-size:13.5px; line-height:1.9;
+}
+#site-footer p{margin:0}
+#site-footer .copy{color:var(--tx2); font-weight:700; font-size:14.5px}
+#top-btn{
+  position:fixed; inset-inline-end:22px; bottom:22px; z-index:50; display:none;
+  background:var(--acc); color:#fff; border:0; border-radius:50%; width:46px; height:46px;
+  font-size:20px; cursor:pointer; box-shadow:0 6px 20px rgba(0,0,0,.35);
+}
+#overlay{display:none; position:fixed; inset:0; background:rgba(0,0,0,.55); z-index:35}
+#toc li a{display:flex; gap:6px; align-items:baseline}
+#toc li a .lt{flex:1}
+#toc li a .mins{font-size:11px; color:var(--tx3); white-space:nowrap}
+#toc li.body-hit a .lt::before{content:"📄 "}
+#toc .unit-btn .uprog{margin-inline-start:auto; font-size:11px; color:var(--ok); font-weight:800; flex:0 0 auto; margin-top:5px}
+.search-info{font-size:12px; color:var(--tx3); margin-top:5px; min-height:1em}
+.side-tools{display:flex; flex-wrap:wrap; gap:6px; margin-top:10px}
+.side-tools button, .side-tools label{
+  font:inherit; font-size:12px; background:var(--bg3); color:var(--tx2); border:1px solid var(--line);
+  border-radius:8px; padding:4px 9px; cursor:pointer;
+}
+.side-tools button:hover, .side-tools label:hover{border-color:var(--acc); color:var(--acc)}
+.side-tools button:disabled{opacity:.7; cursor:default}

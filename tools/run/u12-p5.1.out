@@ -1,0 +1,8 @@
+سطور سليمة: 7 — سطور بايظة: 1
+{'INFO': 2, 'WARNING': 2, 'ERROR': 3}
+الأخطاء لكل جزء: {'payments': 2, 'auth': 1}
+  2× Card declined for user N
+  1× Invalid token for user N
+أبطأ استجابة: 2300 ms
+مستخدمين اتأثّروا: [7, 13, 42]
+['date,time,module,message', '2025-03-15,09:01:10,payments,Card declined for user 42']

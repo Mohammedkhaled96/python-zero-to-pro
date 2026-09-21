@@ -1,0 +1,4 @@
+عدد الاختبارات: 2
+فشل: 1
+اتخطّى: 1
+AssertionError: False != True

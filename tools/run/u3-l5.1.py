@@ -1,0 +1,6 @@
+print("[" + "Python".center(12) + "]")
+print("[" + "Python".ljust(12, ".") + "]")
+print("[" + "Python".rjust(12, "-") + "]")
+print("7".zfill(3))
+print("-42".zfill(5))
+print(f"[{'Python':^12}] [{'Python':.<12}] [{'Python':->12}]")

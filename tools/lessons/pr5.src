@@ -1,0 +1,338 @@
+@@append u10-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>بطاقة موظّف</div>
+      <p>اعمل قاموس لموظّف، زوّد مفتاح، عدّل قيمة، اقرا مفتاح مش موجود بأمان، وافحص وجود مفتاح.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+employee = {"name": "سارة", "role": "مهندسة", "salary": 12000} ¦¦ قاموس: كل مفتاح ليه قيمة.
+employee["city"] = "القاهرة" ¦¦ مفتاح جديد = إضافة.
+employee["salary"] = 14000 ¦¦ مفتاح موجود = تعديل (مش إضافة).
+print(len(employee), employee["role"]) ¦¦ عدد الأزواج، والوصول بالمفتاح.
+print(employee.get("phone", "مش مسجّل")) ¦¦ `get` بقيمة افتراضية — مفيش KeyError.
+print("salary" in employee, "phone" in employee) ¦¦ `in` بتفحص **المفاتيح**.
+del employee["city"] ¦¦ حذف بالمفتاح.
+print(list(employee.keys())) ¦¦ المفاتيح بترتيب الإضافة.
+      @end
+      @out rtl
+4 مهندسة
+مش مسجّل
+True False
+['name', 'role', 'salary']
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">d["x"]</code> والمفتاح مش موجود؟</p>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> بيضيفه بقيمة فاضية</label>
+        <label><input type="radio"> KeyError</label>
+        <label><input type="radio"> ""</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. أنهي واحد ينفع يبقى <strong>مفتاح</strong>؟</p>
+        <label><input type="radio"> قائمة <code class="inl">[1, 2]</code></label>
+        <label><input type="radio"> tuple <code class="inl">(1, 2)</code></label>
+        <label><input type="radio"> قاموس تاني</label>
+        <label><input type="radio"> مجموعة <code class="inl">{1, 2}</code></label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">d = {"a": 1}</code> ثم <code class="inl">d["a"] = 2</code>؟</p>
+        <label><input type="radio"> بيرمي خطأ</label>
+        <label><input type="radio"> بيضيف مفتاح تاني اسمه a</label>
+        <label><input type="radio"> بيتجاهل</label>
+        <label><input type="radio"> بيعدّل القيمة لـ 2</label>
+      </div>
+    </div>
+
+@@append u10-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تقرير مبيعات</div>
+      <p>من قائمة قواميس: احسب الإجمالي، لاقي الأعلى، رتّب حسب المبلغ، واعرض جدول منسّق.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+sales = [ ¦¦ قائمة من قواميس = «جدول» في بايثون.
+    {"seller": "سارة", "amount": 4200}, ¦¦ صف.
+    {"seller": "علي", "amount": 3100}, ¦¦ صف.
+    {"seller": "منى", "amount": 5600}, ¦¦ صف.
+] ¦¦ نهاية القائمة.
+total = sum(row["amount"] for row in sales) ¦¦ تعبير مولّد على القيم.
+best = max(sales, key=lambda row: row["amount"]) ¦¦ `key` بتحدّد نقارن بإيه.
+print("الإجمالي:", total) ¦¦ المجموع.
+print("الأعلى:", best["seller"], best["amount"]) ¦¦ الصف كامل رجع، فناخد منه اللي نحتاجه.
+for row in sorted(sales, key=lambda r: r["amount"], reverse=True): ¦¦ ترتيب تنازلي.
+    print(f"{row['seller']:<6} {row['amount']:>6,}") ¦¦ محاذاة: 6 خانات للاسم، والمبلغ لليمين بفواصل. (لاحظ الأقواس الفردية جوّه f-string).
+      @end
+      @out rtl
+الإجمالي: 12900
+الأعلى: منى 5600
+منى     5,600
+سارة    4,200
+علي     3,100
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">rows[0]["name"]</code> معناها…</p>
+        <label><input type="radio"> المفتاح 0 من القاموس</label>
+        <label><input type="radio"> مفتاح name من أول قاموس في القائمة</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> كل الأسماء</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ترتيب قائمة قواميس حسب مفتاح…</p>
+        <label><input type="radio"> sorted(rows, key=lambda r: r["age"])</label>
+        <label><input type="radio"> sorted(rows, "age")</label>
+        <label><input type="radio"> rows.sort("age")</label>
+        <label><input type="radio"> sorted(rows["age"])</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. الشكل ده (قائمة قواميس) هو نفسه شكل…</p>
+        <label><input type="radio"> ملف صور</label>
+        <label><input type="radio"> قاعدة بيانات بس</label>
+        <label><input type="radio"> مفيش علاقة</label>
+        <label><input type="radio"> ردود الـ APIs وملفات JSON وصفوف CSV</label>
+      </div>
+    </div>
+
+@@append u11-l5
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>دالة موثّقة بالأنواع</div>
+      <p>اكتب دالة بتحسب متوسّط قائمة أرقام وترجّع <code class="inl">None</code> لو القائمة فاضية — بتلميحات أنواع كاملة، وشوف إن بايثون <strong>مش</strong> بتفرضها.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def average(numbers: list[float]) -> float | None: ¦¦ قائمة أرقام ← رقم **أو** None. (`|` من بايثون 3.10؛ قبلها `Optional[float]`).
+    """بترجّع المتوسّط، أو None لو مفيش أرقام.""" ¦¦ التوثيق بيكمّل التلميح، مش بديله.
+    if not numbers: ¦¦ القائمة الفاضية.
+        return None ¦¦ ده اللي خلّانا نكتب `| None`.
+    return sum(numbers) / len(numbers) ¦¦ المتوسّط.
+ ¦¦
+print(average([10, 20, 30])) ¦¦ استخدام سليم.
+print(average([])) ¦¦ الحالة التانية.
+print(average("abc") if False else "مش هنشغّلها") ¦¦ لو ناديتها بنص، بايثون **هتحاول** وتقع وقت التشغيل — التلميح مش حماية.
+print(average.__annotations__) ¦¦ التلميحات متاحة كبيانات (الأدوات بتقرا منها).
+ ¦¦
+def tag(text: str, times: int = 1) -> str: ¦¦ وسيط افتراضي مع تلميح.
+    return (text + " ") * times ¦¦ التكرار.
+print(tag("بايثون", 3).strip()) ¦¦ النتيجة.
+      @end
+      @out rtl
+20.0
+None
+مش هنشغّلها
+{'numbers': list[float], 'return': float | None}
+بايثون بايثون بايثون
+      @end
+      <p>شغّل <code class="inl">mypy file.py</code> وهو اللي هيقول لك «مررت نص مكان قائمة» <strong>قبل</strong> التشغيل.</p>
+      </details>
+    </div>
+
+@@append u11-l8
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>الأربعة في مثال واحد</div>
+      <p>decorator بيقيس الوقت، و <code class="inl">match</code> بيفسّر أوامر، و <code class="inl">:=</code> في شرط، ومدير سياق بتاعك.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import time ¦¦ للقياس.
+from contextlib import contextmanager ¦¦ أسهل طريقة لمدير سياق.
+from functools import wraps ¦¦ بتحافظ على اسم الدالة الأصلية.
+ ¦¦
+def timed(func): ¦¦ **decorator**: بياخد دالة ويرجّع دالة.
+    @wraps(func) ¦¦ من غيرها اسم الدالة يبقى wrapper.
+    def wrapper(*args, **kwargs): ¦¦ بيقبل أي وسائط.
+        start = time.perf_counter() ¦¦ قبل.
+        result = func(*args, **kwargs) ¦¦ الدالة الأصلية.
+        print(f"[{func.__name__}] خلصت") ¦¦ مش بنطبع الوقت نفسه عشان الناتج يبقى ثابت.
+        return result ¦¦ نرجّع نتيجتها زي ما هي.
+    return wrapper ¦¦ الدالة المغلّفة.
+ ¦¦
+@timed ¦¦ = `slow = timed(slow)`.
+def total(n): ¦¦ الدالة.
+    return sum(range(n)) ¦¦ شغل بسيط.
+ ¦¦
+print(total(1000)) ¦¦ الـ decorator طبع سطره، وبعدين النتيجة.
+print(total.__name__) ¦¦ بفضل `wraps` الاسم لسه صح.
+ ¦¦
+def run(command): ¦¦ مطابقة الأنماط.
+    match command.split(): ¦¦ بنطابق على **قائمة** الكلمات.
+        case ["add", x, y]: ¦¦ نمط بثلاث كلمات — x و y بيتربطوا.
+            return int(x) + int(y) ¦¦ النتيجة.
+        case ["quit"] | ["exit"]: ¦¦ نمطين في حالة واحدة.
+            return "وداعًا" ¦¦ الخروج.
+        case _: ¦¦ الباقي (زي else).
+            return "أمر مش معروف" ¦¦ الافتراضي.
+print(run("add 2 3"), run("exit"), run("dance")) ¦¦ تلات حالات.
+ ¦¦
+names = ["سارة", "علي"] ¦¦ بيانات.
+if (count := len(names)) > 1: ¦¦ **الوالروس**: نحسب ونخزّن ونقارن في سطر واحد.
+    print(f"عندنا {count} أسماء") ¦¦ بنستخدم القيمة المحفوظة.
+ ¦¦
+@contextmanager ¦¦ مدير سياق من دالة واحدة.
+def section(title): ¦¦ الدالة.
+    print(f"── {title} ──") ¦¦ قبل الـ with.
+    try: ¦¦ نحمي التسليم.
+        yield ¦¦ هنا بيتنفّذ جسم الـ with.
+    finally: ¦¦ دايمًا.
+        print("── تم ──") ¦¦ بعد الـ with، حتى لو حصل خطأ.
+ ¦¦
+with section("التقرير"): ¦¦ الاستخدام.
+    print("سطر جوّه القسم") ¦¦ الجسم.
+      @end
+      @out rtl
+[total] خلصت
+499500
+total
+5 وداعًا أمر مش معروف
+عندنا 2 أسماء
+── التقرير ──
+سطر جوّه القسم
+── تم ──
+      @end
+      </details>
+    </div>
+
+@@append u12-l7
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>جدول كتب</div>
+      <p>اعمل جدول كتب في الذاكرة، ضيف صفوف بـ <code class="inl">?</code>، واستعلم: الأغلى، والمتوسّط، وتجميع حسب التصنيف.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import sqlite3 ¦¦ مدمجة في بايثون.
+conn = sqlite3.connect(":memory:") ¦¦ قاعدة في الذاكرة — مثالية للتجربة.
+cur = conn.cursor() ¦¦ المؤشّر بينفّذ الأوامر.
+cur.execute("CREATE TABLE books (id INTEGER PRIMARY KEY, title TEXT NOT NULL, genre TEXT, price REAL)") ¦¦ إنشاء الجدول وأنواع الأعمدة.
+books = [("بايثون من الصفر", "تقنية", 180.0), ("الخوارزميات", "تقنية", 250.0), ("رحلة في الفضاء", "علوم", 120.0)] ¦¦ بيانات.
+cur.executemany("INSERT INTO books (title, genre, price) VALUES (?, ?, ?)", books) ¦¦ `executemany` + `?` = آمن وسريع.
+conn.commit() ¦¦ تثبيت.
+print(cur.execute("SELECT title, price FROM books ORDER BY price DESC LIMIT 1").fetchone()) ¦¦ الأغلى: ترتيب تنازلي وأول صف.
+print(cur.execute("SELECT COUNT(*), ROUND(AVG(price), 1) FROM books").fetchone()) ¦¦ العدد والمتوسّط من قاعدة البيانات نفسها.
+for genre, count in cur.execute("SELECT genre, COUNT(*) FROM books GROUP BY genre ORDER BY genre"): ¦¦ تجميع.
+    print(genre, count) ¦¦ كل تصنيف وعدده.
+conn.close() ¦¦ إغلاق الاتصال.
+      @end
+      @out rtl
+('الخوارزميات', 250.0)
+(3, 183.3)
+تقنية 2
+علوم 1
+      @end
+      </details>
+    </div>
+
+@@append u18-l6
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>سير عمل فرع كامل</div>
+      <p>اكتب الأوامر من أول فرع جديد لحد الدمج والرفع — ومعاها تراجع عن ملف بالغلط.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code terminal norun
+git switch -c feature/login ¦¦ فرع جديد والانتقال له في أمر واحد (`checkout -b` القديمة).
+git status ¦¦ إيه اللي اتغيّر قبل ما تعمل commit.
+git add login.py ¦¦ ملف محدّد أحسن من `git add .` عشان ما ترفعش حاجة بالغلط.
+git commit -m "Add login form validation" ¦¦ رسالة بتوصف **إيه** اللي اتغيّر.
+git restore data.csv ¦¦ تراجع عن تعديلات ملف لسه ما عملتش له add.
+git restore --staged secrets.env ¦¦ شيله من منطقة الـ staging (لو عملت add بالغلط).
+git switch main ¦¦ رجوع للفرع الأساسي.
+git merge feature/login ¦¦ دمج الفرع.
+git push -u origin main ¦¦ الرفع (و `-u` بتربط الفرع بالبعيد أول مرّة بس).
+git log --oneline -5 ¦¦ آخر 5 commits في سطر لكل واحد.
+      @end
+      @out
+* 8f2c1ab (HEAD -> main) Merge branch 'feature/login'
+* 5d91e77 Add login form validation
+* c3a7b10 Update README
+* 91be4d2 Add tests for cart
+* 47f0c99 Initial commit
+      @end
+      </details>
+    </div>
+
+@@append u18-l7
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>اقرا التتبّع وحدّد السطر</div>
+      <p>شغّل الكود، وبعدين جاوب: الخطأ في أي دالة؟ وأي سطر؟ وإيه أول خطوة للإصلاح؟</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+def read_price(row): ¦¦ الدالة الداخلية — هنا هيحصل الخطأ.
+    return float(row["price"]) ¦¦ التحويل بيفشل لو القيمة مش رقم.
+ ¦¦
+def total(rows): ¦¦ الدالة اللي بتنادي.
+    return sum(read_price(r) for r in rows) ¦¦ بتمرّ على كل صف.
+ ¦¦
+rows = [{"price": "10.5"}, {"price": "غير محدّد"}] ¦¦ الصف التاني بايظ.
+print(total(rows)) ¦¦ الاستدعاء اللي هيفجّر التتبّع.
+      @end
+      @out
+Traceback (most recent call last):
+  File "main.py", line 6, in <module>
+    print(total(rows))
+          ^^^^^^^^^^^
+  File "main.py", line 4, in total
+    return sum(read_price(r) for r in rows)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "main.py", line 4, in <genexpr>
+    return sum(read_price(r) for r in rows)
+               ^^^^^^^^^^^^^
+  File "main.py", line 2, in read_price
+    return float(row["price"])
+           ^^^^^^^^^^^^^^^^^^^
+ValueError: could not convert string to float: 'غير محدّد'
+      @end
+      <p>
+        <strong>القراءة:</strong> آخر سطر = نوع الخطأ وسببه. اللي فوقه شوية = <code class="inl">read_price</code> سطر 2 (مكان الخطأ الفعلي).
+        واللي فوق = مين نادى مين (<code class="inl">&lt;module&gt;</code> ← <code class="inl">total</code> ← المولّد ← <code class="inl">read_price</code>).
+        <strong>الإصلاح:</strong> تحقّق من القيمة قبل التحويل، أو <code class="inl">try/except ValueError</code> وتجاهل الصفوف البايظة (الوحدة 9).
+      </p>
+      </details>
+    </div>
+
+@@append u18-l8
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تخزين كلمة سر صح</div>
+      <p>ولّد كلمة سر عشوائية آمنة، خزّنها كـ hash مع ملح (salt)، وتحقّق من محاولة دخول صح وغلط.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+import hashlib ¦¦ دوال التشفير أحادية الاتجاه.
+import secrets ¦¦ **العشوائية الآمنة** — مش `random`.
+import string ¦¦ مجموعات الحروف.
+ ¦¦
+alphabet = string.ascii_letters + string.digits + "!@#$%" ¦¦ الحروف المسموحة.
+password = "".join(secrets.choice(alphabet) for _ in range(16)) ¦¦ 16 خانة من مصدر عشوائي آمن.
+print(len(password), password != "".join(secrets.choice(alphabet) for _ in range(16))) ¦¦ الطول، ومش هتتكرّر عمليًا.
+ ¦¦
+def hash_password(plain, salt=None): ¦¦ التخزين الصح.
+    salt = salt or secrets.token_bytes(16) ¦¦ ملح عشوائي **مختلف لكل مستخدم**.
+    digest = hashlib.pbkdf2_hmac("sha256", plain.encode(), salt, 200_000) ¦¦ تكرار 200 ألف مرّة = بطيء على المهاجم.
+    return salt, digest ¦¦ بنخزّن الاتنين (الملح مش سرّ).
+ ¦¦
+def verify(plain, salt, digest): ¦¦ التحقّق.
+    _, test = hash_password(plain, salt) ¦¦ نفس العملية بنفس الملح.
+    return secrets.compare_digest(test, digest) ¦¦ مقارنة بزمن ثابت — بتمنع تسريب معلومات بالوقت.
+ ¦¦
+salt, digest = hash_password("s3cret-pass") ¦¦ التسجيل.
+print(len(digest)) ¦¦ 32 بايت لـ sha256.
+print(verify("s3cret-pass", salt, digest)) ¦¦ الدخول الصح.
+print(verify("wrong-pass", salt, digest)) ¦¦ الدخول الغلط.
+print(hashlib.sha256(b"password123").hexdigest()[:16]) ¦¦ ⚠️ sha256 لوحدها **مش** كفاية لكلمات السر: سريعة أوي وبتتكسر بجداول جاهزة.
+      @end
+      @out rtl
+16 True
+32
+True
+False
+ef92b778bafe771e
+      @end
+      </details>
+    </div>

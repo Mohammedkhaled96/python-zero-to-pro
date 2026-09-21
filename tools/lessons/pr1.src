@@ -1,0 +1,842 @@
+@@append u0-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>فكّر زي الكمبيوتر</div>
+      <p>اكتب خطوات «عمل كوباية شاي» كتعليمات دقيقة جدًا لحد ما يعرفش أي حاجة (زي الكمبيوتر). حاول تكتب 6 خطوات على الأقل ومفيش خطوة فيها «افهمها لوحدك».</p>
+      <details class="sol"><summary>شوف إجابة نموذجية</summary>
+      <ol>
+        <li>املا الكاتل مايه لحد العلامة.</li>
+        <li>شغّل الكاتل واستنّى لحد ما يفصل.</li>
+        <li>حط كيس شاي واحد في الكوباية.</li>
+        <li>صبّ المايه لحد ما الكوباية توصل لـ 80%.</li>
+        <li>استنّى دقيقتين، وبعدين شيل الكيس.</li>
+        <li>لو المستخدم عايز سكر: حط معلقة، وقلّب 10 مرّات.</li>
+      </ol>
+      <p>لاحظ إن الخطوة 6 فيها <strong>شرط</strong> (لو…)، والتقليب فيه <strong>تكرار</strong> (10 مرّات) — دول أهم مفهومين هتتعلّمهم في البرمجة.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. أدق وصف للكمبيوتر…</p>
+        <label><input type="radio"> ذكي وبيفكّر لوحده</label>
+        <label><input type="radio"> بينفّذ تعليمات دقيقة بسرعة كبيرة جدًا</label>
+        <label><input type="radio"> بيفهم الكلام العربي مباشرةً</label>
+        <label><input type="radio"> بيخمّن المطلوب</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. البيانات اللي البرنامج شغّال عليها دلوقتي بتكون في…</p>
+        <label><input type="radio"> الهارد ديسك بس</label>
+        <label><input type="radio"> كارت الشاشة</label>
+        <label><input type="radio"> الرامات (RAM)</label>
+        <label><input type="radio"> الكيبورد</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. في الآخر، الكمبيوتر بيمثّل كل حاجة بـ…</p>
+        <label><input type="radio"> أصفار وواحدات</label>
+        <label><input type="radio"> حروف إنجليزي</label>
+        <label><input type="radio"> أرقام عشرية</label>
+        <label><input type="radio"> صور</label>
+      </div>
+    </div>
+
+@@append u0-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>رتّب السلّم</div>
+      <p>رتّب من الأقرب للجهاز للأقرب للإنسان: <strong>Python</strong>، <strong>لغة الآلة (0 و 1)</strong>، <strong>C</strong>، <strong>Assembly</strong>. وقول ميزة وعيب لأعلى وأقل واحدة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <p>لغة الآلة ← Assembly ← C ← Python.</p>
+      <ul>
+        <li><strong>لغة الآلة</strong>: ميزتها أقصى سرعة وتحكّم كامل، وعيبها إن الإنسان تقريبًا مستحيل يكتبها أو يقراها.</li>
+        <li><strong>Python</strong>: ميزتها سهولة القراءة والكتابة السريعة، وعيبها إنها أبطأ وتحكّمها في الذاكرة أقل.</li>
+      </ul>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. أنهي لغة عالية المستوى؟</p>
+        <label><input type="radio"> لغة الآلة</label>
+        <label><input type="radio"> Assembly</label>
+        <label><input type="radio"> الأصفار والواحدات</label>
+        <label><input type="radio"> Python</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ميزة اللغات منخفضة المستوى…</p>
+        <label><input type="radio"> تحكّم أكبر في الجهاز وسرعة أعلى</label>
+        <label><input type="radio"> أسهل في التعلّم</label>
+        <label><input type="radio"> أقصر في الكتابة</label>
+        <label><input type="radio"> بتشتغل من غير ترجمة على أي جهاز</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. ليه بايثون مناسبة للمبتدئين؟</p>
+        <label><input type="radio"> لأنها أسرع لغة</label>
+        <label><input type="radio"> لأنها مالهاش قواعد</label>
+        <label><input type="radio"> لأن كودها قريب من لغة البشر وقصير</label>
+        <label><input type="radio"> لأنها بتتحكّم في الذاكرة يدويًا</label>
+      </div>
+    </div>
+
+@@append u0-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>مترجم ولّا مفسّر؟</div>
+      <p>لكل موقف قول الأنسب Compiler ولّا Interpreter: (أ) برنامج هيتوزّع على آلاف الأجهزة ومحتاج أقصى سرعة. (ب) بتجرّب سطر كود وعايز تشوف نتيجته فورًا. (ج) عايز تكتشف كل أخطاء التركيب قبل ما أي حاجة تشتغل.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <p>(أ) <strong>Compiler</strong>: الترجمة بتحصل مرّة واحدة والناتج بيشتغل بسرعة. (ب) <strong>Interpreter</strong>: بينفّذ سطر بسطر فورًا (زي Console بايثون). (ج) <strong>Compiler</strong>: بيراجع البرنامج كله قبل التشغيل — وبايثون كمان بتكتشف أخطاء التركيب قبل التنفيذ لأنها بتترجم لـ bytecode الأول.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. الـ Compiler بيترجم…</p>
+        <label><input type="radio"> سطر بسطر أثناء التشغيل</label>
+        <label><input type="radio"> البرنامج كله قبل التشغيل</label>
+        <label><input type="radio"> أول سطر بس</label>
+        <label><input type="radio"> مش بيترجم</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. بايثون بتتصنّف…</p>
+        <label><input type="radio"> مترجمة بالكامل زي C</label>
+        <label><input type="radio"> لغة آلة</label>
+        <label><input type="radio"> Assembly</label>
+        <label><input type="radio"> مفسّرة (بتترجم لـ bytecode والـ PVM بينفّذه)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ميزة المفسّر…</p>
+        <label><input type="radio"> تجربة وتنفيذ فوري من غير خطوة ترجمة منفصلة</label>
+        <label><input type="radio"> أسرع تشغيل ممكن</label>
+        <label><input type="radio"> مش محتاج بايثون متسطّبة</label>
+        <label><input type="radio"> بيمنع كل الأخطاء</label>
+      </div>
+    </div>
+
+@@append u0-l5
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>توقّع الناتج قبل ما تشغّل</div>
+      <p>توقّع اللي هيطبع، وبعدين شغّل وقارن. فكّر في الأسهم والصناديق.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+a = [1, 2] ¦¦ قائمة في الـ Heap، و `a` سهم ليها.
+b = a ¦¦ `b` سهم **لنفس** القائمة — مفيش نسخ.
+b.append(3) ¦¦ التعديل بيحصل في القائمة الوحيدة الموجودة.
+print(a, a is b) ¦¦ `a` شايفة التعديل، و `is` بتأكّد إنهم نفس الكائن.
+c = a.copy() ¦¦ `copy` بتعمل قائمة **جديدة** في الـ Heap.
+c.append(4) ¦¦ التعديل في النسخة بس.
+print(a, c, a is c) ¦¦ الأصل ما اتأثّرش، وهما كائنين مختلفين.
+x = 10 ¦¦ رقم (غير قابل للتعديل).
+y = x ¦¦ سهم لنفس الرقم.
+y = y + 1 ¦¦ مش تعديل — ده **كائن جديد** (11) و `y` اتوجّه له.
+print(x, y) ¦¦ `x` لسه 10.
+      @end
+      @out
+[1, 2, 3] True
+[1, 2, 3] [1, 2, 3, 4] False
+10 11
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. الكائنات نفسها (القوائم والنصوص) بتتخزّن في…</p>
+        <label><input type="radio"> الـ Stack</label>
+        <label><input type="radio"> الكاش بتاع المعالج</label>
+        <label><input type="radio"> الـ Heap</label>
+        <label><input type="radio"> الهارد ديسك</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">b = a</code> لما a قائمة معناها…</p>
+        <label><input type="radio"> b بقت سهم لنفس القائمة</label>
+        <label><input type="radio"> نسخة جديدة من القائمة</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> b بقت فاضية</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. أنهي نوع غير قابل للتعديل (immutable)؟</p>
+        <label><input type="radio"> list</label>
+        <label><input type="radio"> dict</label>
+        <label><input type="radio"> set</label>
+        <label><input type="radio"> str</label>
+      </div>
+    </div>
+
+@@append u0-l6
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>أول ملف ليك</div>
+      <p>اعمل ملف اسمه <code class="inl">hello.py</code> بيطبع اسمك وهوايتك وهدفك من الكورس في 3 سطور، وشغّله من الـ Terminal.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run hello.py
+print("أنا سارة") ¦¦ السطر الأول.
+print("هوايتي القراية") ¦¦ السطر التاني.
+print("هدفي: أبني تطبيقات بالذكاء الاصطناعي") ¦¦ السطر التالت — كل `print` بتطبع في سطر جديد.
+      @end
+      @out rtl
+أنا سارة
+هوايتي القراية
+هدفي: أبني تطبيقات بالذكاء الاصطناعي
+      @end
+      @code terminal
+python hello.py ¦¦ التشغيل من فولدر الملف (على ماك/لينكس ممكن تكون `python3`).
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. امتداد ملفات بايثون…</p>
+        <label><input type="radio"> .pt</label>
+        <label><input type="radio"> .py</label>
+        <label><input type="radio"> .pyn</label>
+        <label><input type="radio"> .txt</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. الفرق بين الـ Console التفاعلي والملف…</p>
+        <label><input type="radio"> مفيش فرق</label>
+        <label><input type="radio"> الملف بيشتغل أسرع دايمًا</label>
+        <label><input type="radio"> الـ Console للتجارب السريعة، والملف للبرامج اللي بتتحفظ وتتكرّر</label>
+        <label><input type="radio"> الـ Console مش بيطبع حاجة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. وإنت بتسطّب بايثون على ويندوز، أهم اختيار…</p>
+        <label><input type="radio"> Add python.exe to PATH</label>
+        <label><input type="radio"> تغيير لغة النظام</label>
+        <label><input type="radio"> تعطيل الإنترنت</label>
+        <label><input type="radio"> تسطيب Java</label>
+      </div>
+    </div>
+
+@@append u1-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>آلة حاسبة بالطباعة</div>
+      <p>اطبع جدول صغير: ناتج 7 × 8، و 100 − 37، وسطر بيجمع نص مع ناتج في نفس الـ print.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+print(7 * 8) ¦¦ بايثون بتحسب الأول وبعدين تطبع الناتج.
+print(100 - 37) ¦¦ طرح.
+print("7 × 8 =", 7 * 8) ¦¦ الفاصلة بتطبع الاتنين في نفس السطر بمسافة بينهم.
+print("7 * 8") ¦¦ بين علامات تنصيص ← نص بيتطبع زي ما هو، مش عملية.
+      @end
+      @out
+56
+63
+7 × 8 = 56
+7 * 8
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">print("5 + 3")</code> بتطبع…</p>
+        <label><input type="radio"> 8</label>
+        <label><input type="radio"> 5 + 3</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> "5 + 3"</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">print("a", "b")</code> بتطبع…</p>
+        <label><input type="radio"> a b</label>
+        <label><input type="radio"> ab</label>
+        <label><input type="radio"> a,b</label>
+        <label><input type="radio"> "a" "b"</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">print(10 - 2 * 3)</code>؟</p>
+        <label><input type="radio"> 24</label>
+        <label><input type="radio"> 10 - 2 * 3</label>
+        <label><input type="radio"> 6</label>
+        <label><input type="radio"> 4</label>
+      </div>
+    </div>
+
+@@append u1-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>اقتباس في سطرين</div>
+      <p>اطبع بـ <code class="inl">print</code> واحدة: سطر فيه كلام بين علامات تنصيص مزدوجة، وسطر تاني فيه مسافة جدولة في أوله.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+print('قال المدرّس: "بايثون سهلة"\n\tوأنا صدّقته') ¦¦ النص كله بين علامات مفردة، فالمزدوجة جوّاه عادي. `\n` سطر جديد، و `\t` مسافة جدولة.
+print("It's", 'a "test"') ¦¦ كل نص بعلامة غير اللي جوّاه — من غير هروب خالص.
+      @end
+      @out rtl
+قال المدرّس: "بايثون سهلة"
+	وأنا صدّقته
+It's a "test"
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">\n</code> جوّه نص معناها…</p>
+        <label><input type="radio"> حرف n</label>
+        <label><input type="radio"> مسافة</label>
+        <label><input type="radio"> سطر جديد</label>
+        <label><input type="radio"> نهاية البرنامج</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. نص متعدّد الأسطر بيتكتب بـ…</p>
+        <label><input type="radio"> علامة واحدة</label>
+        <label><input type="radio"> تلات علامات تنصيص</label>
+        <label><input type="radio"> أقواس مربعة</label>
+        <label><input type="radio"> #</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. أنهي سطر صحيح؟</p>
+        <label><input type="radio"> print('It\'s ok')</label>
+        <label><input type="radio"> print('It's ok')</label>
+        <label><input type="radio"> print("It"s ok")</label>
+        <label><input type="radio"> print(It's ok)</label>
+      </div>
+    </div>
+
+@@append u1-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>عطّل سطر مؤقّتًا</div>
+      <p>عندك 3 سطور طباعة. عطّل التاني من غير ما تمسحه، وضيف تعليق في آخر السطر الأول بيشرحه.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+print("بداية البرنامج")  # رسالة ترحيب ¦¦ تعليق في آخر السطر — الكود قبله بيشتغل عادي.
+# print("سطر بتجرّبه ومش عايزه دلوقتي") ¦¦ السطر كله بقى تعليق — اتعطّل ومسجّل عشان ترجعله.
+print("نهاية البرنامج") ¦¦ بيشتغل عادي.
+      @end
+      @out rtl
+بداية البرنامج
+نهاية البرنامج
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. التعليق في بايثون بيبدأ بـ…</p>
+        <label><input type="radio"> //</label>
+        <label><input type="radio"> --</label>
+        <label><input type="radio"> /*</label>
+        <label><input type="radio"> #</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. أحسن تعليق بيشرح…</p>
+        <label><input type="radio"> ليه الكود مكتوب كده</label>
+        <label><input type="radio"> كل سطر حرفيًا</label>
+        <label><input type="radio"> اسم المبرمج بس</label>
+        <label><input type="radio"> ولا حاجة</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">print("# مرحبا")</code> بتطبع…</p>
+        <label><input type="radio"> ولا حاجة (تعليق)</label>
+        <label><input type="radio"> # مرحبا</label>
+        <label><input type="radio"> مرحبا</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+    </div>
+
+@@append u1-l4
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تتبّع المتغيّرات</div>
+      <p>توقّع الناتج: متغيّر مدينة اتغيّر، وعدّاد زيارات زاد مرّتين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+city = "طنطا" ¦¦ القيمة الأولى.
+city = "القاهرة" ¦¦ إعادة إسناد — القيمة القديمة راحت.
+visits = 3 ¦¦ رقم.
+visits += 2 ¦¦ اختصار `visits = visits + 2`.
+total_price = visits * 50 ¦¦ متغيّر من عملية على متغيّر تاني. الاسم snake_case.
+print(city, visits, total_price) ¦¦ آخر قيمة لكل متغيّر.
+      @end
+      @out rtl
+القاهرة 5 250
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. أنهي اسم متغيّر صحيح؟</p>
+        <label><input type="radio"> 2name</label>
+        <label><input type="radio"> my-name</label>
+        <label><input type="radio"> my_name</label>
+        <label><input type="radio"> my name</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">x = 5</code> ثم <code class="inl">x += 3</code> — قيمة x؟</p>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> 8</label>
+        <label><input type="radio"> 53</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">a = 1</code> ثم <code class="inl">a = "one"</code>؟</p>
+        <label><input type="radio"> مسموح — المتغيّر بقى يشاور على نص</label>
+        <label><input type="radio"> خطأ في النوع</label>
+        <label><input type="radio"> a بقت 1one</label>
+        <label><input type="radio"> a فضلت 1</label>
+      </div>
+    </div>
+
+@@append u1-l5
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>اسأل بايثون عن الأنواع</div>
+      <p>اطبع نوع 4 قيم: عدد صحيح، عشري، رقم بين علامات تنصيص، و True.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+print(type(10)) ¦¦ عدد صحيح.
+print(type(2.5)) ¦¦ عشري.
+print(type("10")) ¦¦ ⚠️ بين علامات تنصيص = نص، حتى لو شكله رقم.
+print(type(True)) ¦¦ منطقي — بحرف T كبير.
+      @end
+      @out
+&lt;class 'int'&gt;
+&lt;class 'float'&gt;
+&lt;class 'str'&gt;
+&lt;class 'bool'&gt;
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. نوع <code class="inl">"3.5"</code>؟</p>
+        <label><input type="radio"> float</label>
+        <label><input type="radio"> str</label>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> bool</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. أنهي قيمة من نوع bool؟</p>
+        <label><input type="radio"> "True"</label>
+        <label><input type="radio"> true</label>
+        <label><input type="radio"> 1</label>
+        <label><input type="radio"> False</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. نوع <code class="inl">7.0</code>؟</p>
+        <label><input type="radio"> float</label>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> str</label>
+        <label><input type="radio"> number</label>
+      </div>
+    </div>
+
+@@append u1-l6
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>لافتة ترحيب</div>
+      <p>اطبع لافتة: سطر من 14 علامة =، وتحته «أهلًا يا» + الاسم + «!»، وتحته نفس السطر.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+name = "سارة" ¦¦ الاسم في متغيّر.
+line = "=" * 14 ¦¦ تكرار النص 14 مرّة.
+print(line) ¦¦ السطر العلوي.
+print("أهلًا يا " + name + "!") ¦¦ الدمج بـ `+` — والمسافة لازم تبقى جوّه النص بنفسك.
+print(line) ¦¦ السطر السفلي.
+      @end
+      @out rtl
+==============
+أهلًا يا سارة!
+==============
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">"ha" * 3</code>؟</p>
+        <label><input type="radio"> ha3</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> hahaha</label>
+        <label><input type="radio"> ha ha ha</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">"5" + "5"</code>؟</p>
+        <label><input type="radio"> "55"</label>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> "10"</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">"العمر: " + 25</code>؟</p>
+        <label><input type="radio"> العمر: 25</label>
+        <label><input type="radio"> العمر: </label>
+        <label><input type="radio"> 25</label>
+        <label><input type="radio"> TypeError</label>
+      </div>
+    </div>
+
+@@append u1-l7
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>سطر فاتورة</div>
+      <p>اطبع بـ f-string: اسم المنتج والكمية والإجمالي بخانتين عشريتين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+product = "كشكول" ¦¦ المنتج.
+price = 12.5 ¦¦ السعر.
+qty = 3 ¦¦ الكمية.
+print(f"{product} × {qty} = {price * qty:.2f} جنيه") ¦¦ عملية حسابية جوّه الأقواس، و `:.2f` = خانتين عشريتين.
+print(f"{'الإجمالي':>10}: {price * qty}") ¦¦ `:>10` = محاذاة يمين في 10 خانات.
+      @end
+      @out rtl
+كشكول × 3 = 37.50 جنيه
+  الإجمالي: 37.5
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">print(f"{2 + 3}")</code>؟</p>
+        <label><input type="radio"> 2 + 3</label>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> {2 + 3}</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">print("{name}")</code> من غير f…</p>
+        <label><input type="radio"> بتطبع قيمة name</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> بتطبع سطر فاضي</label>
+        <label><input type="radio"> بتطبع {name} حرفيًا</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">f"{3.14159:.1f}"</code>؟</p>
+        <label><input type="radio"> 3.14159</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 3.1</label>
+        <label><input type="radio"> 3.14</label>
+      </div>
+    </div>
+
+@@append u2-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>بطاقة زائر</div>
+      <p>اطلب الاسم والمدينة، ونظّف الاتنين (مسافات وحالة الحروف)، واطبع جملة ترحيب.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code
+name = input("اسمك: ").strip().title() ¦¦ `strip` بتشيل المسافات، و `title` بتكبّر أول حرف (للإنجليزي).
+city = input("مدينتك: ").strip() ¦¦ تنظيف المدينة.
+print(f"أهلًا يا {name} من {city}!") ¦¦ الترحيب.
+      @end
+      <p>جرّبه بمدخل زي <code class="inl">"   sara   "</code> — هيطبع <code class="inl">Sara</code> نضيفة.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="0">
+        <p class="qt">1. <code class="inl">input()</code> بترجّع دايمًا…</p>
+        <label><input type="radio"> نص (str)</label>
+        <label><input type="radio"> رقم لو المستخدم كتب رقم</label>
+        <label><input type="radio"> قائمة</label>
+        <label><input type="radio"> None</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. <code class="inl">input("اسمك: ")</code> — النص اللي جوّه الأقواس…</p>
+        <label><input type="radio"> القيمة الافتراضية</label>
+        <label><input type="radio"> اسم المتغيّر</label>
+        <label><input type="radio"> رسالة بتظهر للمستخدم قبل ما يكتب</label>
+        <label><input type="radio"> بيتجاهل</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. المستخدم كتب <code class="inl">"  ali "</code>. تشيل المسافات بـ…</p>
+        <label><input type="radio"> .title()</label>
+        <label><input type="radio"> .strip()</label>
+        <label><input type="radio"> .upper()</label>
+        <label><input type="radio"> int()</label>
+      </div>
+    </div>
+
+@@append u2-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>حوّل واجمع</div>
+      <p>عندك قيمتين جايين كنصوص (زي ما بيجوا من input). اجمعهم كأرقام، وبعدين اعرض الناتج جوّه جملة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+a = "12" ¦¦ نص.
+b = "3.5" ¦¦ نص فيه كسر.
+total = int(a) + float(b) ¦¦ التحويل قبل الجمع — int مع float بيطلّع float.
+print(total) ¦¦ الناتج رقم.
+print("المجموع: " + str(total)) ¦¦ عشان ندمجه مع نص بـ `+` لازم `str`.
+print(a + b) ¦¦ من غير تحويل: دمج نصوص مش جمع!
+      @end
+      @out rtl
+15.5
+المجموع: 15.5
+123.5
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">int("3.5")</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 3.5</label>
+        <label><input type="radio"> ValueError</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">int(3.9)</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 3.9</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. <code class="inl">float("7")</code>؟</p>
+        <label><input type="radio"> 7</label>
+        <label><input type="radio"> "7.0"</label>
+        <label><input type="radio"> 7.0</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+    </div>
+
+@@append u2-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>ثواني لساعات</div>
+      <p>حوّل 3725 ثانية لـ ساعات ودقايق وثواني.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+total = 3725 ¦¦ ثواني.
+hours = total // 3600 ¦¦ الساعات الكاملة (3600 ثانية في الساعة).
+rest = total % 3600 ¦¦ اللي فاضل بعد الساعات.
+minutes = rest // 60 ¦¦ الدقايق الكاملة من الباقي.
+seconds = rest % 60 ¦¦ الثواني الأخيرة.
+print(f"{hours} ساعة و {minutes} دقيقة و {seconds} ثانية") ¦¦ النتيجة.
+      @end
+      @out rtl
+1 ساعة و 2 دقيقة و 5 ثانية
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">2 + 3 * 2</code>؟</p>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> 8</label>
+        <label><input type="radio"> 7</label>
+        <label><input type="radio"> 12</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">17 % 5</code>؟</p>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 3.4</label>
+        <label><input type="radio"> 12</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. <code class="inl">10 / 5</code>؟</p>
+        <label><input type="radio"> 2</label>
+        <label><input type="radio"> 5</label>
+        <label><input type="radio"> "2"</label>
+        <label><input type="radio"> 2.0</label>
+      </div>
+    </div>
+
+@@append u3-l1
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>أطراف الكلمة</div>
+      <p>اطبع أول حرف وآخر حرف والحرف التالت من كلمة، وعدد حروفها.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+word = "Python" ¦¦ الكلمة.
+print(word[0], word[-1], word[2]) ¦¦ الفهرس 0 أول حرف، و -1 آخر حرف، و 2 التالت (العدّ من صفر).
+print(len(word)) ¦¦ الطول 6 — يعني آخر فهرس موجب 5.
+      @end
+      @out
+P n t
+6
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">"abc"[-1]</code>؟</p>
+        <label><input type="radio"> a</label>
+        <label><input type="radio"> b</label>
+        <label><input type="radio"> c</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">"abc"[3]</code>؟</p>
+        <label><input type="radio"> c</label>
+        <label><input type="radio"> ""</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> IndexError</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">s = "cat"</code> ثم <code class="inl">s[0] = "b"</code>؟</p>
+        <label><input type="radio"> TypeError — النصوص مش بتتعدّل</label>
+        <label><input type="radio"> s بقت bat</label>
+        <label><input type="radio"> s بقت bcat</label>
+        <label><input type="radio"> ما بيحصلش حاجة</label>
+      </div>
+    </div>
+
+@@append u3-l2
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تقطيع رقم تليفون</div>
+      <p>من <code class="inl">"01012345678"</code>: اطبع كود الشبكة (أول 3)، وآخر 4 أرقام، والرقم مخفي ما عدا آخر رقمين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+phone = "01012345678" ¦¦ الرقم كنص.
+print(phone[:3]) ¦¦ من الأول لحد قبل الفهرس 3.
+print(phone[-4:]) ¦¦ من رابع حرف من الآخر للنهاية.
+print("*" * (len(phone) - 2) + phone[-2:]) ¦¦ نجوم بعدد الحروف ناقص 2، وبعدها آخر رقمين.
+      @end
+      @out
+010
+5678
+*********78
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">"python"[1:4]</code>؟</p>
+        <label><input type="radio"> pyt</label>
+        <label><input type="radio"> yth</label>
+        <label><input type="radio"> ytho</label>
+        <label><input type="radio"> ython</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. تعكس نص بـ…</p>
+        <label><input type="radio"> s[-1]</label>
+        <label><input type="radio"> s[::1]</label>
+        <label><input type="radio"> s[0:-1]</label>
+        <label><input type="radio"> s[::-1]</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">"abc"[10:20]</code>؟</p>
+        <label><input type="radio"> "" نص فاضي</label>
+        <label><input type="radio"> IndexError</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> "abc"</label>
+      </div>
+    </div>
+
+@@append u3-l3
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تنظيف اسم كامل</div>
+      <p>من مدخل «وسخ» زي <code class="inl">"  ahmed   ALI hassan "</code>: اطبع الاسم منسّق، وعدد الأسماء، والأسماء مفصولة بشرطة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+raw = "  ahmed   ALI hassan " ¦¦ مدخل بمسافات وحروف متلخبطة.
+parts = raw.split() ¦¦ `split()` من غير وسيط بتقسم على أي مسافات وبتتجاهل الزيادة.
+print(" ".join(parts).title()) ¦¦ نرجّعهم بمسافة واحدة ونكبّر أول حرف من كل كلمة.
+print(len(parts)) ¦¦ عدد الأسماء.
+print("-".join(parts).lower()) ¦¦ مفصولين بشرطة وبحروف صغيرة (زي أسماء المستخدمين).
+print(raw.strip().startswith("ahmed")) ¦¦ دالة فحص بترجّع True/False.
+      @end
+      @out
+Ahmed Ali Hassan
+3
+ahmed-ali-hassan
+True
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">"a,b,c".split(",")</code>؟</p>
+        <label><input type="radio"> "abc"</label>
+        <label><input type="radio"> ['a,b,c']</label>
+        <label><input type="radio"> ['a', 'b', 'c']</label>
+        <label><input type="radio"> ('a', 'b', 'c')</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. <code class="inl">"python".find("z")</code>؟</p>
+        <label><input type="radio"> -1</label>
+        <label><input type="radio"> 0</label>
+        <label><input type="radio"> None</label>
+        <label><input type="radio"> ValueError</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">text.upper()</code> بتغيّر text نفسه؟</p>
+        <label><input type="radio"> أيوة</label>
+        <label><input type="radio"> لأ — بترجّع نص جديد، ولازم تخزّنه</label>
+        <label><input type="radio"> لو المتغيّر عالمي بس</label>
+        <label><input type="radio"> بترمي خطأ</label>
+      </div>
+    </div>
+
+@@append u3-l4
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>الحرف اللي بعده بـ 3</div>
+      <p>اطبع رقم الحرف A، والحرف رقم 66، والحرف اللي بعد <code class="inl">x</code> بـ 3 مع اللف لأول الأبجدية.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      @code run
+print(ord("A"), chr(66)) ¦¦ من حرف لرقم والعكس.
+letter = "x" ¦¦ حرف قريب من آخر الأبجدية.
+position = ord(letter) - ord("a") ¦¦ مكانه من 0 لـ 25 (x = 23).
+shifted = (position + 3) % 26 ¦¦ الإزاحة مع اللف: 26 % 26 = 0.
+print(chr(ord("a") + shifted)) ¦¦ نرجّع المكان لحرف ← a.
+      @end
+      @out
+65 B
+a
+      @end
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. <code class="inl">chr(ord("a") + 1)</code>؟</p>
+        <label><input type="radio"> a1</label>
+        <label><input type="radio"> 98</label>
+        <label><input type="radio"> خطأ</label>
+        <label><input type="radio"> b</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. <code class="inl">ord</code> بترجّع…</p>
+        <label><input type="radio"> حرف</label>
+        <label><input type="radio"> رقم الحرف في Unicode</label>
+        <label><input type="radio"> ترتيبه في الكلمة</label>
+        <label><input type="radio"> True/False</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ليه بنستخدم <code class="inl">% 26</code> في التشفير؟</p>
+        <label><input type="radio"> عشان نلف لأول الأبجدية بعد z</label>
+        <label><input type="radio"> عشان نكبّر الحروف</label>
+        <label><input type="radio"> عشان نشيل المسافات</label>
+        <label><input type="radio"> مالهاش لازمة</label>
+      </div>
+    </div>

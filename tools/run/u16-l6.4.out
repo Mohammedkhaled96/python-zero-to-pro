@@ -1,0 +1,8 @@
+**********************************************************************
+File "main.py", line 4, in average
+Failed example:
+    average([2, 4, 6])
+Expected:
+    4
+Got:
+    4.0

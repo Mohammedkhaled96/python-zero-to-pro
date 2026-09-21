@@ -1,0 +1,1316 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة التاسعة عشرة · آفاق بايثون</div>
+    <h2>بايثون في العالم الحقيقي: مدخل للذكاء الاصطناعي والمجالات المختلفة</h2>
+    <p>
+      إنت دلوقتي بتعرف بايثون كويس. السؤال: <strong>هتستخدمها في إيه؟</strong> الوحدة دي جولة في أشهر المجالات —
+      وأكبرها الذكاء الاصطناعي، اللي بايثون هي لغته الأولى — بأمثلة صغيرة شغّالة تحس بيها طعم كل مجال قبل ما تختار طريقك.
+      مفيش تعقيد هنا: الهدف تفهم <em>الفكرة</em> وتشوفها بتشتغل قدّامك.
+    </p>
+  </div>
+
+  <!-- ADD:u19-l1 -->
+  <!-- 19.1 -->
+  <article class="lesson" id="u19-l1">
+    <h3>ليه بايثون في كل مكان؟ خريطة المجالات <span class="tag">درس 102 · نظرة عامة</span></h3>
+    <p class="goal">الهدف: تشوف الصورة الكبيرة — المجالات اللي بايثون بتتستخدم فيها، ليه هي بالذات، ومحتاج تتعلّم إيه بعد الكورس عشان تدخل كل مجال.</p>
+
+    <h4>1. السرّ: بايثون «لغة الغراء»</h4>
+    <p>
+      فاكر في الوحدة صفر إن بايثون لغة عالية المستوى وأبطأ من C؟ طب إزاي أقوى أنظمة الذكاء الاصطناعي في العالم مكتوبة بيها؟
+      الإجابة: <strong>الشغل التقيل مش بيحصل في بايثون أصلًا</strong>. المكتبات الكبيرة زي NumPy و PyTorch مكتوبة من جوّه بـ C و C++ و CUDA (لكروت الشاشة)،
+      وبايثون بتبقى <strong>الواجهة السهلة</strong> اللي بتتحكّم فيهم. إنت بتكتب سطر مقروء، والمحرّك السريع هو اللي بيشتغل.
+    </p>
+    <div class="diagram">
+<pre>  ┌───────────────────────────────────────────────────────┐
+  │   كودك ببايثون:   model.fit(data)   ← سهل ومقروء      │
+  ├───────────────────────────────────────────────────────┤
+  │   مكتبات بايثون:  scikit-learn · pandas · PyTorch     │
+  ├───────────────────────────────────────────────────────┤
+  │   المحرّكات:       C · C++ · Fortran · CUDA  ← السرعة  │
+  ├───────────────────────────────────────────────────────┤
+  │   العتاد:          المعالج (CPU) · كارت الشاشة (GPU)   │
+  └───────────────────────────────────────────────────────┘</pre>
+      <div class="cap">إنت بتستفيد من سهولة بايثون وسرعة C في نفس الوقت</div>
+    </div>
+    <div class="box brain">
+      <div class="bt">🧠 ليه بايثون كسبت؟</div>
+      <ul>
+        <li><strong>سهلة القراءة</strong>: العلماء والباحثين والمحلّلين مش مبرمجين محترفين — بايثون خلّتهم يكتبوا كود بنفسهم.</li>
+        <li><strong>نظام مكتبات ضخم</strong>: مئات الآلاف من المكتبات على PyPI — نادرًا ما هتبدأ من الصفر.</li>
+        <li><strong>مجتمع ضخم</strong>: أي مشكلة هتقابلها، حد غالبًا حلّها وكتب عنها.</li>
+        <li><strong>لغة واحدة لكذا مجال</strong>: نفس اللي اتعلّمته في الكورس ده بيتنقل معاك لأي تراك.</li>
+      </ul>
+    </div>
+
+    <h4>2. خريطة المجالات</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المجال</th><th>بيعمل إيه</th><th>أشهر المكتبات</th><th>مدخله في الوحدة دي</th></tr>
+        <tr><td>🤖 <strong>الذكاء الاصطناعي وتعلّم الآلة</strong></td><td>أنظمة بتتعلّم من البيانات: توقّع، تصنيف، رؤية، لغة</td><td>scikit-learn · PyTorch · TensorFlow · Hugging Face</td><td>التلات دروس الجاية + مشروع مصنّف السبام</td></tr>
+        <tr><td>📊 <strong>تحليل وعلوم البيانات</strong></td><td>تحويل الأرقام لقرارات: تقارير ولوحات ورسوم</td><td>NumPy · pandas · Matplotlib · Jupyter</td><td>درس «تحليل البيانات»</td></tr>
+        <tr><td>🌐 <strong>تطوير الويب (Back-End)</strong></td><td>مواقع وتطبيقات وواجهات APIs</td><td>Django · Flask · FastAPI</td><td>درس «تطوير الويب»</td></tr>
+        <tr><td>⚙️ <strong>الأتمتة</strong></td><td>سكريبتات بتعمل الشغل المتكرّر بدالك</td><td>openpyxl · Selenium · BeautifulSoup · schedule</td><td>درس «الأتمتة»</td></tr>
+        <tr><td>🛡️ <strong>الأمن السيبراني</strong></td><td>فحص الأنظمة، تحليل البرمجيات الخبيثة، أدوات الحماية</td><td>hashlib · Scapy · cryptography</td><td>درس «مجالات تانية»</td></tr>
+        <tr><td>🎮 <strong>الألعاب</strong></td><td>ألعاب 2D ونماذج أولية</td><td>Pygame · Arcade</td><td>درس «مجالات تانية»</td></tr>
+        <tr><td>🖥️ <strong>برامج سطح المكتب</strong></td><td>برامج بواجهة رسومية</td><td>Tkinter · PySide/PyQt</td><td>درس «مجالات تانية»</td></tr>
+        <tr><td>📡 <strong>إنترنت الأشياء (IoT)</strong></td><td>التحكّم في حسّاسات وأجهزة صغيرة</td><td>MicroPython · Raspberry Pi</td><td>درس «مجالات تانية»</td></tr>
+        <tr><td>🔬 <strong>العلوم والبحث</strong></td><td>محاكاة، فلك، أحياء، هندسة</td><td>SciPy · SymPy · Biopython · Astropy</td><td>—</td></tr>
+        <tr><td>☁️ <strong>DevOps والسحابة</strong></td><td>أتمتة السيرفرات والنشر والبنية التحتية</td><td>Ansible · boto3 · Fabric</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="box info">
+      <div class="bt">ℹ️ إزاي تستخدم الوحدة دي</div>
+      <p>
+        الوحدة دي <strong>مدخل مش تخصّص</strong>. كل درس بيوريك «طعم» المجال بأمثلة صغيرة شغّالة، عشان تجرّب وتحس إنت بتحب أنهي واحد.
+        الأمثلة اللي فيها مكتبات خارجية محتاجة <code class="inl">pip install</code> الأول (الوحدة 14) — ويُفضّل جوّه بيئة افتراضية.
+        وما تقلقش لو في مصطلحات جديدة: الهدف تفهم <em>الفكرة</em>، مش تحفظ الأوامر.
+      </p>
+    </div>
+        <!-- APPEND:u19-l1 -->
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. «لغة الغراء» معناها إن بايثون…</p>
+        <label><input type="radio"> أسرع لغة في التنفيذ</label>
+        <label><input type="radio"> بتشتغل على المتصفّح بس</label>
+        <label><input type="radio"> بتوصّل مكتبات مكتوبة بـ C وCUDA وبتديك واجهة سهلة تتحكّم بيها</label>
+        <label><input type="radio"> بديل كامل للغات التانية</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. المكتبات التقيلة (NumPy، TensorFlow) الحساب الفعلي فيها بيتم…</p>
+        <label><input type="radio"> في كود C/C++ مترجَم تحت السطح</label>
+        <label><input type="radio"> في بايثون سطر سطر</label>
+        <label><input type="radio"> في المتصفّح</label>
+        <label><input type="radio"> على السيرفر بس</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. بايثون <strong>مش</strong> الاختيار الأول في…</p>
+        <label><input type="radio"> تحليل البيانات</label>
+        <label><input type="radio"> الأتمتة</label>
+        <label><input type="radio"> تعلّم الآلة</label>
+        <label><input type="radio"> تطبيقات الموبايل والألعاب التقيلة</label>
+      </div>
+    </div>
+    <!-- /APPEND:u19-l1 -->
+            <!-- SUM:u19-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>بايثون واجهة سهلة فوق محرّكات سريعة بـ C/C++/CUDA.</li><li>مكتبات لكل مجال: AI وبيانات وويب وأتمتة وأمن وألعاب.</li><li>الوحدة دي مدخل تجرّب فيه قبل ما تختار تراك.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u19-l1 -->
+
+  <!-- ADD:u19-l2 -->
+  <!-- 19.2 -->
+  <article class="lesson" id="u19-l2">
+    <h3>مدخل للذكاء الاصطناعي: يعني إيه الآلة «تتعلّم»؟ <span class="tag">درس 103 · جوهري</span></h3>
+    <p class="goal">الهدف: تفهم الفرق بين البرمجة التقليدية وتعلّم الآلة، وتشوف بعينك آلة بتتعلّم قاعدة من بيانات — ببايثون عادية الأول، وبعدين بمكتبة scikit-learn.</p>
+
+    <h4>1. المصطلحات: مين جوّه مين؟</h4>
+    <div class="diagram">
+<pre>  ┌─────────────────────────────────────────────────────────────┐
+  │ الذكاء الاصطناعي (AI): أي نظام بيقلّد سلوك ذكي               │
+  │   ┌─────────────────────────────────────────────────────┐   │
+  │   │ تعلّم الآلة (ML): الآلة بتتعلّم القواعد من البيانات    │   │
+  │   │   ┌─────────────────────────────────────────────┐   │   │
+  │   │   │ التعلّم العميق (DL): شبكات عصبية بطبقات كتير  │   │   │
+  │   │   │   ┌─────────────────────────────────────┐   │   │   │
+  │   │   │   │ نماذج اللغة الكبيرة (LLMs)           │   │   │   │
+  │   │   │   │ زي المساعدات الذكية اللي بتكلّمها     │   │   │   │
+  │   │   │   └─────────────────────────────────────┘   │   │   │
+  │   │   └─────────────────────────────────────────────┘   │   │
+  │   └─────────────────────────────────────────────────────┘   │
+  └─────────────────────────────────────────────────────────────┘</pre>
+      <div class="cap">كل دايرة جزء من اللي أكبر منها</div>
+    </div>
+
+    <h4>2. الفرق الجوهري</h4>
+    <div class="diagram">
+<pre>  البرمجة التقليدية (كل اللي عملناه في الكورس):
+      القواعد (الكود بتاعك)  +  البيانات   ──►   الإجابات
+      مثال: if price > 1000: "غالي"
+
+  تعلّم الآلة:
+      البيانات  +  الإجابات الصح (أمثلة)   ──►   القواعد (النموذج)
+      مثال: ورّيها 10,000 شقة بأسعارها ← تستنتج هي إزاي تسعّر</pre>
+      <div class="cap">في تعلّم الآلة إنت ما بتكتبش القاعدة — بتدّي أمثلة والآلة بتستنتجها</div>
+    </div>
+    <p>
+      ليه؟ لأن فيه مشاكل <strong>مستحيل تكتب قواعدها بإيدك</strong>: إزاي تكتب <code class="inl">if</code> تعرف بيها صورة فيها قطة؟
+      أو إيميل ده احتيال ولّا لأ؟ فيه ملايين الاحتمالات. لكن لو عندك أمثلة كفاية، الآلة تقدر تلاقي النمط.
+    </p>
+
+    <h4>3. آلة بتتعلّم — ببايثون عادية خالص</h4>
+    <p>عندنا أسعار شقق حقيقية (بالألف جنيه) ومساحاتها. عايزين الآلة «تكتشف» سعر المتر لوحدها، من غير ما نقولها.</p>
+    <div class="code" data-file="learn.py"><pre>
+areas = [50, 80, 100, 120, 150]
+prices = [520, 790, 1010, 1180, 1530]
+best_w, best_error = None, float("inf")
+for step in range(50, 151):
+    w = step / 10
+    error = sum((w * a - p) ** 2 for a, p in zip(areas, prices))
+    if error &lt; best_error:
+        best_w, best_error = w, error
+print(f"الآلة اتعلّمت: السعر ≈ {best_w} × المساحة")
+print(f"توقّع لشقة 90 متر: {best_w * 90:.0f} ألف")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الآلة اتعلّمت: السعر ≈ 10.1 × المساحة
+توقّع لشقة 90 متر: 909 ألف</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 ده بالظبط تعلّم الآلة — بشكل مصغّر</div>
+      <p>
+        <strong>1) بيانات</strong> فيها أمثلة وإجاباتها · <strong>2) نموذج</strong> فيه أرقام قابلة للتعديل (هنا رقم واحد w) ·
+        <strong>3) دالة خطأ</strong> بتقيس النموذج غلطان قد إيه · <strong>4) تدريب</strong> = تعديل الأرقام لحد ما الخطأ يبقى أقل حاجة ·
+        <strong>5) توقّع</strong> على بيانات جديدة. النماذج الحقيقية فيها ملايين (أو مليارات) الأرقام بدل رقم واحد، وبتتعدّل بطرق رياضية أذكى من «جرّب كل الاحتمالات» — لكن الفكرة واحدة.
+      </p>
+    </div>
+
+    <h4>4. نفس الفكرة بـ scikit-learn</h4>
+    <p><code class="inl">scikit-learn</code> (<code class="inl">pip install scikit-learn</code>) هي أشهر مكتبة لتعلّم الآلة الكلاسيكي. كل نماذجها بتتكلّم نفس اللغة: <code class="inl">fit</code> للتدريب و <code class="inl">predict</code> للتوقّع.</p>
+    <div class="code"><pre>
+from sklearn.linear_model import LinearRegression
+X = [[50], [80], [100], [120], [150]]
+y = [520, 790, 1010, 1180, 1530]
+model = LinearRegression()
+model.fit(X, y)
+print(round(model.coef_[0], 2), round(model.intercept_, 1))
+print(round(model.predict([[90]])[0]))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>10.05 0.8
+905</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ النموذج مش سحر</div>
+      <ul>
+        <li><strong>«Garbage in, garbage out»</strong>: بيانات قليلة أو غلط أو متحيّزة = نموذج بيتوقّع غلط بثقة.</li>
+        <li><strong>بيعرف اللي شافه بس</strong>: لو كل الشقق في التدريب من 50 لـ 150 متر، توقّعه لقصر 2000 متر مالوش أي قيمة.</li>
+        <li><strong>السعر الحقيقي بيعتمد على حاجات كتير</strong> (المنطقة، الدور، التشطيب) — كل ما تدّي خصائص مفيدة أكتر، التوقّع يتحسّن.</li>
+      </ul>
+    </div>
+        <!-- APPEND:u19-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>آلة بتتعلّم قاعدة بسيطة</div>
+      <p>عندك أمثلة (مساحة الشقة ← السعر). خلّي البرنامج «يتعلّم» السعر للمتر من البيانات بدل ما تكتبه بإيدك، وبعدين يتوقّع سعر شقة جديدة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+data = [(60, 600000), (80, 800000), (100, 1000000), (120, 1200000)]
+rate = sum(price / area for area, price in data) / len(data)
+print("سعر المتر اللي اتعلّمه:", round(rate))
+def predict(area):
+    return round(rate * area)
+print("توقّع 90 متر:", predict(90))
+errors = [abs(predict(a) - p) for a, p in data]
+print("أكبر خطأ على بيانات التدريب:", max(errors))
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>سعر المتر اللي اتعلّمه: 10000
+توقّع 90 متر: 900000
+أكبر خطأ على بيانات التدريب: 0</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. الترتيب الصح من الأعمّ للأخصّ…</p>
+        <label><input type="radio"> تعلّم عميق ← تعلّم آلة ← ذكاء اصطناعي</label>
+        <label><input type="radio"> ذكاء اصطناعي ← تعلّم آلة ← تعلّم عميق</label>
+        <label><input type="radio"> تعلّم آلة ← ذكاء اصطناعي ← تعلّم عميق</label>
+        <label><input type="radio"> كلهم نفس الحاجة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. الفرق الجوهري بين البرمجة العادية وتعلّم الآلة…</p>
+        <label><input type="radio"> في العادية إنت بتكتب القاعدة، وفي التعلّم البرنامج بيستنتجها من أمثلة</label>
+        <label><input type="radio"> تعلّم الآلة أسرع في التنفيذ</label>
+        <label><input type="radio"> تعلّم الآلة مش محتاج بيانات</label>
+        <label><input type="radio"> مفيش فرق حقيقي</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. «التعلّم المُوجَّه» (supervised) محتاج…</p>
+        <label><input type="radio"> إنترنت سريع</label>
+        <label><input type="radio"> كارت شاشة</label>
+        <label><input type="radio"> مفيش شروط</label>
+        <label><input type="radio"> أمثلة معروف ناتجها الصح (بيانات موسومة)</label>
+      </div>
+    </div>
+    <!-- /APPEND:u19-l2 -->
+            <!-- SUM:u19-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>تعلّم الآلة: بيانات + إجابات ← النموذج يستنتج القاعدة.</li><li>التدريب = تعديل أرقام النموذج عشان دالة الخطأ تقلّ.</li><li>scikit-learn: <code class="inl">fit</code> للتدريب و <code class="inl">predict</code> للتوقّع.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u19-l2 -->
+
+  <!-- ADD:u19-l3 -->
+  <!-- 19.3 -->
+  <article class="lesson" id="u19-l3">
+    <h3>التصنيف: علّم الآلة تفرّق بين الحاجات <span class="tag">درس 104</span></h3>
+    <p class="goal">الهدف: تبني مصنّف بسيط بإيدك بفكرة «أقرب الجيران»، وبعدين بـ scikit-learn، وتتعلّم أهم قاعدة في تقييم أي نموذج: اختبره على بيانات ما شافهاش.</p>
+
+    <h4>1. نوعين أساسيين من المشاكل</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>النوع</th><th>الإجابة</th><th>أمثلة</th></tr>
+        <tr><td><strong>انحدار (Regression)</strong></td><td>رقم</td><td>سعر شقة، درجة حرارة بكرة، مبيعات الشهر الجاي</td></tr>
+        <tr><td><strong>تصنيف (Classification)</strong></td><td>فئة من اختيارات</td><td>سبام أو لأ، نوع الوردة، العميل هيلغي الاشتراك ولّا لأ</td></tr>
+      </table>
+    </div>
+
+    <h4>2. «أقرب الجيران» بإيدك</h4>
+    <p>الفكرة بسيطة جدًا: <strong>قولّي مين شبهك أقولّك إنت مين</strong>. عشان نعرف فاكهة جديدة، ندوّر على أقرب 3 فواكه ليها في البيانات، ونشوف أغلبهم إيه.</p>
+    <div class="diagram">
+<pre>  النعومة
+    10 │    🍎(140,9) 🍎(150,9)
+     8 │                    🍎(170,8)
+     7 │               ❓(155,7)       ← فاكهة جديدة: أقرب 3؟
+     4 │                  🍊(160,4)
+     3 │      🍊(130,3)
+     2 │  🍊(120,2)
+       └──────────────────────────── الوزن (جرام)
+          120   130   140   150   160   170</pre>
+      <div class="cap">كل فاكهة نقطة بخاصيتين — والتصنيف = مين حواليك</div>
+    </div>
+    <div class="code" data-file="knn.py"><pre>
+import math
+from collections import Counter
+data = [
+    ((150, 9), "تفاحة"), ((170, 8), "تفاحة"), ((140, 9), "تفاحة"),
+    ((130, 3), "برتقالة"), ((120, 2), "برتقالة"), ((160, 4), "برتقالة"),
+]
+def predict(sample, k=3):
+    nearest = sorted(data, key=lambda item: math.dist(sample, item[0]))[:k]
+    votes = Counter(label for _, label in nearest)
+    return votes.most_common(1)[0][0]
+print(predict((155, 7)))
+print(predict((125, 3)))
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>تفاحة
+برتقالة</pre></div>
+
+    <h4>3. نفس المصنّف بـ scikit-learn</h4>
+    <div class="code"><pre>
+from sklearn.neighbors import KNeighborsClassifier
+X = [[150, 9], [170, 8], [140, 9], [130, 3], [120, 2], [160, 4]]
+y = ["تفاحة", "تفاحة", "تفاحة", "برتقالة", "برتقالة", "برتقالة"]
+model = KNeighborsClassifier(n_neighbors=3)
+model.fit(X, y)
+print(model.predict([[155, 7], [125, 3]]))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['تفاحة' 'برتقالة']</pre></div>
+
+    <h4>4. القاعدة الذهبية: ذاكر من كتاب وامتحن من كتاب تاني</h4>
+    <p>
+      لو قيّمت النموذج على نفس البيانات اللي اتدرّب عليها، زي طالب حافظ إجابات الامتحان — هيجيب الدرجة النهائية ومش فاهم حاجة.
+      عشان كده بنقسم البيانات: <strong>جزء للتدريب</strong> وجزء <strong>مخفي</strong> للاختبار. هنجرّب على بيانات حقيقية مشهورة: 150 وردة من 3 أنواع.
+    </p>
+    <div class="code" data-file="iris.py"><pre>
+from sklearn.datasets import load_iris
+from sklearn.model_selection import train_test_split
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.metrics import accuracy_score
+iris = load_iris()
+print(iris.data.shape, ", ".join(iris.target_names))
+X_train, X_test, y_train, y_test = train_test_split(
+    iris.data, iris.target, test_size=0.3, random_state=42
+)
+model = DecisionTreeClassifier(random_state=42)
+model.fit(X_train, y_train)
+predictions = model.predict(X_test)
+print(f"الدقّة: {accuracy_score(y_test, predictions):.0%}")
+flower = [[5.1, 3.5, 1.4, 0.2]]
+print(iris.target_names[model.predict(flower)[0]])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>(150, 4) setosa, versicolor, virginica
+الدقّة: 100%
+setosa</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ 100% مش دايمًا خبر حلو</div>
+      <p>
+        بيانات السوسن سهلة ونظيفة جدًا عشان كده الدقّة عالية. في المشاكل الحقيقية، دقّة 100% غالبًا معناها غلطة:
+        إن بيانات الاختبار «تسرّبت» للتدريب، أو النموذج <strong>حفظ</strong> بدل ما <strong>يفهم</strong> (Overfitting).
+        وكمان الدقّة لوحدها ممكن تخدع: لو 99% من الإيميلات عادية، نموذج بيقول «عادي» على كله دقّته 99% وهو مالوش لازمة!
+      </p>
+    </div>
+        <!-- APPEND:u19-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>أقرب جار بإيدك</div>
+      <p>نفّذ 1-NN: صنّف فاكهة جديدة (وزن، خشونة) حسب أقرب مثال، وبعدين قسّم البيانات تدريب/اختبار وقيس الدقّة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+train = [
+    (150, 8, "برتقان"), (170, 9, "برتقان"), (140, 7, "برتقان"),
+    (120, 2, "تفاح"), (130, 3, "تفاح"), (110, 1, "تفاح"),
+]
+def distance(a, b):
+    return ((a[0] - b[0]) ** 2 + (a[1] - b[1]) ** 2) ** 0.5
+def classify(point):
+    nearest = min(train, key=lambda row: distance(row, point))
+    return nearest[2]
+print(classify((160, 8)))
+print(classify((115, 2)))
+test = [(155, 9, "برتقان"), (125, 2, "تفاح"), (135, 6, "برتقان")]
+correct = sum(1 for point in test if classify(point) == point[2])
+print(f"الدقّة: {correct}/{len(test)}")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>برتقان
+تفاح
+الدقّة: 3/3</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. «هل الرسالة سبام؟» دي مشكلة…</p>
+        <label><input type="radio"> انحدار (Regression)</label>
+        <label><input type="radio"> تجميع (Clustering)</label>
+        <label><input type="radio"> تصنيف (Classification)</label>
+        <label><input type="radio"> ترتيب</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ليه بنقسم البيانات تدريب واختبار؟</p>
+        <label><input type="radio"> عشان نقيس الأداء على بيانات النموذج ما شافهاش</label>
+        <label><input type="radio"> عشان التدريب يبقى أسرع</label>
+        <label><input type="radio"> عشان نوفّر ذاكرة</label>
+        <label><input type="radio"> مفيش سبب حقيقي</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. دقّة 100% على بيانات التدريب و60% على الاختبار معناها…</p>
+        <label><input type="radio"> نموذج ممتاز</label>
+        <label><input type="radio"> حفظ مش تعلّم (Overfitting)</label>
+        <label><input type="radio"> بيانات ناقصة</label>
+        <label><input type="radio"> خطأ في الكود أكيد</label>
+      </div>
+    </div>
+    <!-- /APPEND:u19-l3 -->
+            <!-- SUM:u19-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>انحدار = توقّع رقم، وتصنيف = توقّع فئة.</li><li>أقرب الجيران: مين أقرب k نقط؟ والأغلبية تكسب.</li><li>قيّم دايمًا على بيانات ما شافهاش النموذج (<code class="inl">train_test_split</code>).</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u19-l3 -->
+
+  <!-- ADD:u19-l4 -->
+  <!-- 19.4 -->
+  <article class="lesson" id="u19-l4">
+    <h3>من الخلية العصبية لنماذج اللغة الكبيرة (LLMs) <span class="tag">درس 105</span></h3>
+    <p class="goal">الهدف: تفهم إيه هي الشبكة العصبية بتنفيذ «خلية عصبية» واحدة بإيدك، وتفهم الفكرة اللي بتقوم عليها نماذج المحادثة الذكية بمثال مصغّر جدًا.</p>
+
+    <h4>1. الخلية العصبية الاصطناعية</h4>
+    <div class="diagram">
+<pre>   المدخل 1 ──(× وزن 1)──┐
+                         ├──► مجموع + انحياز ──► دالة تفعيل ──► المخرج (0 أو 1)
+   المدخل 2 ──(× وزن 2)──┘                        (أكبر من صفر؟)
+
+   التعلّم = تعديل الأوزان والانحياز كل ما الخلية تغلط</pre>
+      <div class="cap">الخلية الواحدة (Perceptron) — فكرة من سنة 1958</div>
+    </div>
+    <p>هنعلّم خلية واحدة منطق <code class="inl">and</code>: تطلّع 1 بس لو المدخلين 1. من غير ما نكتب <code class="inl">and</code> خالص.</p>
+    <div class="code" data-file="neuron.py"><pre>
+data = [((0, 0), 0), ((0, 1), 0), ((1, 0), 0), ((1, 1), 1)]
+w1, w2, bias = 0.0, 0.0, 0.0
+lr = 0.1
+def neuron(x1, x2):
+    total = x1 * w1 + x2 * w2 + bias
+    return 1 if total &gt; 0 else 0
+for epoch in range(10):
+    errors = 0
+    for (x1, x2), target in data:
+        error = target - neuron(x1, x2)
+        if error:
+            errors += 1
+            w1 += lr * error * x1
+            w2 += lr * error * x2
+            bias += lr * error
+    if errors == 0:
+        print(f"اتعلّمت في الجولة {epoch + 1}")
+        break
+print([neuron(x1, x2) for (x1, x2), _ in data])
+print(f"w1={w1:.1f} w2={w2:.1f} bias={bias:.1f}")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>اتعلّمت في الجولة 6
+[0, 0, 0, 1]
+w1=0.2 w2=0.1 bias=-0.2</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 من خلية لعقل</div>
+      <p>
+        <strong>الشبكة العصبية</strong> = آلاف أو ملايين الخلايا دي في طبقات، مخرج كل طبقة مدخل للي بعدها.
+        <strong>التعلّم العميق</strong> = شبكات بطبقات كتير جدًا. الطبقات الأولى في شبكة بتتعرّف على الصور بتتعلّم تشوف خطوط وحواف،
+        واللي بعدها أشكال، واللي بعدها عيون ووشوش. بتتبني بمكتبات زي <strong>PyTorch</strong> و <strong>TensorFlow</strong>، وبتتدرّب على كروت الشاشة (GPU).
+      </p>
+    </div>
+
+    <h4>2. نماذج اللغة: «توقّع الكلمة الجاية»</h4>
+    <p>
+      المساعدات الذكية اللي بتكلّمها بالعربي والإنجليزي مبنية على فكرة أساسية بسيطة بشكل مدهش: <strong>بتدّيها نص، وبتتوقّع الكلمة (أو جزء الكلمة) الجاية</strong>،
+      وتكرّر. هنبني أبسط نسخة ممكنة: نموذج بيتعلّم «بعد كل كلمة، إيه الكلمة اللي بتيجي بعدها أكتر؟».
+    </p>
+    <div class="code" data-file="tiny_lm.py"><pre>
+from collections import Counter, defaultdict
+text = "أنا بحب بايثون . أنا بحب البرمجة . أنا بتعلّم بايثون كل يوم . بايثون سهلة"
+words = text.split()
+next_words = defaultdict(Counter)
+for current, following in zip(words, words[1:]):
+    next_words[current][following] += 1
+print(next_words["أنا"].most_common())
+print(next_words["بحب"].most_common())
+word = "أنا"
+sentence = [word]
+for _ in range(3):
+    word = next_words[word].most_common(1)[0][0]
+    sentence.append(word)
+print(" ".join(sentence))
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>[('بحب', 2), ('بتعلّم', 1)]
+[('بايثون', 1), ('البرمجة', 1)]
+أنا بحب بايثون .</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ الفرق بين لعبتنا والنماذج الحقيقية</div>
+      <ul>
+        <li><strong>السياق</strong>: نموذجنا بيبص على <em>كلمة واحدة</em> قبل. النماذج الكبيرة بتبص على آلاف الكلمات مع بعض عشان تفهم المعنى (بفضل معمارية اسمها Transformer).</li>
+        <li><strong>الحجم</strong>: بدل عدّاد بسيط، مليارات الأوزان في شبكة عصبية عميقة.</li>
+        <li><strong>التهذيب</strong>: بعد التدريب الأولي، بتتدرّب تاني عشان تبقى مفيدة وآمنة في المحادثة.</li>
+        <li><strong>بايثون في كل خطوة</strong>: تجهيز البيانات، التدريب (PyTorch)، التقييم، وبناء التطبيقات فوقها.</li>
+      </ul>
+    </div>
+
+    <h4>3. إزاي تبني تطبيق بالذكاء الاصطناعي من غير ما تدرّب نموذج؟</h4>
+    <p>
+      أغلب المطوّرين النهارده <strong>ما بيدرّبوش</strong> نماذج لغة — بيستخدموا نماذج جاهزة عن طريق <strong>API</strong>: نفس اللي اتعلّمته في الوحدة 14 مع <code class="inl">requests</code>،
+      ومفتاح API محفوظ في متغيّر بيئة (درس الأمان). بتبعت النص، والنموذج يرجّع الرد كـ JSON — وبتبني حواليه تطبيقك: شات بوت لخدمة العملاء، ملخّص مستندات، مصنّف تذاكر دعم.
+    </p>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>عايز تعمل إيه؟</th><th>ابدأ بـ</th></tr>
+        <tr><td>تعلّم الآلة الكلاسيكي (جداول وأرقام)</td><td>scikit-learn · pandas</td></tr>
+        <tr><td>تدريب شبكات عصبية</td><td>PyTorch (الأشهر في البحث) · TensorFlow/Keras</td></tr>
+        <tr><td>تستخدم نماذج جاهزة مفتوحة المصدر (نصوص، صور، صوت)</td><td>Hugging Face transformers</td></tr>
+        <tr><td>تبني تطبيق فوق نموذج لغة عن طريق API</td><td>SDK الشركة المزوّدة للنموذج + FastAPI لواجهة تطبيقك</td></tr>
+        <tr><td>الرؤية الحاسوبية (صور وفيديو)</td><td>OpenCV · Pillow</td></tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ مسؤولية المبرمج</div>
+      <ul>
+        <li><strong>الهلوسة</strong>: نماذج اللغة ممكن تألّف معلومة غلط بثقة تامة — راجع دايمًا، خصوصًا الكود والأرقام.</li>
+        <li><strong>التحيّز</strong>: النموذج بيتعلّم من بيانات بشر، فممكن يورث تحيّزاتهم (في التوظيف، القروض…).</li>
+        <li><strong>الخصوصية</strong>: ما تبعتش بيانات شخصية أو سرّية لخدمة خارجية من غير ما تعرف هتتعامل معاها إزاي.</li>
+      </ul>
+    </div>
+        <!-- APPEND:u19-l4 -->
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. «الأوزان» في الشبكة العصبية هي…</p>
+        <label><input type="radio"> سرعة التدريب</label>
+        <label><input type="radio"> عدد الطبقات</label>
+        <label><input type="radio"> البيانات نفسها</label>
+        <label><input type="radio"> الأرقام اللي بتتعدّل في التدريب وبتحدّد أهمية كل مدخل</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">2. نموذج اللغة الكبير (LLM) في جوهره بيعمل…</p>
+        <label><input type="radio"> بيدوّر على الجواب في قاعدة بيانات</label>
+        <label><input type="radio"> بيتوقّع الوحدة النصّية الجاية حسب الاحتمالات</label>
+        <label><input type="radio"> بينفّذ كود بايثون داخليًا</label>
+        <label><input type="radio"> بيترجم بس</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. عايز تطبيق بذكاء اصطناعي من غير ما تدرّب نموذج…</p>
+        <label><input type="radio"> استخدم API لنموذج جاهز (ومفتاحك في متغيّر بيئة)</label>
+        <label><input type="radio"> مستحيل من غير تدريب</label>
+        <label><input type="radio"> لازم كارت شاشة قوي</label>
+        <label><input type="radio"> لازم تكتب الشبكة من الصفر</label>
+      </div>
+    </div>
+    <!-- /APPEND:u19-l4 -->
+            <!-- SUM:u19-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الخلية العصبية: مجموع موزون + دالة تفعيل، والتعلّم = تعديل الأوزان.</li><li>نماذج اللغة بتتوقّع الجزء الجاي من النص وتكرّر.</li><li>أغلب التطبيقات بتستخدم نماذج جاهزة عن طريق API — مع مراجعة الهلوسة والخصوصية.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u19-l4 -->
+
+  <!-- ADD:u19-p1 -->
+  <!-- 19.P1 -->
+  <article class="lesson project" id="u19-p1">
+    <h3>مشروع 33: مصنّف رسائل السبام <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: أول تطبيق ذكاء اصطناعي كامل ليك — نموذج بيقرا رسالة ويقرّر هل هي سبام، ويقولك واثق قد إيه.</p>
+
+    <h4>المشكلة: الآلة ما بتفهمش كلام</h4>
+    <p>
+      النماذج بتشتغل على <strong>أرقام</strong> بس. فأول خطوة في أي مشروع نصوص: تحويل الكلام لأرقام.
+      أبسط طريقة اسمها <strong>«كيس الكلمات» (Bag of Words)</strong>: نعمل قائمة بكل الكلمات، وكل رسالة تبقى صف أرقام = كل كلمة اتكرّرت فيها كام مرّة.
+    </p>
+    <div class="diagram">
+<pre>                        اضغط  جايزة  بكرة  ممكن  ...
+  "اضغط هنا واكسب جايزة"   1      1      0     0
+  "ممكن نتقابل بكرة"        0      0      1     1</pre>
+      <div class="cap">كل رسالة بقت صف أرقام — والنموذج يقدر يتعلّم منها</div>
+    </div>
+
+    <h4>الكود</h4>
+    <div class="code" data-file="spam.py"><pre>
+from sklearn.feature_extraction.text import CountVectorizer
+from sklearn.naive_bayes import MultinomialNB
+messages = [
+    "مبروك كسبت جايزة اضغط على الرابط",
+    "عرض خاص خصم 90% اشتري دلوقتي",
+    "اكسب فلوس من البيت بسرعة",
+    "جايزة مجانية مستنياك اضغط هنا",
+    "هنتقابل بكرة الساعة 5",
+    "ممكن تبعتلي ملف المحاضرة",
+    "المشروع اتسلّم الحمد لله",
+    "بكرة عندنا اجتماع الساعة 10",
+]
+labels = ["سبام"] * 4 + ["عادي"] * 4
+vectorizer = CountVectorizer()
+X = vectorizer.fit_transform(messages)
+print("عدد الكلمات المختلفة:", len(vectorizer.vocabulary_))
+model = MultinomialNB()
+model.fit(X, labels)
+tests = ["اضغط هنا واكسب جايزة", "ممكن نتقابل بكرة", "خصم على الجايزة بكرة"]
+features = vectorizer.transform(tests)
+for msg, label, probs in zip(tests, model.predict(features), model.predict_proba(features)):
+    print(f"{label} ({max(probs):.0%}) ← {msg}")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>عدد الكلمات المختلفة: 34
+سبام (93%) ← اضغط هنا واكسب جايزة
+عادي (88%) ← ممكن نتقابل بكرة
+عادي (51%) ← خصم على الجايزة بكرة</pre></div>
+
+    <h4>التشريح</h4>
+    <ul>
+      <li><strong>الرسالة التالتة</strong>: «خصم» كلمة سبام، و«بكرة» كلمة عادية، و«الجايزة» بـ «ال» ما اتعرفتش أصلًا لأن التدريب فيه «جايزة» بس — فالنموذج متردّد جدًا (51%). ده درس مهم: <strong>العربي محتاج تجهيز</strong> (شيل «ال»، توحيد الهمزات…) قبل التدريب.</li>
+      <li><strong>درجة الثقة</strong> مفيدة في التطبيق: لو أقل من 70% مثلًا، ما تمسحش الرسالة — حطّها في «مشكوك فيه» لمراجعة بشرية.</li>
+      <li><strong>8 رسايل قليلة جدًا</strong>: النموذج ده للفهم. بآلاف الرسايل ونفس الكود بالظبط، الدقّة بتبقى عالية جدًا.</li>
+    </ul>
+
+    <h4>طوّره بنفسك</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تحسينات</div>
+      <ol>
+        <li>زوّد 10 رسايل لكل نوع وشوف الثقة في الرسالة التالتة اتغيّرت إزاي.</li>
+        <li>اكتب دالة <code class="inl">normalize(text)</code> بتشيل «ال» من أول الكلمات وتوحّد «أ إ آ» لـ «ا» (<code class="inl">str.maketrans</code> من الوحدة 3)، وطبّقها على الرسايل قبل التدريب والتوقّع.</li>
+        <li>قسّم البيانات تدريب/اختبار بـ <code class="inl">train_test_split</code> واحسب الدقّة.</li>
+        <li>احفظ النموذج بـ <code class="inl">joblib.dump</code> واعمل برنامج تاني بيحمّله ويسأل المستخدم عن رسالة.</li>
+      </ol>
+    </div>
+  </article>
+<!-- /ADD:u19-p1 -->
+
+  <!-- ADD:u19-l5 -->
+  <!-- 19.5 -->
+  <article class="lesson" id="u19-l5">
+    <h3>تحليل البيانات: NumPy و pandas و Matplotlib <span class="tag">درس 106</span></h3>
+    <p class="goal">الهدف: تشوف رحلة المحلّل الكاملة بشكل مصغّر — حسابات سريعة على مصفوفات، تلخيص جدول مبيعات، ورسم بياني.</p>
+
+    <h4>1. NumPy: حسابات على آلاف الأرقام مرّة واحدة</h4>
+    <div class="code"><pre>
+import numpy as np
+prices = np.array([120, 85, 240, 60])
+print(prices * 1.14)
+print(prices.mean(), prices.max())
+print(prices[prices &gt; 100])
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>[136.8  96.9 273.6  68.4]
+126.25 240
+[120 240]</pre></div>
+
+    <h4>2. pandas: جدول مبيعات في سطرين</h4>
+    <div class="code"><pre>
+import pandas as pd
+sales = pd.DataFrame({
+    "product": ["coffee", "tea", "coffee", "juice", "tea", "coffee"],
+    "branch": ["Maadi", "Maadi", "Zamalek", "Zamalek", "Zamalek", "Maadi"],
+    "qty": [30, 12, 25, 18, 20, 15],
+})
+totals = sales.groupby("product")["qty"].sum().sort_values(ascending=False)
+print(totals)
+print(sales.pivot_table(index="branch", columns="product", values="qty", aggfunc="sum", fill_value=0))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>product
+coffee    70
+tea       32
+juice     18
+Name: qty, dtype: int64
+product  coffee  juice  tea
+branch
+Maadi        45      0   12
+Zamalek      25     18   20</pre></div>
+
+    <h4>3. Matplotlib: الأرقام بتبقى صورة</h4>
+    <div class="code" data-file="chart.py"><pre>
+import matplotlib
+matplotlib.use("Agg")
+import matplotlib.pyplot as plt
+products = ["coffee", "tea", "juice"]
+totals = [70, 32, 18]
+plt.figure(figsize=(6, 3.5))
+plt.bar(products, totals, color=["#4da3ff", "#7c5cff", "#3ddc97"])
+plt.title("Sales by product")
+plt.ylabel("Quantity")
+plt.savefig("sales.png", dpi=110, bbox_inches="tight")
+print("اتحفظ الرسم في sales.png")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>اتحفظ الرسم في sales.png</pre></div>
+    <div class="diagram">
+<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAkgAAAFvCAYAAACxXzS8AAAAOnRFWHRTb2Z0d2FyZQBNYXRwbG90bGliIHZlcnNpb24zLjEwLjYsIGh0dHBzOi8vbWF0cGxvdGxpYi5vcmcvq6yFwwAAAAlwSFlzAAAQ6wAAEOsBUJTofAAANdNJREFUeJzt3XlcVdX+//H3QQWEZBLHUAkSJHGKHDBTcOLagEOmOKVpdv3aNW82eUtzrDCvQ8P1m18j7VYqaWpmDpnXIUcabpN6tBQVlFQCQUVFcP/+6MH5dTaIgOg54Ov5eJzHo7322mt/Np3g3drr7GMxDMMQAAAAbFwcXQAAAICzISABAACYEJAAAABMCEgAAAAmBCQAAAATAhIAAIAJAQkAAMCEgAQAAGBCQAIAADAhIAEAAJgQkAAUa9GiRbJYLNqyZYtDzh8VFaXAwECHnNtZTJ48WRaLRUeOHHF0KcAtg4AEVBKnTp3S+PHj1axZM3l5ealGjRoKCgpS7969lZCQ4OjyUEHMnTtXixYtcnQZgMNVdXQBAK7fsWPH1KZNG6Wnp6tv374aOXKkXF1ddfjwYW3fvl1z587ViBEjHF0mKoC5c+cqMDBQw4YNc3QpgEMRkIBKYObMmTp58qTmzp2rsWPHFtr/22+/OaCqW9eFCxdUrVo1Va3Kr1igouIWG1AJ/PLLL5KkLl26FLm/bt26dttJSUkaPny4QkND5enpKU9PT7Vu3VoLFy4s8Tlzc3P1+uuvq3nz5qpevbq8vLzUtWtXbdu2rVDfjz76SJGRkfLz81P16tXVsGFD9enTR/v27Svx+Y4ePaqHH35Yvr6+8vT0VLdu3fTdd9/Z9l+6dEn+/v5q06ZNkcevWLFCFotFb7/9drHnKVhz9eWXX2r69Om644475ObmptDQUL311luF+heskTp69Kji4uLk7+8vDw8PpaamSpKOHz+uxx9/XLfffrtcXV0VEBCgJ554QmlpaYXGOnv2rMaOHat69eqpevXquvvuu7Vs2bIi6yxubZbFYilyBmj16tXq2rWrfH195e7urqCgID3++ONKT0/XkSNHZLFYdPToUW3dulUWi8X2Yu0TbkX87w1QCQQHB0uSFi5cqBkzZlxz5mLlypX6+eef1bdvXzVq1EhZWVn6+OOPNXz4cJ0+fVrPP/98scfn5eXp/vvv19atWzVgwACNGjVKOTk5+vDDD9W5c2etWrVKDz74oKQ/wtHgwYN17733atKkSbrtttt0/Phx/ec//9GBAwd01113XfP6zp8/r06dOqlVq1aaPn26UlJSNG/ePHXs2FE7duxQixYt5ObmpqFDh2r27Nn68ccf1bx5c7sxFixYoOrVq2vw4MHXPJ8kjR8/XllZWRo5cqTc3Ny0ZMkSPfXUUzp58qSmT59u1/fcuXO677771Lp1a02ZMkVnz561XWfr1q116tQpPf7442rRooV++OEHLViwQOvXr9fXX3+tOnXq2H6mPXr00I4dO9S7d2916dJFx44d0/DhwxUSElKimovz8ssva9q0aQoODtaYMWMUEBCgY8eO6bPPPlNqaqoaN26sDz74QE8//bT8/f310ksv2Y6tVavWdZ8fqHAMABXeoUOHDG9vb0OSUbt2bePhhx82ZsyYYWzfvt3Iz88v1P/cuXOF2vLz84377rvP8Pb2NnJzc23tCxcuNCQZmzdvtrXNnTvXkGSsWLHCbozc3FyjVatWxh133GFr6927t1GjRg27MUujU6dOhiTjySeftGv/5ptvDBcXF6NTp062tgMHDhgWi8X429/+Ztf36NGjhouLizF06NBrnq/gegMCAozMzExb+8WLF402bdoYLi4uxq+//lqovhdeeKHQWEOGDDEkGR999JFd+/vvv29IMkaMGGFrS0hIMCQZY8eOteu7c+dOw2KxGJKM5ORku/M2atSoyGuQZHetSUlJhiSjXbt2V/13X6BRo0Z2P1PgVsUtNqASCAoK0g8//KCnnnpKnp6e+uSTT/TCCy+oQ4cOuvPOO/XFF1/Y9ff09LT984ULF/T7778rIyNDf/nLX5SVlaUDBw4Ue74PPvhAgYGBuu+++5Senm57ZWVlKTY2VsnJyTp48KAkycfHRzk5Ofrss8905cqVMl/jiy++aLcdERGhmJgYbd26Venp6ZKkkJAQRUdH68MPP9SFCxdsfRMSEnTlyhU98cQTJT7f6NGj5ePjY9t2c3PTM888oytXrmjVqlWF+r/wwgt22wX9QkNDNXDgQLt9Q4YMUXBwsFasWCHDMCRJn3zySZHXGRkZedVbpyX10UcfSZJee+01u3/3BVxc+FMAmPFfBVBJNGrUSG+88YYOHz6skydPatWqVRo4cKCOHDmi3r1769dff7X1TU9P1+jRo1W/fn15eHjI399ftWrVst1WycjIKPZc+/fv15EjR1SrVq1CrylTpkiSTp48KUl66aWXFBQUpIcfflj+/v566KGHNGfOHNv+kvDx8VH9+vULtRfcnjt06JCtbdSoUTpz5oyWL18uScrPz9d7772n8PBwtW/fvsTnLOrWX0Hbn3+W0h+3oHx9fe3aTp8+rbNnzyo8PLzQOBaLRU2bNlVmZqYyMzNt1+Dv76/atWsX6t+0adMS112UgrB69913X9c4wK2ENUhAJVS7dm317NlTPXv2VMOGDRUfH6+lS5dqwoQJMgxDMTEx+umnnzRmzBi1bt1avr6+qlKlitauXas5c+Zcc6bnypUrCg0NLXbBc0EwCA4O1t69e7VlyxZt2rRJX331lZ599llNnDhRa9euVceOHcv12nv16qW6detqwYIFGjJkiNavX6/U1NRrrqu6Hh4eHjds7KuxWCxFtufl5d3kSoDKiYAEVHIFsybHjx+XJP3000/67rvvNHHiRE2dOtWu78aNG0s0ZkhIiFJSUhQVFVWij7JXq1ZN3bp1U7du3SRJP/74o+655x69/PLLJXpC95kzZ3TixIlCs0gFn4IrWKRecK7hw4fr1VdfldVqtS3OHjJkSImu7c9j9+zZs8jz3Xnnndc8vlatWqpRo4b27t1baJ9hGNq7d698fX1tM0/BwcE6cOCATp06VWgWqagx/Pz89O233xZqP3z4cKG2kJAQrVu3Tv/973/VqVOnYuu+WvACbjXcYgMqgS1btignJ6fIfStXrpT0/28PValSRZJsa18KnDhxQu+++26Jzvfoo48qMzNTr7zySpH7/3z77PTp04X2h4WFydPTU7///nuJzidJr776qt32t99+qw0bNqhjx47y9/e32zdy5Ei5uLho2rRp+vzzz/XII4/YrScqiXnz5unMmTO27UuXLmnWrFlycXEpFJyK4uLiol69eslqtdpu9xX46KOPdOjQIfXp08cWSPr06VPkde7atUubNm0qNH5oaKjOnj2rpKQku/aZM2cW6jto0CBJf6xv+vParAJ/fi/cdttt17zFCtwKmEECKoG5c+dq8+bNevDBBxURESFfX1+lp6fr888/19atWxUeHq7hw4dLkpo0aaLw8HC9/vrrOnfunJo2bark5GTNnz9fwcHBJfrjOHbsWG3atEmTJ0/Wtm3b1L17d/n5+SklJUU7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6y1169ZNc+fO1Zo1a3Tp0iVJkpubm+69916NHTtWDz30UKnG7NOnj+655x41b95c1atX1w8//KCZM2eqefPm6tWrlyRp4sSJioqK0ujRo9WvXz9t3rxZixcvVmJiYmkvAQAAoFhl+qqR2NhYxcbGKj8/X+np6ZIkf39/ValSpUxFtGnTRomJiYqPj9eVK1cUGBiokSNH6tlnn5Wrq6skqUOHDlqxYoUmTJighIQENWzYUO+++67d07YBAADKQ5m/i02SqlSpojp16lx3EePHj9f48eOv2a8gmAEAANxIZfouNgAAgMqMgAQAAGBCQAIAADAhIAEAAJgQkAAAAEwISAAAACYEJAAAABMCEgAAgAkBCQAAwISABAAAYEJAAgAAMCEgAQAAmBCQAAAATAhIAAAAJgQkAAAAEwISAACACQEJAADAhIAEAABgQkACAAAwISABAACYEJAAAABMCEgAAAAmBCQAAAATAhIAAIAJAQkAAMCEgAQAAGBCQAIAADBxioC0bNky9ezZUwEBAfL09FTLli313nvvyTAMu34JCQkKCQmRu7u7WrRooTVr1jioYgAAUJk5RUCaPXu2PDw8NGvWLH322Wfq0aOHRo4cqalTp9r6LF26VCNHjlT//v21bt06RUZGqnfv3tq9e7cDKwcAAJWRxTBP0zhAenq6/P397dqeeOIJJSYmKjMzUy4uLgoNDVVERIQWL15s69O+fXv5+Pho7dq1pTpfamqqGjRooJSUFAUEBJTLNfxZ7IflPiQquNWDHV3BHyYOcXQFcCbTPnB0BcDNVZq//04xg2QOR5LUqlUrZWdn6/z58zp8+LAOHjyofv362fWJi4vTpk2bdOnSpZtVKgAAuAU4RUAqyvbt23X77berRo0aslqtkqQmTZrY9QkLC1Nubq6Sk5MdUSIAAKikqjq6gKJs375dS5cu1axZsyRJmZmZkiQfHx+7fr6+vpKkjIyMYsfLzs5Wdna2bTstLa0cqwUAAJWN0wWk1NRU9e/fX9HR0XrqqafKZczZs2drypQp5TIWAACo/JzqFtuZM2fUo0cP1axZU5988olcXP4or2CmKCsry65/wcySn59fseOOGzdOKSkptldSUtINqB4AAFQWTjODdOHCBT344IPKysrSrl275O3tbdtXsPbIarUqNDTU1m61WuXq6qqgoKBix/by8pKXl9eN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" alt="رسم أعمدة للمبيعات حسب المنتج: coffee 70، tea 32، juice 18" style="max-width:100%;border-radius:10px;background:#fff" loading="lazy">
+      <div class="cap">الصورة اللي الكود ده ولّدها فعلًا</div>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 أداة المحلّلين: Jupyter Notebook</div>
+      <p>
+        بدل ملف <code class="inl">.py</code> بيشتغل مرّة واحدة، المحلّلين بيشتغلوا في <strong>Jupyter</strong>: خلايا بتشغّل كل واحدة لوحدها وتشوف الجدول أو الرسم تحتها فورًا —
+        مثالية للاستكشاف. <code class="inl">pip install notebook</code> ثم <code class="inl">jupyter notebook</code>، أو افتح ملف <code class="inl">.ipynb</code> في VS Code مباشرةً.
+      </p>
+    </div>
+    <!-- APPEND:u19-l5 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تحليل من غير مكتبات</div>
+      <p>نفس فكرة pandas بأدوات بايثون العادية: اقرا صفوف، اجمع حسب مفتاح، واطبع متوسّط لكل مجموعة مرتّب تنازليًا. (بيشتغل فورًا من غير تحميل مكتبات.)</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+from collections import defaultdict
+rows = [
+    {"branch": "المعادي", "day": "السبت", "sales": 4200},
+    {"branch": "المعادي", "day": "الأحد", "sales": 3800},
+    {"branch": "الزمالك", "day": "السبت", "sales": 5200},
+    {"branch": "الزمالك", "day": "الأحد", "sales": 6100},
+    {"branch": "طنطا", "day": "السبت", "sales": 2500},
+]
+groups = defaultdict(list)
+for row in rows:
+    groups[row["branch"]].append(row["sales"])
+summary = [(b, sum(v), round(sum(v) / len(v))) for b, v in groups.items()]
+for branch, total, avg in sorted(summary, key=lambda r: r[1], reverse=True):
+    print(f"{branch:&lt;8} إجمالي {total:&gt;6,} · متوسّط {avg:&gt;5,}")
+print("إجمالي الكل:", f"{sum(r['sales'] for r in rows):,}")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الزمالك  إجمالي 11,300 · متوسّط 5,650
+المعادي  إجمالي  8,000 · متوسّط 4,000
+طنطا     إجمالي  2,500 · متوسّط 2,500
+إجمالي الكل: 21,800</pre></div>
+      <p>في pandas السطور دي كلها بتبقى: <code class="inl">df.groupby("branch")["sales"].agg(["sum", "mean"]).sort_values("sum", ascending=False)</code>.</p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">DataFrame</code> في pandas أقرب حاجة ليه في بايثون العادية؟</p>
+        <label><input type="radio"> نص</label>
+        <label><input type="radio"> قاموس بسيط</label>
+        <label><input type="radio"> جدول = قائمة من قواميس (صفوف وأعمدة بأسماء)</label>
+        <label><input type="radio"> مجموعة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. ليه NumPy أسرع بكتير من القوائم في الحساب؟</p>
+        <label><input type="radio"> بتخزّن أرقام من نوع واحد في ذاكرة متّصلة والحساب بيتم في كود مترجَم</label>
+        <label><input type="radio"> بتستخدم الإنترنت</label>
+        <label><input type="radio"> بتضغط البيانات</label>
+        <label><input type="radio"> بتشغّل أكتر من نسخة بايثون</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. <code class="inl">df.head()</code> بتعرض…</p>
+        <label><input type="radio"> أسماء الأعمدة بس</label>
+        <label><input type="radio"> أول 5 صفوف</label>
+        <label><input type="radio"> آخر 5 صفوف</label>
+        <label><input type="radio"> الإحصائيات</label>
+      </div>
+    </div>
+    <!-- /APPEND:u19-l5 -->
+            <!-- SUM:u19-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>NumPy: حسابات على المصفوفة كلها من غير حلقات.</li><li>pandas: <code class="inl">groupby</code> و <code class="inl">pivot_table</code> للتلخيص.</li><li>Matplotlib: <code class="inl">plt.bar</code> ثم <code class="inl">savefig</code> أو <code class="inl">show</code>.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u19-l5 -->
+
+  <!-- ADD:u19-l6 -->
+  <!-- 19.6 -->
+  <article class="lesson" id="u19-l6">
+    <h3>تطوير الويب: إزاي موقع بيشتغل ببايثون <span class="tag">درس 107</span></h3>
+    <p class="goal">الهدف: تفهم دور بايثون في المواقع (الـ Back-End)، وتشوف الفكرة الأساسية اللي بتقوم عليها كل أطر الويب، وتكتب أول موقع وأول API.</p>
+
+    <h4>1. الصورة الكبيرة</h4>
+    <div class="diagram">
+<pre>   المتصفّح (Front-End)                     السيرفر (Back-End) ← بايثون هنا
+   HTML · CSS · JavaScript                  Django · Flask · FastAPI
+        │                                          │
+        │ ── طلب: GET /courses ─────────────────►  │  1. يفهم الطلب
+        │                                          │  2. يقرا من قاعدة البيانات
+        │ ◄──────────── رد: HTML أو JSON ───────── │  3. يرجّع الرد
+        │                                          │</pre>
+      <div class="cap">نفس دورة الطلب والرد اللي عملناها من الناحية التانية بـ requests في الوحدة 14</div>
+    </div>
+
+    <h4>2. الفكرة الجوهرية: «التوجيه» (Routing)</h4>
+    <p>كل إطار ويب في قلبه فكرة بسيطة: <strong>رابط ← دالة</strong>. هنبنيها ببايثون عادية عشان تفهم اللي بيحصل جوّه Flask.</p>
+    <div class="code" data-file="router.py"><pre>
+def home():
+    return "&lt;h1&gt;الرئيسية&lt;/h1&gt;"
+def about():
+    return "&lt;h1&gt;من نحن&lt;/h1&gt;"
+routes = {"/": home, "/about": about}
+def handle(path):
+    view = routes.get(path)
+    if view is None:
+        return "404 — الصفحة مش موجودة"
+    return view()
+for path in ["/", "/about", "/contact"]:
+    print(path, "→", handle(path))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>/ → &lt;h1&gt;الرئيسية&lt;/h1&gt;
+/about → &lt;h1&gt;من نحن&lt;/h1&gt;
+/contact → 404 — الصفحة مش موجودة</pre></div>
+
+    <h4>3. أول موقع بـ Flask</h4>
+    <div class="code" data-file="app.py"><pre>
+from flask import Flask, jsonify
+app = Flask(__name__)
+@app.route("/")
+def home():
+    return "&lt;h1&gt;أهلًا من Flask 👋&lt;/h1&gt;"
+@app.route("/api/courses")
+def courses():
+    return jsonify([{"id": 1, "name": "Python"}, {"id": 2, "name": "AI"}])
+if __name__ == "__main__":
+    app.run(debug=True)
+</pre></div>
+    <div class="code" data-file="terminal"><pre>
+pip install flask
+python app.py
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre> * Running on http://127.0.0.1:5000</pre></div>
+
+    <h4>4. API حديثة بـ FastAPI</h4>
+    <p>FastAPI بتستخدم <strong>تلميحات النوع</strong> (الوحدة 11) عشان تتحقّق من البيانات أوتوماتيك وتولّد صفحة توثيق تفاعلية — من غير سطر زيادة.</p>
+    <div class="code" data-file="main.py"><pre>
+from fastapi import FastAPI
+from pydantic import BaseModel
+app = FastAPI()
+class Student(BaseModel):
+    name: str
+    age: int
+@app.post("/students")
+def add_student(student: Student):
+    return {"message": f"اتسجّل {student.name}", "age_next_year": student.age + 1}
+</pre></div>
+    <div class="code" data-file="terminal"><pre>
+fastapi dev main.py
+</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الإطار</th><th>شخصيته</th><th>مناسب لـ</th></tr>
+        <tr><td><strong>Django</strong></td><td>«كل حاجة جوّه العلبة»: قاعدة بيانات، لوحة تحكّم، تسجيل دخول، أمان</td><td>مواقع كبيرة ومتكاملة بسرعة</td></tr>
+        <tr><td><strong>Flask</strong></td><td>خفيف وبسيط، وإنت بتختار الإضافات</td><td>التعلّم، مشاريع صغيرة ومتوسّطة</td></tr>
+        <tr><td><strong>FastAPI</strong></td><td>حديث وسريع ومبني على تلميحات النوع</td><td>APIs وخدمات الذكاء الاصطناعي</td></tr>
+      </table>
+    </div>
+        <!-- APPEND:u19-l6 -->
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. «التوجيه» (Routing) معناه…</p>
+        <label><input type="radio"> تخزين البيانات في قاعدة</label>
+        <label><input type="radio"> ربط مسار في الرابط بدالة بترد عليه</label>
+        <label><input type="radio"> تشفير الاتصال</label>
+        <label><input type="radio"> تسريع الموقع</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. الترتيب الصح لما تفتح صفحة…</p>
+        <label><input type="radio"> السيرفر يبعت طلب للمتصفّح</label>
+        <label><input type="radio"> قاعدة البيانات بتكلّم المتصفّح</label>
+        <label><input type="radio"> بايثون بتشتغل في المتصفّح</label>
+        <label><input type="radio"> المتصفّح يبعت طلب ← السيرفر ينفّذ الدالة ← يرجّع رد (HTML أو JSON)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. FastAPI مناسبة أكتر لما…</p>
+        <label><input type="radio"> تبني API بيرجّع JSON مع توثيق وتحقّق تلقائي</label>
+        <label><input type="radio"> تعمل سكريبت صغير</label>
+        <label><input type="radio"> تحلّل بيانات</label>
+        <label><input type="radio"> تعمل لعبة</label>
+      </div>
+    </div>
+    <!-- /APPEND:u19-l6 -->
+            <!-- SUM:u19-l6 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الـ Back-End بيستقبل الطلب ويرجّع HTML أو JSON.</li><li>قلب أي إطار: جدول توجيه من الرابط للدالة.</li><li>Flask خفيف، و FastAPI حديث بتلميحات النوع، و Django متكامل.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u19-l6 -->
+
+  <!-- ADD:u19-l7 -->
+  <!-- 19.7 -->
+  <article class="lesson" id="u19-l7">
+    <h3>الأتمتة: خلّي بايثون تشتغل بدالك <span class="tag">درس 108</span></h3>
+    <p class="goal">الهدف: تكتب سكريبتات بتوفّر ساعات: شيت Excel بمعادلات، إعادة تسمية مئات الملفات، واستخراج بيانات من صفحة ويب.</p>
+
+    <h4>1. Excel بـ openpyxl</h4>
+    <div class="code" data-file="excel_report.py"><pre>
+from openpyxl import Workbook, load_workbook
+wb = Workbook()
+ws = wb.active
+ws.title = "الرواتب"
+ws.append(["الاسم", "الراتب", "بعد الزيادة"])
+for row, (name, salary) in enumerate([("سارة", 12000), ("أحمد", 9500), ("منى", 11000)], start=2):
+    ws.append([name, salary, f"=B{row}*1.1"])
+wb.save("salaries.xlsx")
+sheet = load_workbook("salaries.xlsx")["الرواتب"]
+for name, salary, formula in sheet.iter_rows(min_row=2, values_only=True):
+    print(name, salary, formula)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>سارة 12000 =B2*1.1
+أحمد 9500 =B3*1.1
+منى 11000 =B4*1.1</pre></div>
+
+    <h4>2. إعادة تسمية ملفات بالجملة</h4>
+    <div class="code" data-file="rename_photos.py"><pre>
+from pathlib import Path
+folder = Path("photos")
+folder.mkdir(exist_ok=True)
+for name in ["IMG_001.jpg", "IMG_002.jpg", "IMG_003.jpg"]:
+    (folder / name).write_text("x")
+for i, file in enumerate(sorted(folder.glob("IMG_*.jpg")), start=1):
+    file.rename(folder / f"رحلة_الساحل_{i:02d}{file.suffix}")
+print(sorted(p.name for p in folder.iterdir()))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['رحلة_الساحل_01.jpg', 'رحلة_الساحل_02.jpg', 'رحلة_الساحل_03.jpg']</pre></div>
+
+    <h4>3. استخراج بيانات من صفحة ويب (Web Scraping)</h4>
+    <div class="code" data-file="scraper.py"><pre>
+from bs4 import BeautifulSoup
+html = """
+&lt;div class="product"&gt;&lt;h2&gt;لابتوب&lt;/h2&gt;&lt;span class="price"&gt;25000&lt;/span&gt;&lt;/div&gt;
+&lt;div class="product"&gt;&lt;h2&gt;ماوس&lt;/h2&gt;&lt;span class="price"&gt;350&lt;/span&gt;&lt;/div&gt;
+"""
+soup = BeautifulSoup(html, "html.parser")
+for product in soup.select(".product"):
+    name = product.h2.get_text(strip=True)
+    price = int(product.select_one(".price").get_text())
+    print(name, price)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>لابتوب 25000
+ماوس 350</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ السحب بأخلاق</div>
+      <ul>
+        <li>اقرا <strong>شروط استخدام الموقع</strong> وملف <code class="inl">robots.txt</code> — مواقع كتير بتمنع السحب الآلي.</li>
+        <li><strong>لو فيه API رسمي استخدمه</strong> — أسهل وأثبت ومسموح.</li>
+        <li>ما تضغطش على السيرفر: <code class="inl">time.sleep</code> بين الطلبات (الوحدة 7).</li>
+        <li>ما تجمعش بيانات شخصية للناس.</li>
+      </ul>
+    </div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>عايز تأتمت…</th><th>المكتبة</th></tr>
+        <tr><td>ملفات Excel / Word / PDF</td><td>openpyxl · python-docx · pypdf</td></tr>
+        <tr><td>التحكّم في متصفّح حقيقي (مواقع بتحتاج تسجيل دخول وضغط أزرار)</td><td>Selenium · Playwright</td></tr>
+        <tr><td>إرسال إيميلات</td><td>smtplib (قياسية)</td></tr>
+        <tr><td>تشغيل سكريبت كل يوم في ميعاد</td><td>schedule · أو «Task Scheduler» في ويندوز / cron في لينكس</td></tr>
+        <tr><td>التحكّم في الماوس والكيبورد</td><td>pyautogui</td></tr>
+      </table>
+    </div>
+        <!-- APPEND:u19-l7 -->
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. أنسب مكتبة لقراءة وكتابة ملفات Excel…</p>
+        <label><input type="radio"> requests</label>
+        <label><input type="radio"> pygame</label>
+        <label><input type="radio"> openpyxl</label>
+        <label><input type="radio"> tkinter</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. قبل أي سكريبت بيعيد تسمية أو يمسح ملفات بالجملة…</p>
+        <label><input type="radio"> اطبع اللي هيحصل الأول (dry run) واعمل نسخة احتياطية</label>
+        <label><input type="radio"> شغّله على كل الجهاز مرّة واحدة</label>
+        <label><input type="radio"> شغّله كمسؤول (admin)</label>
+        <label><input type="radio"> مفيش احتياطات</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. قبل ما تعمل Web Scraping لموقع…</p>
+        <label><input type="radio"> مفيش حاجة تشوفها</label>
+        <label><input type="radio"> شوف هل فيه API رسمي، واقرا شروط الموقع و<code class="inl">robots.txt</code>، وما تحمّلوش بطلبات</label>
+        <label><input type="radio"> ابعت أكبر عدد طلبات بأسرع وقت</label>
+        <label><input type="radio"> غيّر الـ IP بتاعك</label>
+      </div>
+    </div>
+    <!-- /APPEND:u19-l7 -->
+            <!-- SUM:u19-l7 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>openpyxl بيكتب ويقرا Excel بمعادلات.</li><li>pathlib بيعيد تسمية وتنظيم مئات الملفات في ثواني.</li><li>BeautifulSoup لسحب البيانات — بأخلاق وبعد قراءة الشروط.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u19-l7 -->
+
+  <!-- ADD:u19-l8 -->
+  <!-- 19.8 -->
+  <article class="lesson" id="u19-l8">
+    <h3>مجالات تانية: الأمن السيبراني، الألعاب، سطح المكتب، وإنترنت الأشياء <span class="tag">درس 109</span></h3>
+    <p class="goal">الهدف: تاخد لمحة سريعة من 4 مجالات تانية بمثال صغير لكل واحد — عشان تعرف الباب فين لو حبّيت تدخله.</p>
+
+    <h4>1. 🛡️ الأمن السيبراني: كاشف التلاعب بالملفات</h4>
+    <p>
+      بايثون من أشهر لغات المتخصّصين في الأمن: أدوات فحص، تحليل سجلات، أتمتة الاستجابة للحوادث.
+      مثال دفاعي بسيط: نحفظ «بصمة» ملف مهم، ولو حد عدّله (ولو حرف واحد) نكتشف فورًا — نفس فكرة برامج مراقبة سلامة الملفات.
+    </p>
+    <div class="code" data-file="integrity.py"><pre>
+import hashlib
+from pathlib import Path
+def fingerprint(path):
+    return hashlib.sha256(Path(path).read_bytes()).hexdigest()
+config = Path("config.txt")
+config.write_text("port=8080\n", encoding="utf-8", newline="\n")
+original = fingerprint(config)
+config.write_text("port=4444\n", encoding="utf-8", newline="\n")
+print("سليم ✅" if fingerprint(config) == original else "الملف اتعدّل ⚠️")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الملف اتعدّل ⚠️</pre></div>
+    <div class="box err">
+      <div class="bt">❌ خط أحمر</div>
+      <p>
+        مهارات الأمن سلاح ذو حدّين. <strong>عمرك ما تفحص أو تختبر نظام مش بتاعك من غير إذن مكتوب</strong> — ده جريمة في أغلب الدول.
+        اتعلّم في بيئات مخصّصة للتدريب ومسابقات CTF، وخلّي هدفك دايمًا الحماية.
+      </p>
+    </div>
+
+    <h4>2. 🎮 الألعاب: Pygame</h4>
+    <div class="code" data-file="game.py"><pre>
+import pygame
+pygame.init()
+screen = pygame.display.set_mode((640, 480))
+clock = pygame.time.Clock()
+x = 320
+running = True
+while running:
+    for event in pygame.event.get():
+        if event.type == pygame.QUIT:
+            running = False
+    keys = pygame.key.get_pressed()
+    if keys[pygame.K_LEFT]:
+        x -= 5
+    if keys[pygame.K_RIGHT]:
+        x += 5
+    screen.fill((15, 17, 23))
+    pygame.draw.circle(screen, (77, 163, 255), (x, 240), 30)
+    pygame.display.flip()
+    clock.tick(60)
+pygame.quit()
+</pre></div>
+
+    <h4>3. 🖥️ برامج سطح المكتب: Tkinter</h4>
+    <div class="code" data-file="greeter.py"><pre>
+import tkinter as tk
+def greet():
+    label.config(text=f"أهلًا يا {entry.get()} 👋")
+root = tk.Tk()
+root.title("أول برنامج بواجهة")
+entry = tk.Entry(root, font=("Arial", 14))
+entry.pack(padx=20, pady=10)
+tk.Button(root, text="رحّب", command=greet).pack()
+label = tk.Label(root, font=("Arial", 14))
+label.pack(pady=10)
+root.mainloop()
+</pre></div>
+
+    <h4>4. 📡 إنترنت الأشياء: MicroPython</h4>
+    <p>نسخة مصغّرة من بايثون بتشتغل على متحكّمات صغيرة جدًا (زي ESP32 وRaspberry Pi Pico) بسعر رخيص — تتحكّم بيها في لمبات وحسّاسات وموتورات.</p>
+    <div class="code" data-file="main.py"><pre>
+from machine import Pin
+import time
+led = Pin(2, Pin.OUT)
+while True:
+    led.value(not led.value())
+    time.sleep(0.5)
+</pre></div>
+
+    <h4>ملخّص الوحدة: اختار بابك</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>لو بتحب…</th><th>جرّب</th><th>أول مشروع مقترح</th></tr>
+        <tr><td>الرياضيات والتوقّعات والأنماط</td><td>تعلّم الآلة</td><td>توقّع أسعار عربيات مستعملة من بيانات حقيقية (Kaggle)</td></tr>
+        <tr><td>الأرقام والتقارير والقرارات</td><td>تحليل البيانات</td><td>تحليل مصاريفك الشهرية ورسمها</td></tr>
+        <tr><td>بناء منتجات يستخدمها ناس</td><td>الويب</td><td>API لمهامك اليومية + صفحة بسيطة</td></tr>
+        <tr><td>توفير الوقت وحلّ مشاكل الشغل</td><td>الأتمتة</td><td>تقرير Excel أسبوعي بيتعمل لوحده</td></tr>
+        <tr><td>الألغاز وإزاي الأنظمة بتتكسر وتتحمى</td><td>الأمن السيبراني</td><td>أداة بتفحص قوّة كلمات السر وبصمات الملفات</td></tr>
+        <tr><td>الإبداع والتفاعل</td><td>الألعاب</td><td>لعبة الثعبان بـ Pygame</td></tr>
+        <tr><td>الإلكترونيات والحاجات الملموسة</td><td>إنترنت الأشياء</td><td>حسّاس حرارة بيبعت قراءاته لموبايلك</td></tr>
+      </table>
+    </div>
+        <!-- APPEND:u19-l8 -->
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="3">
+        <p class="qt">1. كاشف التلاعب بالملفات بيشتغل بـ…</p>
+        <label><input type="radio"> حجم الملف بس</label>
+        <label><input type="radio"> اسم الملف</label>
+        <label><input type="radio"> تاريخ التعديل بس</label>
+        <label><input type="radio"> بصمة (hash) للمحتوى، وأي تغيير بيغيّر البصمة</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. أي لعبة بـ Pygame جوهرها…</p>
+        <label><input type="radio"> حلقة رئيسية: أحداث ← تحديث الحالة ← رسم ← تكرار</label>
+        <label><input type="radio"> دالة واحدة بترسم الشاشة</label>
+        <label><input type="radio"> ملف صور بس</label>
+        <label><input type="radio"> قاعدة بيانات</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">3. MicroPython بتستخدمها لما…</p>
+        <label><input type="radio"> تعمل موقع</label>
+        <label><input type="radio"> تحلّل بيانات ضخمة</label>
+        <label><input type="radio"> تبرمج متحكّم صغير (ESP32) يقرا حسّاسات ويشغّل أجهزة</label>
+        <label><input type="radio"> تدرّب شبكة عصبية</label>
+      </div>
+    </div>
+    <!-- /APPEND:u19-l8 -->
+            <!-- SUM:u19-l8 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>الأمن: بصمة الملفات بتكشف التلاعب — والفحص بإذن بس.</li><li>الألعاب بحلقة لعبة، وسطح المكتب بحلقة أحداث.</li><li>MicroPython بيتحكّم في أجهزة صغيرة رخيصة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u19-l8 -->
+
+  <!-- ADD:u19-ex -->
+  <!-- ADD:u19-ch -->
+  <!-- 19.CH -->
+  <article class="lesson" id="u19-ch">
+    <h3>تحدّيات بتصحيح آلي: تعلّم الآلة من الصفر <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">ابني قطع الذكاء الاصطناعي بإيدك ببايثون عادية — عشان لما تستخدم المكتبات، تعرف هي بتعمل إيه.</p>
+
+    <div class="challenge" data-ch="u19-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — الميل الأمثل بالمعادلة <span class="lvl">⭐⭐⭐</span></div>
+      <p>
+        في الدرس الآلة «جرّبت» كل القيم بخطوة 0.1. الرياضيات بتدّينا الإجابة الدقيقة مباشرةً:
+        <strong>w = مجموع(x × y) ÷ مجموع(x²)</strong>. عدّل <code class="inl">fit_slope</code> تستخدم المعادلة، وترمي <code class="inl">ValueError</code> لو القائمتين مختلفين في الطول أو كل الـ x أصفار.
+      </p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+def fit_slope(xs, ys):
+    best_w, best_error = 0, float("inf")
+    for step in range(0, 301):
+        w = step / 10
+        error = sum((w * x - y) ** 2 for x, y in zip(xs, ys))
+        if error &lt; best_error:
+            best_w, best_error = w, error
+    return best_w
+
+def predict(w, x):
+    return w * x
+</textarea>
+      <script type="text/plain" class="ch-tests">
+import math
+
+def test_perfect_line():
+    "y = 2x بالظبط ← 2"
+    assert math.isclose(fit_slope([1, 2, 3], [2, 4, 6]), 2)
+
+def test_houses_exact():
+    "بيانات الشقق ← 10.0591… (مش 10.1 التقريبية)"
+    w = fit_slope([50, 80, 100, 120, 150], [520, 790, 1010, 1180, 1530])
+    assert math.isclose(w, 561300 / 55800), f"w = {w}"
+
+def test_negative():
+    "ميل سالب ← -3"
+    assert math.isclose(fit_slope([1, 2], [-3, -6]), -3)
+
+def test_predict():
+    "predict(2.5, 4) ← 10"
+    assert math.isclose(predict(2.5, 4), 10)
+
+def test_invalid():
+    "أطوال مختلفة أو x كلها أصفار ← ValueError"
+    for xs, ys in [([1, 2], [1]), ([0, 0], [1, 2])]:
+        try:
+            fit_slope(xs, ys)
+        except ValueError:
+            continue
+        raise AssertionError(f"fit_slope({xs}, {ys}) ما رمتش ValueError")
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+def fit_slope(xs, ys):
+    if len(xs) != len(ys):
+        raise ValueError("xs و ys لازم نفس الطول")
+    sum_xx = sum(x * x for x in xs)
+    if sum_xx == 0:
+        raise ValueError("كل قيم x أصفار")
+    sum_xy = sum(x * y for x, y in zip(xs, ys))
+    return sum_xy / sum_xx
+def predict(w, x):
+    return w * x
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u19-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — مصنّف أقرب الجيران <span class="lvl">⭐⭐⭐</span></div>
+      <p><code class="inl">knn_predict(data, sample, k=3)</code>: <code class="inl">data</code> قائمة <code class="inl">(خصائص, تصنيف)</code>. ارجع التصنيف الأغلب بين أقرب k. لو <code class="inl">k</code> أقل من 1 أو أكبر من عدد البيانات ← <code class="inl">ValueError</code>. لازم تشتغل مع أي عدد خصائص.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+import math
+from collections import Counter
+
+def knn_predict(data, sample, k=3):
+    pass
+</textarea>
+      <script type="text/plain" class="ch-tests">
+FRUITS = [((150, 9), "تفاحة"), ((170, 8), "تفاحة"), ((140, 9), "تفاحة"),
+          ((130, 3), "برتقالة"), ((120, 2), "برتقالة"), ((160, 4), "برتقالة")]
+
+def test_lesson_examples():
+    "(155, 7) ← تفاحة و (125, 3) ← برتقالة"
+    assert knn_predict(FRUITS, (155, 7)) == "تفاحة"
+    assert knn_predict(FRUITS, (125, 3)) == "برتقالة"
+
+def test_k1():
+    "k = 1 ← أقرب جار بس"
+    assert knn_predict(FRUITS, (158, 5), k=1) == "برتقالة"
+
+def test_three_features():
+    "3 خصائص"
+    data = [((0, 0, 0), "a"), ((0, 0, 1), "a"), ((9, 9, 9), "b"), ((9, 9, 8), "b"), ((8, 9, 9), "b")]
+    assert knn_predict(data, (1, 0, 0), k=3) == "a"
+    assert knn_predict(data, (9, 8, 9), k=3) == "b"
+
+def test_bad_k():
+    "k = 0 أو أكبر من البيانات ← ValueError"
+    for k in (0, 7):
+        try:
+            knn_predict(FRUITS, (1, 1), k=k)
+        except ValueError:
+            continue
+        raise AssertionError(f"k={k} ما رمتش ValueError")
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+import math
+from collections import Counter
+def knn_predict(data, sample, k=3):
+    if not 1 &lt;= k &lt;= len(data):
+        raise ValueError(f"k لازم يكون بين 1 و {len(data)}")
+    nearest = sorted(data, key=lambda item: math.dist(sample, item[0]))[:k]
+    votes = Counter(label for _, label in nearest)
+    return votes.most_common(1)[0][0]
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u19-ch -->
+
+  <!-- 19.EX -->
+  <article class="lesson" id="u19-ex">
+    <h3>تمارين الوحدة التاسعة عشرة <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">جرّب بإيدك في المجالات — الهدف تحس بالفكرة، مش تتقن المكتبة.</p>
+
+    <h4>تمارين</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 1 — نموذج بخاصيتين</div>
+      <p>زوّد «عدد الغرف» كخاصية تانية لبيانات الشقق، ودرّب <code class="inl">LinearRegression</code>، وتوقّع سعر شقة 100 متر فيها 3 غرف.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+from sklearn.linear_model import LinearRegression
+X = [[50, 1], [80, 2], [100, 2], [120, 3], [150, 4]]
+y = [520, 790, 1010, 1180, 1530]
+model = LinearRegression().fit(X, y)
+print([round(c, 1) for c in model.coef_])
+print(round(model.predict([[100, 3]])[0]))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>[10.2, -3.7]
+1004</pre></div>
+      <p>
+        لاحظ إن وزن الغرف طلع <strong>سالب</strong>! مش معناه إن الغرف بتقلّل السعر — معناه إن عند نفس المساحة، غرف أكتر = غرف أصغر،
+        ومع 5 أمثلة بس النموذج بيستنتج علاقات مش دقيقة. <strong>بيانات قليلة = استنتاجات مضلّلة.</strong>
+      </p>
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 2 — أثر عدد الجيران</div>
+      <p>في مصنّف الفواكه، جرّب <code class="inl">k=1</code> و <code class="inl">k=5</code> على العيّنة <code class="inl">(158, 5)</code>. إيه اللي بيتغيّر وليه؟</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import math
+from collections import Counter
+data = [((150, 9), "تفاحة"), ((170, 8), "تفاحة"), ((140, 9), "تفاحة"),
+        ((130, 3), "برتقالة"), ((120, 2), "برتقالة"), ((160, 4), "برتقالة")]
+def predict(sample, k):
+    nearest = sorted(data, key=lambda item: math.dist(sample, item[0]))[:k]
+    return Counter(label for _, label in nearest).most_common(1)[0][0]
+for k in [1, 3, 5]:
+    print(k, predict((158, 5), k))
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>1 برتقالة
+3 تفاحة
+5 تفاحة</pre></div>
+      <p>
+        مع <code class="inl">k=1</code> القرار بيعتمد على جار واحد بس (البرتقالة (160,4) لازقة فيها) — حسّاس جدًا لأي نقطة شاذّة.
+        مع k أكبر القرار بيبقى «رأي جماعة» أثبت. اختيار k الصح جزء من شغل مهندس تعلّم الآلة، وبيتعمل بتجربة قيم وقياس الدقّة على بيانات الاختبار.
+      </p>
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 3 — مولّد نص أذكى شوية</div>
+      <p>عدّل نموذج «الكلمة الجاية» يختار الكلمة <strong>عشوائيًا حسب احتمالها</strong> بدل الأكتر تكرارًا دايمًا. (تلميح: <code class="inl">random.choices</code> بتقبل <code class="inl">weights</code>.)</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import random
+def next_word(word):
+    counter = next_words[word]
+    return random.choices(list(counter), weights=list(counter.values()))[0]
+</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. الفرق الجوهري بين البرمجة التقليدية وتعلّم الآلة؟</p>
+        <label><input type="radio"> تعلّم الآلة ما بيحتاجش كود خالص</label>
+        <label><input type="radio"> في تعلّم الآلة بندّي بيانات وإجابات والآلة تستنتج القواعد</label>
+        <label><input type="radio"> البرمجة التقليدية أبطأ دايمًا</label>
+        <label><input type="radio"> مفيش فرق</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. ليه بنقسم البيانات لتدريب واختبار؟</p>
+        <label><input type="radio"> عشان التدريب يبقى أسرع</label>
+        <label><input type="radio"> شرط في المكتبة</label>
+        <label><input type="radio"> عشان نوفّر ذاكرة</label>
+        <label><input type="radio"> عشان نقيس أداء النموذج على بيانات ما شافهاش (يفهم مش يحفظ)</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. توقّع «هل العميل هيلغي اشتراكه؟» نوع مشكلة…</p>
+        <label><input type="radio"> تصنيف</label>
+        <label><input type="radio"> انحدار</label>
+        <label><input type="radio"> ترتيب</label>
+        <label><input type="radio"> مش مشكلة تعلّم آلة</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. ليه بايثون سريعة في الذكاء الاصطناعي رغم إنها لغة مفسّرة؟</p>
+        <label><input type="radio"> لأنها بقت مترجمة زي C</label>
+        <label><input type="radio"> لأن الذكاء الاصطناعي مش محتاج سرعة</label>
+        <label><input type="radio"> لأن المكتبات بتنفّذ الشغل التقيل بـ C/C++/CUDA وبايثون واجهة ليهم</label>
+        <label><input type="radio"> لأنها بتشتغل على الإنترنت</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">5. الفكرة الأساسية اللي بتقوم عليها نماذج اللغة الكبيرة؟</p>
+        <label><input type="radio"> حفظ كل الإجابات الممكنة في قاعدة بيانات</label>
+        <label><input type="radio"> توقّع الجزء الجاي من النص بناءً على اللي قبله، وتكرار ده</label>
+        <label><input type="radio"> البحث في جوجل</label>
+        <label><input type="radio"> قواعد if/else مكتوبة بإيد مبرمجين</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">6. في Flask، <code class="inl">@app.route("/about")</code> بتعمل إيه؟</p>
+        <label><input type="radio"> بتفتح المتصفّح</label>
+        <label><input type="radio"> بتعمل ملف HTML</label>
+        <label><input type="radio"> بتشغّل السيرفر</label>
+        <label><input type="radio"> بتربط الرابط /about بالدالة اللي تحتها</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">7. عايز تسحب بيانات من موقع. أول حاجة تعملها؟</p>
+        <label><input type="radio"> تشوف لو فيه API رسمي وتقرا شروط الاستخدام</label>
+        <label><input type="radio"> تبعت آلاف الطلبات بسرعة</label>
+        <label><input type="radio"> تتجاهل robots.txt</label>
+        <label><input type="radio"> تجمع بيانات المستخدمين الشخصية</label>
+      </div>
+    </div>
+  </article>
+<!-- /ADD:u19-ex -->
+
+  <!-- 19.END -->
+<!-- CP:19 -->
+  <div class="checkpoint" data-unit="19">
+    <h4>✅ نقطة تفتيش: الوحدة التاسعة عشرة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أقدر أشرح يعني إيه الآلة «تتعلّم».</li><li>أفرّق بين الانحدار والتصنيف وأعرف ليه بنقسم البيانات.</li><li>جرّبت مثال على الأقل من كل مجال.</li><li>اخترت المجال اللي هبدأ فيه بعد الكورس.</li></ul>
+  </div>
+  <!-- /CP -->

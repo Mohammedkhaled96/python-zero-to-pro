@@ -1,0 +1,6 @@
+print(1e3)
+print(2.5e-4)
+print(0.00001)
+print(10 ** 20 // 3)
+print(10 ** 20 / 3)
+print(int(1e23))

@@ -1,0 +1,5 @@
+{'theme': 'dark', 'lang': 'en', 'font': 18}
+True
+{'lang': 'ar', 'font': 14, 'theme': 'dark'}
+{'theme': 'dark', 'lang': 'ar', 'font': 16}
+{'theme': 'dark', 'lang': 'ar', 'font': 16, 'debug': True}

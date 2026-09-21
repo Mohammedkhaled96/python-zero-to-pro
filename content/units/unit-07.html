@@ -1,0 +1,1190 @@
+  <div class="unit-head">
+    <div class="kicker">الوحدة السابعة · المكتبات</div>
+    <h2>المكتبات والعشوائية: استخدم شغل غيرك</h2>
+    <p>
+      المبرمج الشاطر مش اللي بيكتب كل حاجة من الصفر — هو اللي بيعرف إن الحاجة دي متعمولة
+      قبل كده وبيستخدمها. الوحدة دي بتفتح لك عالم <strong>المكتبات</strong>: آلاف الأدوات
+      الجاهزة اللي بتيجي مع بايثون.
+    </p>
+  </div>
+
+  <!-- 7.1 -->
+  <article class="lesson" id="u7-l1">
+    <h3>الاستيراد (import) والوحدات <span class="tag">درس 35</span></h3>
+    <p class="goal">الهدف: تفهم إزاي تضيف قدرات جديدة لبرنامجك بسطر واحد.</p>
+
+    <h4>1. إيه هي المكتبة؟</h4>
+    <p>
+      المكتبة (أو الوحدة / Module) هي ملف بايثون فيه دوال ومتغيّرات جاهزة كتبها ناس تانية.
+      بايثون بتيجي معاها <strong>مكتبة قياسية</strong> ضخمة فيها أدوات لكل حاجة:
+      العشوائية، التاريخ، الرياضيات، الملفات، الشبكات…
+    </p>
+
+    <h4>2. صيغ الاستيراد الأربعة</h4>
+    <div class="code"><pre>
+# 1) استيراد المكتبة كلها
+import random
+print(random.choice([1, 2, 3]))
+# 2) استيراد دالة معيّنة بس
+from random import choice
+print(choice([1, 2, 3]))          # من غير random.
+# 3) استيراد باسم مختصر
+import random as rnd
+print(rnd.choice([1, 2, 3]))
+# 4) استيراد كل حاجة (غير منصوح بيه)
+from random import *
+print(choice([1, 2, 3]))
+</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الصيغة</th><th>الاستخدام</th><th>الحكم</th></tr>
+        <tr><td><code class="inl">import random</code></td><td><code class="inl">random.choice()</code></td><td>✅ الأوضح — بتعرف الدالة جاية منين</td></tr>
+        <tr><td><code class="inl">from random import choice</code></td><td><code class="inl">choice()</code></td><td>✅ كويسة لو بتستخدم دالة واحدة كتير</td></tr>
+        <tr><td><code class="inl">import random as rnd</code></td><td><code class="inl">rnd.choice()</code></td><td>✅ مفيدة للأسماء الطويلة</td></tr>
+        <tr><td><code class="inl">from random import *</code></td><td><code class="inl">choice()</code></td><td>❌ بتلوّث المساحة وممكن تدهس أسماءك</td></tr>
+      </table>
+    </div>
+    <div class="code" data-file="alias_example.py"><pre>
+import random as farid          # الاسم البديل حرّ تمامًا
+list_names = ["farid", "mohammed", "randa"]
+chosen_name = farid.choice(list_names)
+print(chosen_name)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج (عشوائي — ممكن يطلع اسم تاني كل مرّة)</div><pre>mohammed</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 الاصطلاحات المتعارف عليها</div>
+      <p>
+        الاختصارات دي معروفة عالميًا، استخدمها زي ما هي:
+        <code class="inl">import pandas as pd</code>،
+        <code class="inl">import numpy as np</code>،
+        <code class="inl">import matplotlib.pyplot as plt</code>.
+      </p>
+    </div>
+
+    <h4>3. مكان الاستيراد</h4>
+    <div class="code"><pre>
+import random          # ✅ في أول الملف
+import string
+# باقي الكود...
+</pre></div>
+    <p>
+      الاصطلاح إن كل الـ imports تبقى في <strong>أول الملف</strong>. تقنيًا ممكن تكتبها
+      في أي مكان، لكن حطّها فوق عشان أي حد يفتح الملف يعرف على طول إيه اللي البرنامج
+      محتاجه.
+    </p>
+
+    <h4>4. مكتبات قياسية مفيدة</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المكتبة</th><th>بتعمل إيه</th></tr>
+        <tr><td><code class="inl">random</code></td><td>العشوائية — هنشرحها دلوقتي</td></tr>
+        <tr><td><code class="inl">string</code></td><td>مجموعات الحروف والأرقام والرموز</td></tr>
+        <tr><td><code class="inl">math</code></td><td>الجذر، الأسس، الثوابت الرياضية</td></tr>
+        <tr><td><code class="inl">datetime</code></td><td>التاريخ والوقت</td></tr>
+        <tr><td><code class="inl">os</code></td><td>التعامل مع نظام التشغيل والملفات</td></tr>
+        <tr><td><code class="inl">re</code></td><td>البحث بالأنماط (Regular Expressions)</td></tr>
+        <tr><td><code class="inl">json</code></td><td>قراءة وكتابة بيانات JSON</td></tr>
+      </table>
+    </div>
+    <div class="code"><pre>
+import math
+print(math.sqrt(16))      # 4.0
+print(math.pi)            # 3.141592653589793
+print(math.ceil(4.1))     # 5   تقريب لفوق
+print(math.floor(4.9))    # 4   تقريب لتحت
+import datetime
+print(datetime.date.today())
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>4.0
+3.141592653589793
+5
+4
+2026-09-08</pre></div>
+    <!-- APPEND:u7-l1 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تلات صيغ استيراد</div>
+      <p>استخدم <code class="inl">import</code> و <code class="inl">from … import</code> و <code class="inl">as</code> في برنامج واحد.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import math
+from random import randint
+import string as s
+print(math.sqrt(49))
+print(1 &lt;= randint(1, 6) &lt;= 6)
+print(s.digits)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>7.0
+True
+0123456789</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. بعد <code class="inl">from math import sqrt</code> تكتب…</p>
+        <label><input type="radio"> math.sqrt(9)</label>
+        <label><input type="radio"> sqrt(9)</label>
+        <label><input type="radio"> math(sqrt(9))</label>
+        <label><input type="radio"> import sqrt(9)</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. مكان الاستيراد المفضّل…</p>
+        <label><input type="radio"> آخر الملف</label>
+        <label><input type="radio"> جوّه الحلقات</label>
+        <label><input type="radio"> أول الملف</label>
+        <label><input type="radio"> مش مهم خالص</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. ليه <code class="inl">from x import *</code> مش منصوح بيها؟</p>
+        <label><input type="radio"> بتخلّط الأسماء ومش هتعرف كل دالة جاية منين</label>
+        <label><input type="radio"> أبطأ</label>
+        <label><input type="radio"> ممنوعة في بايثون</label>
+        <label><input type="radio"> مش بتستورد حاجة</label>
+      </div>
+    </div>
+    <!-- /APPEND:u7-l1 -->
+                <!-- SUM:u7-l1 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li>المكتبة ملف كود جاهز بتستورده بـ <code class="inl">import</code>.</li><li>صيغ الاستيراد: <code class="inl">import x</code> و <code class="inl">import x as y</code> و <code class="inl">from x import y</code> — وتجنّب <code class="inl">import *</code>.</li><li>الاستيراد في أول الملف.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 7.2 -->
+  <article class="lesson" id="u7-l2">
+    <h3>مكتبة random: العشوائية <span class="tag">درس 36</span></h3>
+    <p class="goal">الهدف: تولّد أرقام وتختار عناصر عشوائيًا — أساس كل الألعاب اللي جاية.</p>
+
+    <h4>1. random.choice — اختيار عنصر واحد</h4>
+    <div class="code" data-file="friend_lottery.py"><pre>
+import random
+names = input("Enter your friend's names, please type a comma between each name\n").lower()
+names_list = names.split(", ")
+choice = random.choice(names_list)
+print(f"Your friend that wins the game is {choice}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Enter your friend's names: Ahmed, Sara, Ali
+Your friend that wins the game is sara</pre></div>
+    <p>
+      لاحظ خط الإنتاج: <code class="inl">input()</code> ← <code class="inl">.lower()</code>
+      ← <code class="inl">.split(", ")</code> ← <code class="inl">random.choice()</code>.
+      كل خطوة بتشتغل على ناتج اللي قبلها.
+    </p>
+
+    <h4>2. random.choices — اختيار أكتر من عنصر (بتكرار)</h4>
+    <div class="code"><pre>
+import random
+names = ["marwa", "abdallah", "mohammed", "sara"]
+names_output = random.choices(names, k=3)
+print(names_output)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['abdallah', 'marwa', 'abdallah']</pre></div>
+    <div class="box warn">
+      <div class="bt">⚠️ choices بتسمح بالتكرار!</div>
+      <p>
+        لاحظ إن «abdallah» اتكرّر. لو عايز عناصر <strong>مختلفة</strong> استخدم
+        <code class="inl">random.sample(names, 3)</code> — دي بتضمن عدم التكرار.
+      </p>
+      <p class="dep-note">↩️ المثال ده بيكمّل على مثال قبله في نفس الدرس (بيستخدم <code class="inl">random</code>) — لو هتشغّله جوّه الصفحة، شغّل اللي قبله الأول.</p>
+      <div class="code"><pre>
+print(random.choices(names, k=3))   # ممكن يتكرّر
+print(random.sample(names, 3))      # مضمون مختلفين
+</pre></div>
+    </div>
+
+    <h4>3. random.randint — رقم عشوائي</h4>
+    <div class="code"><pre>
+import random
+print(random.randint(1, 6))        # زهر: من 1 لـ 6 (الاتنين مشمولين!)
+print(random.randint(0, 20))
+print(random.random())             # عشري بين 0 و 1
+print(random.uniform(1.5, 10.5))   # عشري في نطاق
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>4
+17
+0.7364920358
+6.8213</pre></div>
+    <div class="box brain">
+      <div class="bt">🧠 فرق مهم عن range</div>
+      <p>
+        <code class="inl">random.randint(1, 6)</code> — الرقمين <strong>مشمولين</strong>،
+        فممكن ترجّع 1 أو 6.<br>
+        <code class="inl">range(1, 6)</code> — النهاية <strong>غير مشمولة</strong>، بتدّي 1..5.<br>
+        الاختلاف ده بيوقّع ناس كتير، فخلي بالك.
+      </p>
+    </div>
+
+    <h4>4. random.shuffle — خلط القائمة</h4>
+    <div class="code"><pre>
+import random
+names = ["mohammed", "ahmed", "farid"]
+random.shuffle(names)
+print(names)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['ahmed', 'farid', 'mohammed']</pre></div>
+    <p>
+      <code class="inl">shuffle</code> بتعدّل القائمة <strong>في مكانها</strong> وبترجّع
+      <code class="inl">None</code> — زي <code class="inl">sort</code> بالظبط.
+      فما تكتبش <code class="inl">names = random.shuffle(names)</code>.
+    </p>
+
+    <h4>5. ملخّص دوال random</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الدالة</th><th>بترجّع</th><th>مثال</th></tr>
+        <tr><td><code class="inl">choice(seq)</code></td><td>عنصر واحد</td><td><code class="inl">"sara"</code></td></tr>
+        <tr><td><code class="inl">choices(seq, k=n)</code></td><td>قائمة بـ n عنصر (بتكرار)</td><td><code class="inl">['a','a','b']</code></td></tr>
+        <tr><td><code class="inl">sample(seq, n)</code></td><td>قائمة بـ n عنصر (بدون تكرار)</td><td><code class="inl">['a','b','c']</code></td></tr>
+        <tr><td><code class="inl">randint(a, b)</code></td><td>عدد صحيح من a لـ b شاملين</td><td><code class="inl">4</code></td></tr>
+        <tr><td><code class="inl">random()</code></td><td>عشري بين 0 و 1</td><td><code class="inl">0.732</code></td></tr>
+        <tr><td><code class="inl">shuffle(lst)</code></td><td>None (بتخلط في المكان)</td><td>—</td></tr>
+      </table>
+    </div>
+    <div class="box info">
+      <div class="bt">ℹ️ العشوائية دي مش عشوائية حقيقية</div>
+      <p>
+        الكمبيوتر جهاز حتمي — ما يقدرش يعمل حاجة عشوائية فعلًا. اللي بيحصل إنه بيستخدم
+        معادلة رياضية بتبدأ من قيمة (اسمها seed، غالبًا الوقت الحالي) وبتطلّع أرقام
+        <em>تبدو</em> عشوائية. عشان كده اسمها <strong>pseudo-random</strong>.
+        لو عايز نفس النتيجة كل مرّة (للاختبار) استخدم
+        <code class="inl">random.seed(42)</code> في أول البرنامج.
+      </p>
+    </div>
+    <!-- APPEND:u7-l2 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>اختبر العشوائية</div>
+      <p>النتايج العشوائية ما ينفعش تتوقّعها — لكن تقدر تتأكّد من <strong>خصائصها</strong>. وبـ <code class="inl">seed</code> تقدر تكرّرها.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import random
+dice = random.randint(1, 6)
+print(1 &lt;= dice &lt;= 6)
+colors = ["أحمر", "أخضر", "أزرق"]
+print(random.choice(colors) in colors)
+deck = list(range(1, 11))
+random.shuffle(deck)
+print(sorted(deck) == list(range(1, 11)), len(deck))
+print(len(set(random.sample(deck, 3))))
+random.seed(42)
+first = [random.randint(1, 6) for _ in range(5)]
+random.seed(42)
+second = [random.randint(1, 6) for _ in range(5)]
+print(first == second)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>True
+True
+True 10
+3
+True</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">random.sample(lst, 3)</code>…</p>
+        <label><input type="radio"> ممكن تكرّر نفس العنصر</label>
+        <label><input type="radio"> بتخلط القائمة</label>
+        <label><input type="radio"> 3 عناصر مختلفة من غير تكرار</label>
+        <label><input type="radio"> أول 3 عناصر</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. فايدة <code class="inl">random.seed(42)</code>؟</p>
+        <label><input type="radio"> تكرار نفس النتايج العشوائية</label>
+        <label><input type="radio"> عشوائية أقوى للأمان</label>
+        <label><input type="radio"> توليد رقم 42</label>
+        <label><input type="radio"> مالهاش فايدة</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">3. لكلمات السر الحقيقية تستخدم…</p>
+        <label><input type="radio"> random.choice</label>
+        <label><input type="radio"> random.seed</label>
+        <label><input type="radio"> random.shuffle</label>
+        <label><input type="radio"> secrets (درس الأمان)</label>
+      </div>
+    </div>
+    <!-- /APPEND:u7-l2 -->
+                <!-- SUM:u7-l2 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">random.choice</code> عنصر، <code class="inl">choices</code> أكتر بتكرار، <code class="inl">sample</code> من غير تكرار.</li><li><code class="inl">randint(a, b)</code> الطرفين مشمولين.</li><li><code class="inl">shuffle</code> بتخلط في المكان وترجّع None.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- 7.3 -->
+  <article class="lesson" id="u7-l3">
+    <h3>مكتبة string: مجموعات الحروف الجاهزة <span class="tag">درس 37</span></h3>
+    <p class="goal">الهدف: تحصل على كل الحروف والأرقام والرموز من غير ما تكتبهم بإيدك.</p>
+
+    <h4>1. المجموعات المتاحة</h4>
+    <div class="code"><pre>
+import string
+print(string.ascii_uppercase)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>ABCDEFGHIJKLMNOPQRSTUVWXYZ</pre></div>
+
+    <div class="code"><pre>
+import string
+print(string.ascii_lowercase)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>abcdefghijklmnopqrstuvwxyz</pre></div>
+
+    <div class="code"><pre>
+import string
+print(string.ascii_letters)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ</pre></div>
+
+    <div class="code"><pre>
+import string
+print(string.digits)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>0123456789</pre></div>
+
+    <div class="code"><pre>
+import string
+print(string.punctuation)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>!"#$%&amp;'()*+,-./:;&lt;=&gt;?@[\]^_`{|}~</pre></div>
+
+    <h4>2. جدول مرجعي</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الثابت</th><th>المحتوى</th><th>الطول</th></tr>
+        <tr><td><code class="inl">string.ascii_lowercase</code></td><td>a–z</td><td>26</td></tr>
+        <tr><td><code class="inl">string.ascii_uppercase</code></td><td>A–Z</td><td>26</td></tr>
+        <tr><td><code class="inl">string.ascii_letters</code></td><td>a–z + A–Z</td><td>52</td></tr>
+        <tr><td><code class="inl">string.digits</code></td><td>0–9</td><td>10</td></tr>
+        <tr><td><code class="inl">string.punctuation</code></td><td>الرموز</td><td>32</td></tr>
+        <tr><td><code class="inl">string.whitespace</code></td><td>المسافات والأسطر والتاب</td><td>6</td></tr>
+      </table>
+    </div>
+    <div class="box tip">
+      <div class="bt">💡 دول نصوص عادية</div>
+      <p>
+        <code class="inl">string.digits</code> نوعه <code class="inl">str</code>، فتقدر تعمل
+        عليه كل حاجة: تقطيع، فهرسة، <code class="inl">in</code>. مثلًا
+        <code class="inl">if char in string.punctuation:</code> بتفحص لو الحرف رمز.
+      </p>
+    </div>
+
+    <h4>3. الدمج مع random</h4>
+    <div class="code"><pre>
+import random
+import string
+letters = string.ascii_uppercase
+test = random.choices(letters, k=5)
+print(test)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>['K', 'B', 'X', 'D', 'Q']</pre></div>
+    <p>
+      لاحظ إن الناتج <strong>قائمة</strong> مش نص. عشان نخلّيه نص واحد بنستخدم
+      <code class="inl">join</code>:
+    </p>
+    <div class="code"><pre>
+import random
+import string
+letters = string.ascii_uppercase
+test = random.choices(letters, k=5)
+print("".join(test))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>KBXDQ</pre></div>
+    <p>
+      <code class="inl">"".join()</code> بفاصل فاضي معناها «الزّق العناصر من غير أي حاجة بينهم».
+    </p>
+    <!-- APPEND:u7-l3 -->
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>كود تفعيل</div>
+      <p>ولّد كود من 6 حروف كبيرة وأرقام، واتأكّد إن كل حروفه من المجموعة.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import random
+import string
+chars = string.ascii_uppercase + string.digits
+code = "".join(random.choices(chars, k=6))
+print(len(code), all(c in chars for c in code))
+print(string.punctuation[:5])
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>6 True
+!"#$%</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">string.digits</code>؟</p>
+        <label><input type="radio"> قائمة أرقام</label>
+        <label><input type="radio"> النص "0123456789"</label>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> دالة</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">len(string.ascii_lowercase)</code>؟</p>
+        <label><input type="radio"> 52</label>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> 32</label>
+        <label><input type="radio"> 26</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">"".join(["a", "b"])</code>؟</p>
+        <label><input type="radio"> "ab"</label>
+        <label><input type="radio"> "a b"</label>
+        <label><input type="radio"> ["ab"]</label>
+        <label><input type="radio"> خطأ</label>
+      </div>
+    </div>
+    <!-- /APPEND:u7-l3 -->
+                <!-- SUM:u7-l3 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">string</code> فيها مجموعات جاهزة: <code class="inl">ascii_letters</code> و <code class="inl">digits</code> و <code class="inl">punctuation</code>.</li><li>بتتدمج مع random لتوليد كلمات سر وأكواد.</li><li>أحسن من كتابة الحروف بإيدك.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+
+  <!-- ADD:u7-l4 -->
+  <!-- 7.4 -->
+  <article class="lesson" id="u7-l4">
+    <h3>مكتبات الأرقام: math و decimal و fractions و statistics <span class="tag">درس 38</span></h3>
+    <p class="goal">الهدف: تختار الأداة الصح لكل نوع حساب — علمي، مالي، كسور، أو إحصاء — وتعرف ليه float مش كفاية لكل حاجة.</p>
+
+    <h4>1. مكتبة math: الآلة الحاسبة العلمية</h4>
+    <div class="code"><pre>
+import math
+print(math.pi, math.e)
+print(math.sqrt(16), math.isqrt(17))
+print(math.ceil(4.1), math.floor(4.9), math.trunc(-4.9))
+print(math.factorial(5), math.comb(5, 2), math.perm(5, 2))
+print(math.gcd(12, 18), math.lcm(4, 6))
+print(math.isclose(0.1 + 0.2, 0.3))
+print(math.hypot(3, 4))
+print(math.log10(1000), math.log2(8))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>3.141592653589793 2.718281828459045
+4.0 4
+5 4 -4
+120 10 20
+6 12
+True
+5.0
+3.0 3.0</pre></div>
+    <div class="code"><pre>
+import math
+radius = 2.5
+area = math.pi * radius ** 2
+print(f"مساحة الدائرة: {area:.2f}")
+students = 47
+per_bus = 12
+print(f"محتاجين {math.ceil(students / per_bus)} أتوبيس")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>مساحة الدائرة: 19.63
+محتاجين 4 أتوبيس</pre></div>
+
+    <h4>2. مكتبة decimal: حسابات الفلوس بدقة</h4>
+    <p>
+      <code class="inl">Decimal</code> بتخزّن الرقم <strong>بالنظام العشري</strong> زي ما بنكتبه، مش بالثنائي — فمفيش أخطاء تقريب مخفية.
+      البنوك والمحاسبة وأنظمة الدفع بتستخدمها (أو بتخزّن بالقروش كـ int).
+    </p>
+    <div class="code"><pre>
+from decimal import Decimal, ROUND_HALF_UP
+print(0.1 + 0.2)
+print(Decimal("0.1") + Decimal("0.2"))
+print(Decimal(0.1))
+price = Decimal("19.99")
+qty = 3
+total = price * qty
+print(total)
+vat = total * Decimal("0.14")
+print(vat)
+print(vat.quantize(Decimal("0.01")))
+print(Decimal("2.675").quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+print(round(2.675, 2))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>0.30000000000000004
+0.3
+0.1000000000000000055511151231257827021181583404541015625
+59.97
+8.3958
+8.40
+2.68
+2.67</pre></div>
+
+    <h4>3. مكتبة fractions: كسور حقيقية</h4>
+    <div class="code"><pre>
+from fractions import Fraction
+a = Fraction(1, 3)
+b = Fraction(1, 6)
+print(a + b)
+print(a * 3)
+print(Fraction("0.75"))
+print(float(Fraction(22, 7)))
+print(Fraction(0.1).limit_denominator(100))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>1/2
+1
+3/4
+3.142857142857143
+1/10</pre></div>
+
+    <h4>4. مكتبة statistics: إحصاء جاهز</h4>
+    <div class="code"><pre>
+import statistics
+grades = [70, 85, 85, 90, 100, 45]
+print(statistics.mean(grades))
+print(statistics.median(grades))
+print(statistics.mode(grades))
+print(round(statistics.stdev(grades), 2))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>79.16666666666667
+85.0
+85
+19.34</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>النوع</th><th>الدقة</th><th>السرعة</th><th>استخدمه في</th></tr>
+        <tr><td><code class="inl">int</code></td><td>دقيق وبلا حدود</td><td>سريع جدًا</td><td>العدّ، الفلوس بالقروش، الأرقام الضخمة</td></tr>
+        <tr><td><code class="inl">float</code></td><td>تقريبي (~15 خانة)</td><td>الأسرع (مدعوم من المعالج)</td><td>العلوم، الهندسة، الرسوم، تعلّم الآلة</td></tr>
+        <tr><td><code class="inl">Decimal</code></td><td>دقيق عشريًا</td><td>أبطأ</td><td>الفلوس، الفواتير، الضرايب</td></tr>
+        <tr><td><code class="inl">Fraction</code></td><td>دقيق تمامًا</td><td>الأبطأ</td><td>الرياضيات، الوصفات، النِسب</td></tr>
+      </table>
+    </div>
+
+    <h4>تمرين سريع</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تقسيم الفاتورة</div>
+      <p>فاتورة مطعم 347.50 جنيه + خدمة 12%، هتتقسم على 4 أصحاب. اطبع نصيب كل واحد مقرّب لقرشين بـ Decimal.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+from decimal import Decimal, ROUND_HALF_UP
+bill = Decimal("347.50")
+total = bill * Decimal("1.12")
+share = (total / 4).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+print(f"الإجمالي: {total} — نصيب كل واحد: {share}")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>الإجمالي: 389.2000 — نصيب كل واحد: 97.30</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="2">
+        <p class="qt">1. <code class="inl">math.ceil(10 / 3)</code>؟</p>
+        <label><input type="radio"> 3</label>
+        <label><input type="radio"> 3.33</label>
+        <label><input type="radio"> 4</label>
+        <label><input type="radio"> 3.0</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">2. أصح طريقة لإنشاء Decimal لـ 0.1؟</p>
+        <label><input type="radio"> Decimal("0.1")</label>
+        <label><input type="radio"> Decimal(0.1)</label>
+        <label><input type="radio"> Decimal(1/10)</label>
+        <label><input type="radio"> كلهم نفس الشيء</label>
+      </div>
+      <div class="q" data-a="1">
+        <p class="qt">3. أنهي مقياس ما بيتأثّرش بدرجة واحدة شاذّة جدًا؟</p>
+        <label><input type="radio"> mean</label>
+        <label><input type="radio"> median</label>
+        <label><input type="radio"> stdev</label>
+        <label><input type="radio"> sum</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. <code class="inl">Fraction(2, 4)</code> بتتعرض كـ…</p>
+        <label><input type="radio"> 2/4</label>
+        <label><input type="radio"> 0.5</label>
+        <label><input type="radio"> Fraction(2, 4)</label>
+        <label><input type="radio"> 1/2</label>
+      </div>
+    </div>
+                <!-- SUM:u7-l4 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">math</code>: <code class="inl">ceil</code> و <code class="inl">floor</code> و <code class="inl">sqrt</code> و <code class="inl">isclose</code> و <code class="inl">comb</code>.</li><li><code class="inl">Decimal</code> من نص للفلوس، و <code class="inl">quantize</code> للتقريب.</li><li><code class="inl">Fraction</code> للكسور الدقيقة، و <code class="inl">statistics</code> للمتوسّط والوسيط والانحراف.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u7-l4 -->
+
+  <!-- ADD:u7-l5 -->
+  <!-- 7.5 -->
+  <article class="lesson" id="u7-l5">
+    <h3>التاريخ والوقت بعمق: datetime و timedelta <span class="tag">درس 39</span></h3>
+    <p class="goal">الهدف: تنشئ تواريخ، تعرضها بأي شكل، تقرا تاريخ من نص كتبه مستخدم، وتحسب الفروق — أعمار، مواعيد، ساعات شغل.</p>
+
+    <h4>1. الأنواع التلاتة: date و time و datetime</h4>
+    <div class="code"><pre>
+from datetime import date, datetime
+today = date(2025, 3, 15)
+print(today)
+print(today.year, today.month, today.day)
+print(today.weekday(), today.isoweekday())
+moment = datetime(2025, 3, 15, 14, 30, 5)
+print(moment)
+print(moment.hour, moment.minute)
+print(moment.date())
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>2025-03-15
+2025 3 15
+5 6
+2025-03-15 14:30:05
+14 30
+2025-03-15</pre></div>
+
+    <h4>2. من تاريخ لنص: strftime</h4>
+    <p><code class="inl">strftime</code> = <strong>str</strong>ing <strong>f</strong>ormat <strong>time</strong>: بتاخد «قالب» فيه أكواد بتبدأ بـ <code class="inl">%</code> وبتستبدلها بأجزاء التاريخ.</p>
+    <div class="code"><pre>
+from datetime import datetime
+moment = datetime(2025, 3, 15, 14, 30)
+print(moment.strftime("%d/%m/%Y"))
+print(moment.strftime("%Y-%m-%d %H:%M"))
+print(moment.strftime("%I:%M %p"))
+print(moment.strftime("%A %d %B %Y"))
+print(f"{moment:%d-%m-%Y}")
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>15/03/2025
+2025-03-15 14:30
+02:30 PM
+Saturday 15 March 2025
+15-03-2025</pre></div>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>الكود</th><th>المعنى</th><th>مثال</th></tr>
+        <tr><td><code class="inl">%Y</code> / <code class="inl">%y</code></td><td>السنة كاملة / آخر رقمين</td><td>2025 / 25</td></tr>
+        <tr><td><code class="inl">%m</code></td><td>الشهر برقمين</td><td>03</td></tr>
+        <tr><td><code class="inl">%d</code></td><td>اليوم برقمين</td><td>15</td></tr>
+        <tr><td><code class="inl">%H</code> / <code class="inl">%I</code></td><td>الساعة 24 / 12</td><td>14 / 02</td></tr>
+        <tr><td><code class="inl">%M</code> / <code class="inl">%S</code></td><td>الدقايق / الثواني</td><td>30 / 05</td></tr>
+        <tr><td><code class="inl">%p</code></td><td>AM أو PM</td><td>PM</td></tr>
+        <tr><td><code class="inl">%A</code> / <code class="inl">%a</code></td><td>اسم اليوم كامل / مختصر</td><td>Saturday / Sat</td></tr>
+        <tr><td><code class="inl">%B</code> / <code class="inl">%b</code></td><td>اسم الشهر كامل / مختصر</td><td>March / Mar</td></tr>
+      </table>
+    </div>
+    <div class="box warn">
+      <div class="bt">⚠️ فخ الحروف الكبيرة والصغيرة</div>
+      <p><code class="inl">%M</code> = <strong>دقايق</strong> و <code class="inl">%m</code> = <strong>شهر</strong>. لو كتبت <code class="inl">%Y-%M-%d</code> هيطلع «2025-30-15» من غير أي خطأ — خطأ منطقي صامت.</p>
+    </div>
+
+    <h4>3. من نص لتاريخ: strptime</h4>
+    <p><code class="inl">strptime</code> = <strong>str</strong>ing <strong>p</strong>arse <strong>time</strong>: العكس. بتاخد النص <strong>والقالب اللي مكتوب بيه</strong> وبترجّع كائن datetime تقدر تحسب بيه.</p>
+    <div class="code"><pre>
+from datetime import datetime
+text = "25/12/2024 09:15"
+parsed = datetime.strptime(text, "%d/%m/%Y %H:%M")
+print(parsed)
+print(type(parsed))
+iso = datetime.fromisoformat("2024-12-25T09:15:00")
+print(iso == parsed)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>2024-12-25 09:15:00
+&lt;class 'datetime.datetime'&gt;
+True</pre></div>
+    <div class="box err">
+      <div class="bt">❌ لو القالب ما طابقش</div>
+      <p>
+        <code class="inl">datetime.strptime("2024-12-25", "%d/%m/%Y")</code> ← <code class="inl">ValueError: time data '2024-12-25' does not match format '%d/%m/%Y'</code>.
+        ولو المستخدم كتب <code class="inl">31/02/2025</code> ← <code class="inl">ValueError: day is out of range for month</code>.
+        يعني <code class="inl">strptime</code> جوّه <code class="inl">try/except</code> = <strong>تحقّق مجاني من صحّة التاريخ</strong> (هتعمله في الوحدة 9).
+      </p>
+    </div>
+
+    <h4>4. الحساب بالتواريخ: timedelta</h4>
+    <p><code class="inl">timedelta</code> = <strong>مدّة</strong> (مش لحظة). تاريخ + مدّة = تاريخ. تاريخ − تاريخ = مدّة.</p>
+    <div class="code"><pre>
+from datetime import date, timedelta
+start = date(2025, 1, 30)
+print(start + timedelta(days=30))
+print(start - timedelta(weeks=2))
+exam = date(2025, 6, 1)
+left = exam - start
+print(left)
+print(left.days)
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>2025-03-01
+2025-01-16
+122 days, 0:00:00
+122</pre></div>
+    <div class="code"><pre>
+from datetime import datetime, timedelta
+login = datetime(2025, 3, 15, 8, 45)
+logout = datetime(2025, 3, 15, 17, 20)
+worked = logout - login
+print(worked)
+hours = worked.total_seconds() / 3600
+print(f"{hours:.2f} ساعة")
+print(worked &gt; timedelta(hours=8))
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>8:35:00
+8.58 ساعة
+True</pre></div>
+
+    <h4>5. حساب العمر الصح</h4>
+    <div class="code"><pre>
+from datetime import date
+birth = date(2000, 8, 20)
+today = date(2025, 3, 15)
+had_birthday = (today.month, today.day) &gt;= (birth.month, birth.day)
+age = today.year - birth.year - (not had_birthday)
+print(age)
+print(f"{(today - birth).days:,} يوم")
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>24
+8,973 يوم</pre></div>
+    <div class="box info">
+      <div class="bt">ℹ️ ليه ما قسمناش الأيام على 365؟</div>
+      <p>
+        <code class="inl">8973 // 365</code> = 24 هنا بالصدفة، لكن السنين الكبيسة بتخلّي القسمة تغلط بيوم قريب من عيد الميلاد.
+        المقارنة بالشهر واليوم <strong>دايمًا صح</strong>. وللمناطق الزمنية (القاهرة مقابل طوكيو) فيه مكتبة <code class="inl">zoneinfo</code> القياسية.
+      </p>
+    </div>
+
+    <h4>6. مكتبة time: القياس والانتظار</h4>
+    <p><code class="inl">datetime</code> للتواريخ والمواعيد. أما <code class="inl">time</code> فللحاجات «التقنية»: توقيف البرنامج شوية، وقياس مدّة تنفيذ الكود.</p>
+    <div class="code"><pre>
+import time
+start = time.perf_counter()
+for i in range(3, 0, -1):
+    print(f"{i}…")
+    time.sleep(0.2)
+print("انطلق! 🚀")
+elapsed = time.perf_counter() - start
+print(f"المدّة: {elapsed:.1f} ثانية")
+print(time.time() &gt; 1_700_000_000)
+</pre></div>
+    <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>3…
+2…
+1…
+انطلق! 🚀
+المدّة: 0.6 ثانية
+True</pre></div>
+    <div class="box tip">
+      <div class="bt">💡 إمتى تستخدم sleep؟</div>
+      <p>
+        <strong>تهدئة الطلبات</strong>: لما تكلّم API بيسمح بعدد محدود من الطلبات في الدقيقة، أو بتسحب صفحات موقع من غير ما تضغط عليه.
+        <strong>إعادة المحاولة</strong>: فشل الاتصال؟ استنّى ثانيتين وجرّب تاني. ⚠️ لكن <code class="inl">sleep</code> بتجمّد البرنامج كله —
+        في الواجهات الرسومية والسيرفرات بيستخدموا بدايل (زي <code class="inl">asyncio.sleep</code>).
+      </p>
+    </div>
+
+    <h4>تمارين سريعة</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>جدول المحاضرات</div>
+      <p>أول محاضرة يوم 1 مارس 2025، وبعدها محاضرة كل أسبوع. اطبع مواعيد أول 4 محاضرات باسم اليوم والتاريخ.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+from datetime import date, timedelta
+first = date(2025, 3, 1)
+for i in range(4):
+    session = first + timedelta(weeks=i)
+    print(f"المحاضرة {i + 1}: {session:%A %d/%m}")
+</pre></div>
+      <div class="out rtl"><div class="out-head">▸ الناتج</div><pre>المحاضرة 1: Saturday 01/03
+المحاضرة 2: Saturday 08/03
+المحاضرة 3: Saturday 15/03
+المحاضرة 4: Saturday 22/03</pre></div>
+      </details>
+    </div>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>فاضل كام يوم على عيد ميلادك؟</div>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+from datetime import date
+today = date(2025, 3, 15)
+birthday = date(today.year, 8, 20)
+if birthday &lt; today:
+    birthday = birthday.replace(year=today.year + 1)
+print((birthday - today).days)
+</pre></div>
+      <div class="out"><div class="out-head">▸ الناتج</div><pre>158</pre></div>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. عندك النص <code class="inl">"2025-03-15"</code> وعايز كائن تاريخ. تستخدم…</p>
+        <label><input type="radio"> strftime</label>
+        <label><input type="radio"> strptime (أو fromisoformat)</label>
+        <label><input type="radio"> timedelta</label>
+        <label><input type="radio"> int()</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">2. <code class="inl">date(2025, 5, 10) - date(2025, 5, 1)</code> نوعها؟</p>
+        <label><input type="radio"> int</label>
+        <label><input type="radio"> date</label>
+        <label><input type="radio"> str</label>
+        <label><input type="radio"> timedelta</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. في القالب، <code class="inl">%M</code> معناها…</p>
+        <label><input type="radio"> الدقايق</label>
+        <label><input type="radio"> الشهر</label>
+        <label><input type="radio"> AM/PM</label>
+        <label><input type="radio"> الثواني</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">4. إزاي تجيب عدد الساعات من <code class="inl">timedelta</code> اسمها d؟</p>
+        <label><input type="radio"> d.hours</label>
+        <label><input type="radio"> d.days * 24 بس</label>
+        <label><input type="radio"> d.total_seconds() / 3600</label>
+        <label><input type="radio"> int(d)</label>
+      </div>
+    </div>
+                <!-- SUM:u7-l5 -->
+    <div class="box sum"><div class="bt">🎯 الخلاصة</div><ul><li><code class="inl">date</code> و <code class="inl">datetime</code> للتواريخ، و <code class="inl">strftime</code> ← نص، و <code class="inl">strptime</code> ← تاريخ.</li><li>طرح تاريخين ← <code class="inl">timedelta</code>، و <code class="inl">.days</code> و <code class="inl">total_seconds()</code>.</li><li><code class="inl">time.sleep</code> بتوقف البرنامج، و <code class="inl">perf_counter</code> لقياس المدّة.</li></ul></div>
+    <!-- /SUM -->
+  </article>
+<!-- /ADD:u7-l5 -->
+
+  <!-- 7.P1 -->
+  <article class="lesson project" id="u7-p1">
+    <h3>مشروع 11: مولّد كلمات مرور قوية <span class="tag">◆ مشروع</span></h3>
+    <p class="goal">الهدف: أول برنامج بيدمج 4 وحدات مع بعض: مدخلات + شروط + مكتبات + قوائم.</p>
+
+    <h4>الفكرة</h4>
+    <p>
+      المستخدم بيحدّد طول كلمة السر وكام حرف وكام رقم وكام رمز. البرنامج بيتأكّد إن
+      المجموع مظبوط، وبعدين بيولّد كل مجموعة ويخلطهم.
+    </p>
+
+    <div class="code" data-file="password_generator.py"><pre>
+import random
+import string
+length = int(input("Please enter your password length: "))
+letters = int(input("Please enter the number of letters: "))
+numbers = int(input("Please enter the number of numbers: "))
+symbols = int(input("Please enter the number of symbols: "))
+if (letters + numbers + symbols != length):
+    print("Invalid inputs")
+else:
+    chars = string.ascii_letters
+    numbers_password = string.digits
+    symbols_password = string.punctuation
+    strong_password = (random.choices(chars, k=letters) +
+                       random.choices(numbers_password, k=numbers) +
+                       random.choices(symbols_password, k=symbols))
+    random.shuffle(strong_password)
+    print("Your password is " + ''.join(strong_password))
+</pre></div>
+    <div class="out"><div class="out-head">▸ الناتج</div><pre>Please enter your password length: 8
+Please enter the number of letters: 4
+Please enter the number of numbers: 2
+Please enter the number of symbols: 2
+Your password is $k2Bx#9a</pre></div>
+
+    <h4>الشرح خطوة بخطوة</h4>
+    <ol>
+      <li>
+        <strong>التحقّق:</strong> <code class="inl">letters + numbers + symbols != length</code>
+        — لو المجموع مش مساوي الطول المطلوب، البرنامج بيرفض. ده اسمه
+        <em>validation</em> وهو جزء أساسي من أي برنامج محترم.
+      </li>
+      <li>
+        <strong>التوليد:</strong> تلات استدعاءات لـ <code class="inl">random.choices</code>،
+        كل واحدة بترجّع <strong>قائمة</strong>.
+      </li>
+      <li>
+        <strong>الدمج:</strong> علامة <code class="inl">+</code> بين القوائم بتلزّقهم في
+        قائمة واحدة (زي دمج النصوص بالظبط).
+      </li>
+      <li>
+        <strong>الخلط:</strong> من غير <code class="inl">shuffle</code>، كلمة السر هتبقى
+        دايمًا: حروف الأول، بعدين أرقام، بعدين رموز — وده نمط متوقّع يضعف الأمان.
+      </li>
+      <li>
+        <strong>الدمج النهائي:</strong> <code class="inl">''.join()</code> بتحوّل القائمة لنص.
+      </li>
+    </ol>
+    <div class="diagram">
+<pre>  ['a','K','p','x']  +  ['2','9']  +  ['$','#']
+            │                │             │
+            └────────────────┴─────────────┘
+                             ▼
+        ['a','K','p','x','2','9','$','#']   ← قبل الخلط
+                             │
+                       shuffle()
+                             ▼
+        ['$','k','2','B','x','#','9','a']
+                             │
+                        "".join()
+                             ▼
+                        "$k2Bx#9a"</pre>
+      <div class="cap">رحلة كلمة السر</div>
+    </div>
+
+    <h4>عيوب النسخة دي</h4>
+    <div class="tbl-wrap">
+      <table>
+        <tr><th>المشكلة</th><th>الحل</th></tr>
+        <tr><td>لو المجموع غلط، البرنامج بيقفل بدل ما يسأل تاني</td><td><code class="inl">while</code> — الوحدة 8</td></tr>
+        <tr><td>لو المستخدم كتب حروف → ValueError</td><td><code class="inl">try/except</code> — الوحدة 9</td></tr>
+        <tr><td>الكود كله في المستوى الرئيسي، صعب إعادة استخدامه</td><td>الدوال — الوحدة 11</td></tr>
+      </table>
+    </div>
+
+    <div class="ex">
+      <div class="bt">✍️ التحدّي</div>
+      <p>
+        بسّط البرنامج: خلّي المستخدم يدخل الطول بس، والبرنامج يوزّع تلقائيًا
+        (نص حروف، ربع أرقام، ربع رموز).
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import random, string
+length = int(input("طول كلمة السر: "))
+letters = length // 2
+numbers = length // 4
+symbols = length - letters - numbers      # الباقي عشان المجموع يظبط
+password = (random.choices(string.ascii_letters, k=letters) +
+            random.choices(string.digits, k=numbers) +
+            random.choices(string.punctuation, k=symbols))
+random.shuffle(password)
+print("".join(password))
+</pre></div>
+      <p>لاحظ حساب <code class="inl">symbols</code> بالطرح — ده بيضمن إن المجموع يساوي الطول دايمًا مهما كان.</p>
+      </details>
+    </div>
+  </article>
+  <!-- ADD:u7-ch -->
+  <!-- 7.CH -->
+  <article class="lesson" id="u7-ch">
+    <h3>تحدّيات بتصحيح آلي: الوحدة السابعة <span class="tag">🧪 تحدّي</span></h3>
+    <p class="goal">المكتبات: مش مطلوب تحفظ — مطلوب تعرف تدوّر على الدالة المناسبة وتستخدمها صح.</p>
+
+    <div class="challenge" data-ch="u7-ch1">
+      <div class="ch-head">🧪 التحدّي 1 — الفرق بين تاريخين <span class="lvl">⭐⭐</span></div>
+      <p>اطلب تاريخين بصيغة <code class="inl">يوم/شهر/سنة</code> (زي <code class="inl">01/03/2025</code>)، واطبع <code class="inl">الفرق: N يوم</code> — دايمًا رقم موجب مهما كان الترتيب.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+from datetime import datetime
+
+first = input("التاريخ الأول: ")
+second = input("التاريخ التاني: ")
+# حوّل النصوص لتواريخ، واطبع الفرق بالأيام
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def diff(a, b):
+    out = run_program(f"{a}\n{b}\n")
+    return out.strip().splitlines()[-1].strip(), out
+
+def test_jan_mar():
+    "01/01/2025 و 01/03/2025 ← 59 يوم"
+    got, out = diff("01/01/2025", "01/03/2025")
+    assert got == "الفرق: 59 يوم", out
+
+def test_same_day():
+    "نفس اليوم ← 0 يوم"
+    got, out = diff("10/05/2024", "10/05/2024")
+    assert got == "الفرق: 0 يوم", out
+
+def test_reverse_leap():
+    "ترتيب معكوس في سنة كبيسة: 01/03/2024 و 01/02/2024 ← 29 يوم"
+    got, out = diff("01/03/2024", "01/02/2024")
+    assert got == "الفرق: 29 يوم", out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+from datetime import datetime
+first = input("التاريخ الأول: ")
+second = input("التاريخ التاني: ")
+d1 = datetime.strptime(first, "%d/%m/%Y")
+d2 = datetime.strptime(second, "%d/%m/%Y")
+print(f"الفرق: {abs((d2 - d1).days)} يوم")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="challenge" data-ch="u7-ch2">
+      <div class="ch-head">🧪 التحدّي 2 — عدد الأتوبيسات <span class="lvl">⭐</span></div>
+      <p>اطلب عدد الطلاب وسعة الأتوبيس، واطبع <code class="inl">محتاجين N أتوبيس</code> — من غير ما حد يفضل واقف.</p>
+      <textarea class="ch-starter" hidden aria-hidden="true">
+students = int(input("عدد الطلاب: "))
+capacity = int(input("سعة الأتوبيس: "))
+buses = students // capacity
+print(f"محتاجين {buses} أتوبيس")
+</textarea>
+      <script type="text/plain" class="ch-tests">
+PROGRAM_MODE = True
+
+def buses(s, c):
+    out = run_program(f"{s}\n{c}\n")
+    return out.strip().splitlines()[-1].strip(), out
+
+def test_remainder():
+    "47 طالب و 12 مقعد ← 4 أتوبيس"
+    got, out = buses(47, 12)
+    assert got == "محتاجين 4 أتوبيس", out
+
+def test_exact():
+    "48 و 12 ← 4 بالظبط"
+    got, out = buses(48, 12)
+    assert got == "محتاجين 4 أتوبيس", out
+
+def test_small():
+    "طالب واحد ← أتوبيس واحد"
+    got, out = buses(1, 50)
+    assert got == "محتاجين 1 أتوبيس", out
+</script>
+      <details class="sol"><summary>شوف الحل النموذجي</summary>
+      <div class="code"><pre>
+import math
+students = int(input("عدد الطلاب: "))
+capacity = int(input("سعة الأتوبيس: "))
+buses = math.ceil(students / capacity)
+print(f"محتاجين {buses} أتوبيس")
+</pre></div>
+      </details>
+    </div>
+  </article>
+<!-- /ADD:u7-ch -->
+
+  <!-- 7.EX -->
+  <article class="lesson" id="u7-ex">
+    <h3>تمارين الوحدة السابعة <span class="tag">✍️ تدريب</span></h3>
+    <p class="goal">اتمرّن على المكتبات — دي مهارة «تعرف تدوّر» مش «تعرف تحفظ».</p>
+
+    <h4>تمارين</h4>
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 1 — الزهر</div>
+      <p>اعمل برنامج يرمي زهرين (كل واحد من 1 لـ 6) ويطبع القيمتين والمجموع، ويقول «دبل!» لو الاتنين متساويين.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import random
+d1 = random.randint(1, 6)
+d2 = random.randint(1, 6)
+print(f"الزهر الأول: {d1}")
+print(f"الزهر التاني: {d2}")
+print(f"المجموع: {d1 + d2}")
+if d1 == d2:
+    print("دبل! 🎲")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐</span>تمرين 2 — كود تحقّق (OTP)</div>
+      <p>ولّد كود من 6 أرقام عشوائية كنص واحد.</p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import random
+import string
+otp = "".join(random.choices(string.digits, k=6))
+print(f"كود التحقّق: {otp}")
+# أو بطريقة تانية:
+print(random.randint(100000, 999999))
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 3 — توزيع الفرق</div>
+      <p>
+        عندك 6 أسماء. اخلطهم عشوائيًا وقسّمهم فريقين متساويين واطبع كل فريق.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import random
+players = ["أحمد", "سارة", "علي", "منى", "خالد", "رنا"]
+random.shuffle(players)
+half = len(players) // 2
+team_a = players[:half]
+team_b = players[half:]
+print(f"الفريق الأول: {', '.join(team_a)}")
+print(f"الفريق الثاني: {', '.join(team_b)}")
+</pre></div>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐</span>تمرين 4 — choices ولا sample؟</div>
+      <p>
+        عندك 5 جوايز و3 فايزين. أنهي دالة تستخدم عشان محدّش ياخد جايزتين؟ اكتب الكود ووضّح الفرق عمليًا.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import random
+names = ["أحمد", "سارة", "علي", "منى", "خالد"]
+# ❌ ممكن يتكرّر نفس الاسم
+print(random.choices(names, k=3))
+# ✅ مضمون مختلفين
+print(random.sample(names, 3))
+</pre></div>
+      <p><code class="inl">sample</code> بتختار «بدون إرجاع»، <code class="inl">choices</code> بتختار «بإرجاع».</p>
+      </details>
+    </div>
+
+    <div class="ex">
+      <div class="bt"><span class="lvl">⭐⭐⭐</span>تمرين 5 — مولّد كلمات سر ذكي</div>
+      <p>
+        ولّد كلمة سر بطول يحدّده المستخدم، بحيث <strong>تضمن</strong> إن فيها على الأقل
+        حرف كابيتال وحرف صغير ورقم ورمز — والباقي عشوائي من كل المجموعات.
+      </p>
+      <details class="sol"><summary>شوف الحل</summary>
+      <div class="code"><pre>
+import random
+import string
+length = int(input("طول كلمة السر (4 على الأقل): "))
+if length &lt; 4:
+    print("لازم 4 على الأقل")
+else:
+    # نضمن واحد من كل نوع
+    password = [
+        random.choice(string.ascii_uppercase),
+        random.choice(string.ascii_lowercase),
+        random.choice(string.digits),
+        random.choice(string.punctuation),
+    ]
+    # الباقي من كل المجموعات
+    all_chars = string.ascii_letters + string.digits + string.punctuation
+    password += random.choices(all_chars, k=length - 4)
+    random.shuffle(password)
+    print("".join(password))
+</pre></div>
+      <p>
+        <strong>الفكرة المهمّة:</strong> بنملأ الحد الأدنى المضمون الأول، وبعدين نكمّل الباقي،
+        وبعدين نخلط. ده نمط بيتكرّر كتير في المشاكل اللي فيها «شروط لازم تتحقّق».
+      </p>
+      </details>
+    </div>
+
+    <h4>اختبار سريع</h4>
+    <div class="quiz">
+      <div class="q" data-a="1">
+        <p class="qt">1. <code class="inl">random.randint(1, 6)</code> ممكن ترجّع 6؟</p>
+        <label><input type="radio"> لأ، بتوقف عند 5</label>
+        <label><input type="radio"> أيوة، الطرفين مشمولين</label>
+        <label><input type="radio"> بس لو حظك حلو</label>
+        <label><input type="radio"> بترجّع عشري</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">2. <code class="inl">random.shuffle(lst)</code> بترجّع…</p>
+        <label><input type="radio"> قائمة مخلوطة جديدة</label>
+        <label><input type="radio"> نفس القائمة</label>
+        <label><input type="radio"> None (بتخلط في المكان)</label>
+        <label><input type="radio"> عنصر عشوائي</label>
+      </div>
+      <div class="q" data-a="0">
+        <p class="qt">3. <code class="inl">random.choices(x, k=3)</code> بترجّع…</p>
+        <label><input type="radio"> قائمة بـ 3 عناصر، ممكن تتكرّر</label>
+        <label><input type="radio"> قائمة بـ 3 عناصر مختلفة حتمًا</label>
+        <label><input type="radio"> نص من 3 حروف</label>
+        <label><input type="radio"> عنصر واحد</label>
+      </div>
+      <div class="q" data-a="3">
+        <p class="qt">4. <code class="inl">string.ascii_letters</code> طوله…</p>
+        <label><input type="radio"> 26</label>
+        <label><input type="radio"> 10</label>
+        <label><input type="radio"> 32</label>
+        <label><input type="radio"> 52</label>
+      </div>
+      <div class="q" data-a="2">
+        <p class="qt">5. أنهي صيغة استيراد <strong>غير</strong> منصوح بيها؟</p>
+        <label><input type="radio"> import random</label>
+        <label><input type="radio"> import random as rnd</label>
+        <label><input type="radio"> from random import *</label>
+        <label><input type="radio"> from random import choice</label>
+      </div>
+    </div>
+  </article>
+<!-- CP:7 -->
+  <div class="checkpoint" data-unit="7">
+    <h4>✅ نقطة تفتيش: الوحدة السابعة</h4>
+    <p>قبل ما تكمّل، علّم على اللي تقدر تعمله بثقة. اللي مش متأكّد منه ارجع لدرسه — التقدّم بيتحفظ على جهازك.</p>
+    <ul><li>أستورد مكتبات بالصيغ المختلفة.</li><li>أستخدم random و string لتوليد بيانات.</li><li>أختار بين float و Decimal و Fraction حسب المشكلة.</li><li>أحسب فروق التواريخ وأحوّل بين النص والتاريخ.</li></ul>
+  </div>
+  <!-- /CP -->
